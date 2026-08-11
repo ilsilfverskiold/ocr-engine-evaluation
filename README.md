@@ -70,6 +70,32 @@ python scripts/deploy_modal.py    # deploys the six GPU apps
 
 ---
 
+## The dataset
+
+All 93 documents and their ground truth are published as a HuggingFace
+dataset:
+**[huggingface.co/datasets/ilsilfverskiold/ocr-benchmark](https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark)**
+
+One `train` split, one row per document: the page image plus every
+ground-truth sidecar as columns — `gt_text`, `gt_json`, `structured_gt`
+(the JSON schema + expected values for the schema/key_value legs),
+`markdown_gt`, and `geometry_gt`. The JSON columns are stored as strings
+because their structure varies per document type; parse them with
+`json.loads()`.
+
+`scripts/download_data.py` rebuilds the exact on-disk layout the harness
+expects from this dataset. You can also use it directly, without the
+harness:
+
+```python
+from datasets import load_dataset
+ds = load_dataset("ilsilfverskiold/ocr-benchmark", split="train")
+```
+
+Every image is an excerpt from a public dataset — sources, licences and
+attribution are in
+[docs/documents-and-licensing.md](docs/documents-and-licensing.md).
+
 ## The six legs
 
 Each leg is a different job, asked for differently and scored differently. The
