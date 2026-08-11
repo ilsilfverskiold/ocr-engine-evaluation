@@ -81,13 +81,38 @@ the documents that do.
 |---|---|---|---|
 | `text` | Did it read the words? | 82 | 14 |
 | `markdown` | Did it preserve structure and reading order? | 57 | 11 |
-| `tables` | Did it recover the table, not just the cell text? | 40 | 12 |
-| `key_value` | Did it pull out label → value pairs? | ~60 | 6 |
+| `tables` | Did it recover the table, not just the cell text? | 42 | 12 |
+| `key_value` | Did it pull out label → value pairs? | 65¹ | 6 |
 | `schema` | Given *your* JSON schema, did it fill it correctly? | 65 | 8 |
 | `geometry` | Does it know *where* on the page each word is? | 17 | 6 |
 
+¹ key_value uses the same structured GT as schema, but only its scalar fields —
+documents with fewer than 3 scalar fields (charts, financial tables, whose
+schemas are almost entirely arrays) are reported not applicable at scoring
+time, so the report shows fewer.
+
 Default is all six. Underscore matters: it is `--legs key_value`, not
 `key-value` — an unknown token fails immediately and lists the valid ones.
+
+### Which tiers carry which ground truth
+
+Ground truth is uneven by design — the source datasets annotate what they were
+built for. This is what each tier can actually score (docs with GT per leg):
+
+| Tier | Docs | text | markdown | tables | key_value/schema | geometry |
+|---|---|---|---|---|---|---|
+| easy | 12 | 12 | 6 | 11 | 12 | 6 |
+| medium | 35 | 35 | 35 | 23 | 35 | 0 |
+| hard | 46 | 35² | 16 | 8 | 18 | 11 |
+
+² the other 11 hard documents (newspapers, reports) are the silver-GT set:
+no usable text reference, judged estimate instead — see below.
+
+A run only calls the documents that have GT for at least one selected leg, so
+`--tiers medium --legs geometry` plans zero calls and tells you why. The
+easy-tier markdown GT is the 6 invoices (the receipts have none); geometry GT
+exists only for the SROIE receipts (6), FUNSD forms (6) and SynFinTabs
+financial tables (5).
 
 Not every engine can answer every leg, and the line is drawn at the interface,
 not the score. An engine with **no prompt parameter at all** cannot be asked
@@ -98,9 +123,8 @@ the ask was the best one available to it.
 
 ## How each leg is scored
 
-Two legs are scored purely deterministically. Four are scored by an LLM judge —
-each for a specific reason, explained below. `--skip-judge` switches the legs
-that have a deterministic fallback to it, and skips the ones that don't.
+Two legs are scored purely deterministically, against gold ground truth. Four
+are scored by an LLM judge — each for a specific reason, stated below.
 
 | Leg | Default scoring | With `--skip-judge` | Why a judge at all |
 |---|---|---|---|
@@ -108,8 +132,20 @@ that have a deterministic fallback to it, and skips the ones that don't.
 | `geometry` | **Deterministic** — words located: text match + box centers agree | same | — |
 | `markdown` | **LLM judge** — element accuracy against a checklist built from the page image | deterministic structural F1 vs. the reference markdown | our hand-written markdown references encode *one* valid rendering and are over-segmented — engines that correctly merge text into flowing prose scored low against them |
 | `tables` | **LLM judge** — cell accuracy against a checklist built from the page image | TEDS (tree edit distance) vs. the reference table | same problem: a byte-perfect table scored 0.846 against our reference for its HTML dialect; TEDS stays in the metrics as a diagnostic |
-| `key_value` | **LLM judge** — field accuracy, matching by *value* | not scored (judge-only by design) | engines legitimately name fields differently — `"company"` vs `"Company Name"`. Deterministic key-matching punished naming, not extraction |
-| `schema` | **LLM judge** — field accuracy, matching by *value* | not scored (judge-only by design) | same — and Textract returns FORMS pairs, not JSON, so there is no key to match deterministically |
+| `key_value` | **LLM judge** — field accuracy, matching by *value* | unchanged — still judged (no deterministic scorer exists) | engines legitimately name fields differently — `"company"` vs `"Company Name"`. Deterministic key-matching punished naming, not extraction |
+| `schema` | **LLM judge** — field accuracy, matching by *value* | unchanged — still judged (no deterministic scorer exists) | same — and Textract returns FORMS pairs, not JSON, so there is no key to match deterministically |
+
+So `--skip-judge` changes exactly three things: markdown falls back to the
+deterministic structural F1, tables falls back to TEDS, and the silver-text
+estimate (below) is skipped. It does **not** affect schema or key_value —
+those have no non-judge way to be scored, so selecting them always needs
+`GOOGLE_API_KEY`, flag or no flag.
+
+One honest caveat about the fallbacks: the deterministic markdown and tables
+scorers are exactly what the judge was built to replace. They compare against
+references with known problems (over-segmentation, dialect punishment), so
+their numbers are cheaper but less reliable — fine for smoke tests and
+relative comparisons on a budget, not what we would publish.
 
 **And one estimate that is not a leg:** 11 of the 93 documents (newspapers,
 reports) have machine-generated reference text too unreliable to score against
@@ -117,7 +153,35 @@ reports) have machine-generated reference text too unreliable to score against
 deterministic score; instead a **document judge** builds a checklist of the
 page's content from the image and estimates how much of it each engine
 captured. Those numbers are labelled as judged in the report and kept separate.
-They are directional, not definitive.
+They are directional, not definitive. So the text story is: **gold GT for 82
+documents, a judged estimate for the other 11** — and `--skip-judge` means
+those 11 simply carry no score.
+
+### Worked examples — what actually runs
+
+`--tiers easy --legs schema --skip-judge`
+: 12 easy documents have schema GT, so all 12 are called. Schema is
+judge-scored — the flag does not change that — so this still makes Gemini
+verdict calls and still needs `GOOGLE_API_KEY`. The flag saves nothing here;
+it only matters for markdown, tables, and the silver-text estimate.
+
+`--engines docling --legs markdown` (no flag)
+: docling emits markdown, so it competes on all 57 markdown-GT documents. With
+`GOOGLE_API_KEY` set, scoring is the markdown judge — one cached checklist per
+document (shared with every other engine, so if the reference run already
+built it, it is free) plus one verdict call per document. Without the key,
+scoring falls back to the deterministic F1 automatically — same run, judge
+quality traded for zero judge cost.
+
+`--engines tesseract,docling --tiers easy --skip-judge`
+: entirely free: local engines, deterministic text/tables/markdown scoring,
+no API keys at all.
+
+The pattern for spending less: the judge is the main non-engine cost, so run
+cheap first (`--skip-judge`, or just the deterministic legs) to check your
+setup and get rough rankings, and pay for judged runs when the numbers need
+to hold up. `--estimate` prints both parts — engine cost and judge cost —
+before anything is spent.
 
 Full methodology, prompts, and normalisation rules per leg:
 [docs/scoring-design.md](docs/scoring-design.md).
@@ -283,8 +347,9 @@ python run_benchmark.py --rerun-errors
 ```
 
 Useful flags: `--tiers easy,medium,hard`, `--max-docs N` for a quick check,
-`--skip-judge` to run without any Gemini calls (see the scoring table above
-for what that changes), `--workers N` to cap parallelism.
+`--skip-judge` to score markdown/tables deterministically and skip the
+silver-text estimate (schema/key_value stay judged — see the scoring table
+above), `--workers N` to cap parallelism.
 
 **How a run executes.** Local CPU engines go first, one at a time, one document
 at a time — your machine never runs two engines at once (first runs also

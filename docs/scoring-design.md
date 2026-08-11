@@ -108,9 +108,17 @@ qwen3_vl, and paddleocr_vl — whose pipeline output is its own markdown
 rendering with tables embedded as HTML, which the scorer normalises).
 tesseract, textract_text and textract_structured cannot and do not compete.
 
-**Score:** structural, not literal. Compare **which structural elements are
-present and what they contain** — headings, list items, table blocks — plus
-reading order via block sequence. Never string-equality against our markdown.
+**Score:** the headline comes from the **markdown LLM judge** — a checklist of
+the page's structural elements built from the image (checklist model reads the
+page once, cached, shared by all engines), against which each engine's
+markdown is judged. This replaced the deterministic scorer as headline because
+the hand-written references are over-segmented — lease_000 has 52 paragraph
+blocks where a reader sees 12 logical elements, and engines that correctly
+merge text into flowing prose could not match the fragments. The deterministic
+scorer remains as the `--skip-judge` fallback and works as described below:
+structural, not literal. Compare **which structural elements are present and
+what they contain** — headings, list items, table blocks — plus reading order
+via block sequence. Never string-equality against our markdown.
 
 **Normalise:** heading depth, emphasis markers, list bullet style, table
 alignment rows, and trailing punctuation are all ignored. `## Totals` and
@@ -148,8 +156,12 @@ claude_sonnet_4_6, qwen3_vl — the general VLMs' default conversion preserves
 tables as markdown) plus textract_structured through its cell grid. tesseract
 and textract_text produce no table structure.
 
-**Score:** **TEDS** — tree edit distance between the extracted table tree and
-the reference, via `apted`.
+**Score:** the headline comes from the **table LLM judge** — cell accuracy
+against a checklist built from the page image, for the same reason as the
+markdown leg: comparing against our reference HTML punished dialect and
+inherited the reference's own defects. **TEDS** — tree edit distance between
+the extracted table tree and the reference, via `apted` — remains as the
+`--skip-judge` fallback and as a diagnostic printed beside the judge score.
 
 **Normalise:** both sides reduced to a presentation-free grid — `thead`/`tbody`
 unwrapped, `th` treated as `td`, all attributes dropped. Without this an engine
