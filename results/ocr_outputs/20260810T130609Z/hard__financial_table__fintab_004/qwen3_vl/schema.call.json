@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/financial_table/fintab_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"columns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"rows\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"label\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"object\",\n            \"additionalProperties\": {\n              \"type\": \"string\"\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 7.4904517595,
+ "cost_per_page": 0.0051983735210929995,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"columns\": [\n    \"31.10.06\",\n    \"31.10.05\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"Tangible fixed assets\",\n      \"values\": {\n        \"31.10.06\": \"103,703\",\n        \"31.10.05\": \"103,703\"\n      }\n    },\n    {\n      \"label\": \"Ways\",\n      \"values\": {\n        \"31.10.06\": \"(526,593)\",\n        \"31.10.05\": \"(909,006)\"\n      }\n    },\n    {\n      \"label\": \"Qualifications frontpage verify restaurants\",\n      \"values\": {\n        \"31.10.06\": \"920,000\",\n        \"31.10.05\": \"849,404\"\n      }\n    },\n    {\n      \"label\": \"Employees and directors\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Pgp portfolio\",\n      \"values\": {\n        \"31.10.06\": \"310,914\",\n        \"31.10.05\": \"898,400\"\n      }\n    },\n    {\n      \"label\": \"Ntsc cho au mines\",\n      \"values\": {\n        \"31.10.06\": \"7,350\",\n        \"31.10.05\": \"431,909\"\n      }\n    },\n    {\n      \"label\": \"Signatures channel\",\n      \"values\": {\n        \"31.10.06\": \"243,801\",\n        \"31.10.05\": \"789,077\"\n      }\n    },\n    {\n      \"label\": \"Wan ee hard\",\n      \"values\": {\n        \"31.10.06\": \"23,224\",\n        \"31.10.05\": \"18,553\"\n      }\n    },\n    {\n      \"label\": \"Week ecommerce\",\n      \"values\": {\n        \"31.10.06\": \"842,728\",\n        \"31.10.05\": \"842,728\"\n      }\n    },\n    {\n      \"label\": \"Feof adjacent Installation hand\",\n      \"values\": {\n        \"31.10.06\": \"490,239\",\n        \"31.10.05\": \"939,430\"\n      }\n    },\n    {\n      \"label\": \"Creditors: amounts falling due after more than one year\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Effectively blades\",\n      \"values\": {\n        \"31.10.06\": \"223,160\",\n        \"31.10.05\": \"657,374\"\n      }\n    },\n    {\n      \"label\": \"Diy binary runs wx\",\n      \"values\": {\n        \"31.10.06\": \"832,889\",\n        \"31.10.05\": \"458,480\"\n      }\n    },\n    {\n      \"label\": \"Rh fwd ipod wants\",\n      \"values\": {\n        \"31.10.06\": \"230,668\",\n        \"31.10.05\": \"421,815\"\n      }\n    },\n    {\n      \"label\": \"Problems michelle gst\",\n      \"values\": {\n        \"31.10.06\": \"943,223\",\n        \"31.10.05\": \"139,082\"\n      }\n    },\n    {\n      \"label\": \"Actions herself christine erp\",\n      \"values\": {\n        \"31.10.06\": \"516,149\",\n        \"31.10.05\": \"348,315\"\n      }\n    },\n    {\n      \"label\": \"Turnover\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Wage americas electronics cafe\",\n      \"values\": {\n        \"31.10.06\": \"864,166\",\n        \"31.10.05\": \"423,738\"\n      }\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-a95d24fb0fe47e56",
+   "object": "chat.completion",
+   "created": 1786377535,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"columns\": [\n    \"31.10.06\",\n    \"31.10.05\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"Tangible fixed assets\",\n      \"values\": {\n        \"31.10.06\": \"103,703\",\n        \"31.10.05\": \"103,703\"\n      }\n    },\n    {\n      \"label\": \"Ways\",\n      \"values\": {\n        \"31.10.06\": \"(526,593)\",\n        \"31.10.05\": \"(909,006)\"\n      }\n    },\n    {\n      \"label\": \"Qualifications frontpage verify restaurants\",\n      \"values\": {\n        \"31.10.06\": \"920,000\",\n        \"31.10.05\": \"849,404\"\n      }\n    },\n    {\n      \"label\": \"Employees and directors\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Pgp portfolio\",\n      \"values\": {\n        \"31.10.06\": \"310,914\",\n        \"31.10.05\": \"898,400\"\n      }\n    },\n    {\n      \"label\": \"Ntsc cho au mines\",\n      \"values\": {\n        \"31.10.06\": \"7,350\",\n        \"31.10.05\": \"431,909\"\n      }\n    },\n    {\n      \"label\": \"Signatures channel\",\n      \"values\": {\n        \"31.10.06\": \"243,801\",\n        \"31.10.05\": \"789,077\"\n      }\n    },\n    {\n      \"label\": \"Wan ee hard\",\n      \"values\": {\n        \"31.10.06\": \"23,224\",\n        \"31.10.05\": \"18,553\"\n      }\n    },\n    {\n      \"label\": \"Week ecommerce\",\n      \"values\": {\n        \"31.10.06\": \"842,728\",\n        \"31.10.05\": \"842,728\"\n      }\n    },\n    {\n      \"label\": \"Feof adjacent Installation hand\",\n      \"values\": {\n        \"31.10.06\": \"490,239\",\n        \"31.10.05\": \"939,430\"\n      }\n    },\n    {\n      \"label\": \"Creditors: amounts falling due after more than one year\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Effectively blades\",\n      \"values\": {\n        \"31.10.06\": \"223,160\",\n        \"31.10.05\": \"657,374\"\n      }\n    },\n    {\n      \"label\": \"Diy binary runs wx\",\n      \"values\": {\n        \"31.10.06\": \"832,889\",\n        \"31.10.05\": \"458,480\"\n      }\n    },\n    {\n      \"label\": \"Rh fwd ipod wants\",\n      \"values\": {\n        \"31.10.06\": \"230,668\",\n        \"31.10.05\": \"421,815\"\n      }\n    },\n    {\n      \"label\": \"Problems michelle gst\",\n      \"values\": {\n        \"31.10.06\": \"943,223\",\n        \"31.10.05\": \"139,082\"\n      }\n    },\n    {\n      \"label\": \"Actions herself christine erp\",\n      \"values\": {\n        \"31.10.06\": \"516,149\",\n        \"31.10.05\": \"348,315\"\n      }\n    },\n    {\n      \"label\": \"Turnover\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Wage americas electronics cafe\",\n      \"values\": {\n        \"31.10.06\": \"864,166\",\n        \"31.10.05\": \"423,738\"\n      }\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 3265,
+    "total_tokens": 4281,
+    "completion_tokens": 1016,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 7.4904517595,
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "487960dfbcaa4442ae0577bab3ee6854",
+  "batch_gpu_seconds": 179.770842228,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 7.4904517595,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"columns\": [\n    \"31.10.06\",\n    \"31.10.05\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"Tangible fixed assets\",\n      \"values\": {\n        \"31.10.06\": \"103,703\",\n        \"31.10.05\": \"103,703\"\n      }\n    },\n    {\n      \"label\": \"Ways\",\n      \"values\": {\n        \"31.10.06\": \"(526,593)\",\n        \"31.10.05\": \"(909,006)\"\n      }\n    },\n    {\n      \"label\": \"Qualifications frontpage verify restaurants\",\n      \"values\": {\n        \"31.10.06\": \"920,000\",\n        \"31.10.05\": \"849,404\"\n      }\n    },\n    {\n      \"label\": \"Employees and directors\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Pgp portfolio\",\n      \"values\": {\n        \"31.10.06\": \"310,914\",\n        \"31.10.05\": \"898,400\"\n      }\n    },\n    {\n      \"label\": \"Ntsc cho au mines\",\n      \"values\": {\n        \"31.10.06\": \"7,350\",\n        \"31.10.05\": \"431,909\"\n      }\n    },\n    {\n      \"label\": \"Signatures channel\",\n      \"values\": {\n        \"31.10.06\": \"243,801\",\n        \"31.10.05\": \"789,077\"\n      }\n    },\n    {\n      \"label\": \"Wan ee hard\",\n      \"values\": {\n        \"31.10.06\": \"23,224\",\n        \"31.10.05\": \"18,553\"\n      }\n    },\n    {\n      \"label\": \"Week ecommerce\",\n      \"values\": {\n        \"31.10.06\": \"842,728\",\n        \"31.10.05\": \"842,728\"\n      }\n    },\n    {\n      \"label\": \"Feof adjacent Installation hand\",\n      \"values\": {\n        \"31.10.06\": \"490,239\",\n        \"31.10.05\": \"939,430\"\n      }\n    },\n    {\n      \"label\": \"Creditors: amounts falling due after more than one year\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Effectively blades\",\n      \"values\": {\n        \"31.10.06\": \"223,160\",\n        \"31.10.05\": \"657,374\"\n      }\n    },\n    {\n      \"label\": \"Diy binary runs wx\",\n      \"values\": {\n        \"31.10.06\": \"832,889\",\n        \"31.10.05\": \"458,480\"\n      }\n    },\n    {\n      \"label\": \"Rh fwd ipod wants\",\n      \"values\": {\n        \"31.10.06\": \"230,668\",\n        \"31.10.05\": \"421,815\"\n      }\n    },\n    {\n      \"label\": \"Problems michelle gst\",\n      \"values\": {\n        \"31.10.06\": \"943,223\",\n        \"31.10.05\": \"139,082\"\n      }\n    },\n    {\n      \"label\": \"Actions herself christine erp\",\n      \"values\": {\n        \"31.10.06\": \"516,149\",\n        \"31.10.05\": \"348,315\"\n      }\n    },\n    {\n      \"label\": \"Turnover\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Wage americas electronics cafe\",\n      \"values\": {\n        \"31.10.06\": \"864,166\",\n        \"31.10.05\": \"423,738\"\n      }\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-a95d24fb0fe47e56",
+    "object": "chat.completion",
+    "created": 1786377535,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"columns\": [\n    \"31.10.06\",\n    \"31.10.05\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"Tangible fixed assets\",\n      \"values\": {\n        \"31.10.06\": \"103,703\",\n        \"31.10.05\": \"103,703\"\n      }\n    },\n    {\n      \"label\": \"Ways\",\n      \"values\": {\n        \"31.10.06\": \"(526,593)\",\n        \"31.10.05\": \"(909,006)\"\n      }\n    },\n    {\n      \"label\": \"Qualifications frontpage verify restaurants\",\n      \"values\": {\n        \"31.10.06\": \"920,000\",\n        \"31.10.05\": \"849,404\"\n      }\n    },\n    {\n      \"label\": \"Employees and directors\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Pgp portfolio\",\n      \"values\": {\n        \"31.10.06\": \"310,914\",\n        \"31.10.05\": \"898,400\"\n      }\n    },\n    {\n      \"label\": \"Ntsc cho au mines\",\n      \"values\": {\n        \"31.10.06\": \"7,350\",\n        \"31.10.05\": \"431,909\"\n      }\n    },\n    {\n      \"label\": \"Signatures channel\",\n      \"values\": {\n        \"31.10.06\": \"243,801\",\n        \"31.10.05\": \"789,077\"\n      }\n    },\n    {\n      \"label\": \"Wan ee hard\",\n      \"values\": {\n        \"31.10.06\": \"23,224\",\n        \"31.10.05\": \"18,553\"\n      }\n    },\n    {\n      \"label\": \"Week ecommerce\",\n      \"values\": {\n        \"31.10.06\": \"842,728\",\n        \"31.10.05\": \"842,728\"\n      }\n    },\n    {\n      \"label\": \"Feof adjacent Installation hand\",\n      \"values\": {\n        \"31.10.06\": \"490,239\",\n        \"31.10.05\": \"939,430\"\n      }\n    },\n    {\n      \"label\": \"Creditors: amounts falling due after more than one year\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Effectively blades\",\n      \"values\": {\n        \"31.10.06\": \"223,160\",\n        \"31.10.05\": \"657,374\"\n      }\n    },\n    {\n      \"label\": \"Diy binary runs wx\",\n      \"values\": {\n        \"31.10.06\": \"832,889\",\n        \"31.10.05\": \"458,480\"\n      }\n    },\n    {\n      \"label\": \"Rh fwd ipod wants\",\n      \"values\": {\n        \"31.10.06\": \"230,668\",\n        \"31.10.05\": \"421,815\"\n      }\n    },\n    {\n      \"label\": \"Problems michelle gst\",\n      \"values\": {\n        \"31.10.06\": \"943,223\",\n        \"31.10.05\": \"139,082\"\n      }\n    },\n    {\n      \"label\": \"Actions herself christine erp\",\n      \"values\": {\n        \"31.10.06\": \"516,149\",\n        \"31.10.05\": \"348,315\"\n      }\n    },\n    {\n      \"label\": \"Turnover\",\n      \"values\": {}\n    },\n    {\n      \"label\": \"Wage americas electronics cafe\",\n      \"values\": {\n        \"31.10.06\": \"864,166\",\n        \"31.10.05\": \"423,738\"\n      }\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 3265,
+     "total_tokens": 4281,
+     "completion_tokens": 1016,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"columns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"rows\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"label\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"object\",\n            \"additionalProperties\": {\n              \"type\": \"string\"\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+  "gpu_seconds": 7.4904517595,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/financial_table/fintab_004.png",
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true
+ }
+}

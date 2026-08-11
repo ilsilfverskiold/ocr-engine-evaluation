@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"date\",\n    \"lessor\",\n    \"lessee\",\n    \"premises\",\n    \"lease\",\n    \"rent\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date of the lease, formatted as YYYY-MM-DD\"\n    },\n    \"rent\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"monthlyAmount\",\n        \"securityDeposit\"\n      ],\n      \"properties\": {\n        \"monthlyAmount\": {\n          \"type\": \"number\"\n        },\n        \"securityDeposit\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"lease\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"years\",\n        \"months\",\n        \"startDate\",\n        \"endDate\"\n      ],\n      \"properties\": {\n        \"years\": {\n          \"type\": \"number\"\n        },\n        \"months\": {\n          \"type\": \"number\"\n        },\n        \"endDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"End date of the lease, formatted as YYYY-MM-DD\"\n        },\n        \"startDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"Start date of the lease, formatted as YYYY-MM-DD\"\n        }\n      }\n    },\n    \"lessee\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"lessor\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"premises\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"squareFeet\",\n        \"spaceType\",\n        \"streetAddress\"\n      ],\n      \"properties\": {\n        \"spaceType\": {\n          \"enum\": [\n            \"Office Space\",\n            \"Retail Space\",\n            \"Warehouse\",\n            \"Industrial Space\"\n          ],\n          \"type\": \"string\"\n        },\n        \"squareFeet\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 5.648927000002004,
+ "cost_per_page": 0.010692,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"date\": \"2025-05-11\",\n  \"lessor\": {\n    \"name\": \"Jackie Gerhold\",\n    \"streetAddress\": \"653 Woodside Road\",\n    \"state\": \"California\"\n  },\n  \"lessee\": {\n    \"name\": \"Lemke Inc\",\n    \"streetAddress\": \"152 Lettia Landing\",\n    \"state\": \"California\"\n  },\n  \"premises\": {\n    \"squareFeet\": \"9388\",\n    \"spaceType\": \"Office Space\",\n    \"streetAddress\": \"17803 Gorczany Throughway\"\n  },\n  \"lease\": {\n    \"years\": 2,\n    \"months\": 10,\n    \"startDate\": \"2025-05-11\",\n    \"endDate\": \"2028-03-11\"\n  },\n  \"rent\": {\n    \"monthlyAmount\": 3400,\n    \"securityDeposit\": 2089\n  }\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2339,
+  "output_tokens": 245,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduNGqiuoMHbQVD2AtHCm",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"date\": \"2025-05-11\",\n  \"lessor\": {\n    \"name\": \"Jackie Gerhold\",\n    \"streetAddress\": \"653 Woodside Road\",\n    \"state\": \"California\"\n  },\n  \"lessee\": {\n    \"name\": \"Lemke Inc\",\n    \"streetAddress\": \"152 Lettia Landing\",\n    \"state\": \"California\"\n  },\n  \"premises\": {\n    \"squareFeet\": \"9388\",\n    \"spaceType\": \"Office Space\",\n    \"streetAddress\": \"17803 Gorczany Throughway\"\n  },\n  \"lease\": {\n    \"years\": 2,\n    \"months\": 10,\n    \"startDate\": \"2025-05-11\",\n    \"endDate\": \"2028-03-11\"\n  },\n  \"rent\": {\n    \"monthlyAmount\": 3400,\n    \"securityDeposit\": 2089\n  }\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 2339,
+   "output_tokens": 245,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

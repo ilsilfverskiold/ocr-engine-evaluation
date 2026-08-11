@@ -1,0 +1,154 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"date\",\n    \"lessor\",\n    \"lessee\",\n    \"premises\",\n    \"lease\",\n    \"rent\"\n  ],\n  \"properties\": {\n    \"documentTitle\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date of the lease, formatted as YYYY-MM-DD\"\n    },\n    \"rent\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"monthlyAmount\",\n        \"securityDeposit\"\n      ],\n      \"properties\": {\n        \"monthlyAmount\": {\n          \"type\": \"number\"\n        },\n        \"securityDeposit\": {\n          \"type\": \"number\"\n        },\n        \"monthlyAmountPrinted\": {\n          \"type\": \"string\",\n          \"description\": \"Monthly rent as pre-printed in parentheses, with currency symbol\"\n        },\n        \"securityDepositPrinted\": {\n          \"type\": \"string\",\n          \"description\": \"Security deposit as pre-printed in parentheses, with currency symbol\"\n        },\n        \"instalmentDueDay\": {\n          \"type\": \"string\",\n          \"description\": \"Day of the month each instalment falls due, as printed\"\n        }\n      }\n    },\n    \"lease\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"years\",\n        \"months\",\n        \"startDate\",\n        \"endDate\"\n      ],\n      \"properties\": {\n        \"years\": {\n          \"type\": \"number\"\n        },\n        \"months\": {\n          \"type\": \"number\"\n        },\n        \"endDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"End date of the lease, formatted as YYYY-MM-DD\"\n        },\n        \"startDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"Start date of the lease, formatted as YYYY-MM-DD\"\n        },\n        \"commencementDay\": {\n          \"type\": \"string\",\n          \"description\": \"Day number written in the commencement blank\"\n        },\n        \"commencementMonthYear\": {\n          \"type\": \"string\",\n          \"description\": \"Month and year written in the commencement blank\"\n        },\n        \"expirationDay\": {\n          \"type\": \"string\",\n          \"description\": \"Day number written in the expiry blank\"\n        },\n        \"expirationMonthYear\": {\n          \"type\": \"string\",\n          \"description\": \"Month and year written in the expiry blank\"\n        }\n      }\n    },\n    \"lessee\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"lessor\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"premises\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"squareFeet\",\n        \"spaceType\",\n        \"streetAddress\"\n      ],\n      \"properties\": {\n        \"spaceType\": {\n          \"type\": \"string\",\n          \"enum\": [\n            \"Office Space\",\n            \"Retail Space\",\n            \"Warehouse\",\n            \"Industrial Space\"\n          ]\n        },\n        \"squareFeet\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\",\n          \"description\": \"State named in the premises clause\"\n        }\n      }\n    },\n    \"optionsToRenew\": {\n      \"type\": \"object\",\n      \"description\": \"Section 4 checkbox block, recorded exactly as ticked on the page\",\n      \"properties\": {\n        \"renewalNotAllowedChecked\": {\n          \"type\": \"boolean\",\n          \"description\": \"State of the 'Lessee may not renew the Lease.' box\"\n        },\n        \"renewalAllowedChecked\": {\n          \"type\": \"boolean\",\n          \"description\": \"State of the 'The Lessee may have the right to renew...' box\"\n        },\n        \"renewalPeriods\": {\n          \"type\": [\n            \"string\",\n            \"null\"\n          ]\n        },\n        \"renewalYears\": {\n          \"type\": [\n            \"string\",\n            \"null\"\n          ]\n        },\n        \"renewalMonths\": {\n          \"type\": [\n            \"string\",\n            \"null\"\n          ]\n        },\n        \"noticeDays\": {\n          \"type\": \"string\",\n          \"description\": \"Minimum written notice before expiry, as printed\"\n        }\n      }\n    },\n    \"preparedUsing\": {\n      \"type\": \"string\"\n    },\n    \"page\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 4.736166166025214,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"date\": \"2025-04-07\", \"documentTitle\": \"CALIFORNIA COMMERCIAL LEASE AGREEMENT\", \"lessor\": {\"name\": \"Terrence Rogain\", \"streetAddress\": \"76232 S 1st Avenue\", \"state\": \"California\"}, \"lessee\": {\"name\": \"Zieme - Leuschke\", \"streetAddress\": \"2138 Cullen Lock\", \"state\": \"California\"}, \"premises\": {\"spaceType\": \"Retail Space\", \"squareFeet\": \"9664\", \"streetAddress\": \"125 S Broadway Street\", \"state\": \"California\"}, \"lease\": {\"years\": 3, \"months\": 5, \"startDate\": \"2025-04-07\", \"endDate\": \"2028-09-07\", \"commencementDay\": \"7\", \"commencementMonthYear\": \"April 2025\", \"expirationDay\": \"7\", \"expirationMonthYear\": \"September 2028\"}, \"rent\": {\"monthlyAmount\": 2572, \"securityDeposit\": 1180, \"monthlyAmountPrinted\": \"$2572\", \"securityDepositPrinted\": \"$1180\", \"instalmentDueDay\": \"1\"}, \"optionsToRenew\": {\"renewalNotAllowedChecked\": false, \"renewalAllowedChecked\": true, \"renewalPeriods\": \"total of renewal period(s)\", \"renewalYears\": \"year(s)\", \"renewalMonths\": \"month(s)\", \"noticeDays\": \"60\"}, \"preparedUsing\": \"zipForm® software\", \"page\": \"5 of 8\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# CALIFORNIA COMMERCIAL LEASE AGREEMENT\n\nThis Lease Agreement made the 2025-04-07 , by and between Terrence Rogain [name of lessor], of 76232 S 1st Avenue [street address], State of California , hereinafter referred to as \"Lessor\", and Zieme - Leuschke [name of lessee], of 2138 Cullen Lock [street address], State of California , hereinafter referred to as \"Lessee\", collectively referred to herein as the \"Parties\", agree as follows:\n\n# 1. DESCRIPTION OF LEASED PREMISES:\n\nThe Lessor agrees to lease to the Lessee the following described 9664 square feet (SF) of Retail Space located at 125 S Broadway Street [street address], State of California.\n\n# 2. TERM OF LEASE:\n\nThe term of this Lease shall be for a period of 3 year(s) 5 month(s) commencing on the 7 day of April 2025 day of April 2025 , and expiring at Midnight on the 7 day of September 2028 day of September 2028 . (\"Initial Term\")\n\n# 3. BASE RENT:\n\nThe net monthly payment shall be 2572 dollars ($2572) per month. A security deposit of 180 dollars ($1180) is required. payable monthly with the first payment due upon the is required. payable monthly with the first payment due upon the commencement of the Lease and each monthly installment payable thereafter on the 1st day of each month\n\n# 4. Options to Renew (Check one):\n\nLessee may not renew the Lease.\nThe Lessee may have the right to renew the Lease with a total of renewal period(s) with each term being year(s) month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.\n\nPrepared using zipForm® software\n\nPage 5 of 8",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 2183,
+     "width": 1969
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 554,
+      "top_left_y": 245,
+      "bottom_right_x": 1403,
+      "bottom_right_y": 286,
+      "content": "# CALIFORNIA COMMERCIAL LEASE AGREEMENT",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 365,
+      "bottom_right_x": 1801,
+      "bottom_right_y": 616,
+      "content": "This Lease Agreement made the 2025-04-07 , by and between Terrence Rogain [name of lessor], of 76232 S 1st Avenue [street address], State of California , hereinafter referred to as \"Lessor\", and Zieme - Leuschke [name of lessee], of 2138 Cullen Lock [street address], State of California , hereinafter referred to as \"Lessee\", collectively referred to herein as the \"Parties\", agree as follows:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 160,
+      "top_left_y": 671,
+      "bottom_right_x": 798,
+      "bottom_right_y": 710,
+      "content": "# 1. DESCRIPTION OF LEASED PREMISES:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 743,
+      "bottom_right_x": 1774,
+      "bottom_right_y": 885,
+      "content": "The Lessor agrees to lease to the Lessee the following described 9664 square feet (SF) of Retail Space located at 125 S Broadway Street [street address], State of California.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 160,
+      "top_left_y": 931,
+      "bottom_right_x": 475,
+      "bottom_right_y": 968,
+      "content": "# 2. TERM OF LEASE:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 996,
+      "bottom_right_x": 1685,
+      "bottom_right_y": 1211,
+      "content": "The term of this Lease shall be for a period of 3 year(s) 5 month(s) commencing on the 7 day of April 2025 day of April 2025 , and expiring at Midnight on the 7 day of September 2028 day of September 2028 . (\"Initial Term\")",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 162,
+      "top_left_y": 1261,
+      "bottom_right_x": 398,
+      "bottom_right_y": 1296,
+      "content": "# 3. BASE RENT:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 1331,
+      "bottom_right_x": 1801,
+      "bottom_right_y": 1473,
+      "content": "The net monthly payment shall be 2572 dollars ($2572) per month. A security deposit of 180 dollars ($1180) is required. payable monthly with the first payment due upon the is required. payable monthly with the first payment due upon the commencement of the Lease and each monthly installment payable thereafter on the 1st day of each month",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 162,
+      "top_left_y": 1527,
+      "bottom_right_x": 680,
+      "bottom_right_y": 1567,
+      "content": "# 4. Options to Renew (Check one):",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 162,
+      "top_left_y": 1595,
+      "bottom_right_x": 1792,
+      "bottom_right_y": 1779,
+      "content": "Lessee may not renew the Lease.\nThe Lessee may have the right to renew the Lease with a total of renewal period(s) with each term being year(s) month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+      "confidence_scores": null,
+      "type": "list"
+     },
+     {
+      "top_left_x": 166,
+      "top_left_y": 1910,
+      "bottom_right_x": 542,
+      "bottom_right_y": 1943,
+      "content": "Prepared using zipForm® software",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 1648,
+      "top_left_y": 2045,
+      "bottom_right_x": 1778,
+      "bottom_right_y": 2076,
+      "content": "Page 5 of 8",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 838679
+  },
+  "document_annotation": "{\"date\": \"2025-04-07\", \"documentTitle\": \"CALIFORNIA COMMERCIAL LEASE AGREEMENT\", \"lessor\": {\"name\": \"Terrence Rogain\", \"streetAddress\": \"76232 S 1st Avenue\", \"state\": \"California\"}, \"lessee\": {\"name\": \"Zieme - Leuschke\", \"streetAddress\": \"2138 Cullen Lock\", \"state\": \"California\"}, \"premises\": {\"spaceType\": \"Retail Space\", \"squareFeet\": \"9664\", \"streetAddress\": \"125 S Broadway Street\", \"state\": \"California\"}, \"lease\": {\"years\": 3, \"months\": 5, \"startDate\": \"2025-04-07\", \"endDate\": \"2028-09-07\", \"commencementDay\": \"7\", \"commencementMonthYear\": \"April 2025\", \"expirationDay\": \"7\", \"expirationMonthYear\": \"September 2028\"}, \"rent\": {\"monthlyAmount\": 2572, \"securityDeposit\": 1180, \"monthlyAmountPrinted\": \"$2572\", \"securityDepositPrinted\": \"$1180\", \"instalmentDueDay\": \"1\"}, \"optionsToRenew\": {\"renewalNotAllowedChecked\": false, \"renewalAllowedChecked\": true, \"renewalPeriods\": \"total of renewal period(s)\", \"renewalYears\": \"year(s)\", \"renewalMonths\": \"month(s)\", \"noticeDays\": \"60\"}, \"preparedUsing\": \"zipForm® software\", \"page\": \"5 of 8\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

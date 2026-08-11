@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"etfName\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"autoReinvest\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Automatically reinvest dividends\"\n        },\n        \"partialShares\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Allow purchase of fractional shares\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"contactInfo\": {\n          \"type\": \"string\",\n          \"description\": \"Phone number of the client representative\"\n        },\n        \"consultantId\": {\n          \"type\": \"string\",\n          \"description\": \"Client representative id\"\n        },\n        \"consultantName\": {\n          \"type\": \"string\",\n          \"description\": \"Full name of the client representative\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"ytdBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date starting balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.240260134624999,
+ "cost_per_page": 0.0008607405334297493,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"accountInfo\": {\"autoReinvest\": \"YES\", \"partialShares\": \"YES\"}}",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.240260134624999,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "9fe83e24018a4e3ab3800633cd302f4d",
+  "batch_gpu_seconds": 29.766243230999976,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.240260134624999,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"accountInfo\": {\"autoReinvest\": \"YES\", \"partialShares\": \"YES\"}}",
+  "structured_output": {},
+  "gpu_seconds": 1.240260134624999,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_004.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

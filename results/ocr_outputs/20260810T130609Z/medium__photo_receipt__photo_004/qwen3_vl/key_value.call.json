@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_004.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "response_format": "json",
+ "json_schema_sent": false,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.862737404250008,
+ "cost_per_page": 0.004068739758549505,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"Groblersdal Mall\": \"Superspar\",\n  \"Tel\": \"03 262 2494\",\n  \"Tel\": \"03 262 2495\",\n  \"VAT\": \"4740276029\",\n  \"Customer\": \"Loyalty Customer\",\n  \"L/STAR TOMATO\": \"400GR 49.98 *\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.586kg @ 92.91 R/kg 54.49 A\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.560kg @ 92.91 R/kg 52.07 A\",\n  \"KNORR SOUP\": \"50GR 23.96 A\",\n  \"ROYCO SMOKEY BBQ TOMATOES LOOSE\": \"40GR 20.99 A\",\n  \"BEEF LIVER\": \"1.216kg @ 49.91 R/kg 60.79 A\",\n  \"ONIONS LOOSE\": \"0.838kg @ 12.91 R/kg 10.89 *\",\n  \"SPAR MILK F/CR\": \"1LT 19.49 *\",\n  \"LIQUI FRUIT M/OR\": \"300ML 16.99 A\",\n  \"KOO BAKED BEANS\": \"410GR 35.98 A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"Loyalty Number\": \"8888157274367\",\n  \"POINTS EARNED: This Sale\": \"189\",\n  \"VAT rate excl.\": \"0.00% 121.37\",\n  \"TAX\": \"0.00\",\n  \"VAT rate incl.\": \"15.00% 226.69 34.00 260.69 A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"Hi mosothoane. Card Number\": \"*******6482. Thank you for swiping your SPAR Rewards Card.\",\n  \"SLIP / TILL / CASHIER / DATE / TIME\": \"2338 003 113 04.04.24 15:12\",\n  \"CASHIER NAME\": \"Ntswiki Mogadime\",\n  \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALI. SUPERSPAR\": \"HAVE A LOVELY DAY!\",\n  \"Cell No\": \"Good Products, Good Service, Good Advice\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-9c02009f7a89ffc1",
+   "object": "chat.completion",
+   "created": 1786375956,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"Groblersdal Mall\": \"Superspar\",\n  \"Tel\": \"03 262 2494\",\n  \"Tel\": \"03 262 2495\",\n  \"VAT\": \"4740276029\",\n  \"Customer\": \"Loyalty Customer\",\n  \"L/STAR TOMATO\": \"400GR 49.98 *\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.586kg @ 92.91 R/kg 54.49 A\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.560kg @ 92.91 R/kg 52.07 A\",\n  \"KNORR SOUP\": \"50GR 23.96 A\",\n  \"ROYCO SMOKEY BBQ TOMATOES LOOSE\": \"40GR 20.99 A\",\n  \"BEEF LIVER\": \"1.216kg @ 49.91 R/kg 60.79 A\",\n  \"ONIONS LOOSE\": \"0.838kg @ 12.91 R/kg 10.89 *\",\n  \"SPAR MILK F/CR\": \"1LT 19.49 *\",\n  \"LIQUI FRUIT M/OR\": \"300ML 16.99 A\",\n  \"KOO BAKED BEANS\": \"410GR 35.98 A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"Loyalty Number\": \"8888157274367\",\n  \"POINTS EARNED: This Sale\": \"189\",\n  \"VAT rate excl.\": \"0.00% 121.37\",\n  \"TAX\": \"0.00\",\n  \"VAT rate incl.\": \"15.00% 226.69 34.00 260.69 A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"Hi mosothoane. Card Number\": \"*******6482. Thank you for swiping your SPAR Rewards Card.\",\n  \"SLIP / TILL / CASHIER / DATE / TIME\": \"2338 003 113 04.04.24 15:12\",\n  \"CASHIER NAME\": \"Ntswiki Mogadime\",\n  \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALI. SUPERSPAR\": \"HAVE A LOVELY DAY!\",\n  \"Cell No\": \"Good Products, Good Service, Good Advice\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 2090,
+    "total_tokens": 2780,
+    "completion_tokens": 690,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.862737404250008,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "109550d600c9445b9b188cd754fc064c",
+  "batch_gpu_seconds": 140.70569770200018,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.862737404250008,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"Groblersdal Mall\": \"Superspar\",\n  \"Tel\": \"03 262 2494\",\n  \"Tel\": \"03 262 2495\",\n  \"VAT\": \"4740276029\",\n  \"Customer\": \"Loyalty Customer\",\n  \"L/STAR TOMATO\": \"400GR 49.98 *\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.586kg @ 92.91 R/kg 54.49 A\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.560kg @ 92.91 R/kg 52.07 A\",\n  \"KNORR SOUP\": \"50GR 23.96 A\",\n  \"ROYCO SMOKEY BBQ TOMATOES LOOSE\": \"40GR 20.99 A\",\n  \"BEEF LIVER\": \"1.216kg @ 49.91 R/kg 60.79 A\",\n  \"ONIONS LOOSE\": \"0.838kg @ 12.91 R/kg 10.89 *\",\n  \"SPAR MILK F/CR\": \"1LT 19.49 *\",\n  \"LIQUI FRUIT M/OR\": \"300ML 16.99 A\",\n  \"KOO BAKED BEANS\": \"410GR 35.98 A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"Loyalty Number\": \"8888157274367\",\n  \"POINTS EARNED: This Sale\": \"189\",\n  \"VAT rate excl.\": \"0.00% 121.37\",\n  \"TAX\": \"0.00\",\n  \"VAT rate incl.\": \"15.00% 226.69 34.00 260.69 A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"Hi mosothoane. Card Number\": \"*******6482. Thank you for swiping your SPAR Rewards Card.\",\n  \"SLIP / TILL / CASHIER / DATE / TIME\": \"2338 003 113 04.04.24 15:12\",\n  \"CASHIER NAME\": \"Ntswiki Mogadime\",\n  \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALI. SUPERSPAR\": \"HAVE A LOVELY DAY!\",\n  \"Cell No\": \"Good Products, Good Service, Good Advice\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-9c02009f7a89ffc1",
+    "object": "chat.completion",
+    "created": 1786375956,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"Groblersdal Mall\": \"Superspar\",\n  \"Tel\": \"03 262 2494\",\n  \"Tel\": \"03 262 2495\",\n  \"VAT\": \"4740276029\",\n  \"Customer\": \"Loyalty Customer\",\n  \"L/STAR TOMATO\": \"400GR 49.98 *\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.586kg @ 92.91 R/kg 54.49 A\",\n  \"CHIEF'S CHOICE INDULINA W PKG\": \"0.560kg @ 92.91 R/kg 52.07 A\",\n  \"KNORR SOUP\": \"50GR 23.96 A\",\n  \"ROYCO SMOKEY BBQ TOMATOES LOOSE\": \"40GR 20.99 A\",\n  \"BEEF LIVER\": \"1.216kg @ 49.91 R/kg 60.79 A\",\n  \"ONIONS LOOSE\": \"0.838kg @ 12.91 R/kg 10.89 *\",\n  \"SPAR MILK F/CR\": \"1LT 19.49 *\",\n  \"LIQUI FRUIT M/OR\": \"300ML 16.99 A\",\n  \"KOO BAKED BEANS\": \"410GR 35.98 A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"Loyalty Number\": \"8888157274367\",\n  \"POINTS EARNED: This Sale\": \"189\",\n  \"VAT rate excl.\": \"0.00% 121.37\",\n  \"TAX\": \"0.00\",\n  \"VAT rate incl.\": \"15.00% 226.69 34.00 260.69 A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"Hi mosothoane. Card Number\": \"*******6482. Thank you for swiping your SPAR Rewards Card.\",\n  \"SLIP / TILL / CASHIER / DATE / TIME\": \"2338 003 113 04.04.24 15:12\",\n  \"CASHIER NAME\": \"Ntswiki Mogadime\",\n  \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALI. SUPERSPAR\": \"HAVE A LOVELY DAY!\",\n  \"Cell No\": \"Good Products, Good Service, Good Advice\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 2090,
+     "total_tokens": 2780,
+     "completion_tokens": 690,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "gpu_seconds": 5.862737404250008,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_004.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

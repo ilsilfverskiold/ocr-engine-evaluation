@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"ytdPriceChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"stocks\": {\n          \"enum\": [\n            \"AVERAGE\",\n            \"FIFO\",\n            \"LIFO\",\n            \"Specific\",\n            \"HighCost\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Default Tax Method for Stocks in a Dividend Reinvestment Plan (DRIP)\"\n        },\n        \"discountMethod\": {\n          \"enum\": [\n            \"Straight\",\n            \"Constant\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Accrual market discount method for all other bond types\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"consultantId\": {\n          \"type\": \"string\",\n          \"description\": \"Client representative id\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"ytdBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date starting balance of the portfolio\"\n        },\n        \"currentPeriodBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current starting balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"tableData\": [],\n  \"accountInfo\": {\n    \"stocks\": \"FIFO\",\n    \"discountMethod\": \"Straight\"\n  },\n  \"institution\": \"Macquarie Group\",\n  \"clientServices\": {\n    \"consultantId\": \"El1yLRl47\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 31604.7,\n        \"description\": \"Realized Capital Gains\",\n        \"currentPeriod\": 28027.63\n      },\n      {\n        \"yearToDate\": 80653.09,\n        \"description\": \"Tactical Rebalancing\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 15728.45,\n        \"description\": \"Interest Earnings\",\n        \"currentPeriod\": 14638.22\n      },\n      {\n        \"yearToDate\": -27354.75,\n        \"description\": \"Scheduled Withdrawals\",\n        \"currentPeriod\": -314.83\n      },\n      {\n        \"yearToDate\": 121350.4,\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 51066.05\n      },\n      {\n        \"yearToDate\": -50595.05,\n        \"description\": \"Account Maintenance Fees\",\n        \"currentPeriod\": 0\n      }\n    ],\n    \"ytdEndingBalance\": 730693.84,\n    \"ytdBeginningBalance\": 559307,\n    \"currentPeriodBeginningBalance\": 370320\n  }\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-a92791acd2977eee",
+   "object": "chat.completion",
+   "created": 1786376426,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"tableData\": [],\n  \"accountInfo\": {\n    \"stocks\": \"FIFO\",\n    \"discountMethod\": \"Straight\"\n  },\n  \"institution\": \"Macquarie Group\",\n  \"clientServices\": {\n    \"consultantId\": \"El1yLRl47\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 31604.7,\n        \"description\": \"Realized Capital Gains\",\n        \"currentPeriod\": 28027.63\n      },\n      {\n        \"yearToDate\": 80653.09,\n        \"description\": \"Tactical Rebalancing\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 15728.45,\n        \"description\": \"Interest Earnings\",\n        \"currentPeriod\": 14638.22\n      },\n      {\n        \"yearToDate\": -27354.75,\n        \"description\": \"Scheduled Withdrawals\",\n        \"currentPeriod\": -314.83\n      },\n      {\n        \"yearToDate\": 121350.4,\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 51066.05\n      },\n      {\n        \"yearToDate\": -50595.05,\n        \"description\": \"Account Maintenance Fees\",\n        \"currentPeriod\": 0\n      }\n    ],\n    \"ytdEndingBalance\": 730693.84,\n    \"ytdBeginningBalance\": 559307,\n    \"currentPeriodBeginningBalance\": 370320\n  }\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 11447,
+    "total_tokens": 11822,
+    "completion_tokens": 375,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"tableData\": [],\n  \"accountInfo\": {\n    \"stocks\": \"FIFO\",\n    \"discountMethod\": \"Straight\"\n  },\n  \"institution\": \"Macquarie Group\",\n  \"clientServices\": {\n    \"consultantId\": \"El1yLRl47\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 31604.7,\n        \"description\": \"Realized Capital Gains\",\n        \"currentPeriod\": 28027.63\n      },\n      {\n        \"yearToDate\": 80653.09,\n        \"description\": \"Tactical Rebalancing\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 15728.45,\n        \"description\": \"Interest Earnings\",\n        \"currentPeriod\": 14638.22\n      },\n      {\n        \"yearToDate\": -27354.75,\n        \"description\": \"Scheduled Withdrawals\",\n        \"currentPeriod\": -314.83\n      },\n      {\n        \"yearToDate\": 121350.4,\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 51066.05\n      },\n      {\n        \"yearToDate\": -50595.05,\n        \"description\": \"Account Maintenance Fees\",\n        \"currentPeriod\": 0\n      }\n    ],\n    \"ytdEndingBalance\": 730693.84,\n    \"ytdBeginningBalance\": 559307,\n    \"currentPeriodBeginningBalance\": 370320\n  }\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-a92791acd2977eee",
+    "object": "chat.completion",
+    "created": 1786376426,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"tableData\": [],\n  \"accountInfo\": {\n    \"stocks\": \"FIFO\",\n    \"discountMethod\": \"Straight\"\n  },\n  \"institution\": \"Macquarie Group\",\n  \"clientServices\": {\n    \"consultantId\": \"El1yLRl47\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 31604.7,\n        \"description\": \"Realized Capital Gains\",\n        \"currentPeriod\": 28027.63\n      },\n      {\n        \"yearToDate\": 80653.09,\n        \"description\": \"Tactical Rebalancing\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 15728.45,\n        \"description\": \"Interest Earnings\",\n        \"currentPeriod\": 14638.22\n      },\n      {\n        \"yearToDate\": -27354.75,\n        \"description\": \"Scheduled Withdrawals\",\n        \"currentPeriod\": -314.83\n      },\n      {\n        \"yearToDate\": 121350.4,\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 51066.05\n      },\n      {\n        \"yearToDate\": -50595.05,\n        \"description\": \"Account Maintenance Fees\",\n        \"currentPeriod\": 0\n      }\n    ],\n    \"ytdEndingBalance\": 730693.84,\n    \"ytdBeginningBalance\": 559307,\n    \"currentPeriodBeginningBalance\": 370320\n  }\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 11447,
+     "total_tokens": 11822,
+     "completion_tokens": 375,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"ytdPriceChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"stocks\": {\n          \"enum\": [\n            \"AVERAGE\",\n            \"FIFO\",\n            \"LIFO\",\n            \"Specific\",\n            \"HighCost\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Default Tax Method for Stocks in a Dividend Reinvestment Plan (DRIP)\"\n        },\n        \"discountMethod\": {\n          \"enum\": [\n            \"Straight\",\n            \"Constant\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Accrual market discount method for all other bond types\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"consultantId\": {\n          \"type\": \"string\",\n          \"description\": \"Client representative id\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"ytdBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date starting balance of the portfolio\"\n        },\n        \"currentPeriodBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current starting balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_003.png",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

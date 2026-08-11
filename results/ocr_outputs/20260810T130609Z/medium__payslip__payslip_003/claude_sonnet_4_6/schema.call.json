@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"grandTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Grand Total\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 15.766347500029951,
+ "cost_per_page": 0.020091,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2026-01\",\n  \"distNumber\": \"465861\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Ellen Cassin-Hahn III\",\n      \"idNumber\": \"9959969283\",\n      \"sfmCode\": \"543582\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Jackie Bechtelar\",\n      \"idNumber\": \"4430267226\",\n      \"sfmCode\": \"215197\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Estelle Price\",\n      \"idNumber\": \"7952229840\",\n      \"sfmCode\": \"751716\",\n      \"sales\": 3578.00,\n      \"total\": 3578.00,\n      \"grandTotal\": 4114.70,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Freda Jacobson\",\n      \"idNumber\": \"4607562519\",\n      \"sfmCode\": \"380948\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Roger Smith\",\n      \"idNumber\": \"6848749229\",\n      \"sfmCode\": \"979151\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Mr. Kim Veum\",\n      \"idNumber\": \"4908905096\",\n      \"sfmCode\": \"850318\",\n      \"sales\": 4584.00,\n      \"total\": 4584.00,\n      \"grandTotal\": 5271.60,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Bernice Grady PhD\",\n      \"idNumber\": \"3777397080\",\n      \"sfmCode\": \"433979\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kristin Nienow\",\n      \"idNumber\": \"1354157655\",\n      \"sfmCode\": \"847073\",\n      \"sales\": 2158.00,\n      \"total\": 2158.00,\n      \"grandTotal\": 2481.70,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Wesley Douglas\",\n      \"idNumber\": \"2254324813\",\n      \"sfmCode\": \"239919\",\n      \"sales\": 2621.00,\n      \"total\": 2500.00,\n      \"grandTotal\": 2500.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Darrell Medhurst\",\n      \"idNumber\": \"1198930306\",\n      \"sfmCode\": \"436334\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Clinton Doyle\",\n      \"idNumber\": \"1694377270\",\n      \"sfmCode\": \"455045\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1977,
+  "output_tokens": 944,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduNW97YQ7jbHxNn3wkDk",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2026-01\",\n  \"distNumber\": \"465861\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Ellen Cassin-Hahn III\",\n      \"idNumber\": \"9959969283\",\n      \"sfmCode\": \"543582\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Jackie Bechtelar\",\n      \"idNumber\": \"4430267226\",\n      \"sfmCode\": \"215197\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Estelle Price\",\n      \"idNumber\": \"7952229840\",\n      \"sfmCode\": \"751716\",\n      \"sales\": 3578.00,\n      \"total\": 3578.00,\n      \"grandTotal\": 4114.70,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Freda Jacobson\",\n      \"idNumber\": \"4607562519\",\n      \"sfmCode\": \"380948\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Roger Smith\",\n      \"idNumber\": \"6848749229\",\n      \"sfmCode\": \"979151\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Mr. Kim Veum\",\n      \"idNumber\": \"4908905096\",\n      \"sfmCode\": \"850318\",\n      \"sales\": 4584.00,\n      \"total\": 4584.00,\n      \"grandTotal\": 5271.60,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Bernice Grady PhD\",\n      \"idNumber\": \"3777397080\",\n      \"sfmCode\": \"433979\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kristin Nienow\",\n      \"idNumber\": \"1354157655\",\n      \"sfmCode\": \"847073\",\n      \"sales\": 2158.00,\n      \"total\": 2158.00,\n      \"grandTotal\": 2481.70,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Wesley Douglas\",\n      \"idNumber\": \"2254324813\",\n      \"sfmCode\": \"239919\",\n      \"sales\": 2621.00,\n      \"total\": 2500.00,\n      \"grandTotal\": 2500.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Darrell Medhurst\",\n      \"idNumber\": \"1198930306\",\n      \"sfmCode\": \"436334\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Clinton Doyle\",\n      \"idNumber\": \"1694377270\",\n      \"sfmCode\": \"455045\",\n      \"sales\": null,\n      \"total\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1977,
+   "output_tokens": 944,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

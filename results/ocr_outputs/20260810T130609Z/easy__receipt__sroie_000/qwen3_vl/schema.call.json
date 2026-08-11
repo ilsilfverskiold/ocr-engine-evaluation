@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_000.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"email\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"sales_person\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"price\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_exclude_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_inclusive_gst\": {\n      \"type\": \"string\"\n    },\n    \"round_amount\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment_method\": {\n      \"type\": \"string\"\n    },\n    \"payment_amount\": {\n      \"type\": \"string\"\n    },\n    \"card_number\": {\n      \"type\": \"string\"\n    },\n    \"approval_code\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 2.898089343374996,
+ "cost_per_page": 0.0020112740043022473,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 6218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD B05\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00 SR\",\n      \"tax_code\": \"@6%\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-ab0fc9dc72c50af6",
+   "object": "chat.completion",
+   "created": 1786376118,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 6218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD B05\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00 SR\",\n      \"tax_code\": \"@6%\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 920,
+    "total_tokens": 1330,
+    "completion_tokens": 410,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 2.898089343374996,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "b0be464066f342f1846b735e9e16870b",
+  "batch_gpu_seconds": 69.5541442409999,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 2.898089343374996,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 6218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD B05\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00 SR\",\n      \"tax_code\": \"@6%\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-ab0fc9dc72c50af6",
+    "object": "chat.completion",
+    "created": 1786376118,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 6218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD B05\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00 SR\",\n      \"tax_code\": \"@6%\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 920,
+     "total_tokens": 1330,
+     "completion_tokens": 410,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"email\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"sales_person\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"price\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_exclude_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_inclusive_gst\": {\n      \"type\": \"string\"\n    },\n    \"round_amount\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment_method\": {\n      \"type\": \"string\"\n    },\n    \"payment_amount\": {\n      \"type\": \"string\"\n    },\n    \"card_number\": {\n      \"type\": \"string\"\n    },\n    \"approval_code\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+  "gpu_seconds": 2.898089343374996,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_000.jpg",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

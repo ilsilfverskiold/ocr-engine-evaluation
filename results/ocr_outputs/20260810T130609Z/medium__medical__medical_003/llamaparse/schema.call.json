@@ -1,0 +1,286 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"zip\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's ZIP code as it appears\"\n    },\n    \"city\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's city as it appears\"\n    },\n    \"state\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's state as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"socialHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"doYouSmoke\",\n        \"doYouDrink\",\n        \"doYouExercise\"\n      ],\n      \"properties\": {\n        \"doYouDrink\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient drinks, must return true or false\"\n        },\n        \"doYouSmoke\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient smokes, must return true or false\"\n        },\n        \"packsPerWeek\": {\n          \"type\": \"number\",\n          \"description\": \"If applicable, number of packs per week\"\n        },\n        \"doYouExercise\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient exercises regularly, must return true or false\"\n        }\n      },\n      \"description\": \"Overview of patient's social history\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"chills\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chills, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"fatigue\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced fatigue, must return true or false\"\n        },\n        \"calfPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced calf pain, must return true or false\"\n        },\n        \"seizures\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced seizures, must return true or false\"\n        },\n        \"allergies\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has allergies, must return true or false\"\n        },\n        \"blackOuts\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blackouts, must return true or false\"\n        },\n        \"musclePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced muscle pain, must return true or false\"\n        },\n        \"blurredVision\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blurred vision, must return true or false\"\n        },\n        \"jointSwelling\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced joint swelling, must return true or false\"\n        },\n        \"dentalProblems\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced dental problems, must return true or false\"\n        },\n        \"coughingUpBlood\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has coughed up blood, must return true or false\"\n        },\n        \"excessiveStress\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive stress, must return true or false\"\n        },\n        \"excessiveThirst\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive thirst, must return true or false\"\n        },\n        \"excessiveBruising\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive bruising, must return true or false\"\n        },\n        \"shortnessOfBreath\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced shortness of breath, must return true or false\"\n        },\n        \"irregularHeartRate\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced an irregular heart rate, must return true or false\"\n        },\n        \"stomachTroubleOrUlcers\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced stomach trouble or ulcers, must return true or false\"\n        },\n        \"difficultyEmptyingBowelOrBladder\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has difficulty emptying their bowel or bladder, must return true or false\"\n        },\n        \"weightGainOrLossGreaterThan10Lbs\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced weight gain or loss greater than 10 pounds, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 24.40923066693358,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"zip\": \"96795\", \"city\": \"Waimanalo\", \"state\": \"HI\", \"address\": \"2213 1/2 Mulberry Dr\", \"lastName\": \"Anderson\", \"firstName\": \"Daniel\", \"maritalStatus\": \"Widowed\", \"socialHistory\": {\"doYouDrink\": true, \"doYouSmoke\": false, \"doYouExercise\": false}, \"reviewOfSymptoms\": {\"chills\": false, \"eyePain\": true, \"fatigue\": false, \"calfPain\": false, \"seizures\": false, \"allergies\": false, \"blackOuts\": true, \"musclePain\": false, \"blurredVision\": false, \"jointSwelling\": true, \"dentalProblems\": true, \"coughingUpBlood\": true, \"excessiveStress\": true, \"excessiveThirst\": false, \"excessiveBruising\": false, \"shortnessOfBreath\": true, \"irregularHeartRate\": true, \"stomachTroubleOrUlcers\": false, \"difficultyEmptyingBowelOrBladder\": false, \"weightGainOrLossGreaterThan10Lbs\": false}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:19:07.351553+00:00",
+  "data": {
+   "zip": "96795",
+   "city": "Waimanalo",
+   "state": "HI",
+   "address": "2213 1/2 Mulberry Dr",
+   "lastName": "Anderson",
+   "firstName": "Daniel",
+   "maritalStatus": "Widowed",
+   "socialHistory": {
+    "doYouDrink": true,
+    "doYouSmoke": false,
+    "doYouExercise": false
+   },
+   "reviewOfSymptoms": {
+    "chills": false,
+    "eyePain": true,
+    "fatigue": false,
+    "calfPain": false,
+    "seizures": false,
+    "allergies": false,
+    "blackOuts": true,
+    "musclePain": false,
+    "blurredVision": false,
+    "jointSwelling": true,
+    "dentalProblems": true,
+    "coughingUpBlood": true,
+    "excessiveStress": true,
+    "excessiveThirst": false,
+    "excessiveBruising": false,
+    "shortnessOfBreath": true,
+    "irregularHeartRate": true,
+    "stomachTroubleOrUlcers": false,
+    "difficultyEmptyingBowelOrBladder": false,
+    "weightGainOrLossGreaterThan10Lbs": false
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "zip": {
+     "description": "Patient's ZIP code as it appears",
+     "type": "string"
+    },
+    "city": {
+     "description": "Patient's city as it appears",
+     "type": "string"
+    },
+    "state": {
+     "description": "Patient's state as it appears",
+     "type": "string"
+    },
+    "address": {
+     "description": "Street address of the patient as it appears, only including number and street",
+     "type": "string"
+    },
+    "lastName": {
+     "description": "Patient's last name",
+     "type": "string"
+    },
+    "firstName": {
+     "description": "Patient's first name",
+     "type": "string"
+    },
+    "maritalStatus": {
+     "description": "Patient's marital status",
+     "type": "string"
+    },
+    "socialHistory": {
+     "description": "Overview of patient's social history",
+     "type": "object",
+     "properties": {
+      "doYouDrink": {
+       "description": "Indicates if patient drinks, must return true or false",
+       "type": "boolean"
+      },
+      "doYouSmoke": {
+       "description": "Indicates if patient smokes, must return true or false",
+       "type": "boolean"
+      },
+      "packsPerWeek": {
+       "description": "If applicable, number of packs per week",
+       "type": "number"
+      },
+      "doYouExercise": {
+       "description": "Indicates if patient exercises regularly, must return true or false",
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "doYouSmoke",
+      "doYouDrink",
+      "doYouExercise"
+     ],
+     "additionalProperties": false
+    },
+    "reviewOfSymptoms": {
+     "description": "Indicates if specific symptoms are present or not",
+     "type": "object",
+     "properties": {
+      "chills": {
+       "description": "Indicates if patient has experienced chills, must return true or false",
+       "type": "boolean"
+      },
+      "eyePain": {
+       "description": "Indicates if patient has experienced eye pain, must return true or false",
+       "type": "boolean"
+      },
+      "fatigue": {
+       "description": "Indicates if patient has experienced fatigue, must return true or false",
+       "type": "boolean"
+      },
+      "calfPain": {
+       "description": "Indicates if patient has experienced calf pain, must return true or false",
+       "type": "boolean"
+      },
+      "seizures": {
+       "description": "Indicates if patient has experienced seizures, must return true or false",
+       "type": "boolean"
+      },
+      "allergies": {
+       "description": "Indicates if patient has allergies, must return true or false",
+       "type": "boolean"
+      },
+      "blackOuts": {
+       "description": "Indicates if patient has experienced blackouts, must return true or false",
+       "type": "boolean"
+      },
+      "musclePain": {
+       "description": "Indicates if patient has experienced muscle pain, must return true or false",
+       "type": "boolean"
+      },
+      "blurredVision": {
+       "description": "Indicates if patient has experienced blurred vision, must return true or false",
+       "type": "boolean"
+      },
+      "jointSwelling": {
+       "description": "Indicates if patient has experienced joint swelling, must return true or false",
+       "type": "boolean"
+      },
+      "dentalProblems": {
+       "description": "Indicates if patient has experienced dental problems, must return true or false",
+       "type": "boolean"
+      },
+      "coughingUpBlood": {
+       "description": "Indicates if patient has coughed up blood, must return true or false",
+       "type": "boolean"
+      },
+      "excessiveStress": {
+       "description": "Indicates if patient has experienced excessive stress, must return true or false",
+       "type": "boolean"
+      },
+      "excessiveThirst": {
+       "description": "Indicates if patient has experienced excessive thirst, must return true or false",
+       "type": "boolean"
+      },
+      "excessiveBruising": {
+       "description": "Indicates if patient has experienced excessive bruising, must return true or false",
+       "type": "boolean"
+      },
+      "shortnessOfBreath": {
+       "description": "Indicates if patient has experienced shortness of breath, must return true or false",
+       "type": "boolean"
+      },
+      "irregularHeartRate": {
+       "description": "Indicates if patient has experienced an irregular heart rate, must return true or false",
+       "type": "boolean"
+      },
+      "stomachTroubleOrUlcers": {
+       "description": "Indicates if patient has experienced stomach trouble or ulcers, must return true or false",
+       "type": "boolean"
+      },
+      "difficultyEmptyingBowelOrBladder": {
+       "description": "Indicates if patient has difficulty emptying their bowel or bladder, must return true or false",
+       "type": "boolean"
+      },
+      "weightGainOrLossGreaterThan10Lbs": {
+       "description": "Indicates if patient has experienced weight gain or loss greater than 10 pounds, must return true or false",
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "chills",
+      "eyePain",
+      "fatigue",
+      "calfPain",
+      "seizures",
+      "allergies",
+      "blackOuts",
+      "musclePain",
+      "blurredVision",
+      "jointSwelling",
+      "dentalProblems",
+      "coughingUpBlood",
+      "excessiveStress",
+      "excessiveThirst",
+      "excessiveBruising",
+      "shortnessOfBreath",
+      "irregularHeartRate",
+      "stomachTroubleOrUlcers",
+      "difficultyEmptyingBowelOrBladder",
+      "weightGainOrLossGreaterThan10Lbs"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "firstName",
+    "lastName",
+    "address"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "9a278963-1315-42e8-8cd9-6597ef93dad3",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 730,
+    "num_output_tokens": 219
+   },
+   "parse_job_id": "a2913117-4401-4ad1-bcac-fd40028f11d4"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "67d4ef9c-5d51-49a0-861a-517022c59d52",
+  "from_ui": false,
+  "id": "21d5d273-f1c9-41d4-bed2-f3e90e84daa2",
+  "job_id": "55346611-7006-42ae-a770-c821380809e2",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:19:27.083687+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

@@ -1,0 +1,375 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/scanned_legacy/scanned_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"division\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"security_notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CC\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Ref\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"blend_percent\": {\n      \"type\": \"array\",\n      \"description\": \"Blend (%) sub-block of the trial table, one entry per component\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"component\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"specifications\": {\n      \"type\": \"array\",\n      \"description\": \"Remaining rows of the trial table, one entry per printed row\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"parameter\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          },\n          \"common\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"description\": \"Value printed once across both columns, null when each trial has its own value\"\n          }\n        }\n      }\n    },\n    \"signature_initials\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"typist_reference\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"document_code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp_date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"bates_number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"TO\",\n    \"FROM\",\n    \"DATE\",\n    \"SUBJECT\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 23.63285120902583,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"company\": \"BROWN & WILLIAMSON TOBACCO CORPORATION\", \"division\": \"RESEARCH & DEVELOPMENT\", \"document_type\": \"INTERNAL CORRESPONDENCE\", \"security_notice\": \"SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\", \"TO\": \"MR. P. H. HARPER\", \"CC\": \"MR. T. E. SANDEFUR\\nDR. P. L. AULBACH\", \"FROM\": \"MR. D. S. ROTH\", \"DATE\": \"JANUARY 13, 1983\", \"SUBJECT\": \"KENT 80/KS TAR REDUCTION - FINLAND/907\", \"Ref\": \"S/R 107/82\", \"blend_percent\": [{\"component\": \"MGLF-31\", \"trial_1\": \"69.9\", \"trial_2\": \"69.9\"}, {\"component\": \"Oriental\", \"trial_1\": \"10.3\", \"trial_2\": \"10.3\"}, {\"component\": \"MRT\", \"trial_1\": \"5.0\", \"trial_2\": \"0.0\"}, {\"component\": \"F.C. WTS\", \"trial_1\": \"14.8\", \"trial_2\": \"19.8\"}], \"specifications\": [{\"parameter\": \"Final Casing\", \"trial_1\": \"MGE-651\", \"trial_2\": \"MGE-651\", \"common\": \"MGE-651\"}, {\"parameter\": \"Final Flavor\", \"trial_1\": \"MGE-603\", \"trial_2\": \"MGE-603\", \"common\": \"MGE-603\"}, {\"parameter\": \"Cigarette Paper\", \"trial_1\": \"Current KENT\", \"trial_2\": \"\", \"common\": \"Current KENT\"}, {\"parameter\": \"Density\", \"trial_1\": \"KENT GOLDEN LIGHTS (Less 2%)\", \"trial_2\": \"\", \"common\": \"KENT GOLDEN LIGHTS (Less 2%)\"}, {\"parameter\": \"Filter Tow\", \"trial_1\": \"KENT GOLDEN LIGHTS\", \"trial_2\": \"\", \"common\": \"KENT GOLDEN LIGHTS\"}, {\"parameter\": \"Plugwrap\", \"trial_1\": \"9500 Coresta\", \"trial_2\": \"\", \"common\": \"9500 Coresta\"}, {\"parameter\": \"Tipping\", \"trial_1\": \"1100 Coresta MMP*\", \"trial_2\": \"\", \"common\": \"1100 Coresta MMP\"}, {\"parameter\": \"Vent Target\", \"trial_1\": \"42-44%\", \"trial_2\": \"\", \"common\": \"42-44%\"}], \"signature_initials\": \"D. S. R.\", \"typist_reference\": \"DSR/bfw\", \"document_code\": null, \"received_stamp\": \"RECEIVED\", \"received_stamp_date\": \"JAN 1 8 1983\", \"bates_number\": \"620441151\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:43:36.395831+00:00",
+  "data": {
+   "company": "BROWN & WILLIAMSON TOBACCO CORPORATION",
+   "division": "RESEARCH & DEVELOPMENT",
+   "document_type": "INTERNAL CORRESPONDENCE",
+   "security_notice": "SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.",
+   "TO": "MR. P. H. HARPER",
+   "CC": "MR. T. E. SANDEFUR\nDR. P. L. AULBACH",
+   "FROM": "MR. D. S. ROTH",
+   "DATE": "JANUARY 13, 1983",
+   "SUBJECT": "KENT 80/KS TAR REDUCTION - FINLAND/907",
+   "Ref": "S/R 107/82",
+   "blend_percent": [
+    {
+     "component": "MGLF-31",
+     "trial_1": "69.9",
+     "trial_2": "69.9"
+    },
+    {
+     "component": "Oriental",
+     "trial_1": "10.3",
+     "trial_2": "10.3"
+    },
+    {
+     "component": "MRT",
+     "trial_1": "5.0",
+     "trial_2": "0.0"
+    },
+    {
+     "component": "F.C. WTS",
+     "trial_1": "14.8",
+     "trial_2": "19.8"
+    }
+   ],
+   "specifications": [
+    {
+     "parameter": "Final Casing",
+     "trial_1": "MGE-651",
+     "trial_2": "MGE-651",
+     "common": "MGE-651"
+    },
+    {
+     "parameter": "Final Flavor",
+     "trial_1": "MGE-603",
+     "trial_2": "MGE-603",
+     "common": "MGE-603"
+    },
+    {
+     "parameter": "Cigarette Paper",
+     "trial_1": "Current KENT",
+     "trial_2": "",
+     "common": "Current KENT"
+    },
+    {
+     "parameter": "Density",
+     "trial_1": "KENT GOLDEN LIGHTS (Less 2%)",
+     "trial_2": "",
+     "common": "KENT GOLDEN LIGHTS (Less 2%)"
+    },
+    {
+     "parameter": "Filter Tow",
+     "trial_1": "KENT GOLDEN LIGHTS",
+     "trial_2": "",
+     "common": "KENT GOLDEN LIGHTS"
+    },
+    {
+     "parameter": "Plugwrap",
+     "trial_1": "9500 Coresta",
+     "trial_2": "",
+     "common": "9500 Coresta"
+    },
+    {
+     "parameter": "Tipping",
+     "trial_1": "1100 Coresta MMP*",
+     "trial_2": "",
+     "common": "1100 Coresta MMP"
+    },
+    {
+     "parameter": "Vent Target",
+     "trial_1": "42-44%",
+     "trial_2": "",
+     "common": "42-44%"
+    }
+   ],
+   "signature_initials": "D. S. R.",
+   "typist_reference": "DSR/bfw",
+   "document_code": null,
+   "received_stamp": "RECEIVED",
+   "received_stamp_date": "JAN 1 8 1983",
+   "bates_number": "620441151"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "company": {
+     "type": "string"
+    },
+    "division": {
+     "type": "string"
+    },
+    "document_type": {
+     "type": "string"
+    },
+    "security_notice": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "TO": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "CC": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "FROM": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "DATE": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "SUBJECT": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Ref": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "blend_percent": {
+     "description": "Blend (%) sub-block of the trial table, one entry per component",
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "component": {
+        "type": "string"
+       },
+       "trial_1": {
+        "type": "string"
+       },
+       "trial_2": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component",
+       "trial_1",
+       "trial_2"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "specifications": {
+     "description": "Remaining rows of the trial table, one entry per printed row",
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "parameter": {
+        "type": "string"
+       },
+       "trial_1": {
+        "type": "string"
+       },
+       "trial_2": {
+        "type": "string"
+       },
+       "common": {
+        "description": "Value printed once across both columns, null when each trial has its own value",
+        "anyOf": [
+         {
+          "type": "string"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "parameter",
+       "trial_1",
+       "trial_2",
+       "common"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "signature_initials": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "typist_reference": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "document_code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "received_stamp": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "received_stamp_date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "bates_number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "TO",
+    "FROM",
+    "DATE",
+    "SUBJECT"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "3fe65ba1-fe22-4b4c-91ef-8d40504e01b3",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 538,
+    "num_output_tokens": 778
+   },
+   "parse_job_id": "f1db9fe7-2f1b-4f77-bef8-6f80a50e924c"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "d1a5af74-0090-4144-87bd-7ab55289016a",
+  "from_ui": false,
+  "id": "4e855366-2a1a-4e3b-8ad4-b8b06ad44e0e",
+  "job_id": "c2cb0b4f-ecc5-4026-8288-263c87de2584",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:43:55.755590+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

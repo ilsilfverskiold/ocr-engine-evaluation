@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBMISSION DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"REGION\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVISION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"DIVISION NAME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"# REP\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"DISTRIBUTION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 4.949452625005506,
+ "cost_per_page": 0.007560000000000001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"D. J. Landro\",\n  \"SUBMISSION DATE\": \"JUN 23\",\n  \"SUBJECT\": \"OLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT\",\n  \"REGION\": null,\n  \"DIVISION\": [\n    {\n      \"DIVISION NAME\": \"Milw. South\",\n      \"# REP\": \"7\"\n    },\n    {\n      \"DIVISION NAME\": \"Milw. North\",\n      \"# REP\": \"7\"\n    }\n  ],\n  \"DISTRIBUTION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Walgreen Drug\",\n      \"IND/LOR VOLUME\": \"144/14\",\n      \"NO. OF STORES\": \"93\"\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1425,
+  "output_tokens": 219,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduPhmUVVJ5tns7sSvnxh",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"D. J. Landro\",\n  \"SUBMISSION DATE\": \"JUN 23\",\n  \"SUBJECT\": \"OLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT\",\n  \"REGION\": null,\n  \"DIVISION\": [\n    {\n      \"DIVISION NAME\": \"Milw. South\",\n      \"# REP\": \"7\"\n    },\n    {\n      \"DIVISION NAME\": \"Milw. North\",\n      \"# REP\": \"7\"\n    }\n  ],\n  \"DISTRIBUTION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Walgreen Drug\",\n      \"IND/LOR VOLUME\": \"144/14\",\n      \"NO. OF STORES\": \"93\"\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1425,
+   "output_tokens": 219,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

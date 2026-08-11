@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"symbol\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"closingPrice\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"oneDayChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"contactInfo\": {\n          \"type\": \"string\",\n          \"description\": \"Phone number of the client representative\"\n        },\n        \"consultantName\": {\n          \"type\": \"string\",\n          \"description\": \"Full name of the client representative\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 10.597347499919124,
+ "cost_per_page": 0.015768,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial\",\n  \"clientServices\": {\n    \"contactInfo\": \"(119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -44186.57,\n        \"yearToDate\": -51065.10\n      },\n      {\n        \"description\": \"Unrealized Capital Gains\",\n        \"currentPeriod\": 5180.37,\n        \"yearToDate\": 107527.40\n      },\n      {\n        \"description\": \"Total Portfolio Performance\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -212041.40\n      },\n      {\n        \"description\": \"Reinvested Dividends\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": 55968.00\n      },\n      {\n        \"description\": \"Strategic Rebalancing\",\n        \"currentPeriod\": 926.29,\n        \"yearToDate\": 20993.63\n      },\n      {\n        \"description\": \"Distributions\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -19454.85\n      },\n      {\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 45983.90,\n        \"yearToDate\": 72674.00\n      },\n      {\n        \"description\": \"Other Expenditures (Gains)\",\n        \"currentPeriod\": -30448.23,\n        \"yearToDate\": -42531.10\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2221,
+  "output_tokens": 607,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduJPshhizZAxdiLNDuR6",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial\",\n  \"clientServices\": {\n    \"contactInfo\": \"(119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -44186.57,\n        \"yearToDate\": -51065.10\n      },\n      {\n        \"description\": \"Unrealized Capital Gains\",\n        \"currentPeriod\": 5180.37,\n        \"yearToDate\": 107527.40\n      },\n      {\n        \"description\": \"Total Portfolio Performance\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -212041.40\n      },\n      {\n        \"description\": \"Reinvested Dividends\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": 55968.00\n      },\n      {\n        \"description\": \"Strategic Rebalancing\",\n        \"currentPeriod\": 926.29,\n        \"yearToDate\": 20993.63\n      },\n      {\n        \"description\": \"Distributions\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -19454.85\n      },\n      {\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 45983.90,\n        \"yearToDate\": 72674.00\n      },\n      {\n        \"description\": \"Other Expenditures (Gains)\",\n        \"currentPeriod\": -30448.23,\n        \"yearToDate\": -42531.10\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 2221,
+   "output_tokens": 607,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

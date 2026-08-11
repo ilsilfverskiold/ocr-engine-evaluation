@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_002.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"company_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"gst_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"customer\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"cashier_no\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"unit_price_excluding_gst\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"subtotal\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_excluding_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_inclusive_of_gst\": {\n      \"type\": \"string\"\n    },\n    \"rounding_adjustment\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment\": {\n      \"type\": \"string\"\n    },\n    \"change_due\": {\n      \"type\": \"string\"\n    },\n    \"total_items\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"rate\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 9.558028333005495,
+ "cost_per_page": 0.013269,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"company\": \"SIN LIANHAP SDN BHD\",\n  \"address\": \"LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA, 44300 BTG KALI, SELANGOR\",\n  \"tel\": \"03-60752222\",\n  \"fax\": \"03-60752572\",\n  \"company_reg_no\": \"284922-D\",\n  \"gst_reg_no\": \"001610833920\",\n  \"document_type\": \"TAX INVOICE\",\n  \"customer\": \"CASH CUSTOMER\",\n  \"invoice_no\": \"H0003939\",\n  \"date\": \"05/02/2018\",\n  \"cashier_no\": null,\n  \"items\": [\n    {\n      \"description\": \"PPD 4MM DENLIME\",\n      \"unit_price_excluding_gst\": \"1.887\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1.000 PC\",\n      \"amount\": \"2.00\"\n    },\n    {\n      \"description\": \"6023# GARDEN\",\n      \"unit_price_excluding_gst\": \"5.000\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1.000 PC\",\n      \"amount\": \"5.30\"\n    }\n  ],\n  \"subtotal\": \"7.30\",\n  \"total_sales_excluding_gst\": \"6.89\",\n  \"total_sales_inclusive_of_gst\": \"7.30\",\n  \"rounding_adjustment\": \"0.00\",\n  \"total\": \"7.30\",\n  \"payment\": \"7.30\",\n  \"change_due\": \"0.00\",\n  \"total_items\": \"2\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"rate\": \"6\",\n      \"amount\": \"6.89\",\n      \"tax\": \"0.41\"\n    }\n  ],\n  \"stamp\": \"SIN LIANHAP SDN BHD PAID stamp\"\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1813,
+  "output_tokens": 522,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduJFHDKHgSEkYuBW3aJS",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"company\": \"SIN LIANHAP SDN BHD\",\n  \"address\": \"LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA, 44300 BTG KALI, SELANGOR\",\n  \"tel\": \"03-60752222\",\n  \"fax\": \"03-60752572\",\n  \"company_reg_no\": \"284922-D\",\n  \"gst_reg_no\": \"001610833920\",\n  \"document_type\": \"TAX INVOICE\",\n  \"customer\": \"CASH CUSTOMER\",\n  \"invoice_no\": \"H0003939\",\n  \"date\": \"05/02/2018\",\n  \"cashier_no\": null,\n  \"items\": [\n    {\n      \"description\": \"PPD 4MM DENLIME\",\n      \"unit_price_excluding_gst\": \"1.887\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1.000 PC\",\n      \"amount\": \"2.00\"\n    },\n    {\n      \"description\": \"6023# GARDEN\",\n      \"unit_price_excluding_gst\": \"5.000\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1.000 PC\",\n      \"amount\": \"5.30\"\n    }\n  ],\n  \"subtotal\": \"7.30\",\n  \"total_sales_excluding_gst\": \"6.89\",\n  \"total_sales_inclusive_of_gst\": \"7.30\",\n  \"rounding_adjustment\": \"0.00\",\n  \"total\": \"7.30\",\n  \"payment\": \"7.30\",\n  \"change_due\": \"0.00\",\n  \"total_items\": \"2\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"rate\": \"6\",\n      \"amount\": \"6.89\",\n      \"tax\": \"0.41\"\n    }\n  ],\n  \"stamp\": \"SIN LIANHAP SDN BHD PAID stamp\"\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1813,
+   "output_tokens": 522,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

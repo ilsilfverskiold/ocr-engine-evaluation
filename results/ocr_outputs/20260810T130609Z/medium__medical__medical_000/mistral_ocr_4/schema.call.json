@@ -1,0 +1,274 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"dob\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's date of birth as it appears\"\n    },\n    \"zip\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's ZIP code as it appears\"\n    },\n    \"city\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's city as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"spousePhone\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's phone number as it appear\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"previousHealthHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"primaryCarePhysician\"\n      ],\n      \"properties\": {\n        \"lastSeenDate\": {\n          \"type\": \"string\",\n          \"description\": \"Date last seen by physician\"\n        },\n        \"prescriptionDrugs\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"other\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              },\n              \"description\": \"List of other prescription drugs that patient uses, must return null if not provided\"\n            },\n            \"insulin\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses insulin, must return true or false\"\n            },\n            \"dietPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses diet pills, must return true or false\"\n            },\n            \"painPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses pain pills, must return true or false\"\n            },\n            \"muscleRelaxers\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses muscle relaxers, must return true or false\"\n            },\n            \"antidepressants\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses antidepressants, must return true or false\"\n            },\n            \"antiInflammatory\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses anti-inflammatories, must return true or false\"\n            },\n            \"birthControlPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses birth control, must return true or false\"\n            },\n            \"bloodSugarMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood sugar medication, must return true or false\"\n            },\n            \"bloodPressureMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood pressure medication, must return true or false\"\n            }\n          },\n          \"description\": \"Details of prescription drugs currently taken\"\n        },\n        \"accidentsOrInjuries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of accidents or injuries that patient has experienced, must return null if not provided\"\n        },\n        \"overTheCounterDrugs\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of over-the-counter drugs that patient uses, must return null if not provided\"\n        },\n        \"primaryCarePhysician\": {\n          \"type\": \"string\",\n          \"description\": \"Name of primary care physician\"\n        },\n        \"vitaminsOrSupplements\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of vitamins or supplements that patient takes, must return null if not provided\"\n        },\n        \"receivedAcupunctureCare\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient received acupuncture care, must return true or false\"\n        },\n        \"receivedChiropracticCare\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient received chiropractic care, must return true or false\"\n        }\n      },\n      \"description\": \"Details of patient's previous health history\"\n    },\n    \"financialResponsibility\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"patientSignature\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"isSigned\"\n          ],\n          \"properties\": {\n            \"date\": {\n              \"type\": \"string\",\n              \"description\": \"Date the patient signed the form\"\n            },\n            \"isSigned\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if the patient has signed the form, must return true or false\"\n            }\n          },\n          \"description\": \"Details of the patient's signature\"\n        },\n        \"insuranceCompanyDetails\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"name\"\n          ],\n          \"properties\": {\n            \"name\": {\n              \"type\": \"string\",\n              \"description\": \"Name of the insurance\"\n            }\n          },\n          \"description\": \"Details of the patient's insurance\"\n        }\n      },\n      \"description\": \"Details of financial responsibility for the patient\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 16.18116420903243,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"firstName\": \"Jessica\", \"lastName\": \"Smith\", \"address\": \"9665A Otter Dr\", \"city\": \"Waldport\", \"zip\": \"97394\", \"dob\": \"November 2, 1997\", \"maritalStatus\": \"Widowed\", \"spousePhone\": null, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Emily Brown\", \"lastSeenDate\": \"03/29/1959\", \"prescriptionDrugs\": {\"antidepressants\": false, \"birthControlPills\": false, \"dietPills\": true, \"muscleRelaxers\": false, \"painPills\": false, \"antiInflammatory\": true, \"bloodPressureMedication\": false, \"bloodSugarMedication\": true, \"insulin\": true, \"other\": null}, \"overTheCounterDrugs\": [\"monistat\", \"motrin\"], \"accidentsOrInjuries\": [\"dog bite\"], \"vitaminsOrSupplements\": [\"vitamin b3\"], \"receivedChiropracticCare\": false, \"receivedAcupunctureCare\": false}, \"financialResponsibility\": {\"insuranceCompanyDetails\": {\"name\": \"Priority Health\"}, \"patientSignature\": {\"isSigned\": true, \"date\": \"10/30/1957\"}}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Patient Information Form\n\n|  First Name: Jessica | Last Name: Smith  |   |\n| --- | --- | --- |\n|  Marital Status: Single ☐ Married ☐ Divorced ☐ Separated ☑ Widowed ☐  |   |   |\n|  Address: 9665A Otter Dr  |   |   |\n|  City: Waldport | State: Oregon | Zip: 97394  |\n|  Phone: 2719832850 | DOB: November 2, 1997  |   |\n|  Spouse Name: | Spouse Phone:  |   |\n\nIs the requested medication NEW ☐ or a CONTINUATION ☑ of THERAPY? If so, start date: __________\n\nHave you been hospitalized in the past year? Yes ☐ No ☑\n\n# Previous Health History\n\n|  Primary Care Physician: Dr. Emily Brown | Last Seen Date: 03/29/1959  |\n| --- | --- |\n\nHave you received chiropractic care? Yes ☐ No ☑\n\nHave you received acupuncture care? Yes ☐ No ☑\n\nPrescription Drugs:\n\nAntidepressants ☐\n\nBirth Control Pills ☐\n\nDiet Pills ☑\n\nMuscle Relaxers ☐\n\nPain Pills ☐\n\nOther:\n\nAnti Inflammatory ☑\n\nBlood Pressure Medication ☐\n\nBlood Sugar Medication ☑\n\nInsulin ☑\n\nSleeping Pills ☐\n\nOver-The-Counter Drugs: monistat, motrin\n\nAccidents Or Injuries: dog bite\n\nVitamins Or Supplements: vitamin b3\n\n# Financial Responsibility\n\n|  Responsible Party: Other | Type Of Insurance: Automobile | Insurance Company: Priority Health  |\n| --- | --- | --- |\n|  Insurance Address: 5339 Sequoia Square  |   |   |\n|  Insurance Phone: 705 188-7583 | Group #: LN59C | Member ID: 1QOSXUU56G  |\n|  Patient Signature: | Social Security #: 811476374 | Date: 10/30/1957  |\n|  Guardian Signature: | Guardian Social Security #: | Date:  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 4284,
+     "width": 5712
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 2407,
+      "top_left_y": 279,
+      "bottom_right_x": 3088,
+      "bottom_right_y": 339,
+      "content": "# Patient Information Form",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 354,
+      "top_left_y": 369,
+      "bottom_right_x": 5169,
+      "bottom_right_y": 1051,
+      "content": "|  First Name: Jessica | Last Name: Smith  |   |\n| --- | --- | --- |\n|  Marital Status: Single ☐ Married ☐ Divorced ☐ Separated ☑ Widowed ☐  |   |   |\n|  Address: 9665A Otter Dr  |   |   |\n|  City: Waldport | State: Oregon | Zip: 97394  |\n|  Phone: 2719832850 | DOB: November 2, 1997  |   |\n|  Spouse Name: | Spouse Phone:  |   |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 314,
+      "top_left_y": 1094,
+      "bottom_right_x": 2950,
+      "bottom_right_y": 1166,
+      "content": "Is the requested medication NEW ☐ or a CONTINUATION ☑ of THERAPY? If so, start date: __________",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 314,
+      "top_left_y": 1222,
+      "bottom_right_x": 1704,
+      "bottom_right_y": 1295,
+      "content": "Have you been hospitalized in the past year? Yes ☐ No ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 314,
+      "top_left_y": 1364,
+      "bottom_right_x": 915,
+      "bottom_right_y": 1432,
+      "content": "# Previous Health History",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 303,
+      "top_left_y": 1475,
+      "bottom_right_x": 5226,
+      "bottom_right_y": 1595,
+      "content": "|  Primary Care Physician: Dr. Emily Brown | Last Seen Date: 03/29/1959  |\n| --- | --- |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 297,
+      "top_left_y": 1660,
+      "bottom_right_x": 1521,
+      "bottom_right_y": 1732,
+      "content": "Have you received chiropractic care? Yes ☐ No ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 292,
+      "top_left_y": 1788,
+      "bottom_right_x": 1521,
+      "bottom_right_y": 1861,
+      "content": "Have you received acupuncture care? Yes ☐ No ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 297,
+      "top_left_y": 1930,
+      "bottom_right_x": 760,
+      "bottom_right_y": 1998,
+      "content": "Prescription Drugs:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 292,
+      "top_left_y": 2028,
+      "bottom_right_x": 760,
+      "bottom_right_y": 2093,
+      "content": "Antidepressants ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 292,
+      "top_left_y": 2110,
+      "bottom_right_x": 806,
+      "bottom_right_y": 2174,
+      "content": "Birth Control Pills ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 286,
+      "top_left_y": 2196,
+      "bottom_right_x": 595,
+      "bottom_right_y": 2260,
+      "content": "Diet Pills ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 280,
+      "top_left_y": 2281,
+      "bottom_right_x": 760,
+      "bottom_right_y": 2346,
+      "content": "Muscle Relaxers ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 274,
+      "top_left_y": 2367,
+      "bottom_right_x": 589,
+      "bottom_right_y": 2431,
+      "content": "Pain Pills ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 269,
+      "top_left_y": 2453,
+      "bottom_right_x": 423,
+      "bottom_right_y": 2513,
+      "content": "Other:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2767,
+      "top_left_y": 2007,
+      "bottom_right_x": 3293,
+      "bottom_right_y": 2076,
+      "content": "Anti Inflammatory ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2767,
+      "top_left_y": 2093,
+      "bottom_right_x": 3494,
+      "bottom_right_y": 2153,
+      "content": "Blood Pressure Medication ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2767,
+      "top_left_y": 2174,
+      "bottom_right_x": 3436,
+      "bottom_right_y": 2238,
+      "content": "Blood Sugar Medication ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2767,
+      "top_left_y": 2260,
+      "bottom_right_x": 3025,
+      "bottom_right_y": 2324,
+      "content": "Insulin ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2767,
+      "top_left_y": 2346,
+      "bottom_right_x": 3185,
+      "bottom_right_y": 2414,
+      "content": "Sleeping Pills ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 252,
+      "top_left_y": 2594,
+      "bottom_right_x": 1315,
+      "bottom_right_y": 2676,
+      "content": "Over-The-Counter Drugs: monistat, motrin",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 252,
+      "top_left_y": 2723,
+      "bottom_right_x": 1023,
+      "bottom_right_y": 2800,
+      "content": "Accidents Or Injuries: dog bite",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 246,
+      "top_left_y": 2847,
+      "bottom_right_x": 1184,
+      "bottom_right_y": 2920,
+      "content": "Vitamins Or Supplements: vitamin b3",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 223,
+      "top_left_y": 3015,
+      "bottom_right_x": 852,
+      "bottom_right_y": 3088,
+      "content": "# Financial Responsibility",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 3130,
+      "bottom_right_x": 5358,
+      "bottom_right_y": 3778,
+      "content": "|  Responsible Party: Other | Type Of Insurance: Automobile | Insurance Company: Priority Health  |\n| --- | --- | --- |\n|  Insurance Address: 5339 Sequoia Square  |   |   |\n|  Insurance Phone: 705 188-7583 | Group #: LN59C | Member ID: 1QOSXUU56G  |\n|  Patient Signature: | Social Security #: 811476374 | Date: 10/30/1957  |\n|  Guardian Signature: | Guardian Social Security #: | Date:  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 18442265
+  },
+  "document_annotation": "{\"firstName\": \"Jessica\", \"lastName\": \"Smith\", \"address\": \"9665A Otter Dr\", \"city\": \"Waldport\", \"zip\": \"97394\", \"dob\": \"November 2, 1997\", \"maritalStatus\": \"Widowed\", \"spousePhone\": null, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Emily Brown\", \"lastSeenDate\": \"03/29/1959\", \"prescriptionDrugs\": {\"antidepressants\": false, \"birthControlPills\": false, \"dietPills\": true, \"muscleRelaxers\": false, \"painPills\": false, \"antiInflammatory\": true, \"bloodPressureMedication\": false, \"bloodSugarMedication\": true, \"insulin\": true, \"other\": null}, \"overTheCounterDrugs\": [\"monistat\", \"motrin\"], \"accidentsOrInjuries\": [\"dog bite\"], \"vitaminsOrSupplements\": [\"vitamin b3\"], \"receivedChiropracticCare\": false, \"receivedAcupunctureCare\": false}, \"financialResponsibility\": {\"insuranceCompanyDetails\": {\"name\": \"Priority Health\"}, \"patientSignature\": {\"isSigned\": true, \"date\": \"10/30/1957\"}}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

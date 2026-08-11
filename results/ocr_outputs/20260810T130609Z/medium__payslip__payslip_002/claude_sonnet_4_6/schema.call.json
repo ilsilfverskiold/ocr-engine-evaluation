@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 15.589140249998309,
+ "cost_per_page": 0.021200999999999998,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-09\",\n  \"distNumber\": \"359396\",\n  \"manager\": \"Kim Abernathy\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Blake McLaughlin\",\n      \"idNumber\": \"9689414383\",\n      \"sfmCode\": \"165296\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Holly Lind\",\n      \"idNumber\": \"3466054262\",\n      \"sfmCode\": \"173068\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Mathew Littel\",\n      \"idNumber\": \"3950820184\",\n      \"sfmCode\": \"540188\",\n      \"sales\": 2210.00,\n      \"total\": 2210.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Homer Goyette\",\n      \"idNumber\": \"1200040391\",\n      \"sfmCode\": \"715373\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Eula Hintz\",\n      \"idNumber\": \"2118768308\",\n      \"sfmCode\": \"528564\",\n      \"sales\": 1140.00,\n      \"total\": 1119.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Jeffrey Blanda\",\n      \"idNumber\": \"3109403621\",\n      \"sfmCode\": \"503684\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Marjorie Sanford\",\n      \"idNumber\": \"7436294303\",\n      \"sfmCode\": \"114025\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Jasmine Johnston\",\n      \"idNumber\": \"2694407508\",\n      \"sfmCode\": \"321175\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Andrea Weimann\",\n      \"idNumber\": \"6150707543\",\n      \"sfmCode\": \"274772\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Travis Wisoky\",\n      \"idNumber\": \"6928799821\",\n      \"sfmCode\": \"449858\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Chad Howell\",\n      \"idNumber\": \"1111741445\",\n      \"sfmCode\": \"974534\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Rick Koelpin\",\n      \"idNumber\": \"5024605886\",\n      \"sfmCode\": \"639258\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Carolyn Medhurst\",\n      \"idNumber\": \"5501728225\",\n      \"sfmCode\": \"845196\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Virginia Ward\",\n      \"idNumber\": \"6616015097\",\n      \"sfmCode\": \"323433\",\n      \"sales\": 2803.00,\n      \"total\": 2803.00,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1912,
+  "output_tokens": 1031,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduNTZryqkkzhhMbAFFWr",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-09\",\n  \"distNumber\": \"359396\",\n  \"manager\": \"Kim Abernathy\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Blake McLaughlin\",\n      \"idNumber\": \"9689414383\",\n      \"sfmCode\": \"165296\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Holly Lind\",\n      \"idNumber\": \"3466054262\",\n      \"sfmCode\": \"173068\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Mathew Littel\",\n      \"idNumber\": \"3950820184\",\n      \"sfmCode\": \"540188\",\n      \"sales\": 2210.00,\n      \"total\": 2210.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Homer Goyette\",\n      \"idNumber\": \"1200040391\",\n      \"sfmCode\": \"715373\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Eula Hintz\",\n      \"idNumber\": \"2118768308\",\n      \"sfmCode\": \"528564\",\n      \"sales\": 1140.00,\n      \"total\": 1119.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Jeffrey Blanda\",\n      \"idNumber\": \"3109403621\",\n      \"sfmCode\": \"503684\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Marjorie Sanford\",\n      \"idNumber\": \"7436294303\",\n      \"sfmCode\": \"114025\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Jasmine Johnston\",\n      \"idNumber\": \"2694407508\",\n      \"sfmCode\": \"321175\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Andrea Weimann\",\n      \"idNumber\": \"6150707543\",\n      \"sfmCode\": \"274772\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Travis Wisoky\",\n      \"idNumber\": \"6928799821\",\n      \"sfmCode\": \"449858\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Chad Howell\",\n      \"idNumber\": \"1111741445\",\n      \"sfmCode\": \"974534\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Rick Koelpin\",\n      \"idNumber\": \"5024605886\",\n      \"sfmCode\": \"639258\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Carolyn Medhurst\",\n      \"idNumber\": \"5501728225\",\n      \"sfmCode\": \"845196\",\n      \"sales\": null,\n      \"total\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Virginia Ward\",\n      \"idNumber\": \"6616015097\",\n      \"sfmCode\": \"323433\",\n      \"sales\": 2803.00,\n      \"total\": 2803.00,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1912,
+   "output_tokens": 1031,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

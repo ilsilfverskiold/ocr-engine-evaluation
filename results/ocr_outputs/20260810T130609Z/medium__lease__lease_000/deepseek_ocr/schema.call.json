@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"date\",\n    \"lessor\",\n    \"lessee\",\n    \"premises\",\n    \"lease\",\n    \"rent\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date of the lease, formatted as YYYY-MM-DD\"\n    },\n    \"rent\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"monthlyAmount\",\n        \"securityDeposit\"\n      ],\n      \"properties\": {\n        \"monthlyAmount\": {\n          \"type\": \"number\"\n        },\n        \"securityDeposit\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"lease\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"years\",\n        \"months\",\n        \"startDate\",\n        \"endDate\"\n      ],\n      \"properties\": {\n        \"years\": {\n          \"type\": \"number\"\n        },\n        \"months\": {\n          \"type\": \"number\"\n        },\n        \"endDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"End date of the lease, formatted as YYYY-MM-DD\"\n        },\n        \"startDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"Start date of the lease, formatted as YYYY-MM-DD\"\n        }\n      }\n    },\n    \"lessee\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"lessor\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"premises\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"squareFeet\",\n        \"spaceType\",\n        \"streetAddress\"\n      ],\n      \"properties\": {\n        \"spaceType\": {\n          \"enum\": [\n            \"Office Space\",\n            \"Retail Space\",\n            \"Warehouse\",\n            \"Industrial Space\"\n          ],\n          \"type\": \"string\"\n        },\n        \"squareFeet\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.240260134624999,
+ "cost_per_page": 0.0008607405334297493,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"date\":\"2025-12-31\",\"rent\":{\"monthlyAmount\":9750,\"securityDeposit\":0},\"lease\":{\"years\":3,\"months\":12,\"endDate\":\"2025-12-31\",\"startDate\":\"2025-12-31\"},\"lessee\":{\"name\":\"John Doe\",\"state\":\"California\",\"streetAddress\":\"123 Main St\"},\"lessor\":{\"name\":\"Jane Smith\",\"state\":\"California\",\"streetAddress\":\"456 Elm St\"},\"premises\":{\"spaceType\":\"Office Space\",\"squareFeet\":  \"1000\",\"streetAddress\":\"123 Main St\"} }",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.240260134624999,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "9fe83e24018a4e3ab3800633cd302f4d",
+  "batch_gpu_seconds": 29.766243230999976,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.240260134624999,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"date\":\"2025-12-31\",\"rent\":{\"monthlyAmount\":9750,\"securityDeposit\":0},\"lease\":{\"years\":3,\"months\":12,\"endDate\":\"2025-12-31\",\"startDate\":\"2025-12-31\"},\"lessee\":{\"name\":\"John Doe\",\"state\":\"California\",\"streetAddress\":\"123 Main St\"},\"lessor\":{\"name\":\"Jane Smith\",\"state\":\"California\",\"streetAddress\":\"456 Elm St\"},\"premises\":{\"spaceType\":\"Office Space\",\"squareFeet\":  \"1000\",\"streetAddress\":\"123 Main St\"} }",
+  "structured_output": {},
+  "gpu_seconds": 1.240260134624999,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_000.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

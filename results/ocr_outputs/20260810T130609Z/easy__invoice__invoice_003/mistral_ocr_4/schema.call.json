@@ -1,0 +1,210 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 6.645850125001743,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"26343874\", \"invoice_date\": \"2013-07-17\", \"seller\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\", \"client\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\", \"seller_tax_id\": \"916-97-6743\", \"client_tax_id\": \"913-80-4636\", \"iban\": \"GB78TZMX55978564099007\"}, \"items\": [{\"item_desc\": \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great\", \"item_qty\": \"5\", \"item_net_price\": \"249.00\", \"item_net_worth\": \"1245.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1369.50\"}, {\"item_desc\": \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\", \"item_qty\": \"5\", \"item_net_price\": \"100.00\", \"item_net_worth\": \"500.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"550.00\"}, {\"item_desc\": \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\", \"item_qty\": \"4\", \"item_net_price\": \"252.00\", \"item_net_worth\": \"1008.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1108.80\"}, {\"item_desc\": \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\", \"item_qty\": \"2\", \"item_net_price\": \"130.00\", \"item_net_worth\": \"260.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"286.00\"}, {\"item_desc\": \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\", \"item_qty\": \"1\", \"item_net_price\": \"159.99\", \"item_net_worth\": \"159.99\", \"item_vat\": \"10%\", \"item_gross_worth\": \"175.99\"}], \"summary\": {\"total_net_worth\": \"3172.99\", \"total_vat\": \"317.30\", \"total_gross_worth\": \"3490.29\"}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 26343874\n\nDate of issue:\n\n07/17/2013\n\nSeller:\n\nSmith Ltd\n\n290 Jodi Gardens\n\nCharlesview, TN 10958\n\nTax Id: 916-97-6743\n\nIBAN: GB78TZMX55978564099007\n\nClient:\n\nHerring-Floyd\n\n8113 Hansen Cliff Apt. 826\n\nPort Alice, ID 99663\n\nTax Id: 913-80-4636\n\nITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787 | 5,00 | each | 249,00 | 1 245,00 | 10% | 1 369,50  |\n|  2. | Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller | 5,00 | each | 100,00 | 500,00 | 10% | 550,00  |\n|  3. | PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested | 4,00 | each | 252,00 | 1 008,00 | 10% | 1 108,80  |\n|  4. | Nintendo Game Boy Micro Console - Black (OXYSFBB) | 2,00 | each | 130,00 | 260,00 | 10% | 286,00  |\n|  5. | Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT | 1,00 | each | 159,99 | 159,99 | 10% | 175,99  |\n\nSUMMARY\n\n|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 3 172,99 | 317,30 | 3 490,29  |\n|  **Total** |  | **$ 3 172,99** | **$ 317,30** | **$ 3 490,29**  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 191,
+      "top_left_y": 102,
+      "bottom_right_x": 810,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 26343874",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1195,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "07/17/2013",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 657,
+      "bottom_right_x": 382,
+      "bottom_right_y": 716,
+      "content": "Seller:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 751,
+      "bottom_right_x": 415,
+      "bottom_right_y": 804,
+      "content": "Smith Ltd",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 571,
+      "bottom_right_y": 860,
+      "content": "290 Jodi Gardens",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 864,
+      "bottom_right_x": 695,
+      "bottom_right_y": 913,
+      "content": "Charlesview, TN 10958",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 966,
+      "bottom_right_x": 638,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 916-97-6743",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 1022,
+      "bottom_right_x": 944,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB78TZMX55978564099007",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1232,
+      "top_left_y": 657,
+      "bottom_right_x": 1426,
+      "bottom_right_y": 716,
+      "content": "Client:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 751,
+      "bottom_right_x": 1537,
+      "bottom_right_y": 811,
+      "content": "Herring-Floyd",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1815,
+      "bottom_right_y": 860,
+      "content": "8113 Hansen Cliff Apt. 826",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 864,
+      "bottom_right_x": 1666,
+      "bottom_right_y": 913,
+      "content": "Port Alice, ID 99663",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 966,
+      "bottom_right_x": 1679,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 913-80-4636",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1131,
+      "bottom_right_x": 373,
+      "bottom_right_y": 1187,
+      "content": "ITEMS",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1236,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 2195,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787 | 5,00 | each | 249,00 | 1 245,00 | 10% | 1 369,50  |\n|  2. | Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller | 5,00 | each | 100,00 | 500,00 | 10% | 550,00  |\n|  3. | PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested | 4,00 | each | 252,00 | 1 008,00 | 10% | 1 108,80  |\n|  4. | Nintendo Game Boy Micro Console - Black (OXYSFBB) | 2,00 | each | 130,00 | 260,00 | 10% | 286,00  |\n|  5. | Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT | 1,00 | each | 159,99 | 159,99 | 10% | 175,99  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 2261,
+      "bottom_right_x": 494,
+      "bottom_right_y": 2314,
+      "content": "SUMMARY",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 2360,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 2641,
+      "content": "|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 3 172,99 | 317,30 | 3 490,29  |\n|  **Total** |  | **$ 3 172,99** | **$ 317,30** | **$ 3 490,29**  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 849718
+  },
+  "document_annotation": "{\"header\": {\"invoice_no\": \"26343874\", \"invoice_date\": \"2013-07-17\", \"seller\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\", \"client\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\", \"seller_tax_id\": \"916-97-6743\", \"client_tax_id\": \"913-80-4636\", \"iban\": \"GB78TZMX55978564099007\"}, \"items\": [{\"item_desc\": \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great\", \"item_qty\": \"5\", \"item_net_price\": \"249.00\", \"item_net_worth\": \"1245.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1369.50\"}, {\"item_desc\": \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\", \"item_qty\": \"5\", \"item_net_price\": \"100.00\", \"item_net_worth\": \"500.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"550.00\"}, {\"item_desc\": \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\", \"item_qty\": \"4\", \"item_net_price\": \"252.00\", \"item_net_worth\": \"1008.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1108.80\"}, {\"item_desc\": \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\", \"item_qty\": \"2\", \"item_net_price\": \"130.00\", \"item_net_worth\": \"260.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"286.00\"}, {\"item_desc\": \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\", \"item_qty\": \"1\", \"item_net_price\": \"159.99\", \"item_net_worth\": \"159.99\", \"item_vat\": \"10%\", \"item_gross_worth\": \"175.99\"}], \"summary\": {\"total_net_worth\": \"3172.99\", \"total_vat\": \"317.30\", \"total_gross_worth\": \"3490.29\"}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

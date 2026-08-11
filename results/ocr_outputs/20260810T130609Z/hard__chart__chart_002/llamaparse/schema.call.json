@@ -1,0 +1,218 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"Revenue by Geography and Segment\",\n  \"required\": [\n    \"geographyRevenue\",\n    \"productRevenue\"\n  ],\n  \"properties\": {\n    \"productRevenue\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"totalRevenueBillions\",\n        \"segments\"\n      ],\n      \"properties\": {\n        \"segments\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"segmentName\",\n              \"revenueBillions\"\n            ],\n            \"properties\": {\n              \"segmentName\": {\n                \"type\": \"string\",\n                \"description\": \"Name of the product segment\"\n              },\n              \"revenueBillions\": {\n                \"type\": \"number\",\n                \"description\": \"Revenue for this segment in billions of USD\"\n              }\n            }\n          },\n          \"description\": \"Breakdown of revenue by product segment (in billions USD)\"\n        },\n        \"totalRevenueBillions\": {\n          \"type\": \"number\",\n          \"description\": \"Total BD revenue in billions of USD\"\n        }\n      },\n      \"description\": \"Detailed product/segment breakdown of total BD revenue\"\n    },\n    \"geographyRevenue\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"region\",\n          \"revenueMillions\"\n        ],\n        \"properties\": {\n          \"region\": {\n            \"enum\": [\n              \"United States\",\n              \"Europe\",\n              \"Africa\",\n              \"South America\",\n              \"Greater Asia\",\n              \"South East Asia\",\n              \"Middle East\",\n              \"Other\"\n            ],\n            \"type\": \"string\",\n            \"description\": \"Name of the region or country group\"\n          },\n          \"revenueMillions\": {\n            \"type\": \"number\",\n            \"description\": \"Revenue in millions of USD\"\n          }\n        }\n      },\n      \"description\": \"Revenue by geography (in millions USD)\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 20.707029625074938,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"productRevenue\": {\"segments\": [{\"segmentName\": \"Medication Management Solutions\", \"revenueBillions\": 2.6}, {\"segmentName\": \"Diabetes Care\", \"revenueBillions\": 1.1}, {\"segmentName\": \"Pharmaceutical Systems\", \"revenueBillions\": 1.5}, {\"segmentName\": \"Medication Delivery Solutions\", \"revenueBillions\": 3.9}, {\"segmentName\": \"Preanalytical Systems\", \"revenueBillions\": 1.6}, {\"segmentName\": \"Diagnostic Systems\", \"revenueBillions\": 1.5}, {\"segmentName\": \"Biosciences\", \"revenueBillions\": 1.2}, {\"segmentName\": \"Surgery\", \"revenueBillions\": 1.4}, {\"segmentName\": \"Peripheral Intervention\", \"revenueBillions\": 1.4}, {\"segmentName\": \"Urology and Critical Care\", \"revenueBillions\": 1.1}], \"totalRevenueBillions\": 17.3}, \"geographyRevenue\": [{\"region\": \"United States\", \"revenueMillions\": 9730.0}, {\"region\": \"Europe\", \"revenueMillions\": 3359.0}, {\"region\": \"Greater Asia\", \"revenueMillions\": 2726.0}, {\"region\": \"Other\", \"revenueMillions\": 1476.0}]}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:39:26.141236+00:00",
+  "data": {
+   "productRevenue": {
+    "segments": [
+     {
+      "segmentName": "Medication Management Solutions",
+      "revenueBillions": 2.6
+     },
+     {
+      "segmentName": "Diabetes Care",
+      "revenueBillions": 1.1
+     },
+     {
+      "segmentName": "Pharmaceutical Systems",
+      "revenueBillions": 1.5
+     },
+     {
+      "segmentName": "Medication Delivery Solutions",
+      "revenueBillions": 3.9
+     },
+     {
+      "segmentName": "Preanalytical Systems",
+      "revenueBillions": 1.6
+     },
+     {
+      "segmentName": "Diagnostic Systems",
+      "revenueBillions": 1.5
+     },
+     {
+      "segmentName": "Biosciences",
+      "revenueBillions": 1.2
+     },
+     {
+      "segmentName": "Surgery",
+      "revenueBillions": 1.4
+     },
+     {
+      "segmentName": "Peripheral Intervention",
+      "revenueBillions": 1.4
+     },
+     {
+      "segmentName": "Urology and Critical Care",
+      "revenueBillions": 1.1
+     }
+    ],
+    "totalRevenueBillions": 17.3
+   },
+   "geographyRevenue": [
+    {
+     "region": "United States",
+     "revenueMillions": 9730.0
+    },
+    {
+     "region": "Europe",
+     "revenueMillions": 3359.0
+    },
+    {
+     "region": "Greater Asia",
+     "revenueMillions": 2726.0
+    },
+    {
+     "region": "Other",
+     "revenueMillions": 1476.0
+    }
+   ]
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "productRevenue": {
+     "description": "Detailed product/segment breakdown of total BD revenue",
+     "type": "object",
+     "properties": {
+      "segments": {
+       "description": "Breakdown of revenue by product segment (in billions USD)",
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "segmentName": {
+          "description": "Name of the product segment",
+          "type": "string"
+         },
+         "revenueBillions": {
+          "description": "Revenue for this segment in billions of USD",
+          "type": "number"
+         }
+        },
+        "required": [
+         "segmentName",
+         "revenueBillions"
+        ],
+        "additionalProperties": false
+       }
+      },
+      "totalRevenueBillions": {
+       "description": "Total BD revenue in billions of USD",
+       "type": "number"
+      }
+     },
+     "required": [
+      "totalRevenueBillions",
+      "segments"
+     ],
+     "additionalProperties": false
+    },
+    "geographyRevenue": {
+     "description": "Revenue by geography (in millions USD)",
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "region": {
+        "description": "Name of the region or country group",
+        "type": "string",
+        "enum": [
+         "United States",
+         "Europe",
+         "Africa",
+         "South America",
+         "Greater Asia",
+         "South East Asia",
+         "Middle East",
+         "Other"
+        ]
+       },
+       "revenueMillions": {
+        "description": "Revenue in millions of USD",
+        "type": "number"
+       }
+      },
+      "required": [
+       "region",
+       "revenueMillions"
+      ],
+      "additionalProperties": false
+     }
+    }
+   },
+   "required": [
+    "geographyRevenue",
+    "productRevenue"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "7a14ab59-a797-4bc0-a4f6-4e1791c6c883",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 392,
+    "num_output_tokens": 230
+   },
+   "parse_job_id": "6e34a3de-b27f-442c-9de0-04d78c50c650"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "973761d0-f6ca-4b48-9c62-738016e54bd5",
+  "from_ui": false,
+  "id": "130a3e15-a13e-4f2c-ae62-8f3393f3e96c",
+  "job_id": "aa86fbdb-02bd-47b7-a05b-b0e345e5edbb",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:39:41.841602+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

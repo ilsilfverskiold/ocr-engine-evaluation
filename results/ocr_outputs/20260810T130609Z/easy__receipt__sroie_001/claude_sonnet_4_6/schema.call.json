@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_001.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"gst_no\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"receipt_no\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"salesperson\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"time\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"rsp\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"sub_total_excluding_gst\": {\n      \"type\": \"string\"\n    },\n    \"discount\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"rounding\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"cash\": {\n      \"type\": \"string\"\n    },\n    \"change\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"percent\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"gst\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 14.274033707915805,
+ "cost_per_page": 0.019287,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"company\": \"PERNIAGAAN ZHENG HUI\",\n  \"registration_no\": \"JM0325955-V\",\n  \"address\": \"NO.59 JALAN PERMAS 9/5, BANDAR BARU PERMAS JAYA, 81750 JOHOR BAHRU\",\n  \"tel\": \"07-386 7524\",\n  \"fax\": \"07-386 3793\",\n  \"gst_no\": \"000800589824\",\n  \"document_type\": \"SIMPLIFIED TAX INVOICE\",\n  \"receipt_no\": \"CS00082258\",\n  \"bill_to\": \"GOGIANT ENGINEERING (M) SDN BHD\",\n  \"salesperson\": null,\n  \"cashier\": \"USER\",\n  \"date\": \"09/02/2018\",\n  \"time\": \"08:32:00\",\n  \"items\": [\n    {\n      \"code\": \"6783\",\n      \"description\": \"CERAMIC CAP\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"5\",\n      \"rsp\": \"3.50\",\n      \"amount\": \"17.50\"\n    },\n    {\n      \"code\": \"2954\",\n      \"description\": \"S/STEEL 1/2\\\" STREET ELBOW\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"30\",\n      \"rsp\": \"3.80\",\n      \"amount\": \"114.00\"\n    },\n    {\n      \"code\": \"1760\",\n      \"description\": \"2.4MM STARWELD RED HEAD TUNGSTEN ROD\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1\",\n      \"rsp\": \"55.00\",\n      \"amount\": \"55.00\"\n    },\n    {\n      \"code\": \"3496\",\n      \"description\": \"ESICUT 4\\\" CUTTING DISC (1BOX)-50PCS\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"3\",\n      \"rsp\": \"33.00\",\n      \"amount\": \"99.00\"\n    },\n    {\n      \"code\": \"2460\",\n      \"description\": \"WELDRO PICKLING GEL 1KG\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"2\",\n      \"rsp\": \"43.00\",\n      \"amount\": \"86.00\"\n    },\n    {\n      \"code\": \"9428\",\n      \"description\": \"13.5\\\" WELDING GLOVE - GREEN (GS)\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"4\",\n      \"rsp\": \"10.00\",\n      \"amount\": \"40.00\"\n    }\n  ],\n  \"total_qty\": \"45\",\n  \"sub_total_excluding_gst\": \"411.50\",\n  \"discount\": \"0.00\",\n  \"total_gst\": \"24.69\",\n  \"rounding\": \"0.01\",\n  \"total\": \"436.20\",\n  \"cash\": \"436.20\",\n  \"change\": \"0.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6\",\n      \"amount\": \"411.50\",\n      \"gst\": \"24.69\"\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2304,
+  "output_tokens": 825,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduJDwNghp32Rikz8Eja6",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"company\": \"PERNIAGAAN ZHENG HUI\",\n  \"registration_no\": \"JM0325955-V\",\n  \"address\": \"NO.59 JALAN PERMAS 9/5, BANDAR BARU PERMAS JAYA, 81750 JOHOR BAHRU\",\n  \"tel\": \"07-386 7524\",\n  \"fax\": \"07-386 3793\",\n  \"gst_no\": \"000800589824\",\n  \"document_type\": \"SIMPLIFIED TAX INVOICE\",\n  \"receipt_no\": \"CS00082258\",\n  \"bill_to\": \"GOGIANT ENGINEERING (M) SDN BHD\",\n  \"salesperson\": null,\n  \"cashier\": \"USER\",\n  \"date\": \"09/02/2018\",\n  \"time\": \"08:32:00\",\n  \"items\": [\n    {\n      \"code\": \"6783\",\n      \"description\": \"CERAMIC CAP\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"5\",\n      \"rsp\": \"3.50\",\n      \"amount\": \"17.50\"\n    },\n    {\n      \"code\": \"2954\",\n      \"description\": \"S/STEEL 1/2\\\" STREET ELBOW\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"30\",\n      \"rsp\": \"3.80\",\n      \"amount\": \"114.00\"\n    },\n    {\n      \"code\": \"1760\",\n      \"description\": \"2.4MM STARWELD RED HEAD TUNGSTEN ROD\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1\",\n      \"rsp\": \"55.00\",\n      \"amount\": \"55.00\"\n    },\n    {\n      \"code\": \"3496\",\n      \"description\": \"ESICUT 4\\\" CUTTING DISC (1BOX)-50PCS\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"3\",\n      \"rsp\": \"33.00\",\n      \"amount\": \"99.00\"\n    },\n    {\n      \"code\": \"2460\",\n      \"description\": \"WELDRO PICKLING GEL 1KG\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"2\",\n      \"rsp\": \"43.00\",\n      \"amount\": \"86.00\"\n    },\n    {\n      \"code\": \"9428\",\n      \"description\": \"13.5\\\" WELDING GLOVE - GREEN (GS)\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"4\",\n      \"rsp\": \"10.00\",\n      \"amount\": \"40.00\"\n    }\n  ],\n  \"total_qty\": \"45\",\n  \"sub_total_excluding_gst\": \"411.50\",\n  \"discount\": \"0.00\",\n  \"total_gst\": \"24.69\",\n  \"rounding\": \"0.01\",\n  \"total\": \"436.20\",\n  \"cash\": \"436.20\",\n  \"change\": \"0.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6\",\n      \"amount\": \"411.50\",\n      \"gst\": \"24.69\"\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 2304,
+   "output_tokens": 825,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

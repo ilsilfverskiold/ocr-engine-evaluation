@@ -1,0 +1,739 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"zip\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's ZIP code as it appears\"\n    },\n    \"phone\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's phone number as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"isHospitalized\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if patient has been hospitalized in the past year, must return true or false\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"fever\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced a fever, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"calfPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced calf pain, must return true or false\"\n        },\n        \"coughing\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced persistent coughing, must return true or false\"\n        },\n        \"seizures\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced seizures, must return true or false\"\n        },\n        \"chestPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chest pain, must return true or false\"\n        },\n        \"coughingUpBlood\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has coughed up blood, must return true or false\"\n        },\n        \"excessiveStress\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive stress, must return true or false\"\n        },\n        \"excessiveThirst\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive thirst, must return true or false\"\n        },\n        \"shortnessOfBreath\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced shortness of breath, must return true or false\"\n        },\n        \"irregularHeartRate\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced an irregular heart rate, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    },\n    \"previousHealthHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"primaryCarePhysician\"\n      ],\n      \"properties\": {\n        \"lastSeenDate\": {\n          \"type\": \"string\",\n          \"description\": \"Date last seen by physician\"\n        },\n        \"prescriptionDrugs\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"other\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              },\n              \"description\": \"List of other prescription drugs that patient uses, must return null if not provided\"\n            },\n            \"painPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses pain pills, must return true or false\"\n            },\n            \"sleepingPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses sleeping pills, must return true or false\"\n            },\n            \"antidepressants\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses antidepressants, must return true or false\"\n            },\n            \"birthControlPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses birth control, must return true or false\"\n            },\n            \"bloodSugarMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood sugar medication, must return true or false\"\n            },\n            \"bloodPressureMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood pressure medication, must return true or false\"\n            }\n          },\n          \"description\": \"Details of prescription drugs currently taken\"\n        },\n        \"accidentsOrInjuries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of accidents or injuries that patient has experienced, must return null if not provided\"\n        },\n        \"overTheCounterDrugs\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of over-the-counter drugs that patient uses, must return null if not provided\"\n        },\n        \"primaryCarePhysician\": {\n          \"type\": \"string\",\n          \"description\": \"Name of primary care physician\"\n        },\n        \"vitaminsOrSupplements\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of vitamins or supplements that patient takes, must return null if not provided\"\n        },\n        \"receivedChiropracticCare\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient received chiropractic care, must return true or false\"\n        }\n      },\n      \"description\": \"Details of patient's previous health history\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 8.692018041969277,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"firstName\": \"Jessica\", \"lastName\": \"Brown\", \"address\": \"6306 Upper Mountain Circle\", \"zip\": \"16234\", \"phone\": \"796-895-8529\", \"maritalStatus\": \"Divorced\", \"isHospitalized\": true, \"reviewOfSymptoms\": {\"fever\": true, \"eyePain\": false, \"calfPain\": true, \"coughing\": false, \"seizures\": true, \"chestPain\": false, \"coughingUpBlood\": true, \"excessiveStress\": false, \"excessiveThirst\": true, \"shortnessOfBreath\": true, \"irregularHeartRate\": true}, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Sarah Moore\", \"lastSeenDate\": \"03-20-1998\", \"prescriptionDrugs\": {\"painPills\": false, \"sleepingPills\": false, \"antidepressants\": true, \"birthControlPills\": false, \"bloodSugarMedication\": true, \"bloodPressureMedication\": true, \"other\": [\"metformin\", \"simvastatin\"]}, \"accidentsOrInjuries\": [\"poisoning\"], \"overTheCounterDrugs\": [\"pepto-bismol\"], \"vitaminsOrSupplements\": [\"vitamin b9\", \"msm\", \"fish oil\"], \"receivedChiropracticCare\": true}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Personal Health Record\n\nJessica\n\nBrown\n\nFirst Name\n\nLast Name\n\n☐ Single ☐ Married ☑ Divorced ☐ Separated ☐ Widowed\n\nMarital Status\n\n6306 Upper Mountain Circle\n\nAddress\n\nLimestone\n\nPA\n\n16234\n\nCity\n\nState\n\nZip\n\n796-895-8529\n\n10/25/1954\n\nPhone\n\nDOB\n\nSpouse Name\n\nSpouse Phone\n\nIs the requested medication ☐ NEW or a ☑ CONTINUATION of THERAPY? If so, start date: ____________\n\nHave you been hospitalized in the past year? ☑ Yes ☐ No\n\n# Review of Symptoms\n\nAllergies ☑\n\nBlack Outs ☐\n\nBlurred Vision ☑\n\nCalf Pain ☑\n\nChest Pain ☐\n\nChills ☐\n\nCoughing ☐\n\nCoughing Up Blood ☑\n\nDental Problems ☑\n\nDifficulty Emptying Bowel Or Bladder ☑\n\nDouble Vision ☑\n\nEnlarged Glands ☑\n\nExcessive Bruising ☑\n\nExcessive Stress ☐\n\nExcessive Thirst ☑\n\nEye Pain ☐\n\nFatigue ☐\n\nFever ☑\n\nHeadaches ☐\n\nHearing Loss ☐\n\nIrregular Heart Rate ☑\n\nJoint Swelling ☑\n\nMuscle Pain ☑\n\nSeizures ☑\n\nShortness Of Breath ☑\n\nStomach Trouble Or Ulcers ☐\n\nTuberculosis Exposure ☑\n\nWeight Gain Or Loss Greater Than 10 Lbs ☐\n\n# Previous Health History\n\nDr. Sarah Moore\n\n03-20-1998\n\nPrimary Care Physician\n\nLast Seen Date\n\nHave you received chiropractic care? ☑ Yes ☐ No\n\nHave you received acupuncture care? ☑ Yes ☐ No\n\n# PRESCRIPTION DRUGS:\n\n☑ Antidepressants\n\n☐ Anti Inflammatory\n\n☐ Birth Control Pills\n\n☑ Blood Pressure Medication\n\n☐ Diet Pills\n\n☐ Blood Sugar Medication\n\n☑ Muscle Relaxers\n\n☑ Insulin\n\n☐ Pain Pills\n\n☐ Sleeping Pills\n\nOther: metformin, simvastatin\n\npepto-bismol\n\nOver-the-Counter Drugs\n\npoisoning\n\nAccidents or Injuries\n\nvitamin b9, msm, fish oil\n\nVitamins or Supplements",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3060,
+     "width": 1500
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 592,
+      "top_left_y": 43,
+      "bottom_right_x": 904,
+      "bottom_right_y": 77,
+      "content": "# Personal Health Record",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 156,
+      "bottom_right_x": 120,
+      "bottom_right_y": 190,
+      "content": "Jessica",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 156,
+      "bottom_right_x": 602,
+      "bottom_right_y": 190,
+      "content": "Brown",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 202,
+      "bottom_right_x": 135,
+      "bottom_right_y": 230,
+      "content": "First Name",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 202,
+      "bottom_right_x": 620,
+      "bottom_right_y": 230,
+      "content": "Last Name",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 27,
+      "top_left_y": 288,
+      "bottom_right_x": 814,
+      "bottom_right_y": 328,
+      "content": "☐ Single ☐ Married ☑ Divorced ☐ Separated ☐ Widowed",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 337,
+      "bottom_right_x": 164,
+      "bottom_right_y": 365,
+      "content": "Marital Status",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 423,
+      "bottom_right_x": 398,
+      "bottom_right_y": 459,
+      "content": "6306 Upper Mountain Circle",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 469,
+      "bottom_right_x": 108,
+      "bottom_right_y": 496,
+      "content": "Address",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 554,
+      "bottom_right_x": 164,
+      "bottom_right_y": 588,
+      "content": "Limestone",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 554,
+      "bottom_right_x": 554,
+      "bottom_right_y": 588,
+      "content": "PA",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1000,
+      "top_left_y": 554,
+      "bottom_right_x": 1083,
+      "bottom_right_y": 588,
+      "content": "16234",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 600,
+      "bottom_right_x": 71,
+      "bottom_right_y": 631,
+      "content": "City",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 600,
+      "bottom_right_x": 563,
+      "bottom_right_y": 631,
+      "content": "State",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 997,
+      "top_left_y": 600,
+      "bottom_right_x": 1036,
+      "bottom_right_y": 631,
+      "content": "Zip",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 686,
+      "bottom_right_x": 210,
+      "bottom_right_y": 720,
+      "content": "796-895-8529",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 686,
+      "bottom_right_x": 661,
+      "bottom_right_y": 720,
+      "content": "10/25/1954",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 732,
+      "bottom_right_x": 90,
+      "bottom_right_y": 760,
+      "content": "Phone",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 732,
+      "bottom_right_x": 565,
+      "bottom_right_y": 760,
+      "content": "DOB",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 864,
+      "bottom_right_x": 161,
+      "bottom_right_y": 894,
+      "content": "Spouse Name",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 511,
+      "top_left_y": 864,
+      "bottom_right_x": 650,
+      "bottom_right_y": 894,
+      "content": "Spouse Phone",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 14,
+      "top_left_y": 934,
+      "bottom_right_x": 1476,
+      "bottom_right_y": 980,
+      "content": "Is the requested medication ☐ NEW or a ☑ CONTINUATION of THERAPY? If so, start date: ____________",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 14,
+      "top_left_y": 1008,
+      "bottom_right_x": 781,
+      "bottom_right_y": 1051,
+      "content": "Have you been hospitalized in the past year? ☑ Yes ☐ No",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 611,
+      "top_left_y": 1087,
+      "bottom_right_x": 884,
+      "bottom_right_y": 1127,
+      "content": "# Review of Symptoms",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 14,
+      "top_left_y": 1167,
+      "bottom_right_x": 180,
+      "bottom_right_y": 1207,
+      "content": "Allergies ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1167,
+      "bottom_right_x": 940,
+      "bottom_right_y": 1204,
+      "content": "Black Outs ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1216,
+      "bottom_right_x": 252,
+      "bottom_right_y": 1250,
+      "content": "Blurred Vision ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1216,
+      "bottom_right_x": 916,
+      "bottom_right_y": 1250,
+      "content": "Calf Pain ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1262,
+      "bottom_right_x": 201,
+      "bottom_right_y": 1296,
+      "content": "Chest Pain ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1262,
+      "bottom_right_x": 875,
+      "bottom_right_y": 1296,
+      "content": "Chills ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1305,
+      "bottom_right_x": 191,
+      "bottom_right_y": 1348,
+      "content": "Coughing ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1305,
+      "bottom_right_x": 1056,
+      "bottom_right_y": 1348,
+      "content": "Coughing Up Blood ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1351,
+      "bottom_right_x": 278,
+      "bottom_right_y": 1388,
+      "content": "Dental Problems ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1351,
+      "bottom_right_x": 1296,
+      "bottom_right_y": 1394,
+      "content": "Difficulty Emptying Bowel Or Bladder ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1397,
+      "bottom_right_x": 248,
+      "bottom_right_y": 1434,
+      "content": "Double Vision ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1397,
+      "bottom_right_x": 1009,
+      "bottom_right_y": 1440,
+      "content": "Enlarged Glands ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1443,
+      "bottom_right_x": 309,
+      "bottom_right_y": 1486,
+      "content": "Excessive Bruising ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1443,
+      "bottom_right_x": 1009,
+      "bottom_right_y": 1479,
+      "content": "Excessive Stress ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1489,
+      "bottom_right_x": 275,
+      "bottom_right_y": 1525,
+      "content": "Excessive Thirst ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1489,
+      "bottom_right_x": 913,
+      "bottom_right_y": 1525,
+      "content": "Eye Pain ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1535,
+      "bottom_right_x": 161,
+      "bottom_right_y": 1574,
+      "content": "Fatigue ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1535,
+      "bottom_right_x": 869,
+      "bottom_right_y": 1571,
+      "content": "Fever ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1581,
+      "bottom_right_x": 203,
+      "bottom_right_y": 1617,
+      "content": "Headaches ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1581,
+      "bottom_right_x": 968,
+      "bottom_right_y": 1620,
+      "content": "Hearing Loss ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1626,
+      "bottom_right_x": 321,
+      "bottom_right_y": 1666,
+      "content": "Irregular Heart Rate ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1626,
+      "bottom_right_x": 980,
+      "bottom_right_y": 1666,
+      "content": "Joint Swelling ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1672,
+      "bottom_right_x": 222,
+      "bottom_right_y": 1709,
+      "content": "Muscle Pain ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1672,
+      "bottom_right_x": 905,
+      "bottom_right_y": 1709,
+      "content": "Seizures ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1718,
+      "bottom_right_x": 323,
+      "bottom_right_y": 1755,
+      "content": "Shortness Of Breath ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1718,
+      "bottom_right_x": 1149,
+      "bottom_right_y": 1755,
+      "content": "Stomach Trouble Or Ulcers ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 15,
+      "top_left_y": 1764,
+      "bottom_right_x": 357,
+      "bottom_right_y": 1804,
+      "content": "Tuberculosis Exposure ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 751,
+      "top_left_y": 1764,
+      "bottom_right_x": 1333,
+      "bottom_right_y": 1804,
+      "content": "Weight Gain Or Loss Greater Than 10 Lbs ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 589,
+      "top_left_y": 1844,
+      "bottom_right_x": 904,
+      "bottom_right_y": 1881,
+      "content": "# Previous Health History",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 1970,
+      "bottom_right_x": 243,
+      "bottom_right_y": 2006,
+      "content": "Dr. Sarah Moore",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 752,
+      "top_left_y": 1970,
+      "bottom_right_x": 907,
+      "bottom_right_y": 2006,
+      "content": "03-20-1998",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2015,
+      "bottom_right_x": 257,
+      "bottom_right_y": 2049,
+      "content": "Primary Care Physician",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 752,
+      "top_left_y": 2015,
+      "bottom_right_x": 904,
+      "bottom_right_y": 2046,
+      "content": "Last Seen Date",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 14,
+      "top_left_y": 2089,
+      "bottom_right_x": 686,
+      "bottom_right_y": 2129,
+      "content": "Have you received chiropractic care? ☑ Yes ☐ No",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 14,
+      "top_left_y": 2159,
+      "bottom_right_x": 689,
+      "bottom_right_y": 2202,
+      "content": "Have you received acupuncture care? ☑ Yes ☐ No",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2236,
+      "bottom_right_x": 375,
+      "bottom_right_y": 2276,
+      "content": "# PRESCRIPTION DRUGS:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 2294,
+      "bottom_right_x": 275,
+      "bottom_right_y": 2334,
+      "content": "☑ Antidepressants",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 2294,
+      "bottom_right_x": 1035,
+      "bottom_right_y": 2334,
+      "content": "☐ Anti Inflammatory",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 2340,
+      "bottom_right_x": 306,
+      "bottom_right_y": 2377,
+      "content": "☐ Birth Control Pills",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 2340,
+      "bottom_right_x": 1144,
+      "bottom_right_y": 2380,
+      "content": "☑ Blood Pressure Medication",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 2389,
+      "bottom_right_x": 191,
+      "bottom_right_y": 2426,
+      "content": "☐ Diet Pills",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 2389,
+      "bottom_right_x": 1110,
+      "bottom_right_y": 2429,
+      "content": "☐ Blood Sugar Medication",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 2438,
+      "bottom_right_x": 284,
+      "bottom_right_y": 2475,
+      "content": "☑ Muscle Relaxers",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 2438,
+      "bottom_right_x": 884,
+      "bottom_right_y": 2475,
+      "content": "☑ Insulin",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 2484,
+      "bottom_right_x": 192,
+      "bottom_right_y": 2521,
+      "content": "☐ Pain Pills",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 2484,
+      "bottom_right_x": 971,
+      "bottom_right_y": 2527,
+      "content": "☐ Sleeping Pills",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2533,
+      "bottom_right_x": 422,
+      "bottom_right_y": 2570,
+      "content": "Other: metformin, simvastatin",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2659,
+      "bottom_right_x": 197,
+      "bottom_right_y": 2695,
+      "content": "pepto-bismol",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2705,
+      "bottom_right_x": 263,
+      "bottom_right_y": 2735,
+      "content": "Over-the-Counter Drugs",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2794,
+      "bottom_right_x": 156,
+      "bottom_right_y": 2830,
+      "content": "poisoning",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2836,
+      "bottom_right_x": 228,
+      "bottom_right_y": 2867,
+      "content": "Accidents or Injuries",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2922,
+      "bottom_right_x": 347,
+      "bottom_right_y": 2959,
+      "content": "vitamin b9, msm, fish oil",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 23,
+      "top_left_y": 2968,
+      "bottom_right_x": 270,
+      "bottom_right_y": 2999,
+      "content": "Vitamins or Supplements",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 353471
+  },
+  "document_annotation": "{\"firstName\": \"Jessica\", \"lastName\": \"Brown\", \"address\": \"6306 Upper Mountain Circle\", \"zip\": \"16234\", \"phone\": \"796-895-8529\", \"maritalStatus\": \"Divorced\", \"isHospitalized\": true, \"reviewOfSymptoms\": {\"fever\": true, \"eyePain\": false, \"calfPain\": true, \"coughing\": false, \"seizures\": true, \"chestPain\": false, \"coughingUpBlood\": true, \"excessiveStress\": false, \"excessiveThirst\": true, \"shortnessOfBreath\": true, \"irregularHeartRate\": true}, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Sarah Moore\", \"lastSeenDate\": \"03-20-1998\", \"prescriptionDrugs\": {\"painPills\": false, \"sleepingPills\": false, \"antidepressants\": true, \"birthControlPills\": false, \"bloodSugarMedication\": true, \"bloodPressureMedication\": true, \"other\": [\"metformin\", \"simvastatin\"]}, \"accidentsOrInjuries\": [\"poisoning\"], \"overTheCounterDrugs\": [\"pepto-bismol\"], \"vitaminsOrSupplements\": [\"vitamin b9\", \"msm\", \"fish oil\"], \"receivedChiropracticCare\": true}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

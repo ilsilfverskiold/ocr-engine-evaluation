@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIV. NAME / NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE TO NYO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"NAME OF EVENT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE OF EVENT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SAMPLES / ITEMS REQUIRED\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"# CASES\": {\n      \"type\": \"object\",\n      \"additionalProperties\": {\n        \"type\": \"string\"\n      }\n    },\n    \"ITEMS\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"ITEMS\": {\n            \"type\": \"string\"\n          },\n          \"QUANTITY REQUIRED\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"CUSTOMER SHIPPING NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE FORWARDED TO PROMOTION SERVICES\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 7.531382624991238,
+ "cost_per_page": 0.010092,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"TO\": \"K. A. SPARROW\",\n  \"FROM\": \"S. Reindel\",\n  \"DIV. NAME / NO.\": \"Nassau / 107\",\n  \"DATE TO NYO\": \"1/24/97\",\n  \"NAME OF EVENT\": \"H. Levinson Tradeshow\",\n  \"DATE OF EVENT\": \"3/18/97\",\n  \"SAMPLES / ITEMS REQUIRED\": \"SAMPLE 10'S (400 PACKS PER CASE)\",\n  \"# CASES\": {\n    \"NEWPORT K.S.\": \"2\",\n    \"NEWPORT 100'S\": null,\n    \"NEWPORT LTS. K.S.\": \"1\",\n    \"NEWPORT LTS. 100\": null,\n    \"KENT III K.S.\": null,\n    \"KENT III 100\": null,\n    \"TRUE K.S.\": \"1\",\n    \"KENT K.S.\": \"1\",\n    \"KENT 100\": null,\n    \"KENT GL LTS K.S.\": null,\n    \"KENT GL 100\": null\n  },\n  \"ITEMS\": [\n    {\n      \"ITEMS\": \"BASEBALL CAP\",\n      \"QUANTITY REQUIRED\": \"1500\"\n    },\n    {\n      \"ITEMS\": \"WATER BOTTLES\",\n      \"QUANTITY REQUIRED\": \"500\"\n    }\n  ],\n  \"CUSTOMER SHIPPING NUMBER\": \"198-1160006\",\n  \"DATE FORWARDED TO PROMOTION SERVICES\": \"3/6/97\"\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1439,
+  "output_tokens": 385,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduPkN2Rh4XF2vVi7jnHe",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"TO\": \"K. A. SPARROW\",\n  \"FROM\": \"S. Reindel\",\n  \"DIV. NAME / NO.\": \"Nassau / 107\",\n  \"DATE TO NYO\": \"1/24/97\",\n  \"NAME OF EVENT\": \"H. Levinson Tradeshow\",\n  \"DATE OF EVENT\": \"3/18/97\",\n  \"SAMPLES / ITEMS REQUIRED\": \"SAMPLE 10'S (400 PACKS PER CASE)\",\n  \"# CASES\": {\n    \"NEWPORT K.S.\": \"2\",\n    \"NEWPORT 100'S\": null,\n    \"NEWPORT LTS. K.S.\": \"1\",\n    \"NEWPORT LTS. 100\": null,\n    \"KENT III K.S.\": null,\n    \"KENT III 100\": null,\n    \"TRUE K.S.\": \"1\",\n    \"KENT K.S.\": \"1\",\n    \"KENT 100\": null,\n    \"KENT GL LTS K.S.\": null,\n    \"KENT GL 100\": null\n  },\n  \"ITEMS\": [\n    {\n      \"ITEMS\": \"BASEBALL CAP\",\n      \"QUANTITY REQUIRED\": \"1500\"\n    },\n    {\n      \"ITEMS\": \"WATER BOTTLES\",\n      \"QUANTITY REQUIRED\": \"500\"\n    }\n  ],\n  \"CUSTOMER SHIPPING NUMBER\": \"198-1160006\",\n  \"DATE FORWARDED TO PROMOTION SERVICES\": \"3/6/97\"\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1439,
+   "output_tokens": 385,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_001.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"gst_no\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"receipt_no\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"salesperson\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"time\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"rsp\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"sub_total_excluding_gst\": {\n      \"type\": \"string\"\n    },\n    \"discount\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"rounding\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"cash\": {\n      \"type\": \"string\"\n    },\n    \"change\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"percent\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"gst\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.805286457994953,
+ "cost_per_page": 0.0017855000000000002,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"PERNIAGAAN ZHENG HUI\",\n  \"registration_no\": \"JM0325955-V\",\n  \"address\": \"NO.59 JALAN PERMAS 9/5 BANDAR BARU PERMAS JAYA 81750 JOHOR BAHRU\",\n  \"tel\": \"07-386 7524\",\n  \"fax\": \"07-386 3793\",\n  \"gst_no\": \"000800589824\",\n  \"document_type\": \"SIMPLIFIED TAX INVOICE\",\n  \"receipt_no\": \"CS00082258\",\n  \"bill_to\": \"GOGIANT ENGINEERING (M) SDN BHD\",\n  \"salesperson\": null,\n  \"cashier\": \"USER\",\n  \"date\": \"09/02/2018\",\n  \"time\": \"08:32:00\",\n  \"items\": [\n    {\n      \"code\": \"6783\",\n      \"description\": \"SR: CERAMIC CAP\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"5\",\n      \"rsp\": \"3.50\",\n      \"amount\": \"17.50\"\n    },\n    {\n      \"code\": \"2954\",\n      \"description\": \"SR: S/STEEL 1/2\\\" STREET ELBOW\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"30\",\n      \"rsp\": \"3.80\",\n      \"amount\": \"114.00\"\n    },\n    {\n      \"code\": \"1760\",\n      \"description\": \"SR: 2.4MM STARWELD RED HEAD TUNGSTEN ROD\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1\",\n      \"rsp\": \"55.00\",\n      \"amount\": \"55.00\"\n    },\n    {\n      \"code\": \"3496\",\n      \"description\": \"SR: ESICUT 4\\\" CUTTING DISC (1BOX)-50PCS\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"3\",\n      \"rsp\": \"33.00\",\n      \"amount\": \"99.00\"\n    },\n    {\n      \"code\": \"2460\",\n      \"description\": \"SR: WELDRO PICKLING GEL 1KG\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"2\",\n      \"rsp\": \"43.00\",\n      \"amount\": \"86.00\"\n    },\n    {\n      \"code\": \"9428\",\n      \"description\": \"SR: 13.5\\\" WELDING GLOVE - GREEN (GS)\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"4\",\n      \"rsp\": \"10.00\",\n      \"amount\": \"40.00\"\n    }\n  ],\n  \"total_qty\": \"45\",\n  \"sub_total_excluding_gst\": \"411.50\",\n  \"discount\": \"0.00\",\n  \"total_gst\": \"24.69\",\n  \"rounding\": \"0.01\",\n  \"total\": \"436.20\",\n  \"cash\": \"436.20\",\n  \"change\": \"0.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6\",\n      \"amount\": \"411.50\",\n      \"gst\": \"24.69\"\n    }\n  ]\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1826,
+  "output_tokens": 886,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:00:39 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2767",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"company\": \"PERNIAGAAN ZHENG HUI\",\n  \"registration_no\": \"JM0325955-V\",\n  \"address\": \"NO.59 JALAN PERMAS 9/5 BANDAR BARU PERMAS JAYA 81750 JOHOR BAHRU\",\n  \"tel\": \"07-386 7524\",\n  \"fax\": \"07-386 3793\",\n  \"gst_no\": \"000800589824\",\n  \"document_type\": \"SIMPLIFIED TAX INVOICE\",\n  \"receipt_no\": \"CS00082258\",\n  \"bill_to\": \"GOGIANT ENGINEERING (M) SDN BHD\",\n  \"salesperson\": null,\n  \"cashier\": \"USER\",\n  \"date\": \"09/02/2018\",\n  \"time\": \"08:32:00\",\n  \"items\": [\n    {\n      \"code\": \"6783\",\n      \"description\": \"SR: CERAMIC CAP\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"5\",\n      \"rsp\": \"3.50\",\n      \"amount\": \"17.50\"\n    },\n    {\n      \"code\": \"2954\",\n      \"description\": \"SR: S/STEEL 1/2\\\" STREET ELBOW\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"30\",\n      \"rsp\": \"3.80\",\n      \"amount\": \"114.00\"\n    },\n    {\n      \"code\": \"1760\",\n      \"description\": \"SR: 2.4MM STARWELD RED HEAD TUNGSTEN ROD\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"1\",\n      \"rsp\": \"55.00\",\n      \"amount\": \"55.00\"\n    },\n    {\n      \"code\": \"3496\",\n      \"description\": \"SR: ESICUT 4\\\" CUTTING DISC (1BOX)-50PCS\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"3\",\n      \"rsp\": \"33.00\",\n      \"amount\": \"99.00\"\n    },\n    {\n      \"code\": \"2460\",\n      \"description\": \"SR: WELDRO PICKLING GEL 1KG\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"2\",\n      \"rsp\": \"43.00\",\n      \"amount\": \"86.00\"\n    },\n    {\n      \"code\": \"9428\",\n      \"description\": \"SR: 13.5\\\" WELDING GLOVE - GREEN (GS)\",\n      \"tax_code\": \"SR\",\n      \"qty\": \"4\",\n      \"rsp\": \"10.00\",\n      \"amount\": \"40.00\"\n    }\n  ],\n  \"total_qty\": \"45\",\n  \"sub_total_excluding_gst\": \"411.50\",\n  \"discount\": \"0.00\",\n  \"total_gst\": \"24.69\",\n  \"rounding\": \"0.01\",\n  \"total\": \"436.20\",\n  \"cash\": \"436.20\",\n  \"change\": \"0.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6\",\n      \"amount\": \"411.50\",\n      \"gst\": \"24.69\"\n    }\n  ]\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\xa7\\x83\\x1bD:\\xc3\\xd6\\xbb`\\x97Et\\x1fi(\\xe2\\x97\\x7f\\x1b\\x9c?\\xf7\\xcb\\x8b\\t\\r\\xb4F\\x89\\x99\\xcapyx\\xb2a+\\x15\\xcb$\\xbb,h\\xc9\\xb9'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "hNl5avDVJoa0xN8P4JDRoAg",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 886,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1826,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1092
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 734
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2712,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

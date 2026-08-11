@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.240260134624999,
+ "cost_per_page": 0.0008607405334297493,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"62517865\",\"invoice_date\": \"06/02/2015\",\"seller\": \"Trujillo-Hunt\",\"client\": \"Lee and Sons\",\"client_tax_id\": \"952-71-8540\",\"iban\": \"GB73HCPH34959888432899\"}, \"items\": [{\"item_desc\": \"Care & Repair of Furniture\",\"item_qty\": \"2,00\",\"item_net_price\": \"4,25\",\"item_net_worth\": \"8,50\",\"item_vat\": \"10%\",\"item_gross_worth\": \"9,35\"}, {\"item_desc\": \"Care & Repair of Furniture\",\"item_qty\": \"2,00\",\"item_net_price\": \"4,25\",\"item_net_worth\": \"8,50\",\"item_vat\": \"10%\",\"item_gross_worth\": \"9,35\"}]}",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.240260134624999,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "9fe83e24018a4e3ab3800633cd302f4d",
+  "batch_gpu_seconds": 29.766243230999976,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.240260134624999,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"header\": {\"invoice_no\": \"62517865\",\"invoice_date\": \"06/02/2015\",\"seller\": \"Trujillo-Hunt\",\"client\": \"Lee and Sons\",\"client_tax_id\": \"952-71-8540\",\"iban\": \"GB73HCPH34959888432899\"}, \"items\": [{\"item_desc\": \"Care & Repair of Furniture\",\"item_qty\": \"2,00\",\"item_net_price\": \"4,25\",\"item_net_worth\": \"8,50\",\"item_vat\": \"10%\",\"item_gross_worth\": \"9,35\"}, {\"item_desc\": \"Care & Repair of Furniture\",\"item_qty\": \"2,00\",\"item_net_price\": \"4,25\",\"item_net_worth\": \"8,50\",\"item_vat\": \"10%\",\"item_gross_worth\": \"9,35\"}]}",
+  "structured_output": {},
+  "gpu_seconds": 1.240260134624999,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_001.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

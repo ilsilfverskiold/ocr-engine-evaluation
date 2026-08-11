@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_000.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"email\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"sales_person\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"price\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_exclude_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_inclusive_gst\": {\n      \"type\": \"string\"\n    },\n    \"round_amount\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment_method\": {\n      \"type\": \"string\"\n    },\n    \"payment_amount\": {\n      \"type\": \"string\"\n    },\n    \"card_number\": {\n      \"type\": \"string\"\n    },\n    \"approval_code\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 1.74978537496645,
+ "cost_per_page": 0.00112,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 8218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"15/01/2019 11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD 805\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00\",\n      \"tax_code\": \"SR\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxxxxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1738,
+  "output_tokens": 457,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:00:36 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=1670",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"company\": \"OJC MARKETING SDN BHD\",\n  \"registration_no\": \"538358-H\",\n  \"address\": \"NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR\",\n  \"tel\": \"07-388 2218\",\n  \"fax\": \"07-388 8218\",\n  \"email\": \"ng@ojcgroup.com\",\n  \"document_type\": \"TAX INVOICE\",\n  \"invoice_no\": \"PEGIV-1030765\",\n  \"date\": \"15/01/2019\",\n  \"datetime\": \"15/01/2019 11:05:16 AM\",\n  \"cashier\": \"NG CHUAN MIN\",\n  \"sales_person\": \"FATIN\",\n  \"bill_to\": \"THE PEAK QUARRY WORKS\",\n  \"items\": [\n    {\n      \"code\": \"000000111\",\n      \"description\": \"KINGS SAFETY SHOES KWD 805\",\n      \"qty\": \"1\",\n      \"price\": \"193.00\",\n      \"amount\": \"193.00\",\n      \"tax_code\": \"SR\"\n    }\n  ],\n  \"total_exclude_gst\": \"193.00\",\n  \"total_gst\": \"0.00\",\n  \"total_inclusive_gst\": \"193.00\",\n  \"round_amount\": \"0.00\",\n  \"total\": \"193.00\",\n  \"payment_method\": \"VISA CARD\",\n  \"payment_amount\": \"193.00\",\n  \"card_number\": \"xxxxxxxxxxxx4318\",\n  \"approval_code\": \"000\"\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\xca#(\\x1b\\xc2\\x9f\\xc6\\x14f\\x15\\xba\\xd0<\\xe5?\\n\\xf9m\\xa8\\x1d\\x9d\\x92\\x80\\xe1\\x00\\xc8h\\x07\\x93\\xad\\xf6[N\\xbfQ\\xd0\\x05\\xae{\\x8c\\xd2\\x1ejD\\x01'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "gtl5atSDOb2evdIPo5fn0Qc",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 457,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1738,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 634
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1104
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2195,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

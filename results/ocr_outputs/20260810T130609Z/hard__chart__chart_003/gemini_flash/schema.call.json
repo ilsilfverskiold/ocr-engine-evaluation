@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"Workforce By Employment & Gender\",\n  \"required\": [\n    \"topWorkforceSector\",\n    \"workforceByGender\"\n  ],\n  \"properties\": {\n    \"figures\": {\n      \"type\": \"array\",\n      \"description\": \"One entry per figure printed on the page, in page order\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"figureNumber\": {\n            \"type\": \"string\",\n            \"description\": \"Figure label as printed, e.g. 'Figure 20'\"\n          },\n          \"title\": {\n            \"type\": \"string\",\n            \"description\": \"Figure title as printed, excluding the figure label\"\n          },\n          \"chartType\": {\n            \"type\": \"string\"\n          },\n          \"yAxisMax\": {\n            \"type\": \"number\",\n            \"description\": \"Highest printed y-axis tick\"\n          },\n          \"yAxisLabels\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"Y-axis tick labels as printed, bottom to top\"\n          },\n          \"xAxisLabels\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"X-axis category labels as printed, left to right\"\n          },\n          \"legend\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"Legend entries as printed, in legend order\"\n          },\n          \"legendNote\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"description\": \"Any key printed beneath the legend, null if absent\"\n          }\n        }\n      }\n    },\n    \"employmentLevelBreakdown\": {\n      \"type\": \"array\",\n      \"description\": \"Figure 20: headcount for each employment level in each year\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"level\"\n        ],\n        \"properties\": {\n          \"level\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"year\": {\n                  \"type\": \"number\"\n                },\n                \"headcount\": {\n                  \"type\": \"number\"\n                }\n              }\n            }\n          }\n        }\n      }\n    },\n    \"ageAndGenderBreakdown\": {\n      \"type\": \"array\",\n      \"description\": \"Figure 21: headcount by age band for each year and gender, one entry per bar\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"year\",\n          \"gender\"\n        ],\n        \"properties\": {\n          \"year\": {\n            \"type\": \"number\"\n          },\n          \"gender\": {\n            \"type\": \"string\"\n          },\n          \"bands\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"ageBand\": {\n                  \"type\": \"string\",\n                  \"description\": \"Age band label as printed in the legend\"\n                },\n                \"headcount\": {\n                  \"type\": \"number\"\n                }\n              }\n            }\n          },\n          \"total\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"workforceByGender\": {\n      \"type\": \"array\",\n      \"description\": \"Data on the workforce split by gender, listed by year. Round all numbers to the nearest thousand.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"year\",\n          \"male\",\n          \"female\"\n        ],\n        \"properties\": {\n          \"male\": {\n            \"type\": \"number\",\n            \"description\": \"Number of male employees in that year rounded to nearest thousand (i.e. 1,234 should be 1000).\"\n          },\n          \"year\": {\n            \"type\": \"number\",\n            \"description\": \"Four-digit year\"\n          },\n          \"female\": {\n            \"type\": \"number\",\n            \"description\": \"Number of female employees in that year rounded to nearest thousand (i.e. 8,904 should be 9000).\"\n          }\n        }\n      }\n    },\n    \"topWorkforceSector\": {\n      \"type\": \"string\",\n      \"description\": \"The largest employment category (e.g. Sales, Operations, Finance, etc.)\"\n    },\n    \"pageNumber\": {\n      \"type\": \"string\"\n    },\n    \"documentFooter\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.6024939590133727,
+ "cost_per_page": 0.0015715,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"figures\": [\n    {\n      \"figureNumber\": \"Figure 20\",\n      \"title\": \"Global Workforce by Employment Level\",\n      \"chartType\": \"Stacked Bar Chart\",\n      \"yAxisMax\": 12000,\n      \"yAxisLabels\": [\n        \"0\",\n        \"2,000\",\n        \"4,000\",\n        \"6,000\",\n        \"8,000\",\n        \"10,000\",\n        \"12,000\"\n      ],\n      \"xAxisLabels\": [\n        \"2020\",\n        \"2019\",\n        \"2018\",\n        \"2017\"\n      ],\n      \"legend\": [\n        \"Executive & Senior Management\",\n        \"Management\",\n        \"Professional\",\n        \"Professional Support\",\n        \"Administration\",\n        \"Operations\"\n      ],\n      \"legendNote\": null\n    },\n    {\n      \"figureNumber\": \"Figure 21\",\n      \"title\": \"Global Workforce by Age and Gender\",\n      \"chartType\": \"Stacked Bar Chart\",\n      \"yAxisMax\": 10000,\n      \"yAxisLabels\": [\n        \"0\",\n        \"2,000\",\n        \"4,000\",\n        \"6,000\",\n        \"8,000\",\n        \"10,000\"\n      ],\n      \"xAxisLabels\": [\n        \"2020\",\n        \"2019\",\n        \"2018\",\n        \"2017\"\n      ],\n      \"legend\": [\n        \"0–24\",\n        \"25–34\",\n        \"35–44\",\n        \"45–54\",\n        \"55–64\",\n        \"65+\"\n      ],\n      \"legendNote\": \"F=Female M=Male\"\n    }\n  ],\n  \"workforceByGender\": [\n    {\n      \"year\": 2020,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2019,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2018,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2017,\n      \"male\": 8000,\n      \"female\": 2000\n    }\n  ],\n  \"topWorkforceSector\": \"Operations\",\n  \"pageNumber\": \"84\",\n  \"documentFooter\": \"Teck 2020 Sustainability Report | Forward Together\"\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2272,
+  "output_tokens": 669,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:09:07 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2473",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"figures\": [\n    {\n      \"figureNumber\": \"Figure 20\",\n      \"title\": \"Global Workforce by Employment Level\",\n      \"chartType\": \"Stacked Bar Chart\",\n      \"yAxisMax\": 12000,\n      \"yAxisLabels\": [\n        \"0\",\n        \"2,000\",\n        \"4,000\",\n        \"6,000\",\n        \"8,000\",\n        \"10,000\",\n        \"12,000\"\n      ],\n      \"xAxisLabels\": [\n        \"2020\",\n        \"2019\",\n        \"2018\",\n        \"2017\"\n      ],\n      \"legend\": [\n        \"Executive & Senior Management\",\n        \"Management\",\n        \"Professional\",\n        \"Professional Support\",\n        \"Administration\",\n        \"Operations\"\n      ],\n      \"legendNote\": null\n    },\n    {\n      \"figureNumber\": \"Figure 21\",\n      \"title\": \"Global Workforce by Age and Gender\",\n      \"chartType\": \"Stacked Bar Chart\",\n      \"yAxisMax\": 10000,\n      \"yAxisLabels\": [\n        \"0\",\n        \"2,000\",\n        \"4,000\",\n        \"6,000\",\n        \"8,000\",\n        \"10,000\"\n      ],\n      \"xAxisLabels\": [\n        \"2020\",\n        \"2019\",\n        \"2018\",\n        \"2017\"\n      ],\n      \"legend\": [\n        \"0–24\",\n        \"25–34\",\n        \"35–44\",\n        \"45–54\",\n        \"55–64\",\n        \"65+\"\n      ],\n      \"legendNote\": \"F=Female M=Male\"\n    }\n  ],\n  \"workforceByGender\": [\n    {\n      \"year\": 2020,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2019,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2018,\n      \"male\": 8000,\n      \"female\": 2000\n    },\n    {\n      \"year\": 2017,\n      \"male\": 8000,\n      \"female\": 2000\n    }\n  ],\n  \"topWorkforceSector\": \"Operations\",\n  \"pageNumber\": \"84\",\n  \"documentFooter\": \"Teck 2020 Sustainability Report | Forward Together\"\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\xcc\\x1c\\xfdx_\\xbbvH\\xa9\\xf1/\\xe0>{\\xf9\\xa9j*\\x04MT<\\xbdk\\xc4N$\\xb6\\xe0\\xd3u\\xa9L\\x85\\x17\\xc0\\x84\\xa5\\x83\\xa2\\x92Yi\\xf7\\x02'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "gNt5apbrOv20xN8P4NX20Qo",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 669,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 2272,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 1199
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1073
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2941,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

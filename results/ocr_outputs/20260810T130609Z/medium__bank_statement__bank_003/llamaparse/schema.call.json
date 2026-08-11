@@ -1,0 +1,321 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"ytdPriceChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"stocks\": {\n          \"enum\": [\n            \"AVERAGE\",\n            \"FIFO\",\n            \"LIFO\",\n            \"Specific\",\n            \"HighCost\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Default Tax Method for Stocks in a Dividend Reinvestment Plan (DRIP)\"\n        },\n        \"discountMethod\": {\n          \"enum\": [\n            \"Straight\",\n            \"Constant\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Accrual market discount method for all other bond types\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"consultantId\": {\n          \"type\": \"string\",\n          \"description\": \"Client representative id\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"ytdBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date starting balance of the portfolio\"\n        },\n        \"currentPeriodBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current starting balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 46.56665120902471,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"tableData\": [{\"avgDailyVolume\": 46003064.0, \"ytdPriceChange\": 0.2534}, {\"avgDailyVolume\": 29009270.0, \"ytdPriceChange\": 0.2665}, {\"avgDailyVolume\": 10714970.0, \"ytdPriceChange\": 0.0312}, {\"avgDailyVolume\": 3046583.0, \"ytdPriceChange\": 0.2424}, {\"avgDailyVolume\": 5594505.0, \"ytdPriceChange\": 0.2548}, {\"avgDailyVolume\": 3544059.0, \"ytdPriceChange\": 0.052}, {\"avgDailyVolume\": 3509577.0, \"ytdPriceChange\": 0.0839}, {\"avgDailyVolume\": 9449047.0, \"ytdPriceChange\": 0.0667}, {\"avgDailyVolume\": 453405.0, \"ytdPriceChange\": 0.305}, {\"avgDailyVolume\": 8214263.0, \"ytdPriceChange\": 0.1076}, {\"avgDailyVolume\": 5875330.0, \"ytdPriceChange\": 0.2542}, {\"avgDailyVolume\": 4015302.0, \"ytdPriceChange\": 0.2265}, {\"avgDailyVolume\": 7659450.0, \"ytdPriceChange\": 0.1366}, {\"avgDailyVolume\": 8199248.0, \"ytdPriceChange\": 0.0332}, {\"avgDailyVolume\": 1145739.0, \"ytdPriceChange\": 0.339}, {\"avgDailyVolume\": 965248.0, \"ytdPriceChange\": 0.1697}], \"accountInfo\": {\"stocks\": \"Specific\", \"discountMethod\": \"Straight\"}, \"institution\": \"Macquarie Group\", \"clientServices\": {\"consultantId\": \"El1yLRI47\"}, \"portfolioSummary\": {\"changes\": [{\"yearToDate\": 31604.7, \"description\": \"Realized Capital Gains\", \"currentPeriod\": 28027.63}, {\"yearToDate\": 80653.09, \"description\": \"Tactical Rebalancing\", \"currentPeriod\": 0.0}, {\"yearToDate\": 15728.45, \"description\": \"Interest Earnings\", \"currentPeriod\": 14638.22}, {\"yearToDate\": -27354.75, \"description\": \"Scheduled Withdrawals\", \"currentPeriod\": -314.83}, {\"yearToDate\": 121350.4, \"description\": \"Automatic Transfers In\", \"currentPeriod\": 51066.05}, {\"yearToDate\": -50595.05, \"description\": \"Account Maintenance Fees\", \"currentPeriod\": 0.0}], \"ytdEndingBalance\": 730693.84, \"ytdBeginningBalance\": 559307.0, \"currentPeriodBeginningBalance\": 370320.0}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:12:34.447337+00:00",
+  "data": {
+   "tableData": [
+    {
+     "avgDailyVolume": 46003064.0,
+     "ytdPriceChange": 0.2534
+    },
+    {
+     "avgDailyVolume": 29009270.0,
+     "ytdPriceChange": 0.2665
+    },
+    {
+     "avgDailyVolume": 10714970.0,
+     "ytdPriceChange": 0.0312
+    },
+    {
+     "avgDailyVolume": 3046583.0,
+     "ytdPriceChange": 0.2424
+    },
+    {
+     "avgDailyVolume": 5594505.0,
+     "ytdPriceChange": 0.2548
+    },
+    {
+     "avgDailyVolume": 3544059.0,
+     "ytdPriceChange": 0.052
+    },
+    {
+     "avgDailyVolume": 3509577.0,
+     "ytdPriceChange": 0.0839
+    },
+    {
+     "avgDailyVolume": 9449047.0,
+     "ytdPriceChange": 0.0667
+    },
+    {
+     "avgDailyVolume": 453405.0,
+     "ytdPriceChange": 0.305
+    },
+    {
+     "avgDailyVolume": 8214263.0,
+     "ytdPriceChange": 0.1076
+    },
+    {
+     "avgDailyVolume": 5875330.0,
+     "ytdPriceChange": 0.2542
+    },
+    {
+     "avgDailyVolume": 4015302.0,
+     "ytdPriceChange": 0.2265
+    },
+    {
+     "avgDailyVolume": 7659450.0,
+     "ytdPriceChange": 0.1366
+    },
+    {
+     "avgDailyVolume": 8199248.0,
+     "ytdPriceChange": 0.0332
+    },
+    {
+     "avgDailyVolume": 1145739.0,
+     "ytdPriceChange": 0.339
+    },
+    {
+     "avgDailyVolume": 965248.0,
+     "ytdPriceChange": 0.1697
+    }
+   ],
+   "accountInfo": {
+    "stocks": "Specific",
+    "discountMethod": "Straight"
+   },
+   "institution": "Macquarie Group",
+   "clientServices": {
+    "consultantId": "El1yLRI47"
+   },
+   "portfolioSummary": {
+    "changes": [
+     {
+      "yearToDate": 31604.7,
+      "description": "Realized Capital Gains",
+      "currentPeriod": 28027.63
+     },
+     {
+      "yearToDate": 80653.09,
+      "description": "Tactical Rebalancing",
+      "currentPeriod": 0.0
+     },
+     {
+      "yearToDate": 15728.45,
+      "description": "Interest Earnings",
+      "currentPeriod": 14638.22
+     },
+     {
+      "yearToDate": -27354.75,
+      "description": "Scheduled Withdrawals",
+      "currentPeriod": -314.83
+     },
+     {
+      "yearToDate": 121350.4,
+      "description": "Automatic Transfers In",
+      "currentPeriod": 51066.05
+     },
+     {
+      "yearToDate": -50595.05,
+      "description": "Account Maintenance Fees",
+      "currentPeriod": 0.0
+     }
+    ],
+    "ytdEndingBalance": 730693.84,
+    "ytdBeginningBalance": 559307.0,
+    "currentPeriodBeginningBalance": 370320.0
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "tableData": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "avgDailyVolume": {
+        "description": "",
+        "type": "number"
+       },
+       "ytdPriceChange": {
+        "description": "",
+        "type": "number"
+       }
+      },
+      "required": [
+       "avgDailyVolume",
+       "ytdPriceChange"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "accountInfo": {
+     "description": "Summary of account settings and investment elections",
+     "type": "object",
+     "properties": {
+      "stocks": {
+       "description": "Default Tax Method for Stocks in a Dividend Reinvestment Plan (DRIP)",
+       "type": "string",
+       "enum": [
+        "AVERAGE",
+        "FIFO",
+        "LIFO",
+        "Specific",
+        "HighCost"
+       ]
+      },
+      "discountMethod": {
+       "description": "Accrual market discount method for all other bond types",
+       "type": "string",
+       "enum": [
+        "Straight",
+        "Constant"
+       ]
+      }
+     },
+     "required": [
+      "stocks",
+      "discountMethod"
+     ],
+     "additionalProperties": false
+    },
+    "institution": {
+     "description": "Name of the financial institution",
+     "type": "string"
+    },
+    "clientServices": {
+     "description": "Client representative",
+     "type": "object",
+     "properties": {
+      "consultantId": {
+       "description": "Client representative id",
+       "type": "string"
+      }
+     },
+     "required": [
+      "consultantId"
+     ],
+     "additionalProperties": false
+    },
+    "portfolioSummary": {
+     "description": "Overview of the portfolio with balances and changes",
+     "type": "object",
+     "properties": {
+      "changes": {
+       "description": "Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.",
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "yearToDate": {
+          "description": "Amount recorded year to date",
+          "type": "number"
+         },
+         "description": {
+          "description": "Description of the change",
+          "type": "string"
+         },
+         "currentPeriod": {
+          "description": "Amount recorded during the current period",
+          "type": "number"
+         }
+        },
+        "required": [
+         "description",
+         "currentPeriod",
+         "yearToDate"
+        ],
+        "additionalProperties": false
+       }
+      },
+      "ytdEndingBalance": {
+       "description": "The year to date ending balance of the portfolio",
+       "type": "number"
+      },
+      "ytdBeginningBalance": {
+       "description": "The year to date starting balance of the portfolio",
+       "type": "number"
+      },
+      "currentPeriodBeginningBalance": {
+       "description": "The current starting balance of the portfolio",
+       "type": "number"
+      }
+     },
+     "required": [
+      "changes",
+      "ytdEndingBalance",
+      "ytdBeginningBalance",
+      "currentPeriodBeginningBalance"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "tableData",
+    "accountInfo",
+    "institution",
+    "clientServices",
+    "portfolioSummary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "52168f80-1aff-48e9-b1f9-32abbb7e8b21",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 1742,
+    "num_output_tokens": 769
+   },
+   "parse_job_id": "add16b7e-d6c5-4c87-b188-2b67e9e1881e"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "4a8c21c4-9fa8-41d9-8511-9387ac5ee996",
+  "from_ui": false,
+  "id": "950d6768-c9ba-4c72-a808-8151bcac9b73",
+  "job_id": "11605744-4daa-48b1-aba5-66a0bccb6462",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:13:16.894245+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

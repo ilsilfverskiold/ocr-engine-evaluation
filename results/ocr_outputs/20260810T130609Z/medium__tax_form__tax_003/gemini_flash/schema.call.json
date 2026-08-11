@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"income\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"line1\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"c\": {\n              \"type\": \"number\",\n              \"description\": \"Tip income not reported on line 1a.\"\n            },\n            \"d\": {\n              \"type\": \"number\",\n              \"description\": \"Medicaid waiver payments not reported on Form W-2\"\n            },\n            \"e\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable dependent care benefits from Form 2441.\"\n            },\n            \"g\": {\n              \"type\": \"number\",\n              \"description\": \"Wages from Form 8919.\"\n            },\n            \"h\": {\n              \"type\": \"number\",\n              \"description\": \"Other earned income.\"\n            },\n            \"i\": {\n              \"type\": \"number\",\n              \"description\": \"Nontaxable combat pay election.\"\n            },\n            \"z\": {\n              \"type\": \"number\",\n              \"description\": \"Total of lines 1a through 1h\"\n            }\n          }\n        },\n        \"line2\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Tax-exempt interest.\"\n            },\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable interest.\"\n            }\n          }\n        },\n        \"line3\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Qualified dividends.\"\n            },\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Ordinary dividends.\"\n            }\n          }\n        },\n        \"line4\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable amount.\"\n            }\n          }\n        },\n        \"line5\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Pensions and annuities.\"\n            },\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable amount.\"\n            }\n          }\n        },\n        \"line6\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"a\",\n            \"b\",\n            \"c\"\n          ],\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Social security benefits.\"\n            },\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable amount.\"\n            },\n            \"c\": {\n              \"type\": \"boolean\",\n              \"description\": \"Whether the taxpayer elected to use the lump sum election method. Return false unless box is checked.\"\n            }\n          }\n        },\n        \"line7\": {\n          \"type\": \"number\",\n          \"description\": \"Capital gain or loss\"\n        },\n        \"line10\": {\n          \"type\": \"number\",\n          \"description\": \"Adjustments to income from Schedule 1\"\n        },\n        \"line11\": {\n          \"type\": \"number\",\n          \"description\": \"Taxpayer adjusted gross income\"\n        },\n        \"line12\": {\n          \"type\": \"number\",\n          \"description\": \"Standard deduction or itemized deductions\"\n        },\n        \"line14\": {\n          \"type\": \"number\",\n          \"description\": \"Total of lines 12 and 13\"\n        }\n      },\n      \"description\": \"Income items from Form 1040\"\n    },\n    \"spouse\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"spouseSsn\": {\n          \"type\": \"string\",\n          \"description\": \"Spouse social security number. Return in the following format: 123-45-6789\"\n        },\n        \"spouseLastName\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"address\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"address1\",\n        \"address2\",\n        \"city\",\n        \"state\",\n        \"zipCode\"\n      ],\n      \"properties\": {\n        \"city\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"zipCode\": {\n          \"type\": \"string\"\n        },\n        \"address1\": {\n          \"type\": \"string\",\n          \"description\": \"Address line one. Excludes Suites / Apartment numbers.\"\n        },\n        \"address2\": {\n          \"type\": \"string\",\n          \"description\": \"Address line two\"\n        }\n      }\n    },\n    \"taxPeriod\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"taxYearEnd\": {\n          \"type\": \"string\",\n          \"description\": \"Last 2 digits of the tax year (ex: 22)\"\n        }\n      }\n    },\n    \"dependents\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"firstName\",\n          \"lastName\",\n          \"ssn\",\n          \"relationship\",\n          \"childTaxCredit\",\n          \"otherCredit\"\n        ],\n        \"properties\": {\n          \"ssn\": {\n            \"type\": \"string\",\n            \"description\": \"Dependent social security number. Return in the following format: 123-45-6789\"\n          },\n          \"lastName\": {\n            \"type\": \"string\"\n          },\n          \"firstName\": {\n            \"type\": \"string\"\n          },\n          \"otherCredit\": {\n            \"type\": \"boolean\",\n            \"description\": \"Does the dependent qualify for other credit. Return false unless box is checked\"\n          },\n          \"relationship\": {\n            \"type\": \"string\"\n          },\n          \"childTaxCredit\": {\n            \"type\": \"boolean\",\n            \"description\": \"Does the dependent qualify for child tax credit. Return false unless box is checked\"\n          }\n        }\n      },\n      \"description\": \"List of dependents and their information. Return null if there are no dependents.\"\n    },\n    \"ageBlindness\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"bornBeforeJanuary\",\n        \"blind\",\n        \"spouseBornBeforeJanuary\",\n        \"spouseBlind\"\n      ],\n      \"properties\": {\n        \"blind\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Taxpayer is blind. Return false unless box is checked.\"\n        },\n        \"spouseBlind\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse is blind. Return false unless box is checked.\"\n        },\n        \"bornBeforeJanuary\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Taxpayer born before January 2, 1960. Return false unless box is checked.\"\n        },\n        \"spouseBornBeforeJanuary\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse born before January 2, 1960. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Taxpayer and Spouse age and blindess classification.\"\n    },\n    \"filingStatus\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"single\",\n        \"HOH\",\n        \"MFJ\",\n        \"MFS\",\n        \"QSS\",\n        \"nonResident\"\n      ],\n      \"properties\": {\n        \"HOH\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Head of household. Return false unless box is checked.\"\n        },\n        \"MFJ\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Married filing jointly. Return false unless box is checked.\"\n        },\n        \"MFS\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Married filing separately. Return false unless box is checked.\"\n        },\n        \"QSS\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Qualifying surviving spouse. Return false unless box is checked.\"\n        },\n        \"single\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Single. Return false unless box is checked.\"\n        },\n        \"nonResident\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Taxpayer filing status.\"\n    },\n    \"personalInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"lastName\": {\n          \"type\": \"string\"\n        },\n        \"firstName\": {\n          \"type\": \"string\",\n          \"description\": \"Taxpayer first name. Exclude middle initial.\"\n        }\n      }\n    },\n    \"standardDeductions\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"youAreDependent\",\n        \"spouseIsDependent\",\n        \"spouseItemizes\"\n      ],\n      \"properties\": {\n        \"spouseItemizes\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse itemizes on a separate return. Return false unless box is checked.\"\n        },\n        \"youAreDependent\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Someone can claim you as a dependent. Return false unless box is checked.\"\n        },\n        \"spouseIsDependent\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Someone can claim your spouse as a dependent. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Standard Deductions.\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 3.5225009589921683,
+ "cost_per_page": 0.0018922499999999998,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"income\": {\n    \"line1\": {\n      \"c\": 845.0,\n      \"d\": 5433.0,\n      \"e\": 9900.0,\n      \"g\": 0.0,\n      \"h\": 0.0,\n      \"i\": 9891.0,\n      \"z\": 168818.0\n    },\n    \"line2\": {\n      \"a\": 8185.0,\n      \"b\": 0.0\n    },\n    \"line3\": {\n      \"a\": 3998.0,\n      \"b\": 0.0\n    },\n    \"line4\": {\n      \"b\": 0.0\n    },\n    \"line5\": {\n      \"a\": 8081.0,\n      \"b\": 1878.0\n    },\n    \"line6\": {\n      \"a\": 2597.0,\n      \"b\": 3755.0,\n      \"c\": true\n    },\n    \"line7\": 0.0,\n    \"line10\": 0.0,\n    \"line11\": 174451.0,\n    \"line12\": 7993.0,\n    \"line14\": 9809.0\n  },\n  \"spouse\": {\n    \"spouseSsn\": \"297-75-4691\",\n    \"spouseLastName\": \"Johnston\"\n  },\n  \"address\": {\n    \"city\": \"Sandraboro\",\n    \"state\": \"NE\",\n    \"zipCode\": \"68004\",\n    \"address1\": \"995 S Main\",\n    \"address2\": \"Apt. 168\"\n  },\n  \"taxPeriod\": {\n    \"taxYearEnd\": \"24\"\n  },\n  \"dependents\": null,\n  \"ageBlindness\": {\n    \"blind\": true,\n    \"spouseBlind\": false,\n    \"bornBeforeJanuary\": false,\n    \"spouseBornBeforeJanuary\": false\n  },\n  \"filingStatus\": {\n    \"single\": false,\n    \"HOH\": false,\n    \"MFJ\": false,\n    \"MFS\": true,\n    \"QSS\": false,\n    \"nonResident\": false\n  },\n  \"personalInfo\": {\n    \"lastName\": \"Gutmann\",\n    \"firstName\": \"Gussie\"\n  },\n  \"standardDeductions\": {\n    \"youAreDependent\": true,\n    \"spouseIsDependent\": false,\n    \"spouseItemizes\": false\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 3729,
+  "output_tokens": 640,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:08:35 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=3398",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"income\": {\n    \"line1\": {\n      \"c\": 845.0,\n      \"d\": 5433.0,\n      \"e\": 9900.0,\n      \"g\": 0.0,\n      \"h\": 0.0,\n      \"i\": 9891.0,\n      \"z\": 168818.0\n    },\n    \"line2\": {\n      \"a\": 8185.0,\n      \"b\": 0.0\n    },\n    \"line3\": {\n      \"a\": 3998.0,\n      \"b\": 0.0\n    },\n    \"line4\": {\n      \"b\": 0.0\n    },\n    \"line5\": {\n      \"a\": 8081.0,\n      \"b\": 1878.0\n    },\n    \"line6\": {\n      \"a\": 2597.0,\n      \"b\": 3755.0,\n      \"c\": true\n    },\n    \"line7\": 0.0,\n    \"line10\": 0.0,\n    \"line11\": 174451.0,\n    \"line12\": 7993.0,\n    \"line14\": 9809.0\n  },\n  \"spouse\": {\n    \"spouseSsn\": \"297-75-4691\",\n    \"spouseLastName\": \"Johnston\"\n  },\n  \"address\": {\n    \"city\": \"Sandraboro\",\n    \"state\": \"NE\",\n    \"zipCode\": \"68004\",\n    \"address1\": \"995 S Main\",\n    \"address2\": \"Apt. 168\"\n  },\n  \"taxPeriod\": {\n    \"taxYearEnd\": \"24\"\n  },\n  \"dependents\": null,\n  \"ageBlindness\": {\n    \"blind\": true,\n    \"spouseBlind\": false,\n    \"bornBeforeJanuary\": false,\n    \"spouseBornBeforeJanuary\": false\n  },\n  \"filingStatus\": {\n    \"single\": false,\n    \"HOH\": false,\n    \"MFJ\": false,\n    \"MFS\": true,\n    \"QSS\": false,\n    \"nonResident\": false\n  },\n  \"personalInfo\": {\n    \"lastName\": \"Gutmann\",\n    \"firstName\": \"Gussie\"\n  },\n  \"standardDeductions\": {\n    \"youAreDependent\": true,\n    \"spouseIsDependent\": false,\n    \"spouseItemizes\": false\n  }\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f-E=\\xe2\\x8cx\\xc2.c\\x06_\\x8aV\\x84#\\xbd\\x06\\x8d\\xab$\\x16\\xda\\x89\\xfc\\xcd\\xfee\\x1a\\x07\\xe4\\xa5\\xfc\\x14\\xd7\\x91E\\xfe\\xe1&T\\xaf[F\\xc3F'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "Ydt5aqqZLfeIvdIP2cWBgAc",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 640,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 3729,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1102
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 2627
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 4369,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

@@ -1,0 +1,218 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 22.66033608408179,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"25698672\", \"invoice_date\": \"08/01/2015\", \"seller\": \"Gordon, Alvarado and Jones\", \"client\": \"Manning-Ho\", \"seller_tax_id\": \"936-79-2794\", \"client_tax_id\": \"960-85-1578\", \"iban\": \"GB47JKAT88391563723291\"}, \"items\": [{\"item_desc\": \"CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences\", \"item_qty\": \"5,00\", \"item_net_price\": \"1,99\", \"item_net_worth\": \"9,95\", \"item_vat\": \"10%\", \"item_gross_worth\": \"10,94\"}, {\"item_desc\": \"Tales from the Buffalo Bills\", \"item_qty\": \"5,00\", \"item_net_price\": \"5,50\", \"item_net_worth\": \"27,50\", \"item_vat\": \"10%\", \"item_gross_worth\": \"30,25\"}, {\"item_desc\": \"A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook 🕮🕮🕮🕮🕮🕮🕮🕮\", \"item_qty\": \"4,00\", \"item_net_price\": \"19,50\", \"item_net_worth\": \"78,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"85,80\"}], \"summary\": {\"total_net_worth\": \"$ 115,45\", \"total_vat\": \"$ 11,55\", \"total_gross_worth\": \"$ 127,00\"}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 14:19:04.443733+00:00",
+  "data": {
+   "header": {
+    "invoice_no": "25698672",
+    "invoice_date": "08/01/2015",
+    "seller": "Gordon, Alvarado and Jones",
+    "client": "Manning-Ho",
+    "seller_tax_id": "936-79-2794",
+    "client_tax_id": "960-85-1578",
+    "iban": "GB47JKAT88391563723291"
+   },
+   "items": [
+    {
+     "item_desc": "CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences",
+     "item_qty": "5,00",
+     "item_net_price": "1,99",
+     "item_net_worth": "9,95",
+     "item_vat": "10%",
+     "item_gross_worth": "10,94"
+    },
+    {
+     "item_desc": "Tales from the Buffalo Bills",
+     "item_qty": "5,00",
+     "item_net_price": "5,50",
+     "item_net_worth": "27,50",
+     "item_vat": "10%",
+     "item_gross_worth": "30,25"
+    },
+    {
+     "item_desc": "A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook 🕮🕮🕮🕮🕮🕮🕮🕮",
+     "item_qty": "4,00",
+     "item_net_price": "19,50",
+     "item_net_worth": "78,00",
+     "item_vat": "10%",
+     "item_gross_worth": "85,80"
+    }
+   ],
+   "summary": {
+    "total_net_worth": "$ 115,45",
+    "total_vat": "$ 11,55",
+    "total_gross_worth": "$ 127,00"
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "header": {
+     "type": "object",
+     "properties": {
+      "invoice_no": {
+       "type": "string"
+      },
+      "invoice_date": {
+       "type": "string"
+      },
+      "seller": {
+       "type": "string"
+      },
+      "client": {
+       "type": "string"
+      },
+      "seller_tax_id": {
+       "type": "string"
+      },
+      "client_tax_id": {
+       "type": "string"
+      },
+      "iban": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "invoice_no",
+      "invoice_date",
+      "seller",
+      "client",
+      "seller_tax_id",
+      "client_tax_id",
+      "iban"
+     ],
+     "additionalProperties": false
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "item_desc": {
+        "type": "string"
+       },
+       "item_qty": {
+        "type": "string"
+       },
+       "item_net_price": {
+        "type": "string"
+       },
+       "item_net_worth": {
+        "type": "string"
+       },
+       "item_vat": {
+        "type": "string"
+       },
+       "item_gross_worth": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "item_desc",
+       "item_qty",
+       "item_net_price",
+       "item_net_worth",
+       "item_vat",
+       "item_gross_worth"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "summary": {
+     "type": "object",
+     "properties": {
+      "total_net_worth": {
+       "type": "string"
+      },
+      "total_vat": {
+       "type": "string"
+      },
+      "total_gross_worth": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "total_net_worth",
+      "total_vat",
+      "total_gross_worth"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "header",
+    "items",
+    "summary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "ea4d8124-4505-4c6d-a443-500c700baaf5",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 429,
+    "num_output_tokens": 419
+   },
+   "parse_job_id": "df0dce7e-a371-487f-8cb8-4a9c525bad2c"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "70880bd5-1310-4feb-84c3-453792f479ca",
+  "from_ui": false,
+  "id": "c32f67ed-b021-447c-8f09-72d8e903f7b3",
+  "job_id": "ce5fb87f-02c1-4107-87e2-6cb138a48b66",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 14:19:22.773863+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

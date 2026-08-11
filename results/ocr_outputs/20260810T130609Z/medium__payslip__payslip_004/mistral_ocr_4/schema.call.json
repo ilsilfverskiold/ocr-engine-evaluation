@@ -1,0 +1,83 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"returns\": {\n            \"type\": \"number\",\n            \"description\": \"BB Returns\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 4.711219166987576,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"title\": \"Pay-In Sheet - 2025-05\", \"date\": \"2025-05\", \"distNumber\": \"140821\", \"manager\": \"Kathleen Heathcote\", \"consultants\": [{\"consultantName\": \"Michael Altenwerth\", \"idNumber\": \"1241962718\", \"sfmCode\": \"182097\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Amelia Hane-Zemlak\", \"idNumber\": \"4889547264\", \"sfmCode\": \"747362\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Bobbie Kuhn-Haag\", \"idNumber\": \"8010345989\", \"sfmCode\": \"787151\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Grant Labadie\", \"idNumber\": \"9350604287\", \"sfmCode\": \"739099\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Katherine Cummerata\", \"idNumber\": \"1148561050\", \"sfmCode\": \"626102\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Mr. Hubert Rogahn IV\", \"idNumber\": \"7842462271\", \"sfmCode\": \"619983\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Brendan Bartell\", \"idNumber\": \"4103164995\", \"sfmCode\": \"664271\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Tom Deckow\", \"idNumber\": \"8522908367\", \"sfmCode\": \"406620\", \"total\": 2996, \"returns\": 0, \"puerReturns\": 0}]}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Pay-In Sheet - 2025-05\n\nDist: 140821\n\nMan: Kathleen Heathcote\n\n|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Michael Altenwerth | 1241962718 | 182097 |  |  |  |  |  |  |   |\n|  Amelia Hane-Zemlak | 4889547264 | 747362 |  |  |  |  |  |  |   |\n|  Bobbie Kuhn-Haag | 8010345989 | 787151 |  |  |  |  |  |  |   |\n|  Grant Labadie | 9350604287 | 739099 |  |  |  |  |  |  |   |\n|  Katherine Cummerata | 1148561050 | 626102 |  |  |  |  |  |  |   |\n|  Mr. Hubert Rogahn IV | 7842462271 | 619983 |  |  |  |  |  |  |   |\n|  Brendan Bartell | 4103164995 | 664271 |  |  |  |  |  |  |   |\n|  Tom Deckow | 8522908367 | 406620 | R2996.00 |  | R2996.00 |  |  |  | R2996.00  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 856,
+     "width": 1833
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 53,
+      "top_left_y": 88,
+      "bottom_right_x": 444,
+      "bottom_right_y": 129,
+      "content": "# Pay-In Sheet - 2025-05",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 53,
+      "top_left_y": 148,
+      "bottom_right_x": 196,
+      "bottom_right_y": 173,
+      "content": "Dist: 140821",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 919,
+      "top_left_y": 147,
+      "bottom_right_x": 1200,
+      "bottom_right_y": 172,
+      "content": "Man: Kathleen Heathcote",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 72,
+      "top_left_y": 234,
+      "bottom_right_x": 1756,
+      "bottom_right_y": 775,
+      "content": "|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Michael Altenwerth | 1241962718 | 182097 |  |  |  |  |  |  |   |\n|  Amelia Hane-Zemlak | 4889547264 | 747362 |  |  |  |  |  |  |   |\n|  Bobbie Kuhn-Haag | 8010345989 | 787151 |  |  |  |  |  |  |   |\n|  Grant Labadie | 9350604287 | 739099 |  |  |  |  |  |  |   |\n|  Katherine Cummerata | 1148561050 | 626102 |  |  |  |  |  |  |   |\n|  Mr. Hubert Rogahn IV | 7842462271 | 619983 |  |  |  |  |  |  |   |\n|  Brendan Bartell | 4103164995 | 664271 |  |  |  |  |  |  |   |\n|  Tom Deckow | 8522908367 | 406620 | R2996.00 |  | R2996.00 |  |  |  | R2996.00  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 239781
+  },
+  "document_annotation": "{\"title\": \"Pay-In Sheet - 2025-05\", \"date\": \"2025-05\", \"distNumber\": \"140821\", \"manager\": \"Kathleen Heathcote\", \"consultants\": [{\"consultantName\": \"Michael Altenwerth\", \"idNumber\": \"1241962718\", \"sfmCode\": \"182097\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Amelia Hane-Zemlak\", \"idNumber\": \"4889547264\", \"sfmCode\": \"747362\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Bobbie Kuhn-Haag\", \"idNumber\": \"8010345989\", \"sfmCode\": \"787151\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Grant Labadie\", \"idNumber\": \"9350604287\", \"sfmCode\": \"739099\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Katherine Cummerata\", \"idNumber\": \"1148561050\", \"sfmCode\": \"626102\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Mr. Hubert Rogahn IV\", \"idNumber\": \"7842462271\", \"sfmCode\": \"619983\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Brendan Bartell\", \"idNumber\": \"4103164995\", \"sfmCode\": \"664271\", \"total\": 0, \"returns\": 0, \"puerReturns\": 0}, {\"consultantName\": \"Tom Deckow\", \"idNumber\": \"8522908367\", \"sfmCode\": \"406620\", \"total\": 2996, \"returns\": 0, \"puerReturns\": 0}]}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

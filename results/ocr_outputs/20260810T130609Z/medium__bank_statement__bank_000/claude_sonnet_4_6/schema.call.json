@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"etfName\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"autoReinvest\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Automatically reinvest dividends\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 15.514050458092242,
+ "cost_per_page": 0.020613,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": null,\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": -637990.00,\n        \"yearToDate\": -770199.00\n      },\n      {\n        \"description\": \"Dividends\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -73579.95\n      },\n      {\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": 14691.25\n      },\n      {\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": -25497.13,\n        \"yearToDate\": -217594.40\n      },\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": 70374.61,\n        \"yearToDate\": 89254.60\n      },\n      {\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": -9514.72,\n        \"yearToDate\": -50150.55\n      },\n      {\n        \"description\": \"Other\",\n        \"currentPeriod\": 34310.90,\n        \"yearToDate\": 123685.00\n      },\n      {\n        \"description\": \"Net Change in Portfolio\",\n        \"currentPeriod\": -1125.55,\n        \"yearToDate\": -27802.05\n      }\n    ],\n    \"ytdEndingBalance\": 634902.90,\n    \"currentPeriodEndingBalance\": 708538.11\n  }\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2156,
+  "output_tokens": 943,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduJKTdzfCBU5g48rg1yA",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": null,\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": -637990.00,\n        \"yearToDate\": -770199.00\n      },\n      {\n        \"description\": \"Dividends\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": -73579.95\n      },\n      {\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": 0.00,\n        \"yearToDate\": 14691.25\n      },\n      {\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": -25497.13,\n        \"yearToDate\": -217594.40\n      },\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": 70374.61,\n        \"yearToDate\": 89254.60\n      },\n      {\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": -9514.72,\n        \"yearToDate\": -50150.55\n      },\n      {\n        \"description\": \"Other\",\n        \"currentPeriod\": 34310.90,\n        \"yearToDate\": 123685.00\n      },\n      {\n        \"description\": \"Net Change in Portfolio\",\n        \"currentPeriod\": -1125.55,\n        \"yearToDate\": -27802.05\n      }\n    ],\n    \"ytdEndingBalance\": 634902.90,\n    \"currentPeriodEndingBalance\": 708538.11\n  }\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 2156,
+   "output_tokens": 943,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

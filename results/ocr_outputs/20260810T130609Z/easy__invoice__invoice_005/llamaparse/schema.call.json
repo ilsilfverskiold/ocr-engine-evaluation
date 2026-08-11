@@ -1,0 +1,242 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_005.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 23.866009667050093,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"72455228\", \"invoice_date\": \"05/11/2021\", \"seller\": \"Potts, Reed and Miller\", \"client\": \"Brady LLC\", \"seller_tax_id\": \"913-82-5781\", \"client_tax_id\": \"953-75-0545\", \"iban\": \"GB54RDGK95400103726634\"}, \"items\": [{\"item_desc\": \"PlayStation 5 Console Disc Version PREORDER\", \"item_qty\": \"1,00\", \"item_net_price\": \"899,99\", \"item_net_worth\": \"899,99\", \"item_vat\": \"10%\", \"item_gross_worth\": \"989,99\"}, {\"item_desc\": \"Sony PlayStation 4 Slim 1TB (Upgraded to SSD) Black Game Console\", \"item_qty\": \"2,00\", \"item_net_price\": \"150,00\", \"item_net_worth\": \"300,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"330,00\"}, {\"item_desc\": \"Nintendo Gameboy Pocket Console Clear Purple with Box MGB-001 Japan Tested 53\", \"item_qty\": \"1,00\", \"item_net_price\": \"85,00\", \"item_net_worth\": \"85,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"93,50\"}, {\"item_desc\": \"NEC PC Engine INTERFACE UNIT IFU-30 CD ROM Console PI-TG001 Tested Japan\", \"item_qty\": \"1,00\", \"item_net_price\": \"159,99\", \"item_net_worth\": \"159,99\", \"item_vat\": \"10%\", \"item_gross_worth\": \"175,99\"}, {\"item_desc\": \"SONY Playstation2 Slim Console set \\\" SCPH-90000 / White \\\" / TESTED Working 11194\", \"item_qty\": \"4,00\", \"item_net_price\": \"90,00\", \"item_net_worth\": \"360,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"396,00\"}, {\"item_desc\": \"Magnavox Odyssey 2 Microprocessor Console System w Joy Sticks & 15 Games - 1978\", \"item_qty\": \"1,00\", \"item_net_price\": \"155,00\", \"item_net_worth\": \"155,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"170,50\"}], \"summary\": {\"total_net_worth\": \"$ 1 959,98\", \"total_vat\": \"$ 196,00\", \"total_gross_worth\": \"$ 2 155,98\"}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 14:19:35.555161+00:00",
+  "data": {
+   "header": {
+    "invoice_no": "72455228",
+    "invoice_date": "05/11/2021",
+    "seller": "Potts, Reed and Miller",
+    "client": "Brady LLC",
+    "seller_tax_id": "913-82-5781",
+    "client_tax_id": "953-75-0545",
+    "iban": "GB54RDGK95400103726634"
+   },
+   "items": [
+    {
+     "item_desc": "PlayStation 5 Console Disc Version PREORDER",
+     "item_qty": "1,00",
+     "item_net_price": "899,99",
+     "item_net_worth": "899,99",
+     "item_vat": "10%",
+     "item_gross_worth": "989,99"
+    },
+    {
+     "item_desc": "Sony PlayStation 4 Slim 1TB (Upgraded to SSD) Black Game Console",
+     "item_qty": "2,00",
+     "item_net_price": "150,00",
+     "item_net_worth": "300,00",
+     "item_vat": "10%",
+     "item_gross_worth": "330,00"
+    },
+    {
+     "item_desc": "Nintendo Gameboy Pocket Console Clear Purple with Box MGB-001 Japan Tested 53",
+     "item_qty": "1,00",
+     "item_net_price": "85,00",
+     "item_net_worth": "85,00",
+     "item_vat": "10%",
+     "item_gross_worth": "93,50"
+    },
+    {
+     "item_desc": "NEC PC Engine INTERFACE UNIT IFU-30 CD ROM Console PI-TG001 Tested Japan",
+     "item_qty": "1,00",
+     "item_net_price": "159,99",
+     "item_net_worth": "159,99",
+     "item_vat": "10%",
+     "item_gross_worth": "175,99"
+    },
+    {
+     "item_desc": "SONY Playstation2 Slim Console set \" SCPH-90000 / White \" / TESTED Working 11194",
+     "item_qty": "4,00",
+     "item_net_price": "90,00",
+     "item_net_worth": "360,00",
+     "item_vat": "10%",
+     "item_gross_worth": "396,00"
+    },
+    {
+     "item_desc": "Magnavox Odyssey 2 Microprocessor Console System w Joy Sticks & 15 Games - 1978",
+     "item_qty": "1,00",
+     "item_net_price": "155,00",
+     "item_net_worth": "155,00",
+     "item_vat": "10%",
+     "item_gross_worth": "170,50"
+    }
+   ],
+   "summary": {
+    "total_net_worth": "$ 1 959,98",
+    "total_vat": "$ 196,00",
+    "total_gross_worth": "$ 2 155,98"
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "header": {
+     "type": "object",
+     "properties": {
+      "invoice_no": {
+       "type": "string"
+      },
+      "invoice_date": {
+       "type": "string"
+      },
+      "seller": {
+       "type": "string"
+      },
+      "client": {
+       "type": "string"
+      },
+      "seller_tax_id": {
+       "type": "string"
+      },
+      "client_tax_id": {
+       "type": "string"
+      },
+      "iban": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "invoice_no",
+      "invoice_date",
+      "seller",
+      "client",
+      "seller_tax_id",
+      "client_tax_id",
+      "iban"
+     ],
+     "additionalProperties": false
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "item_desc": {
+        "type": "string"
+       },
+       "item_qty": {
+        "type": "string"
+       },
+       "item_net_price": {
+        "type": "string"
+       },
+       "item_net_worth": {
+        "type": "string"
+       },
+       "item_vat": {
+        "type": "string"
+       },
+       "item_gross_worth": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "item_desc",
+       "item_qty",
+       "item_net_price",
+       "item_net_worth",
+       "item_vat",
+       "item_gross_worth"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "summary": {
+     "type": "object",
+     "properties": {
+      "total_net_worth": {
+       "type": "string"
+      },
+      "total_vat": {
+       "type": "string"
+      },
+      "total_gross_worth": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "total_net_worth",
+      "total_vat",
+      "total_gross_worth"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "header",
+    "items",
+    "summary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "ea4d8124-4505-4c6d-a443-500c700baaf5",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 593,
+    "num_output_tokens": 658
+   },
+   "parse_job_id": "9ef78689-83df-40f9-8964-7348ed158894"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "f7d87b28-2026-42ed-b6fe-969a8f5c8fb1",
+  "from_ui": false,
+  "id": "f721090b-6fbe-4d2e-9e77-4ed3044c031f",
+  "job_id": "7ae27f95-bb70-4c3d-878d-f4eec88626db",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 14:19:55.178484+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

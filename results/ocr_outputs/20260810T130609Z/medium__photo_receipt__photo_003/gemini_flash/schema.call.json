@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"slip_number\": {\n          \"type\": \"string\"\n        },\n        \"till_number\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 3.8773632909869775,
+ "cost_per_page": 0.0013847500000000001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 14.99,\n      \"description\": \"CELERY STICKS CUT 300G\",\n      \"total_price\": 14.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 46.99,\n      \"description\": \"COMESSA T/ILLA WHT WRAPS 8S\",\n      \"total_price\": 46.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 1.50,\n      \"description\": \"F/L RECYCLED C/BAG 24L\",\n      \"total_price\": 1.50\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 14.99,\n      \"description\": \"LOAF BANANA\",\n      \"total_price\": 14.99\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 21.99,\n      \"description\": \"PINEAPPLE QUEEN\",\n      \"total_price\": 43.98\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": -3.98,\n      \"description\": \"COMBO PROMO\",\n      \"total_price\": -3.98\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.99,\n      \"description\": \"SUPER M FL/MILK C/SODA 300ML\",\n      \"total_price\": 17.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 16.99,\n      \"description\": \"SUPER M FL/MILK S/BERRY 300ML\",\n      \"total_price\": 16.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 59.99,\n      \"description\": \"TOMATOES LONG LIFE 2KG\",\n      \"total_price\": 59.99\n    }\n  ],\n  \"totals\": {\n    \"total\": 213.44\n  },\n  \"store_info\": {\n    \"name\": \"FOOD LOVER'S MARKET\"\n  },\n  \"cashier_info\": {\n    \"date\": \"3/04/2024\",\n    \"name\": \"Felicia\",\n    \"time\": \"11:51\",\n    \"slip_number\": \"R008\",\n    \"till_number\": \"C1011\",\n    \"cashier_number\": \"5174\"\n  },\n  \"customer_name\": null\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1519,
+  "output_tokens": 670,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:05:53 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=3754",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 14.99,\n      \"description\": \"CELERY STICKS CUT 300G\",\n      \"total_price\": 14.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 46.99,\n      \"description\": \"COMESSA T/ILLA WHT WRAPS 8S\",\n      \"total_price\": 46.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 1.50,\n      \"description\": \"F/L RECYCLED C/BAG 24L\",\n      \"total_price\": 1.50\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 14.99,\n      \"description\": \"LOAF BANANA\",\n      \"total_price\": 14.99\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 21.99,\n      \"description\": \"PINEAPPLE QUEEN\",\n      \"total_price\": 43.98\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": -3.98,\n      \"description\": \"COMBO PROMO\",\n      \"total_price\": -3.98\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.99,\n      \"description\": \"SUPER M FL/MILK C/SODA 300ML\",\n      \"total_price\": 17.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 16.99,\n      \"description\": \"SUPER M FL/MILK S/BERRY 300ML\",\n      \"total_price\": 16.99\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 59.99,\n      \"description\": \"TOMATOES LONG LIFE 2KG\",\n      \"total_price\": 59.99\n    }\n  ],\n  \"totals\": {\n    \"total\": 213.44\n  },\n  \"store_info\": {\n    \"name\": \"FOOD LOVER'S MARKET\"\n  },\n  \"cashier_info\": {\n    \"date\": \"3/04/2024\",\n    \"name\": \"Felicia\",\n    \"time\": \"11:51\",\n    \"slip_number\": \"R008\",\n    \"till_number\": \"C1011\",\n    \"cashier_number\": \"5174\"\n  },\n  \"customer_name\": null\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f%\\xe28\\x18\\x05\\xe3\\xde\\xfe\\x9d\\xec\"\\xdf\\xff\\xa3\\xc8\\x95]\\xdd\\x91\\x04\\xa6u\\xb6\\x0e\\xa6\\xec\\x18H\\xc2\\xc1\\xad\\x8c\\xf9\\x04@+\\x9a\\xb5\\x8c\\xfb<bW\\x15\\xa2'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "vtp5apukMo2MvdIP4OfgqAo",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 670,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1519,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1100
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 419
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2189,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

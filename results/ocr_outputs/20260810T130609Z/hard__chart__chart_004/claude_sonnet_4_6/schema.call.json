@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"DataCenterConcerns\",\n  \"required\": [\n    \"concerns\"\n  ],\n  \"properties\": {\n    \"concerns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"topic\",\n          \"veryConcernedPct\",\n          \"somewhatConcernedPct\",\n          \"slightlyConcernedPct\",\n          \"notConcernedPct\"\n        ],\n        \"properties\": {\n          \"topic\": {\n            \"type\": \"string\",\n            \"description\": \"Name of the concern topic (e.g. 'Cost')\"\n          },\n          \"notConcernedPct\": {\n            \"type\": \"number\",\n            \"description\": \"Decimal representation of 'not concerned'\"\n          },\n          \"veryConcernedPct\": {\n            \"type\": \"number\",\n            \"description\": \"Decimal representation of 'very concerned' (e.g., 0.44 for 44%)\"\n          },\n          \"slightlyConcernedPct\": {\n            \"type\": \"number\",\n            \"description\": \"Decimal representation of 'slightly concerned'\"\n          },\n          \"somewhatConcernedPct\": {\n            \"type\": \"number\",\n            \"description\": \"Decimal representation of 'somewhat concerned'\"\n          }\n        }\n      },\n      \"description\": \"List of data center concerns along with associated concern levels\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 8.602557208039798,
+ "cost_per_page": 0.013895999999999999,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"concerns\": [\n    {\n      \"topic\": \"Cost\",\n      \"veryConcernedPct\": 0.44,\n      \"somewhatConcernedPct\": 0.36,\n      \"slightlyConcernedPct\": 0.17,\n      \"notConcernedPct\": 0.03\n    },\n    {\n      \"topic\": \"Forecasting future data center capacity requirements\",\n      \"veryConcernedPct\": 0.30,\n      \"somewhatConcernedPct\": 0.38,\n      \"slightlyConcernedPct\": 0.24,\n      \"notConcernedPct\": 0.09\n    },\n    {\n      \"topic\": \"Improving energy performance for facilities equipment\",\n      \"veryConcernedPct\": 0.29,\n      \"somewhatConcernedPct\": 0.40,\n      \"slightlyConcernedPct\": 0.23,\n      \"notConcernedPct\": 0.08\n    },\n    {\n      \"topic\": \"Lack of qualified staff\",\n      \"veryConcernedPct\": 0.27,\n      \"somewhatConcernedPct\": 0.44,\n      \"slightlyConcernedPct\": 0.24,\n      \"notConcernedPct\": 0.06\n    },\n    {\n      \"topic\": \"Accommodating significantly denser IT\",\n      \"veryConcernedPct\": 0.24,\n      \"somewhatConcernedPct\": 0.41,\n      \"slightlyConcernedPct\": 0.25,\n      \"notConcernedPct\": 0.09\n    },\n    {\n      \"topic\": \"Improving energy performance for IT\",\n      \"veryConcernedPct\": 0.24,\n      \"somewhatConcernedPct\": 0.40,\n      \"slightlyConcernedPct\": 0.26,\n      \"notConcernedPct\": 0.10\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1962,
+  "output_tokens": 534,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduPK7cZHgiNBXWg7axyA",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"concerns\": [\n    {\n      \"topic\": \"Cost\",\n      \"veryConcernedPct\": 0.44,\n      \"somewhatConcernedPct\": 0.36,\n      \"slightlyConcernedPct\": 0.17,\n      \"notConcernedPct\": 0.03\n    },\n    {\n      \"topic\": \"Forecasting future data center capacity requirements\",\n      \"veryConcernedPct\": 0.30,\n      \"somewhatConcernedPct\": 0.38,\n      \"slightlyConcernedPct\": 0.24,\n      \"notConcernedPct\": 0.09\n    },\n    {\n      \"topic\": \"Improving energy performance for facilities equipment\",\n      \"veryConcernedPct\": 0.29,\n      \"somewhatConcernedPct\": 0.40,\n      \"slightlyConcernedPct\": 0.23,\n      \"notConcernedPct\": 0.08\n    },\n    {\n      \"topic\": \"Lack of qualified staff\",\n      \"veryConcernedPct\": 0.27,\n      \"somewhatConcernedPct\": 0.44,\n      \"slightlyConcernedPct\": 0.24,\n      \"notConcernedPct\": 0.06\n    },\n    {\n      \"topic\": \"Accommodating significantly denser IT\",\n      \"veryConcernedPct\": 0.24,\n      \"somewhatConcernedPct\": 0.41,\n      \"slightlyConcernedPct\": 0.25,\n      \"notConcernedPct\": 0.09\n    },\n    {\n      \"topic\": \"Improving energy performance for IT\",\n      \"veryConcernedPct\": 0.24,\n      \"somewhatConcernedPct\": 0.40,\n      \"slightlyConcernedPct\": 0.26,\n      \"notConcernedPct\": 0.10\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1962,
+   "output_tokens": 534,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

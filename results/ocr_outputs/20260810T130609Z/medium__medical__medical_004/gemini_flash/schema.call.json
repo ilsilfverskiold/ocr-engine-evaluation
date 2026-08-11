@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"dob\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's date of birth as it appears\"\n    },\n    \"city\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's city as it appears\"\n    },\n    \"phone\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's phone number as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"spouseName\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's name\"\n    },\n    \"spousePhone\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's phone number as it appear\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"isHospitalized\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if patient has been hospitalized in the past year, must return true or false\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"fever\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced a fever, must return true or false\"\n        },\n        \"chills\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chills, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"fatigue\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced fatigue, must return true or false\"\n        },\n        \"calfPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced calf pain, must return true or false\"\n        },\n        \"blackOuts\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blackouts, must return true or false\"\n        },\n        \"headaches\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced headaches, must return true or false\"\n        },\n        \"musclePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced muscle pain, must return true or false\"\n        },\n        \"blurredVision\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blurred vision, must return true or false\"\n        },\n        \"excessiveBruising\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive bruising, must return true or false\"\n        },\n        \"shortnessOfBreath\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced shortness of breath, must return true or false\"\n        },\n        \"tuberculosisExposure\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has been exposed to tuberculosis, must return true or false\"\n        },\n        \"difficultyEmptyingBowelOrBladder\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has difficulty emptying their bowel or bladder, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    },\n    \"previousHealthHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"primaryCarePhysician\"\n      ],\n      \"properties\": {\n        \"lastSeenDate\": {\n          \"type\": \"string\",\n          \"description\": \"Date last seen by physician\"\n        },\n        \"prescriptionDrugs\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"other\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              },\n              \"description\": \"List of other prescription drugs that patient uses, must return null if not provided\"\n            },\n            \"insulin\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses insulin, must return true or false\"\n            },\n            \"painPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses pain pills, must return true or false\"\n            },\n            \"muscleRelaxers\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses muscle relaxers, must return true or false\"\n            },\n            \"antidepressants\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses antidepressants, must return true or false\"\n            },\n            \"antiInflammatory\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses anti-inflammatories, must return true or false\"\n            },\n            \"birthControlPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses birth control, must return true or false\"\n            },\n            \"bloodPressureMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood pressure medication, must return true or false\"\n            }\n          },\n          \"description\": \"Details of prescription drugs currently taken\"\n        },\n        \"accidentsOrInjuries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of accidents or injuries that patient has experienced, must return null if not provided\"\n        },\n        \"overTheCounterDrugs\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of over-the-counter drugs that patient uses, must return null if not provided\"\n        },\n        \"primaryCarePhysician\": {\n          \"type\": \"string\",\n          \"description\": \"Name of primary care physician\"\n        },\n        \"vitaminsOrSupplements\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of vitamins or supplements that patient takes, must return null if not provided\"\n        },\n        \"receivedChiropracticCare\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient received chiropractic care, must return true or false\"\n        }\n      },\n      \"description\": \"Details of patient's previous health history\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.430863582994789,
+ "cost_per_page": 0.00134775,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"firstName\": \"Daniel\",\n  \"lastName\": \"Miller\",\n  \"address\": \"7098 West Eagle St\",\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"spouseName\": null,\n  \"spousePhone\": null,\n  \"maritalStatus\": \"Widowed\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": false,\n    \"fatigue\": true,\n    \"calfPain\": false,\n    \"blackOuts\": false,\n    \"headaches\": true,\n    \"musclePain\": false,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": false,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": false,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": false,\n      \"antiInflammatory\": false,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": null,\n    \"overTheCounterDrugs\": null,\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": [\n      \"resveratrol\",\n      \"vitamin b3\"\n    ],\n    \"receivedChiropracticCare\": true\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2811,
+  "output_tokens": 430,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:03:29 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2332",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"firstName\": \"Daniel\",\n  \"lastName\": \"Miller\",\n  \"address\": \"7098 West Eagle St\",\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"spouseName\": null,\n  \"spousePhone\": null,\n  \"maritalStatus\": \"Widowed\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": false,\n    \"fatigue\": true,\n    \"calfPain\": false,\n    \"blackOuts\": false,\n    \"headaches\": true,\n    \"musclePain\": false,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": false,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": false,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": false,\n      \"antiInflammatory\": false,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": null,\n    \"overTheCounterDrugs\": null,\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": [\n      \"resveratrol\",\n      \"vitamin b3\"\n    ],\n    \"receivedChiropracticCare\": true\n  }\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f/\\t\\x19\\x0f\\x18\\xbbBRF\\xdb\"\\xa8,\\x03\\x94\\xd1\\xb4\\xfb\\t\\x81\\xb9\\x8b\\xf9\\xc4\\xea\\xb1\\xa0QN\\x08\\xc0,\\xb0\\xa1D\\xa4\\xfeH\\xe3\\xaf,\\xd6Pfz'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "L9p5ar-sH4advdIP6cSB6Qs",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 430,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 2811,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1081
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 1730
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 3241,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

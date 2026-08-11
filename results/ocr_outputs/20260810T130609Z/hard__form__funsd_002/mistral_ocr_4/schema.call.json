@@ -1,0 +1,335 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBMISSION DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"REGION\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVISION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"DIVISION NAME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"# REP\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"DISTRIBUTION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 5.353838042006828,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"TO\": \"K. A. Sparrow\", \"FROM\": \"D. J. Landro\", \"SUBMISSION DATE\": \"JUN 23\", \"SUBJECT\": \"OLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT\", \"REGION\": null, \"DIVISION\": [{\"DIVISION NAME\": \"Milw. South\", \"# REP\": \"7\"}, {\"DIVISION NAME\": \"Milw. North\", \"# REP\": \"7\"}], \"DISTRIBUTION\": [{\"NAME OF ACCOUNT\": \"Walgreen Drug\", \"IND/LOR VOLUME\": \"144/14\", \"NO. OF STORES\": \"93\"}]}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "TO:\n\nK. A. Sparrow\n\nSUBMISSION DATE\n\nFROM:\n\nD. J. Landro\n\nMAY 12\n\nAUG 4\n\nJUN 23 X\n\nSEP 15\n\nSUBJECT:\n\nOLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT\n\n# GEOGRAPHY\n\nREGION:\n\n(ONLY IF PARTIAL REGION CONTINUE WITH DIVISION(S) SCOPE)\n\nDIVISION:\n\nDIVISION NAME:\n\nMilw. South\n\nDIVISION NAME:\n\n# REP 7\n\nDIVISION NAME:\n\nMilw. North\n\nDIVISION NAME:\n\n# REP 7\n\nDIVISION NAME:\n\nDIVISION NAME:\n\n# REPS\n\n# DISTRIBUTION\n\nDIRECT ACCOUNTS AND CHAINS HEADQUARTERED WITHIN THE REGION\n(15 + STORES) STOCKING NO OLD GOLD MENTHOL LIGHTS OR ULTRA LIGHTS 100'S\n\n|  NAME OF ACCOUNT | IND/LOR VOLUME | NO. OF STORES | NAME OF ACCOUNT | IND/LOR VOLUME | NO. OF STORES  |\n| --- | --- | --- | --- | --- | --- |\n|  Walgreen Drug | 144/14 | 93 |  |  |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n\n82252956\n\nOLDGOLD.XLS\n\nPage1 of 3 Pages",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1000,
+     "width": 754
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 35,
+      "top_left_y": 111,
+      "bottom_right_x": 60,
+      "bottom_right_y": 125,
+      "content": "TO:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 190,
+      "top_left_y": 111,
+      "bottom_right_x": 268,
+      "bottom_right_y": 126,
+      "content": "K. A. Sparrow",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 526,
+      "top_left_y": 111,
+      "bottom_right_x": 643,
+      "bottom_right_y": 126,
+      "content": "SUBMISSION DATE",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 144,
+      "bottom_right_x": 78,
+      "bottom_right_y": 159,
+      "content": "FROM:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 190,
+      "top_left_y": 144,
+      "bottom_right_x": 259,
+      "bottom_right_y": 159,
+      "content": "D. J. Landro",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 429,
+      "top_left_y": 142,
+      "bottom_right_x": 475,
+      "bottom_right_y": 160,
+      "content": "MAY 12",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 551,
+      "top_left_y": 144,
+      "bottom_right_x": 592,
+      "bottom_right_y": 160,
+      "content": "AUG 4",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 431,
+      "top_left_y": 176,
+      "bottom_right_x": 488,
+      "bottom_right_y": 193,
+      "content": "JUN 23 X",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 546,
+      "top_left_y": 177,
+      "bottom_right_x": 592,
+      "bottom_right_y": 193,
+      "content": "SEP 15",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 211,
+      "bottom_right_x": 97,
+      "bottom_right_y": 226,
+      "content": "SUBJECT:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 190,
+      "top_left_y": 211,
+      "bottom_right_x": 628,
+      "bottom_right_y": 226,
+      "content": "OLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 262,
+      "bottom_right_x": 241,
+      "bottom_right_y": 276,
+      "content": "# GEOGRAPHY",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 295,
+      "bottom_right_x": 90,
+      "bottom_right_y": 310,
+      "content": "REGION:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 328,
+      "bottom_right_x": 413,
+      "bottom_right_y": 345,
+      "content": "(ONLY IF PARTIAL REGION CONTINUE WITH DIVISION(S) SCOPE)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 363,
+      "bottom_right_x": 96,
+      "bottom_right_y": 378,
+      "content": "DIVISION:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 395,
+      "bottom_right_x": 149,
+      "bottom_right_y": 411,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 189,
+      "top_left_y": 395,
+      "bottom_right_x": 268,
+      "bottom_right_y": 411,
+      "content": "Milw. South",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 275,
+      "top_left_y": 395,
+      "bottom_right_x": 371,
+      "bottom_right_y": 411,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 475,
+      "top_left_y": 396,
+      "bottom_right_x": 592,
+      "bottom_right_y": 413,
+      "content": "# REP 7",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 428,
+      "bottom_right_x": 149,
+      "bottom_right_y": 444,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 189,
+      "top_left_y": 428,
+      "bottom_right_x": 264,
+      "bottom_right_y": 445,
+      "content": "Milw. North",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 275,
+      "top_left_y": 428,
+      "bottom_right_x": 371,
+      "bottom_right_y": 445,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 475,
+      "top_left_y": 429,
+      "bottom_right_x": 592,
+      "bottom_right_y": 446,
+      "content": "# REP 7",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 463,
+      "bottom_right_x": 149,
+      "bottom_right_y": 478,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 275,
+      "top_left_y": 463,
+      "bottom_right_x": 371,
+      "bottom_right_y": 479,
+      "content": "DIVISION NAME:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 475,
+      "top_left_y": 463,
+      "bottom_right_x": 592,
+      "bottom_right_y": 480,
+      "content": "# REPS",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 154,
+      "top_left_y": 515,
+      "bottom_right_x": 242,
+      "bottom_right_y": 529,
+      "content": "# DISTRIBUTION",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 35,
+      "top_left_y": 547,
+      "bottom_right_x": 618,
+      "bottom_right_y": 583,
+      "content": "DIRECT ACCOUNTS AND CHAINS HEADQUARTERED WITHIN THE REGION\n(15 + STORES) STOCKING NO OLD GOLD MENTHOL LIGHTS OR ULTRA LIGHTS 100'S",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 32,
+      "top_left_y": 613,
+      "bottom_right_x": 695,
+      "bottom_right_y": 814,
+      "content": "|  NAME OF ACCOUNT | IND/LOR VOLUME | NO. OF STORES | NAME OF ACCOUNT | IND/LOR VOLUME | NO. OF STORES  |\n| --- | --- | --- | --- | --- | --- |\n|  Walgreen Drug | 144/14 | 93 |  |  |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |\n|  |   |   |   |   |   |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 692,
+      "top_left_y": 789,
+      "bottom_right_x": 713,
+      "bottom_right_y": 893,
+      "content": "82252956",
+      "confidence_scores": null,
+      "type": "aside_text"
+     },
+     {
+      "top_left_x": 74,
+      "top_left_y": 919,
+      "bottom_right_x": 143,
+      "bottom_right_y": 930,
+      "content": "OLDGOLD.XLS",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 549,
+      "top_left_y": 914,
+      "bottom_right_x": 670,
+      "bottom_right_y": 932,
+      "content": "Page1 of 3 Pages",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 89161
+  },
+  "document_annotation": "{\"TO\": \"K. A. Sparrow\", \"FROM\": \"D. J. Landro\", \"SUBMISSION DATE\": \"JUN 23\", \"SUBJECT\": \"OLD GOLD MENTHOL LIGHTS & ULTRA LIGHTS 100'S - PROGRESS REPORT\", \"REGION\": null, \"DIVISION\": [{\"DIVISION NAME\": \"Milw. South\", \"# REP\": \"7\"}, {\"DIVISION NAME\": \"Milw. North\", \"# REP\": \"7\"}], \"DISTRIBUTION\": [{\"NAME OF ACCOUNT\": \"Walgreen Drug\", \"IND/LOR VOLUME\": \"144/14\", \"NO. OF STORES\": \"93\"}]}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

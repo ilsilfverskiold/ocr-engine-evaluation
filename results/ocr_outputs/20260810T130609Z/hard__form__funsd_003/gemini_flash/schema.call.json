@@ -1,0 +1,118 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBMISSION DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PRE-SELL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"BIGIF / 2 FOR 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"$7.00 CARTON COUPON/BUYDOWN\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DISTRIBUTION_WITHIN_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"DISTRIBUTION_OUTSIDE_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.4018959579989314,
+ "cost_per_page": 0.0015960000000000002,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeesport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sico Serve\",\n      \"IND/LOR VOLUME\": \"104/22\",\n      \"NO. OF STORES\": \"18\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"21\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"82\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"106\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"87\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"5\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"23\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"35\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    }\n  ]\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1656,
+  "output_tokens": 788,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:13:12 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2267",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeesport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sico Serve\",\n      \"IND/LOR VOLUME\": \"104/22\",\n      \"NO. OF STORES\": \"18\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"21\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"82\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"106\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"87\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"5\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"23\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"35\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    }\n  ]\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0fDcw\\xcd3\\xcc\\x05\\x0e%\\xcdd\\x13\\x11\\xf3\\rA\\xaa\\x12[M\\xe8\\xe2j\\x1e\\xca.\\xa06(N^\\xb2\\xbd\\r\\xc1\\x88\\xe2\\x88\\x1c\\xa1\\xef\\xf7\\x04\\x9b\\x16'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": {
+     "citations": [
+      {
+       "end_index": 623,
+       "license": "",
+       "publication_date": null,
+       "start_index": 197,
+       "title": null,
+       "uri": "https://github.com/RA1NCS/Structura"
+      }
+     ]
+    },
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "dtx5aoWAG_W8kdUPypuxiQw",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 788,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1656,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1102
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 554
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2444,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

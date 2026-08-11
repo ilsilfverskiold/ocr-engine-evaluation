@@ -1,0 +1,118 @@
+from __future__ import annotations
+
+import base64
+import io
+import os
+from pathlib import Path
+
+from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
+
+_MAX_BYTES = 4_900_000  # Claude API hard limit is 5MB; stay under with margin
+
+
+def _prepare_image(path: Path) -> tuple[bytes, str]:
+    """Return (bytes, media_type), compressing if the image exceeds Claude's 5MB limit."""
+    raw = path.read_bytes()
+    media_type = "image/jpeg" if path.suffix.lower() in (".jpg", ".jpeg") else "image/png"
+    if len(raw) <= _MAX_BYTES:
+        return raw, media_type
+    from PIL import Image
+    img = Image.open(path).convert("RGB")
+    for quality in [85, 70, 55, 40]:
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=quality)
+        if buf.tell() <= _MAX_BYTES:
+            return buf.getvalue(), "image/jpeg"
+    # Last resort: halve dimensions
+    buf = io.BytesIO()
+    img = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
+    img.save(buf, format="JPEG", quality=85)
+    return buf.getvalue(), "image/jpeg"
+
+# Claude Sonnet 4.6 pricing (approximate per page = 1 image ~1500 in + ~800 out tokens)
+INPUT_PRICE_PER_TOKEN = 3.0 / 1_000_000   # $3/M input
+OUTPUT_PRICE_PER_TOKEN = 15.0 / 1_000_000  # $15/M output
+
+
+class ClaudeRunner(OCRRunner):
+    """Claude Sonnet 4.6 — image-based OCR via Anthropic API."""
+
+    name = "claude_sonnet_4_6"
+    supports_pdf = False  # orchestrator converts PDF pages to images
+    accepts_task = True
+
+    _PROMPT = (
+        "Transcribe ALL text visible in this document image exactly as it appears. "
+        "Preserve structure, tables (as markdown), reading order, and special characters. "
+        "Do not add commentary, summaries, or corrections. Output only the transcribed text."
+    )
+
+    def __init__(self, model: str = "claude-sonnet-4-6") -> None:
+        import anthropic
+        self._client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        self._model = model
+
+    def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
+        t0 = self._timer()
+        raw_bytes, media_type = _prepare_image(document_path)
+        b64 = base64.standard_b64encode(raw_bytes).decode()
+
+        # task=None reproduces leg 1 byte for byte.
+        prompt = task.prompt if task else self._PROMPT
+        kwargs: dict = {}
+        if task and task.wants_json:
+            # Claude has no JSON mode, and current models reject assistant
+            # prefill (400: "does not support assistant message prefill").
+            # Temperature 0 plus the prompt's own JSON instruction is the
+            # available control; the scorers' parsers strip fences and prose.
+            kwargs["temperature"] = 0
+
+        content: list[dict] = [
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": media_type,
+                    "data": b64,
+                },
+            },
+            {"type": "text", "text": prompt},
+        ]
+        messages: list[dict] = [{"role": "user", "content": content}]
+
+        message = self._client.messages.create(
+            model=self._model,
+            max_tokens=4096,
+            messages=messages,
+            **kwargs,
+        )
+        elapsed = self._elapsed(t0)
+
+        text = message.content[0].text if message.content else ""
+        usage = message.usage
+        cost = (
+            usage.input_tokens * INPUT_PRICE_PER_TOKEN
+            + usage.output_tokens * OUTPUT_PRICE_PER_TOKEN
+        )
+
+        return OCRResult(
+            engine_name=self.name,
+            document_path=str(document_path),
+            raw_text=text,
+            structured_output={},
+            latency_seconds=elapsed,
+            cost_per_page=cost,
+            page_count=1,
+            model_version=self._model,
+            metadata={
+                "input_tokens": usage.input_tokens,
+                "output_tokens": usage.output_tokens,
+                "leg": task.leg if task else "default",
+                # A reply cut off at max_tokens is invalid JSON that looks like
+                # the model failing the leg. stop_reason is the difference.
+                "stop_reason": getattr(message, "stop_reason", None),
+            },
+            # raw_text above is content[0] only; this is every block that came
+            # back, with the stop_reason and usage that explain a short reply.
+            raw_response=provider_payload(message),
+        )

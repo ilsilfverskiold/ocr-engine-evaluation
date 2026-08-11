@@ -1,0 +1,121 @@
+{
+ "engine": "glm_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "请按下列JSON格式输出图中信息:\n\n{\n  \"dob\": \"\",\n  \"city\": \"\",\n  \"phone\": \"\",\n  \"address\": \"\",\n  \"lastName\": \"\",\n  \"firstName\": \"\",\n  \"spouseName\": \"\",\n  \"spousePhone\": \"\",\n  \"maritalStatus\": \"\",\n  \"isHospitalized\": \"\",\n  \"reviewOfSymptoms\": {\n    \"fever\": \"\",\n    \"chills\": \"\",\n    \"eyePain\": \"\",\n    \"fatigue\": \"\",\n    \"calfPain\": \"\",\n    \"blackOuts\": \"\",\n    \"headaches\": \"\",\n    \"musclePain\": \"\",\n    \"blurredVision\": \"\",\n    \"excessiveBruising\": \"\",\n    \"shortnessOfBreath\": \"\",\n    \"tuberculosisExposure\": \"\",\n    \"difficultyEmptyingBowelOrBladder\": \"\"\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"\"\n      ],\n      \"insulin\": \"\",\n      \"painPills\": \"\",\n      \"muscleRelaxers\": \"\",\n      \"antidepressants\": \"\",\n      \"antiInflammatory\": \"\",\n      \"birthControlPills\": \"\",\n      \"bloodPressureMedication\": \"\"\n    },\n    \"accidentsOrInjuries\": [\n      \"\"\n    ],\n    \"overTheCounterDrugs\": [\n      \"\"\n    ],\n    \"primaryCarePhysician\": \"\",\n    \"vitaminsOrSupplements\": [\n      \"\"\n    ],\n    \"receivedChiropracticCare\": \"\"\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "zai-org/GLM-OCR via vllm-server",
+ "latency_seconds": 2.9446446508333346,
+ "cost_per_page": 0.0009010612631550004,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"address\": \"\",\n  \"lastName\": \"Miller\",\n  \"firstName\": \"Daniel\",\n  \"spouseName\": \"\",\n  \"spousePhone\": \"\",\n  \"maritalStatus\": \"Marital Status\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"calfPain\": true,\n    \"blackOuts\": true,\n    \"headaches\": true,\n    \"musclePain\": true,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": true,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": true,\n      \"antiInflammatory\": true,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": [],\n    \"overTheCounterDrugs\": [],\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": []\n  }\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-a3255967e9343724",
+   "object": "chat.completion",
+   "created": 1786375372,
+   "prompt_routed_experts": null,
+   "model": "glm-ocr",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"address\": \"\",\n  \"lastName\": \"Miller\",\n  \"firstName\": \"Daniel\",\n  \"spouseName\": \"\",\n  \"spousePhone\": \"\",\n  \"maritalStatus\": \"Marital Status\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"calfPain\": true,\n    \"blackOuts\": true,\n    \"headaches\": true,\n    \"musclePain\": true,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": true,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": true,\n      \"antiInflammatory\": true,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": [],\n    \"overTheCounterDrugs\": [],\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": []\n  }\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-1cced44d",
+   "usage": {
+    "prompt_tokens": 6242,
+    "total_tokens": 6640,
+    "completion_tokens": 398,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A10",
+  "gpu_seconds": 2.9446446508333346,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "6bdca971d7724fa0824bf8c68d25dab3",
+  "batch_gpu_seconds": 70.67147162000003,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 2.9446446508333346,
+  "gpu_rate_usd_per_second": 0.000306,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"address\": \"\",\n  \"lastName\": \"Miller\",\n  \"firstName\": \"Daniel\",\n  \"spouseName\": \"\",\n  \"spousePhone\": \"\",\n  \"maritalStatus\": \"Marital Status\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"calfPain\": true,\n    \"blackOuts\": true,\n    \"headaches\": true,\n    \"musclePain\": true,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": true,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": true,\n      \"antiInflammatory\": true,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": [],\n    \"overTheCounterDrugs\": [],\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": []\n  }\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-a3255967e9343724",
+    "object": "chat.completion",
+    "created": 1786375372,
+    "prompt_routed_experts": null,
+    "model": "glm-ocr",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"dob\": \"July 20, 1972\",\n  \"city\": \"Waimanalo\",\n  \"phone\": \"603 916-8665\",\n  \"address\": \"\",\n  \"lastName\": \"Miller\",\n  \"firstName\": \"Daniel\",\n  \"spouseName\": \"\",\n  \"spousePhone\": \"\",\n  \"maritalStatus\": \"Marital Status\",\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"fever\": true,\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"calfPain\": true,\n    \"blackOuts\": true,\n    \"headaches\": true,\n    \"musclePain\": true,\n    \"blurredVision\": true,\n    \"excessiveBruising\": true,\n    \"shortnessOfBreath\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"previousHealthHistory\": {\n    \"lastSeenDate\": \"08/30/1958\",\n    \"prescriptionDrugs\": {\n      \"other\": [\n        \"amoxicillin\"\n      ],\n      \"insulin\": true,\n      \"painPills\": true,\n      \"muscleRelaxers\": true,\n      \"antidepressants\": true,\n      \"antiInflammatory\": true,\n      \"birthControlPills\": true,\n      \"bloodPressureMedication\": true\n    },\n    \"accidentsOrInjuries\": [],\n    \"overTheCounterDrugs\": [],\n    \"primaryCarePhysician\": \"Dr. Emily Anderson\",\n    \"vitaminsOrSupplements\": []\n  }\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-1cced44d",
+    "usage": {
+     "prompt_tokens": 6242,
+     "total_tokens": 6640,
+     "completion_tokens": 398,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "gpu_seconds": 2.9446446508333346,
+  "gpu_type": "A10",
+  "model_version": "zai-org/GLM-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_004.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

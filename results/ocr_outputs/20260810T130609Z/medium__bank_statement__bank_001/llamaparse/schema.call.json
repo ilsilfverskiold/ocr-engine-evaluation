@@ -1,0 +1,369 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"symbol\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"oneDayChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"ytdPriceChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"mutualFunds\": {\n          \"enum\": [\n            \"AVERAGE\",\n            \"FIFO\",\n            \"LIFO\",\n            \"Specific\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Default tax disposition method for Mutual Funds\"\n        },\n        \"contingentBeneficiary\": {\n          \"enum\": [\n            \"Individual\",\n            \"Trust\",\n            \"Estate\",\n            \"Charity\",\n            \"None\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Contingent beneficiary designation\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"contactInfo\": {\n          \"type\": \"string\",\n          \"description\": \"Phone number of the client representative\"\n        },\n        \"consultantId\": {\n          \"type\": \"string\",\n          \"description\": \"Client representative id\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"ytdBeginningBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date starting balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 14.98159866698552,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"tableData\": [{\"symbol\": \"VTV\", \"oneDayChange\": -0.0101, \"avgDailyVolume\": 1827734.0, \"ytdPriceChange\": 0.1571}, {\"symbol\": \"VTI\", \"oneDayChange\": -0.0111, \"avgDailyVolume\": 3046583.0, \"ytdPriceChange\": 0.2424}, {\"symbol\": \"VUG\", \"oneDayChange\": -0.0126, \"avgDailyVolume\": 1145739.0, \"ytdPriceChange\": 0.339}, {\"symbol\": \"VIG\", \"oneDayChange\": -0.0125, \"avgDailyVolume\": 965248.0, \"ytdPriceChange\": 0.1697}, {\"symbol\": \"VOO\", \"oneDayChange\": -0.0111, \"avgDailyVolume\": 5594505.0, \"ytdPriceChange\": 0.2548}, {\"symbol\": \"QQQ\", \"oneDayChange\": -0.0133, \"avgDailyVolume\": 29009270.0, \"ytdPriceChange\": 0.2665}, {\"symbol\": \"IWF\", \"oneDayChange\": -0.0119, \"avgDailyVolume\": 1349642.0, \"ytdPriceChange\": 0.3432}, {\"symbol\": \"VGT\", \"oneDayChange\": -0.0125, \"avgDailyVolume\": 453405.0, \"ytdPriceChange\": 0.305}, {\"symbol\": \"VWO\", \"oneDayChange\": -0.0088, \"avgDailyVolume\": 8214263.0, \"ytdPriceChange\": 0.1076}, {\"symbol\": \"IVV\", \"oneDayChange\": -0.011, \"avgDailyVolume\": 5875330.0, \"ytdPriceChange\": 0.2542}, {\"symbol\": \"VXUS\", \"oneDayChange\": -0.0067, \"avgDailyVolume\": 3544059.0, \"ytdPriceChange\": 0.052}, {\"symbol\": \"IJR\", \"oneDayChange\": -0.0072, \"avgDailyVolume\": 3509577.0, \"ytdPriceChange\": 0.0839}, {\"symbol\": \"IJH\", \"oneDayChange\": -0.007, \"avgDailyVolume\": 7659450.0, \"ytdPriceChange\": 0.1366}, {\"symbol\": \"IEFA\", \"oneDayChange\": -0.0066, \"avgDailyVolume\": 8199248.0, \"ytdPriceChange\": 0.0332}, {\"symbol\": \"SPY\", \"oneDayChange\": -0.0114, \"avgDailyVolume\": 46003064.0, \"ytdPriceChange\": 0.2534}], \"accountInfo\": {\"mutualFunds\": \"Specific\", \"contingentBeneficiary\": \"Charity\"}, \"clientServices\": {\"contactInfo\": \"+1-506-980-6485\", \"consultantId\": \"KdacjkZT8\"}, \"portfolioSummary\": {\"changes\": [{\"yearToDate\": 54678.15, \"description\": \"Dividend / Interest Income\", \"currentPeriod\": 36951.35}, {\"yearToDate\": 275922.8, \"description\": \"Additional Contributions\", \"currentPeriod\": 0.0}, {\"yearToDate\": 73416.98, \"description\": \"Tactical Rebalancing\", \"currentPeriod\": 17707.92}, {\"yearToDate\": -8144.65, \"description\": \"Other\", \"currentPeriod\": 0.0}, {\"yearToDate\": -29207.75, \"description\": \"Transaction Fees\", \"currentPeriod\": 0.0}, {\"yearToDate\": 53738.0, \"description\": \"Realized Capital Gains\", \"currentPeriod\": 30822.64}, {\"yearToDate\": -233536.8, \"description\": \"Net Change in Portfolio\", \"currentPeriod\": -116363.19}, {\"yearToDate\": -156408.75, \"description\": \"Withdrawals\", \"currentPeriod\": 0.0}], \"ytdEndingBalance\": 573445.98, \"ytdBeginningBalance\": 542988.0, \"currentPeriodEndingBalance\": 368434.72}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:11:38.357351+00:00",
+  "data": {
+   "tableData": [
+    {
+     "symbol": "VTV",
+     "oneDayChange": -0.0101,
+     "avgDailyVolume": 1827734.0,
+     "ytdPriceChange": 0.1571
+    },
+    {
+     "symbol": "VTI",
+     "oneDayChange": -0.0111,
+     "avgDailyVolume": 3046583.0,
+     "ytdPriceChange": 0.2424
+    },
+    {
+     "symbol": "VUG",
+     "oneDayChange": -0.0126,
+     "avgDailyVolume": 1145739.0,
+     "ytdPriceChange": 0.339
+    },
+    {
+     "symbol": "VIG",
+     "oneDayChange": -0.0125,
+     "avgDailyVolume": 965248.0,
+     "ytdPriceChange": 0.1697
+    },
+    {
+     "symbol": "VOO",
+     "oneDayChange": -0.0111,
+     "avgDailyVolume": 5594505.0,
+     "ytdPriceChange": 0.2548
+    },
+    {
+     "symbol": "QQQ",
+     "oneDayChange": -0.0133,
+     "avgDailyVolume": 29009270.0,
+     "ytdPriceChange": 0.2665
+    },
+    {
+     "symbol": "IWF",
+     "oneDayChange": -0.0119,
+     "avgDailyVolume": 1349642.0,
+     "ytdPriceChange": 0.3432
+    },
+    {
+     "symbol": "VGT",
+     "oneDayChange": -0.0125,
+     "avgDailyVolume": 453405.0,
+     "ytdPriceChange": 0.305
+    },
+    {
+     "symbol": "VWO",
+     "oneDayChange": -0.0088,
+     "avgDailyVolume": 8214263.0,
+     "ytdPriceChange": 0.1076
+    },
+    {
+     "symbol": "IVV",
+     "oneDayChange": -0.011,
+     "avgDailyVolume": 5875330.0,
+     "ytdPriceChange": 0.2542
+    },
+    {
+     "symbol": "VXUS",
+     "oneDayChange": -0.0067,
+     "avgDailyVolume": 3544059.0,
+     "ytdPriceChange": 0.052
+    },
+    {
+     "symbol": "IJR",
+     "oneDayChange": -0.0072,
+     "avgDailyVolume": 3509577.0,
+     "ytdPriceChange": 0.0839
+    },
+    {
+     "symbol": "IJH",
+     "oneDayChange": -0.007,
+     "avgDailyVolume": 7659450.0,
+     "ytdPriceChange": 0.1366
+    },
+    {
+     "symbol": "IEFA",
+     "oneDayChange": -0.0066,
+     "avgDailyVolume": 8199248.0,
+     "ytdPriceChange": 0.0332
+    },
+    {
+     "symbol": "SPY",
+     "oneDayChange": -0.0114,
+     "avgDailyVolume": 46003064.0,
+     "ytdPriceChange": 0.2534
+    }
+   ],
+   "accountInfo": {
+    "mutualFunds": "Specific",
+    "contingentBeneficiary": "Charity"
+   },
+   "clientServices": {
+    "contactInfo": "+1-506-980-6485",
+    "consultantId": "KdacjkZT8"
+   },
+   "portfolioSummary": {
+    "changes": [
+     {
+      "yearToDate": 54678.15,
+      "description": "Dividend / Interest Income",
+      "currentPeriod": 36951.35
+     },
+     {
+      "yearToDate": 275922.8,
+      "description": "Additional Contributions",
+      "currentPeriod": 0.0
+     },
+     {
+      "yearToDate": 73416.98,
+      "description": "Tactical Rebalancing",
+      "currentPeriod": 17707.92
+     },
+     {
+      "yearToDate": -8144.65,
+      "description": "Other",
+      "currentPeriod": 0.0
+     },
+     {
+      "yearToDate": -29207.75,
+      "description": "Transaction Fees",
+      "currentPeriod": 0.0
+     },
+     {
+      "yearToDate": 53738.0,
+      "description": "Realized Capital Gains",
+      "currentPeriod": 30822.64
+     },
+     {
+      "yearToDate": -233536.8,
+      "description": "Net Change in Portfolio",
+      "currentPeriod": -116363.19
+     },
+     {
+      "yearToDate": -156408.75,
+      "description": "Withdrawals",
+      "currentPeriod": 0.0
+     }
+    ],
+    "ytdEndingBalance": 573445.98,
+    "ytdBeginningBalance": 542988.0,
+    "currentPeriodEndingBalance": 368434.72
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "tableData": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "symbol": {
+        "description": "",
+        "type": "string"
+       },
+       "oneDayChange": {
+        "description": "",
+        "type": "number"
+       },
+       "avgDailyVolume": {
+        "description": "",
+        "type": "number"
+       },
+       "ytdPriceChange": {
+        "description": "",
+        "type": "number"
+       }
+      },
+      "required": [
+       "symbol",
+       "oneDayChange",
+       "avgDailyVolume",
+       "ytdPriceChange"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "accountInfo": {
+     "description": "Summary of account settings and investment elections",
+     "type": "object",
+     "properties": {
+      "mutualFunds": {
+       "description": "Default tax disposition method for Mutual Funds",
+       "type": "string",
+       "enum": [
+        "AVERAGE",
+        "FIFO",
+        "LIFO",
+        "Specific"
+       ]
+      },
+      "contingentBeneficiary": {
+       "description": "Contingent beneficiary designation",
+       "type": "string",
+       "enum": [
+        "Individual",
+        "Trust",
+        "Estate",
+        "Charity",
+        "None"
+       ]
+      }
+     },
+     "required": [
+      "mutualFunds",
+      "contingentBeneficiary"
+     ],
+     "additionalProperties": false
+    },
+    "clientServices": {
+     "description": "Client representative",
+     "type": "object",
+     "properties": {
+      "contactInfo": {
+       "description": "Phone number of the client representative",
+       "type": "string"
+      },
+      "consultantId": {
+       "description": "Client representative id",
+       "type": "string"
+      }
+     },
+     "required": [
+      "contactInfo",
+      "consultantId"
+     ],
+     "additionalProperties": false
+    },
+    "portfolioSummary": {
+     "description": "Overview of the portfolio with balances and changes",
+     "type": "object",
+     "properties": {
+      "changes": {
+       "description": "Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.",
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "yearToDate": {
+          "description": "Amount recorded year to date",
+          "type": "number"
+         },
+         "description": {
+          "description": "Description of the change",
+          "type": "string"
+         },
+         "currentPeriod": {
+          "description": "Amount recorded during the current period",
+          "type": "number"
+         }
+        },
+        "required": [
+         "description",
+         "currentPeriod",
+         "yearToDate"
+        ],
+        "additionalProperties": false
+       }
+      },
+      "ytdEndingBalance": {
+       "description": "The year to date ending balance of the portfolio",
+       "type": "number"
+      },
+      "ytdBeginningBalance": {
+       "description": "The year to date starting balance of the portfolio",
+       "type": "number"
+      },
+      "currentPeriodEndingBalance": {
+       "description": "The current ending balance of the portfolio",
+       "type": "number"
+      }
+     },
+     "required": [
+      "changes",
+      "ytdEndingBalance",
+      "ytdBeginningBalance",
+      "currentPeriodEndingBalance"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "tableData",
+    "accountInfo",
+    "clientServices",
+    "portfolioSummary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "f2a9d65d-f4c2-459c-b488-48a2da5209d5",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 1608,
+    "num_output_tokens": 1114
+   },
+   "parse_job_id": "6ea8e432-04a8-4cad-9669-2471f85b8ad4"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "25170bcb-65a6-4dbe-bb59-636f15d7f9f4",
+  "from_ui": false,
+  "id": "b9b79990-3fbb-4fe9-950c-baf532b11fb1",
+  "job_id": "a3b0638b-2f5d-4a47-9eb4-39bfe2b8e19b",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:11:42.338826+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

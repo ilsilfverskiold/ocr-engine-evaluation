@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerSales\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Sales\"\n          },\n          \"puerTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Total\"\n          },\n          \"grandTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Grand Total\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 15.730602083029225,
+ "cost_per_page": 0.022098,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-08\",\n  \"distNumber\": \"201840\",\n  \"manager\": \"Juan Brown\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Mathew Bailey\",\n      \"idNumber\": \"8737908414\",\n      \"sfmCode\": \"104061\",\n      \"sales\": 2985.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 2673.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Christian Bergnaum I\",\n      \"idNumber\": \"8879526006\",\n      \"sfmCode\": \"163809\",\n      \"sales\": 946.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 778.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Brooke Waters\",\n      \"idNumber\": \"2846455971\",\n      \"sfmCode\": \"496432\",\n      \"sales\": 3971.00,\n      \"puerSales\": 595.65,\n      \"puerTotal\": 595.65,\n      \"grandTotal\": 4566.65,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Myron Hagenes\",\n      \"idNumber\": \"3067691502\",\n      \"sfmCode\": \"974002\",\n      \"sales\": 3725.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 3233.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kelli Predovic\",\n      \"idNumber\": \"8309953719\",\n      \"sfmCode\": \"176320\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Viola McLaughlin\",\n      \"idNumber\": \"7527042004\",\n      \"sfmCode\": \"249761\",\n      \"sales\": 623.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 623.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Garrett Lakin\",\n      \"idNumber\": \"1430566822\",\n      \"sfmCode\": \"335846\",\n      \"sales\": 3242.00,\n      \"puerSales\": 486.30,\n      \"puerTotal\": 486.30,\n      \"grandTotal\": 3728.30,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Louise Strosin\",\n      \"idNumber\": \"8829580805\",\n      \"sfmCode\": \"199309\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Byron Becker\",\n      \"idNumber\": \"9742676352\",\n      \"sfmCode\": \"166436\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Traci Kautzer\",\n      \"idNumber\": \"3571071141\",\n      \"sfmCode\": \"678067\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Alice Schinner\",\n      \"idNumber\": \"8735278269\",\n      \"sfmCode\": \"650760\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1981,
+  "output_tokens": 1077,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduNREFU3AvjG1fTKb3mN",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-08\",\n  \"distNumber\": \"201840\",\n  \"manager\": \"Juan Brown\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Mathew Bailey\",\n      \"idNumber\": \"8737908414\",\n      \"sfmCode\": \"104061\",\n      \"sales\": 2985.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 2673.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Christian Bergnaum I\",\n      \"idNumber\": \"8879526006\",\n      \"sfmCode\": \"163809\",\n      \"sales\": 946.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 778.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Brooke Waters\",\n      \"idNumber\": \"2846455971\",\n      \"sfmCode\": \"496432\",\n      \"sales\": 3971.00,\n      \"puerSales\": 595.65,\n      \"puerTotal\": 595.65,\n      \"grandTotal\": 4566.65,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Myron Hagenes\",\n      \"idNumber\": \"3067691502\",\n      \"sfmCode\": \"974002\",\n      \"sales\": 3725.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 3233.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kelli Predovic\",\n      \"idNumber\": \"8309953719\",\n      \"sfmCode\": \"176320\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Viola McLaughlin\",\n      \"idNumber\": \"7527042004\",\n      \"sfmCode\": \"249761\",\n      \"sales\": 623.00,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 623.00,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Garrett Lakin\",\n      \"idNumber\": \"1430566822\",\n      \"sfmCode\": \"335846\",\n      \"sales\": 3242.00,\n      \"puerSales\": 486.30,\n      \"puerTotal\": 486.30,\n      \"grandTotal\": 3728.30,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Louise Strosin\",\n      \"idNumber\": \"8829580805\",\n      \"sfmCode\": \"199309\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Byron Becker\",\n      \"idNumber\": \"9742676352\",\n      \"sfmCode\": \"166436\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Traci Kautzer\",\n      \"idNumber\": \"3571071141\",\n      \"sfmCode\": \"678067\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Alice Schinner\",\n      \"idNumber\": \"8735278269\",\n      \"sfmCode\": \"650760\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1981,
+   "output_tokens": 1077,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

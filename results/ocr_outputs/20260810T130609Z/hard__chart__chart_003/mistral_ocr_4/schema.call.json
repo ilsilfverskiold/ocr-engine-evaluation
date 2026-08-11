@@ -1,0 +1,202 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"Workforce By Employment & Gender\",\n  \"required\": [\n    \"topWorkforceSector\",\n    \"workforceByGender\"\n  ],\n  \"properties\": {\n    \"figures\": {\n      \"type\": \"array\",\n      \"description\": \"One entry per figure printed on the page, in page order\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"figureNumber\": {\n            \"type\": \"string\",\n            \"description\": \"Figure label as printed, e.g. 'Figure 20'\"\n          },\n          \"title\": {\n            \"type\": \"string\",\n            \"description\": \"Figure title as printed, excluding the figure label\"\n          },\n          \"chartType\": {\n            \"type\": \"string\"\n          },\n          \"yAxisMax\": {\n            \"type\": \"number\",\n            \"description\": \"Highest printed y-axis tick\"\n          },\n          \"yAxisLabels\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"Y-axis tick labels as printed, bottom to top\"\n          },\n          \"xAxisLabels\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"X-axis category labels as printed, left to right\"\n          },\n          \"legend\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"Legend entries as printed, in legend order\"\n          },\n          \"legendNote\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"description\": \"Any key printed beneath the legend, null if absent\"\n          }\n        }\n      }\n    },\n    \"employmentLevelBreakdown\": {\n      \"type\": \"array\",\n      \"description\": \"Figure 20: headcount for each employment level in each year\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"level\"\n        ],\n        \"properties\": {\n          \"level\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"year\": {\n                  \"type\": \"number\"\n                },\n                \"headcount\": {\n                  \"type\": \"number\"\n                }\n              }\n            }\n          }\n        }\n      }\n    },\n    \"ageAndGenderBreakdown\": {\n      \"type\": \"array\",\n      \"description\": \"Figure 21: headcount by age band for each year and gender, one entry per bar\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"year\",\n          \"gender\"\n        ],\n        \"properties\": {\n          \"year\": {\n            \"type\": \"number\"\n          },\n          \"gender\": {\n            \"type\": \"string\"\n          },\n          \"bands\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"ageBand\": {\n                  \"type\": \"string\",\n                  \"description\": \"Age band label as printed in the legend\"\n                },\n                \"headcount\": {\n                  \"type\": \"number\"\n                }\n              }\n            }\n          },\n          \"total\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"workforceByGender\": {\n      \"type\": \"array\",\n      \"description\": \"Data on the workforce split by gender, listed by year. Round all numbers to the nearest thousand.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"year\",\n          \"male\",\n          \"female\"\n        ],\n        \"properties\": {\n          \"male\": {\n            \"type\": \"number\",\n            \"description\": \"Number of male employees in that year rounded to nearest thousand (i.e. 1,234 should be 1000).\"\n          },\n          \"year\": {\n            \"type\": \"number\",\n            \"description\": \"Four-digit year\"\n          },\n          \"female\": {\n            \"type\": \"number\",\n            \"description\": \"Number of female employees in that year rounded to nearest thousand (i.e. 8,904 should be 9000).\"\n          }\n        }\n      }\n    },\n    \"topWorkforceSector\": {\n      \"type\": \"string\",\n      \"description\": \"The largest employment category (e.g. Sales, Operations, Finance, etc.)\"\n    },\n    \"pageNumber\": {\n      \"type\": \"string\"\n    },\n    \"documentFooter\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 13.391963292029686,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"topWorkforceSector\": \"Operations\", \"workforceByGender\": [{\"year\": 2020, \"male\": 6000, \"female\": 4000}, {\"year\": 2019, \"male\": 6000, \"female\": 4000}, {\"year\": 2018, \"male\": 6000, \"female\": 4000}, {\"year\": 2017, \"male\": 6000, \"female\": 4000}], \"figures\": [{\"figureNumber\": \"Figure 20\", \"title\": \"Global Workforce by Employment Level\", \"chartType\": \"Stacked bar chart\", \"yAxisMax\": 12000, \"yAxisLabels\": [\"0\", \"2,000\", \"4,000\", \"6,000\", \"8,000\", \"10,000\", \"12,000\"], \"xAxisLabels\": [\"2017\", \"2018\", \"2019\", \"2020\"], \"legend\": [\"Executive & Senior Management\", \"Management\", \"Professional\", \"Professional Support\", \"Administration\", \"Operations\"], \"legendNote\": null}, {\"figureNumber\": \"Figure 21\", \"title\": \"Global Workforce by Age and Gender\", \"chartType\": \"Stacked bar chart\", \"yAxisMax\": 10000, \"yAxisLabels\": [\"0\", \"2,000\", \"4,000\", \"6,000\", \"8,000\", \"10,000\"], \"xAxisLabels\": [\"F 2017\", \"M 2017\", \"F 2018\", \"M 2018\", \"F 2019\", \"M 2019\", \"F 2020\", \"M 2020\"], \"legend\": [\"0–24\", \"25–34\", \"35–44\", \"45–54\", \"55–64\", \"65+\"], \"legendNote\": \"F=Female  M=Male\"}], \"employmentLevelBreakdown\": [{\"level\": \"Executive & Senior Management\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Management\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Professional\", \"values\": [{\"year\": 2017, \"headcount\": 2000}, {\"year\": 2018, \"headcount\": 2000}, {\"year\": 2019, \"headcount\": 2000}, {\"year\": 2020, \"headcount\": 2000}]}, {\"level\": \"Professional Support\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Administration\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Operations\", \"values\": [{\"year\": 2017, \"headcount\": 4000}, {\"year\": 2018, \"headcount\": 4000}, {\"year\": 2019, \"headcount\": 4000}, {\"year\": 2020, \"headcount\": 4000}]}], \"ageAndGenderBreakdown\": [{\"year\": 2017, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2017, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2018, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2018, \"gender\": \"Male\", \"bands\": [{\"year\": 2018, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2019, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2019, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2020, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2020, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}], \"pageNumber\": \"54\", \"documentFooter\": \"Teck 2020 Sustainability Report | Forward Together\"}]}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "**Figure 20: Global Workforce by Employment Level**\n\n![img-0.jpeg](img-0.jpeg)\n\n**Figure 21: Global Workforce by Age and Gender**\n\n![img-1.jpeg](img-1.jpeg)\n\n## Our COVID-19 Response\n\nWe are focused on operating safely and responsibly, and on maintaining employment and economic activity to the extent possible during the COVID-19 pandemic. We provide regular updates to employees on preventive measures, COVID-19 symptoms, protecting themselves and others, and how to self-assess before coming to work. See page 55 of the Health and Safety section for more details on preventive measures implemented across our offices and operations.\n\n### Sick Leave\n\nWe expanded the coverage of sick leave benefits for regular employees so that anyone required to self-isolate remains eligible for sick leave benefits with no waiting period. We also eliminated the waiting period to support employees in staying home and immediately receive sick pay benefits if they were feeling unwell, had just returned from international travel or had exposure to someone suspected of having COVID-19.\n\n### Workplace Flexibility\n\nAlong with our existing family-friendly policies and programs, we implemented remote work wherever feasible, as part of our response to COVID-19, with a focus on supporting working parents and employees\n\nwith underlying health conditions. A global Flexible Work Task Force and an Executive Steering Committee have been put together to identify opportunities to implement expanded flexible work guidelines beyond the COVID-19 pandemic.\n\n### Supporting Mental Well-Being\n\nIn 2020, we expanded the Employee Family Assistance Program (EFAP) for all employees and their dependents globally to support overall wellness, including mental health. This benefit will remain in place beyond the current pandemic period. We also launched telehealth services in the U.S., Canada and Chile, where the vast majority of our employees are located. In Canada, we also expanded the Best Doctors Mental Health Navigator program to provide additional mental health guidance for employees and their families (including parents and in-laws).\n\nWe continue to raise awareness on mental health through mental wellness webinars, including *Understanding Suicide* and *Balance and Burnout: Unplugging During Challenging Times*. These webinars were recorded and made available for employees and their families to access.\n\n84 Teck 2020 Sustainability Report | Forward Together",
+    "images": [
+     {
+      "id": "img-0.jpeg",
+      "top_left_x": 98,
+      "top_left_y": 178,
+      "bottom_right_x": 683,
+      "bottom_right_y": 689,
+      "image_base64": null,
+      "image_annotation": null
+     },
+     {
+      "id": "img-1.jpeg",
+      "top_left_x": 758,
+      "top_left_y": 178,
+      "bottom_right_x": 1398,
+      "bottom_right_y": 702,
+      "image_base64": null,
+      "image_annotation": null
+     }
+    ],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1916,
+     "width": 1490
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 98,
+      "top_left_y": 130,
+      "bottom_right_x": 567,
+      "bottom_right_y": 161,
+      "content": "**Figure 20: Global Workforce by Employment Level**",
+      "confidence_scores": null,
+      "type": "caption"
+     },
+     {
+      "top_left_x": 98,
+      "top_left_y": 178,
+      "bottom_right_x": 683,
+      "bottom_right_y": 689,
+      "content": "![img-0.jpeg](img-0.jpeg)",
+      "image_id": "img-0.jpeg",
+      "confidence_scores": null,
+      "type": "image"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 130,
+      "bottom_right_x": 1201,
+      "bottom_right_y": 161,
+      "content": "**Figure 21: Global Workforce by Age and Gender**",
+      "confidence_scores": null,
+      "type": "caption"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 178,
+      "bottom_right_x": 1398,
+      "bottom_right_y": 702,
+      "content": "![img-1.jpeg](img-1.jpeg)",
+      "image_id": "img-1.jpeg",
+      "confidence_scores": null,
+      "type": "image"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 792,
+      "bottom_right_x": 585,
+      "bottom_right_y": 836,
+      "content": "## Our COVID-19 Response",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 855,
+      "bottom_right_x": 716,
+      "bottom_right_y": 1118,
+      "content": "We are focused on operating safely and responsibly, and on maintaining employment and economic activity to the extent possible during the COVID-19 pandemic. We provide regular updates to employees on preventive measures, COVID-19 symptoms, protecting themselves and others, and how to self-assess before coming to work. See page 55 of the Health and Safety section for more details on preventive measures implemented across our offices and operations.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 1139,
+      "bottom_right_x": 277,
+      "bottom_right_y": 1168,
+      "content": "### Sick Leave",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 1180,
+      "bottom_right_x": 692,
+      "bottom_right_y": 1412,
+      "content": "We expanded the coverage of sick leave benefits for regular employees so that anyone required to self-isolate remains eligible for sick leave benefits with no waiting period. We also eliminated the waiting period to support employees in staying home and immediately receive sick pay benefits if they were feeling unwell, had just returned from international travel or had exposure to someone suspected of having COVID-19.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 1433,
+      "bottom_right_x": 395,
+      "bottom_right_y": 1463,
+      "content": "### Workplace Flexibility",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 1475,
+      "bottom_right_x": 677,
+      "bottom_right_y": 1590,
+      "content": "Along with our existing family-friendly policies and programs, we implemented remote work wherever feasible, as part of our response to COVID-19, with a focus on supporting working parents and employees",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 855,
+      "bottom_right_x": 1321,
+      "bottom_right_y": 1001,
+      "content": "with underlying health conditions. A global Flexible Work Task Force and an Executive Steering Committee have been put together to identify opportunities to implement expanded flexible work guidelines beyond the COVID-19 pandemic.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 1022,
+      "bottom_right_x": 1120,
+      "bottom_right_y": 1055,
+      "content": "### Supporting Mental Well-Being",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 1064,
+      "bottom_right_x": 1327,
+      "bottom_right_y": 1383,
+      "content": "In 2020, we expanded the Employee Family Assistance Program (EFAP) for all employees and their dependents globally to support overall wellness, including mental health. This benefit will remain in place beyond the current pandemic period. We also launched telehealth services in the U.S., Canada and Chile, where the vast majority of our employees are located. In Canada, we also expanded the Best Doctors Mental Health Navigator program to provide additional mental health guidance for employees and their families (including parents and in-laws).",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 758,
+      "top_left_y": 1394,
+      "bottom_right_x": 1310,
+      "bottom_right_y": 1569,
+      "content": "We continue to raise awareness on mental health through mental wellness webinars, including *Understanding Suicide* and *Balance and Burnout: Unplugging During Challenging Times*. These webinars were recorded and made available for employees and their families to access.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 54,
+      "top_left_y": 1864,
+      "bottom_right_x": 567,
+      "bottom_right_y": 1897,
+      "content": "84 Teck 2020 Sustainability Report | Forward Together",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 375602
+  },
+  "document_annotation": "{\"topWorkforceSector\": \"Operations\", \"workforceByGender\": [{\"year\": 2020, \"male\": 6000, \"female\": 4000}, {\"year\": 2019, \"male\": 6000, \"female\": 4000}, {\"year\": 2018, \"male\": 6000, \"female\": 4000}, {\"year\": 2017, \"male\": 6000, \"female\": 4000}], \"figures\": [{\"figureNumber\": \"Figure 20\", \"title\": \"Global Workforce by Employment Level\", \"chartType\": \"Stacked bar chart\", \"yAxisMax\": 12000, \"yAxisLabels\": [\"0\", \"2,000\", \"4,000\", \"6,000\", \"8,000\", \"10,000\", \"12,000\"], \"xAxisLabels\": [\"2017\", \"2018\", \"2019\", \"2020\"], \"legend\": [\"Executive & Senior Management\", \"Management\", \"Professional\", \"Professional Support\", \"Administration\", \"Operations\"], \"legendNote\": null}, {\"figureNumber\": \"Figure 21\", \"title\": \"Global Workforce by Age and Gender\", \"chartType\": \"Stacked bar chart\", \"yAxisMax\": 10000, \"yAxisLabels\": [\"0\", \"2,000\", \"4,000\", \"6,000\", \"8,000\", \"10,000\"], \"xAxisLabels\": [\"F 2017\", \"M 2017\", \"F 2018\", \"M 2018\", \"F 2019\", \"M 2019\", \"F 2020\", \"M 2020\"], \"legend\": [\"0–24\", \"25–34\", \"35–44\", \"45–54\", \"55–64\", \"65+\"], \"legendNote\": \"F=Female  M=Male\"}], \"employmentLevelBreakdown\": [{\"level\": \"Executive & Senior Management\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Management\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Professional\", \"values\": [{\"year\": 2017, \"headcount\": 2000}, {\"year\": 2018, \"headcount\": 2000}, {\"year\": 2019, \"headcount\": 2000}, {\"year\": 2020, \"headcount\": 2000}]}, {\"level\": \"Professional Support\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Administration\", \"values\": [{\"year\": 2017, \"headcount\": 1000}, {\"year\": 2018, \"headcount\": 1000}, {\"year\": 2019, \"headcount\": 1000}, {\"year\": 2020, \"headcount\": 1000}]}, {\"level\": \"Operations\", \"values\": [{\"year\": 2017, \"headcount\": 4000}, {\"year\": 2018, \"headcount\": 4000}, {\"year\": 2019, \"headcount\": 4000}, {\"year\": 2020, \"headcount\": 4000}]}], \"ageAndGenderBreakdown\": [{\"year\": 2017, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2017, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2018, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2018, \"gender\": \"Male\", \"bands\": [{\"year\": 2018, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2019, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2019, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}, {\"year\": 2020, \"gender\": \"Female\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1000}, {\"ageBand\": \"35–44\", \"headcount\": 1000}, {\"ageBand\": \"45–54\", \"headcount\": 1000}, {\"ageBand\": \"55–64\", \"headcount\": 500}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 4000}, {\"year\": 2020, \"gender\": \"Male\", \"bands\": [{\"ageBand\": \"0–24\", \"headcount\": 500}, {\"ageBand\": \"25–34\", \"headcount\": 1500}, {\"ageBand\": \"35–44\", \"headcount\": 1500}, {\"ageBand\": \"45–54\", \"headcount\": 1500}, {\"ageBand\": \"55–64\", \"headcount\": 1000}, {\"ageBand\": \"65+\", \"headcount\": 0}], \"total\": 6000}], \"pageNumber\": \"54\", \"documentFooter\": \"Teck 2020 Sustainability Report | Forward Together\"}]}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

@@ -1,0 +1,478 @@
+"""Leg 2 — markdown / reading order.
+
+Ask: *"Convert this document to Markdown. Preserve reading order, headings,
+lists and tables. Output only the Markdown."*
+
+The reference encodes **one** valid rendering of the page, so comparing against
+it literally would measure our formatting choices. Instead the comparison is
+structural: both sides are reduced to a sequence of typed blocks — heading,
+list item, table row, paragraph — each carrying its normalised content, and we
+ask which blocks are present and whether they arrive in the same order.
+
+Normalised away, on both sides: heading depth, emphasis markers, list bullet
+style, table alignment rows, and trailing punctuation. `## Totals` and
+`**Totals**` are the same heading — a bold-only line is a heading, because that
+is how half the engines render one.
+
+Score: `0.8 x element F1 + 0.2 x order`, where element F1 matches blocks by
+type and near-identical content (fuzzy, so an OCR typo inside a paragraph does
+not delete the whole block), and order is a Kendall-tau over the positions of
+matched blocks.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+from typing import Any
+
+from evaluation.ground_truth import GroundTruth
+
+# Two blocks of the same type are the same block above this content similarity.
+# Below it they are different content, not a noisy match.
+BLOCK_MATCH_THRESHOLD = 0.90
+
+ELEMENT_WEIGHT = 0.8
+ORDER_WEIGHT = 0.2
+
+STRUCTURAL_TYPES = ("heading", "list_item", "table_row")
+
+_FENCE_RE = re.compile(r"^\s*```")
+_HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s+(.*)$")
+_SETEXT_RE = re.compile(r"^\s{0,3}(=+|-{2,})\s*$")
+_BOLD_ONLY_RE = re.compile(r"^\s*(?:\*\*|__)(.+?)(?:\*\*|__)\s*:?\s*$")
+_LIST_RE = re.compile(r"^\s*(?:[-*+]|\d{1,3}[.)])\s+(.*)$")
+_TABLE_ROW_RE = re.compile(r"^\s*\|.*\|\s*$")
+_ALIGNMENT_ROW_RE = re.compile(r"^\s*\|?[\s:|-]+\|[\s:|-]*$")
+_HTML_TAG_RE = re.compile(r"</?[a-zA-Z][^>]*>")
+_EMPHASIS_RE = re.compile(r"(\*{1,3}|_{1,3}|`+|~~)")
+_LINK_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+
+
+@dataclass(frozen=True)
+class Block:
+    kind: str      # heading | list_item | table_row | paragraph
+    text: str      # normalised content
+    index: int     # position in the source document
+
+
+@dataclass
+class MarkdownScore:
+    applicable: bool
+    reason: str | None = None
+    markdown_score: float | None = None      # headline
+    element_f1: float | None = None
+    element_precision: float | None = None
+    element_recall: float | None = None
+    order_score: float | None = None
+    per_type_recall: dict[str, float] = field(default_factory=dict)
+    reference_blocks: int = 0
+    output_blocks: int = 0
+    matched_blocks: int = 0
+    reference_has_structure: bool = True
+    missed: list[tuple[str, str]] = field(default_factory=list)
+    # Judge fields (when LLM judge is used, these are populated)
+    judge_element_accuracy: float | None = None
+    judge_cost_usd: float = 0.0
+    judge_checklist_size: int = 0
+    judge_full_checklist_size: int = 0
+    judge_sampled: bool = False
+    judge_prompt_tokens: int = 0
+    judge_output_tokens: int = 0
+    judge_thinking_tokens: int = 0
+    judge_checklist_model: str | None = None
+    judge_verdict_model: str | None = None
+    judge_error: str | None = None
+
+    @property
+    def score(self) -> float | None:
+        if self.judge_element_accuracy is not None:
+            return self.judge_element_accuracy
+        return self.markdown_score
+
+    def as_metrics(self) -> dict[str, Any]:
+        d: dict[str, Any] = {}
+        if self.judge_element_accuracy is not None:
+            d["judge_element_accuracy"] = self.judge_element_accuracy
+            d["judge_checklist_size"] = self.judge_checklist_size
+            d["judge_full_checklist_size"] = self.judge_full_checklist_size
+            d["judge_sampled"] = self.judge_sampled
+            d["judge_checklist_model"] = self.judge_checklist_model
+            d["judge_verdict_model"] = self.judge_verdict_model
+        d["markdown_score"] = self.markdown_score
+        d["element_f1"] = self.element_f1
+        d["element_precision"] = self.element_precision
+        d["element_recall"] = self.element_recall
+        d["order_score"] = self.order_score
+        d["reference_blocks"] = self.reference_blocks
+        d["output_blocks"] = self.output_blocks
+        d["matched_blocks"] = self.matched_blocks
+        d.update({f"recall_{k}": v for k, v in self.per_type_recall.items()})
+        if self.judge_cost_usd:
+            d["judge_cost_usd"] = self.judge_cost_usd
+            d["judge_prompt_tokens"] = self.judge_prompt_tokens
+            d["judge_output_tokens"] = self.judge_output_tokens
+            d["judge_thinking_tokens"] = self.judge_thinking_tokens
+        return d
+
+    def as_detail(self) -> dict[str, Any]:
+        return {
+            "missed_blocks": [
+                {"kind": kind, "text": text[:120]} for kind, text in self.missed[:40]
+            ],
+            "reference_has_structure": self.reference_has_structure,
+        }
+
+
+def normalize_block_text(text: str) -> str:
+    """Strip everything that is a rendering choice rather than content."""
+    text = _LINK_RE.sub(r"\1", text)
+    text = _HTML_TAG_RE.sub(" ", text)
+    text = _EMPHASIS_RE.sub("", text)
+    text = text.replace("\\", "")
+    text = re.sub(r"\s+", " ", text).strip()
+    return text.rstrip(" .:;,-").strip().casefold()
+
+
+_HTML_TABLE_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+_HTML_ROW_RE = re.compile(r"<tr\b.*?</tr>", re.IGNORECASE | re.DOTALL)
+_HTML_CELL_RE = re.compile(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", re.IGNORECASE | re.DOTALL)
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _html_tables_to_pipe(markdown: str) -> str:
+    """Rewrite embedded HTML tables as pipe rows before block parsing.
+
+    Markdown legitimately embeds HTML tables — PaddleOCR-VL's pipeline emits
+    its tables that way — and scoring the dialect instead of the structure is
+    the same mistake that once cost a byte-perfect table 0.154 in the TEDS
+    leg. Same content, same blocks, whichever syntax the engine chose.
+    """
+    def one(match: re.Match) -> str:
+        rows = []
+        for row in _HTML_ROW_RE.findall(match.group(0)):
+            cells = [_HTML_TAG_RE.sub("", c).strip() for c in _HTML_CELL_RE.findall(row)]
+            if any(cells):
+                rows.append("| " + " | ".join(cells) + " |")
+        return "\n" + "\n".join(rows) + "\n"
+
+    return _HTML_TABLE_RE.sub(one, markdown or "")
+
+
+def _tsv_tables_to_pipe(markdown: str) -> str:
+    """Rewrite tab-separated table blocks as pipe rows.
+
+    The same dialect tolerance HTML tables already get: MinerU renders its
+    tables tab-separated, so a correctly recovered table contributed no
+    table_row blocks at all and the engine scored 0.200 on a page it had
+    parsed. Two or more consecutive lines carrying tabs are a table block.
+    """
+    out: list[str] = []
+    run: list[str] = []
+
+    def flush() -> None:
+        if len(run) >= 2:
+            for line in run:
+                cells = [c.strip() for c in line.split("\t")]
+                out.append("| " + " | ".join(cells) + " |")
+        else:
+            out.extend(run)
+        run.clear()
+
+    for line in (markdown or "").splitlines():
+        if "\t" in line and line.strip():
+            run.append(line)
+        else:
+            flush()
+            out.append(line)
+    flush()
+    return "\n".join(out)
+
+
+def strip_wrapping_fence(text: str) -> str:
+    """Unwrap an answer that is entirely one code fence.
+
+    Asked for markdown, several models return the whole document inside
+    ```markdown ... ``` — qwen3_vl does it consistently. Treated as a code
+    block, every heading and table inside becomes invisible and the engine
+    scores as though it returned nothing. A fence that opens on the first
+    non-empty line and closes on the last is packaging, not content.
+    """
+    lines = (text or "").strip().splitlines()
+    if len(lines) < 2 or not lines[0].lstrip().startswith("```"):
+        return text
+    if not lines[-1].strip().startswith("```"):
+        return text
+    inner = lines[1:-1]
+    # Only unwrap when nothing else in the body opens a fence of its own,
+    # so a genuine document that merely starts with a code sample is untouched.
+    if any(line.lstrip().startswith("```") for line in inner):
+        return text
+    return "\n".join(inner)
+
+
+def parse_blocks(markdown: str) -> list[Block]:
+    """Markdown -> typed block sequence.
+
+    Deliberately hand-rolled rather than run through a renderer: engines emit
+    markdown that is only approximately well-formed, and a strict parser drops
+    exactly the malformed blocks whose presence the leg is trying to measure.
+    """
+    markdown = _tsv_tables_to_pipe(
+        _html_tables_to_pipe(strip_wrapping_fence(markdown or ""))
+    )
+    blocks: list[Block] = []
+    paragraph: list[str] = []
+    in_fence = False
+    lines = markdown.splitlines()
+
+    def flush_paragraph() -> None:
+        if not paragraph:
+            return
+        text = normalize_block_text(" ".join(paragraph))
+        paragraph.clear()
+        if text:
+            blocks.append(Block("paragraph", text, len(blocks)))
+
+    for i, raw in enumerate(lines):
+        if _FENCE_RE.match(raw):
+            in_fence = not in_fence
+            flush_paragraph()
+            continue
+        if in_fence:
+            continue
+
+        line = raw.rstrip()
+        if not line.strip():
+            flush_paragraph()
+            continue
+
+        heading = _HEADING_RE.match(line)
+        if heading:
+            flush_paragraph()
+            text = normalize_block_text(heading.group(1))
+            if text:
+                blocks.append(Block("heading", text, len(blocks)))
+            continue
+
+        # Setext heading: the underline belongs to the line above.
+        if _SETEXT_RE.match(line) and paragraph:
+            text = normalize_block_text(paragraph.pop())
+            flush_paragraph()
+            if text:
+                blocks.append(Block("heading", text, len(blocks)))
+            continue
+
+        bold = _BOLD_ONLY_RE.match(line)
+        if bold and ":" not in line.rstrip().rstrip(":"):
+            # `**Totals**` is the same heading as `## Totals`.
+            flush_paragraph()
+            text = normalize_block_text(bold.group(1))
+            if text:
+                blocks.append(Block("heading", text, len(blocks)))
+            continue
+
+        if _TABLE_ROW_RE.match(line):
+            flush_paragraph()
+            if _ALIGNMENT_ROW_RE.match(line):
+                continue  # alignment rows carry no content
+            cells = [normalize_block_text(c) for c in line.strip().strip("|").split("|")]
+            text = " | ".join(c for c in cells)
+            if text.replace("|", "").strip():
+                blocks.append(Block("table_row", text, len(blocks)))
+            continue
+
+        item = _LIST_RE.match(line)
+        if item:
+            flush_paragraph()
+            text = normalize_block_text(item.group(1))
+            if text:
+                blocks.append(Block("list_item", text, len(blocks)))
+            continue
+
+        paragraph.append(line.strip())
+
+    flush_paragraph()
+    return blocks
+
+
+def _similarity(a: str, b: str) -> float:
+    if a == b:
+        return 1.0
+    try:
+        from rapidfuzz import fuzz
+        return fuzz.ratio(a, b) / 100.0
+    except ImportError:  # pragma: no cover - rapidfuzz is a hard requirement
+        return 1.0 if a == b else 0.0
+
+
+def _match_blocks(
+    reference: list[Block], hypothesis: list[Block]
+) -> tuple[list[tuple[Block, Block]], int]:
+    """Greedy best-first matching within a block type; returns (pairs,
+    consumed hypothesis blocks).
+
+    A reference block may match a consecutive same-kind RUN of hypothesis
+    blocks: annotators group ("Seller: Bradley-Andrade ...") what engines
+    split with blank lines, and where the content is the same, segmentation
+    is formatting, not structure — an engine must not lose the block for
+    splitting it. Every hypothesis block feeds at most one reference.
+
+    Greedy rather than optimal: an exact assignment would let a distant
+    duplicate steal a match and change the order score for reasons that have
+    nothing to do with the engine.
+    """
+    consumed: set[int] = set()
+    pairs: list[tuple[Block, Block]] = []
+    for ref in reference:
+        best_run, best_score = None, 0.0
+        for i, head in enumerate(hypothesis):
+            if head.index in consumed or head.kind != ref.kind:
+                continue
+            texts: list[str] = []
+            for j in range(i, len(hypothesis)):
+                block = hypothesis[j]
+                if block.kind != ref.kind or block.index in consumed:
+                    break
+                texts.append(block.text)
+                joined = " ".join(texts)
+                if len(joined) > 2 * len(ref.text) + 40:
+                    break
+                score = _similarity(ref.text, joined)
+                if score > best_score:
+                    best_run, best_score = (i, j + 1), score
+        if best_run is not None and best_score >= BLOCK_MATCH_THRESHOLD:
+            start, end = best_run
+            consumed.update(b.index for b in hypothesis[start:end])
+            pairs.append((ref, hypothesis[start]))
+    return pairs, len(consumed)
+
+
+def _kendall_tau_order(positions: list[int]) -> float:
+    if len(positions) <= 1:
+        return 1.0
+    concordant = discordant = 0
+    for i in range(len(positions)):
+        for j in range(i + 1, len(positions)):
+            if positions[i] < positions[j]:
+                concordant += 1
+            elif positions[i] > positions[j]:
+                discordant += 1
+    total = len(positions) * (len(positions) - 1) // 2
+    return ((concordant - discordant) / total + 1) / 2
+
+
+def score_markdown(
+    output_markdown: str | None,
+    gt: GroundTruth,
+    engine: str = "",
+    use_judge: bool | None = None,
+    checklist_model: str | None = None,
+    verdict_model: str | None = None,
+) -> MarkdownScore:
+    """(engine markdown, ground truth) -> MarkdownScore.
+
+    When ``use_judge`` is True (or None with GOOGLE_API_KEY set) the LLM
+    judge is the headline scorer.  The deterministic block-matching score
+    runs alongside as a supporting metric.
+    """
+    import os
+    judge = use_judge if use_judge is not None else bool(os.environ.get("GOOGLE_API_KEY"))
+
+    if not gt.has_gt_for("markdown"):
+        return MarkdownScore(applicable=False, reason=gt.missing_gt_reason("markdown"))
+    if output_markdown is None:
+        return MarkdownScore(
+            applicable=False, reason="engine produced no markdown output"
+        )
+
+    reference = parse_blocks(gt.markdown or "")
+    hypothesis = parse_blocks(output_markdown)
+
+    if not reference:
+        return MarkdownScore(
+            applicable=False, reason="markdown reference parsed to no blocks"
+        )
+
+    pairs, consumed = _match_blocks(reference, hypothesis)
+    matched = len(pairs)
+    # Precision counts every output block that fed a matched reference — an
+    # engine that split one annotated block into five is not four blocks wrong.
+    precision = consumed / len(hypothesis) if hypothesis else 0.0
+    recall = matched / len(reference)
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0 else 0.0
+    )
+
+    order = _kendall_tau_order([hyp.index for _, hyp in pairs])
+
+    per_type: dict[str, float] = {}
+    for kind in ("heading", "list_item", "table_row", "paragraph"):
+        ref_of_kind = [b for b in reference if b.kind == kind]
+        if not ref_of_kind:
+            continue
+        hit = sum(1 for ref, _ in pairs if ref.kind == kind)
+        per_type[kind] = round(hit / len(ref_of_kind), 4)
+
+    matched_refs = {id(ref) for ref, _ in pairs}
+    missed = [(b.kind, b.text) for b in reference if id(b) not in matched_refs]
+
+    # Reading order is only a fact about blocks that were actually matched.
+    # With fewer than two of them there is no order to be right about, and
+    # Kendall tau returns 1.0 for an empty sequence — so an engine that
+    # recovered nothing was collecting the full order weight and landing on a
+    # 0.2 floor. Ten engines shared that exact minimum before this was fixed.
+    headline = (ELEMENT_WEIGHT * f1 + ORDER_WEIGHT * order) if matched >= 2 else f1
+
+    det_score = round(headline, 4)
+    det_kwargs = dict(
+        markdown_score=det_score,
+        element_f1=round(f1, 4),
+        element_precision=round(precision, 4),
+        element_recall=round(recall, 4),
+        order_score=round(order, 4),
+        per_type_recall=per_type,
+        reference_blocks=len(reference),
+        output_blocks=len(hypothesis),
+        matched_blocks=matched,
+        reference_has_structure=any(b.kind in STRUCTURAL_TYPES for b in reference),
+        missed=missed,
+    )
+
+    if judge:
+        from evaluation.markdown_judge import (
+            judge_markdown,
+            DEFAULT_CHECKLIST_MODEL,
+            DEFAULT_VERDICT_MODEL,
+        )
+        from pathlib import Path
+
+        doc_path = Path(gt.document_path)
+        cm = checklist_model or DEFAULT_CHECKLIST_MODEL
+        vm = verdict_model or DEFAULT_VERDICT_MODEL
+        result = judge_markdown(
+            document_path=doc_path,
+            engine_text=output_markdown or "",
+            engine_name=engine,
+            checklist_model=cm,
+            verdict_model=vm,
+        )
+        return MarkdownScore(
+            applicable=True,
+            judge_element_accuracy=result.element_accuracy,
+            judge_cost_usd=result.cost_usd,
+            judge_checklist_size=result.checklist_size,
+            judge_full_checklist_size=result.full_checklist_size,
+            judge_sampled=result.sampled,
+            judge_prompt_tokens=result.prompt_tokens,
+            judge_output_tokens=result.output_tokens,
+            judge_thinking_tokens=result.thinking_tokens,
+            judge_checklist_model=cm,
+            judge_verdict_model=vm,
+            judge_error=result.error,
+            reason=result.error,
+            **det_kwargs,
+        )
+
+    return MarkdownScore(applicable=True, **det_kwargs)

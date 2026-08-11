@@ -1,0 +1,202 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"etfName\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"autoReinvest\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Automatically reinvest dividends\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 15.214342874940485,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"tableData\": [{\"etfName\": \"Technology Select Sector SPDR Fund\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Information Technology ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"SPDR S&P 500 ETF Trust\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Growth ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Invesco QQQ Trust Series I\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core S&P 500 ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Total International Stock ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard FTSE Emerging Markets ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core MSCI Emerging Markets ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core S&P Mid-Cap ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Total Stock Market ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core MSCI EAFE ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Value ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard S&P 500 ETF\", \"assetClass\": \"Equity\"}], \"accountInfo\": {\"autoReinvest\": \"YES\"}, \"institution\": \"Dr. Gregory Frami\", \"portfolioSummary\": {\"changes\": [{\"description\": \"Account Transfers Out\", \"currentPeriod\": 0, \"yearToDate\": -73579.95}, {\"description\": \"Dividends\", \"currentPeriod\": 0, \"yearToDate\": 14691.25}, {\"description\": \"Aggregate Portfolio Movement\", \"currentPeriod\": -25497.13, \"yearToDate\": -217594.4}, {\"description\": \"Additional Deposits\", \"currentPeriod\": 70374.61, \"yearToDate\": 89254.6}, {\"description\": \"Performance Fees\", \"currentPeriod\": -9514.72, \"yearToDate\": -50150.55}, {\"description\": \"Capital Appreciation\", \"currentPeriod\": 34310.9, \"yearToDate\": 123685}, {\"description\": \"Other\", \"currentPeriod\": -1125.55, \"yearToDate\": -27602.05}], \"ytdEndingBalance\": 524902, \"currentPeriodEndingBalance\": 726935.31}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Account Overview\n\n|   | Current Period | YTD Period  |\n| --- | --- | --- |\n|  Beginning of Period Value | $637,890.00 | $725,199.00  |\n|  Account Transfers Out | $0.00 | -$73,579.95  |\n|  Dividends | $0.00 | $14,691.25  |\n|  Aggregate Portfolio Movement | -$25,497.13 | -$217,594.40  |\n|  Additional Deposits | $70,374.61 | $89,254.60  |\n|  Performance Fees | -$9,514.72 | -$50,150.55  |\n|  Capital Appreciation | $34,310.90 | $123,685.00  |\n|  Other | -$1,125.55 | -$27,602.05  |\n|  SNDING ACCOUNT VALUE | $726,935.31 | $524,902.00  |\n\n|  ETF | Traded As | FUD Price | YTD Price Change | Avg. Daily Volume | One Day Change | Classification  |\n| --- | --- | --- | --- | --- | --- | --- |\n|  Technology Select Sector SPDR Fund | XLK | 234.47 | 0.2265 | 4015302 | -0.0127 | Equity  |\n|  Vanguard Information Technology ETF | VGT | 627.57 | 0.305 | 453405 | -0.0125 | Equity  |\n|  SPDR S&P 500 ETF Trust | SPY | 588.22 | 0.2534 | 46003064 | -0.0114 | Equity  |\n|  Vanguard Growth ETF | VUG | 414.19 | 0.339 | 1145739 | -0.0126 | Equity  |\n|  Invesco QQQ Trust Series I | QQQ | 515.61 | 0.2665 | 29009270 | -0.0133 | Equity  |\n|  iShares Core S&P 500 ETF | IVV | 590.98 | 0.2542 | 5875330 | -0.011 | Equity  |\n|  Vanguard Total International Stock ETF | VXUS | 59 | 0.052 | 3544059 | -0.0067 | Equity  |\n|  Vanguard FTSE Emerging Markets ETF | VWO | 44.11 | 0.1076 | 8214263 | -0.0088 | Equity  |\n|  iShares Core MSCI Emerging Markets ETF | IEMG | 52.31 | 0.0667 | 9449047 | -0.0082 | Equity  |\n|  iShares Core S&P Mid-Cap ETF | IIH | 62.17 | 0.1366 | 7659450 | -0.007 | Equity  |\n|  Vanguard Total Stock Market ETF | VTI | 290.82 | 0.2424 | 3046583 | -0.0111 | Equity  |\n|  iShares Core MSCI EAFE ETF | IEFA | 70.32 | 0.0332 | 8199248 | -0.0066 | Equity  |\n|  Vanguard Value ETF | VTV | 168.94 | 0.1571 | 1827734 | -0.0101 | Equity  |\n|  Vanguard S&P 500 ETF | VOO | 540.99 | 0.2548 | 5594505 | -0.0111 | Equity  |\n\nAccount statement as of Apr 2020 - Nov 2020\n\nYour Representative\n\nYour Financial Consultant: Dr. Gregory Frami\nID: jGefATevv\n\n212 Beier Walks North Richland Hills Kentucky, 18382-7941\n\nContact Information\nBusiness: 663 999-5583\n\nYour Account Information\n\n# DIVIDEND REINVESTMENT PREFERENCES\n\nAutomatically apply dividends toward new share acquisitions:\nAllow partial share ownership for investments:\n\nDaily Balances\n\nYES\nNO\n\n|  Date | Amount | Date | Amount | Date | Amount | Date | Amount  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  2023-12-30 | $707,126.00 | 2023-12-22 | $706,373.00 | 2023-12-14 | $707,309.00 | 2023-12-06 | $708,831.00  |\n|  2023-12-29 | $707,431.00 | 2023-12-21 | $706,832.00 | 2023-12-13 | $707,955.00 | 2023-12-05 | $709,301.00  |\n|  2023-12-28 | $701,554.00 | 2023-12-20 | $706,666.00 | 2023-12-12 | $708,475.00 | 2023-12-02 | $709,798.00  |\n|  2023-12-27 | $706,159.00 | 2023-12-19 | $707,119.00 | 2023-12-09 | $709,146.00 | 2023-12-01 | $709,311.00  |\n|  2023-12-26 | $705,795.00 | 2023-12-16 | $706,759.00 | 2023-12-08 | $709,423.00 |  |   |\n|  2023-12-23 | $706,412.00 | 2023-12-15 | $706,899.00 | 2023-12-07 | $709,066.00 |  |   |\n\nGet your statements online\n\nDownload on the\nApp Store\n\nGet it on\nGoogle Play",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 5712,
+     "width": 4284
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 956,
+      "top_left_y": 772,
+      "bottom_right_x": 1342,
+      "bottom_right_y": 841,
+      "content": "Account Overview",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 943,
+      "top_left_y": 903,
+      "bottom_right_x": 3478,
+      "bottom_right_y": 1567,
+      "content": "|   | Current Period | YTD Period  |\n| --- | --- | --- |\n|  Beginning of Period Value | $637,890.00 | $725,199.00  |\n|  Account Transfers Out | $0.00 | -$73,579.95  |\n|  Dividends | $0.00 | $14,691.25  |\n|  Aggregate Portfolio Movement | -$25,497.13 | -$217,594.40  |\n|  Additional Deposits | $70,374.61 | $89,254.60  |\n|  Performance Fees | -$9,514.72 | -$50,150.55  |\n|  Capital Appreciation | $34,310.90 | $123,685.00  |\n|  Other | -$1,125.55 | -$27,602.05  |\n|  SNDING ACCOUNT VALUE | $726,935.31 | $524,902.00  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 943,
+      "top_left_y": 1567,
+      "bottom_right_x": 3418,
+      "bottom_right_y": 3025,
+      "content": "|  ETF | Traded As | FUD Price | YTD Price Change | Avg. Daily Volume | One Day Change | Classification  |\n| --- | --- | --- | --- | --- | --- | --- |\n|  Technology Select Sector SPDR Fund | XLK | 234.47 | 0.2265 | 4015302 | -0.0127 | Equity  |\n|  Vanguard Information Technology ETF | VGT | 627.57 | 0.305 | 453405 | -0.0125 | Equity  |\n|  SPDR S&P 500 ETF Trust | SPY | 588.22 | 0.2534 | 46003064 | -0.0114 | Equity  |\n|  Vanguard Growth ETF | VUG | 414.19 | 0.339 | 1145739 | -0.0126 | Equity  |\n|  Invesco QQQ Trust Series I | QQQ | 515.61 | 0.2665 | 29009270 | -0.0133 | Equity  |\n|  iShares Core S&P 500 ETF | IVV | 590.98 | 0.2542 | 5875330 | -0.011 | Equity  |\n|  Vanguard Total International Stock ETF | VXUS | 59 | 0.052 | 3544059 | -0.0067 | Equity  |\n|  Vanguard FTSE Emerging Markets ETF | VWO | 44.11 | 0.1076 | 8214263 | -0.0088 | Equity  |\n|  iShares Core MSCI Emerging Markets ETF | IEMG | 52.31 | 0.0667 | 9449047 | -0.0082 | Equity  |\n|  iShares Core S&P Mid-Cap ETF | IIH | 62.17 | 0.1366 | 7659450 | -0.007 | Equity  |\n|  Vanguard Total Stock Market ETF | VTI | 290.82 | 0.2424 | 3046583 | -0.0111 | Equity  |\n|  iShares Core MSCI EAFE ETF | IEFA | 70.32 | 0.0332 | 8199248 | -0.0066 | Equity  |\n|  Vanguard Value ETF | VTV | 168.94 | 0.1571 | 1827734 | -0.0101 | Equity  |\n|  Vanguard S&P 500 ETF | VOO | 540.99 | 0.2548 | 5594505 | -0.0111 | Equity  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 2393,
+      "top_left_y": 3042,
+      "bottom_right_x": 3259,
+      "bottom_right_y": 3139,
+      "content": "Account statement as of Apr 2020 - Nov 2020",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 883,
+      "top_left_y": 3059,
+      "bottom_right_x": 1261,
+      "bottom_right_y": 3128,
+      "content": "Your Representative",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 841,
+      "top_left_y": 3168,
+      "bottom_right_x": 1621,
+      "bottom_right_y": 3276,
+      "content": "Your Financial Consultant: Dr. Gregory Frami\nID: jGefATevv",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 828,
+      "top_left_y": 3288,
+      "bottom_right_x": 1780,
+      "bottom_right_y": 3396,
+      "content": "212 Beier Walks North Richland Hills Kentucky, 18382-7941",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 2895,
+      "top_left_y": 3339,
+      "bottom_right_x": 3306,
+      "bottom_right_y": 3471,
+      "content": "Contact Information\nBusiness: 663 999-5583",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 810,
+      "top_left_y": 3442,
+      "bottom_right_x": 1312,
+      "bottom_right_y": 3516,
+      "content": "Your Account Information",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 780,
+      "top_left_y": 3534,
+      "bottom_right_x": 1608,
+      "bottom_right_y": 3636,
+      "content": "# DIVIDEND REINVESTMENT PREFERENCES",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 759,
+      "top_left_y": 3636,
+      "bottom_right_x": 1745,
+      "bottom_right_y": 3779,
+      "content": "Automatically apply dividends toward new share acquisitions:\nAllow partial share ownership for investments:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 742,
+      "top_left_y": 3814,
+      "bottom_right_x": 1029,
+      "bottom_right_y": 3882,
+      "content": "Daily Balances",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 3221,
+      "top_left_y": 3837,
+      "bottom_right_x": 3293,
+      "bottom_right_y": 3951,
+      "content": "YES\nNO",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 712,
+      "top_left_y": 3922,
+      "bottom_right_x": 3293,
+      "bottom_right_y": 4546,
+      "content": "|  Date | Amount | Date | Amount | Date | Amount | Date | Amount  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  2023-12-30 | $707,126.00 | 2023-12-22 | $706,373.00 | 2023-12-14 | $707,309.00 | 2023-12-06 | $708,831.00  |\n|  2023-12-29 | $707,431.00 | 2023-12-21 | $706,832.00 | 2023-12-13 | $707,955.00 | 2023-12-05 | $709,301.00  |\n|  2023-12-28 | $701,554.00 | 2023-12-20 | $706,666.00 | 2023-12-12 | $708,475.00 | 2023-12-02 | $709,798.00  |\n|  2023-12-27 | $706,159.00 | 2023-12-19 | $707,119.00 | 2023-12-09 | $709,146.00 | 2023-12-01 | $709,311.00  |\n|  2023-12-26 | $705,795.00 | 2023-12-16 | $706,759.00 | 2023-12-08 | $709,423.00 |  |   |\n|  2023-12-23 | $706,412.00 | 2023-12-15 | $706,899.00 | 2023-12-07 | $709,066.00 |  |   |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 1642,
+      "top_left_y": 4574,
+      "bottom_right_x": 2196,
+      "bottom_right_y": 4671,
+      "content": "Get your statements online",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1544,
+      "top_left_y": 4706,
+      "bottom_right_x": 1848,
+      "bottom_right_y": 4843,
+      "content": "Download on the\nApp Store",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1900,
+      "top_left_y": 4734,
+      "bottom_right_x": 2260,
+      "bottom_right_y": 4877,
+      "content": "Get it on\nGoogle Play",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 14380292
+  },
+  "document_annotation": "{\"tableData\": [{\"etfName\": \"Technology Select Sector SPDR Fund\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Information Technology ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"SPDR S&P 500 ETF Trust\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Growth ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Invesco QQQ Trust Series I\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core S&P 500 ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Total International Stock ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard FTSE Emerging Markets ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core MSCI Emerging Markets ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core S&P Mid-Cap ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Total Stock Market ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"iShares Core MSCI EAFE ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard Value ETF\", \"assetClass\": \"Equity\"}, {\"etfName\": \"Vanguard S&P 500 ETF\", \"assetClass\": \"Equity\"}], \"accountInfo\": {\"autoReinvest\": \"YES\"}, \"institution\": \"Dr. Gregory Frami\", \"portfolioSummary\": {\"changes\": [{\"description\": \"Account Transfers Out\", \"currentPeriod\": 0, \"yearToDate\": -73579.95}, {\"description\": \"Dividends\", \"currentPeriod\": 0, \"yearToDate\": 14691.25}, {\"description\": \"Aggregate Portfolio Movement\", \"currentPeriod\": -25497.13, \"yearToDate\": -217594.4}, {\"description\": \"Additional Deposits\", \"currentPeriod\": 70374.61, \"yearToDate\": 89254.6}, {\"description\": \"Performance Fees\", \"currentPeriod\": -9514.72, \"yearToDate\": -50150.55}, {\"description\": \"Capital Appreciation\", \"currentPeriod\": 34310.9, \"yearToDate\": 123685}, {\"description\": \"Other\", \"currentPeriod\": -1125.55, \"yearToDate\": -27602.05}], \"ytdEndingBalance\": 524902, \"currentPeriodEndingBalance\": 726935.31}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

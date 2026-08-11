@@ -1,0 +1,264 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_002.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"company_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"gst_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"customer\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"cashier_no\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"unit_price_excluding_gst\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"subtotal\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_excluding_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_inclusive_of_gst\": {\n      \"type\": \"string\"\n    },\n    \"rounding_adjustment\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment\": {\n      \"type\": \"string\"\n    },\n    \"change_due\": {\n      \"type\": \"string\"\n    },\n    \"total_items\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"rate\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 24.967871040920727,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"company\": \"SIN LIANHAP SDN BHD\", \"address\": \"LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA 44300 BTG KALI, SELANGOR.\", \"tel\": \"03-60752222\", \"fax\": \"03-60752572\", \"company_reg_no\": \"284922-D\", \"gst_reg_no\": \"001610333920\", \"document_type\": \"TAX INVOICE\", \"customer\": \"CASH CUSTOMER\", \"invoice_no\": \"H0003939\", \"date\": \"05/02/2018\", \"cashier_no\": null, \"items\": [{\"description\": \"PPD 4MM DENLIME\", \"unit_price_excluding_gst\": \"1.887\", \"tax_code\": \"SR\", \"qty\": \"1.000\", \"amount\": \"1.887\"}, {\"description\": \"6023# GARDEN\", \"unit_price_excluding_gst\": \"5.000\", \"tax_code\": \"SR\", \"qty\": \"1.000\", \"amount\": \"5.000\"}], \"subtotal\": \"7.30\", \"total_sales_excluding_gst\": \"6.89\", \"total_sales_inclusive_of_gst\": \"7.30\", \"rounding_adjustment\": \"0.00\", \"total\": \"7.30\", \"payment\": \"7.30\", \"change_due\": \"0.00\", \"total_items\": \"2\", \"gst_summary\": [{\"tax_code\": \"SR\", \"rate\": \"6\", \"amount\": \"6.89\", \"tax\": \"0.41\"}], \"stamp\": \"SIN LIANHAP SDN BHD PAID stamp\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 14:21:35.024392+00:00",
+  "data": {
+   "company": "SIN LIANHAP SDN BHD",
+   "address": "LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA 44300 BTG KALI, SELANGOR.",
+   "tel": "03-60752222",
+   "fax": "03-60752572",
+   "company_reg_no": "284922-D",
+   "gst_reg_no": "001610333920",
+   "document_type": "TAX INVOICE",
+   "customer": "CASH CUSTOMER",
+   "invoice_no": "H0003939",
+   "date": "05/02/2018",
+   "cashier_no": null,
+   "items": [
+    {
+     "description": "PPD 4MM DENLIME",
+     "unit_price_excluding_gst": "1.887",
+     "tax_code": "SR",
+     "qty": "1.000",
+     "amount": "1.887"
+    },
+    {
+     "description": "6023# GARDEN",
+     "unit_price_excluding_gst": "5.000",
+     "tax_code": "SR",
+     "qty": "1.000",
+     "amount": "5.000"
+    }
+   ],
+   "subtotal": "7.30",
+   "total_sales_excluding_gst": "6.89",
+   "total_sales_inclusive_of_gst": "7.30",
+   "rounding_adjustment": "0.00",
+   "total": "7.30",
+   "payment": "7.30",
+   "change_due": "0.00",
+   "total_items": "2",
+   "gst_summary": [
+    {
+     "tax_code": "SR",
+     "rate": "6",
+     "amount": "6.89",
+     "tax": "0.41"
+    }
+   ],
+   "stamp": "SIN LIANHAP SDN BHD PAID stamp"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "company": {
+     "type": "string"
+    },
+    "address": {
+     "type": "string"
+    },
+    "tel": {
+     "type": "string"
+    },
+    "fax": {
+     "type": "string"
+    },
+    "company_reg_no": {
+     "type": "string"
+    },
+    "gst_reg_no": {
+     "type": "string"
+    },
+    "document_type": {
+     "type": "string"
+    },
+    "customer": {
+     "type": "string"
+    },
+    "invoice_no": {
+     "type": "string"
+    },
+    "date": {
+     "type": "string"
+    },
+    "cashier_no": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "description": {
+        "type": "string"
+       },
+       "unit_price_excluding_gst": {
+        "type": "string"
+       },
+       "tax_code": {
+        "type": "string"
+       },
+       "qty": {
+        "type": "string"
+       },
+       "amount": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "description",
+       "unit_price_excluding_gst",
+       "tax_code",
+       "qty",
+       "amount"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "subtotal": {
+     "type": "string"
+    },
+    "total_sales_excluding_gst": {
+     "type": "string"
+    },
+    "total_sales_inclusive_of_gst": {
+     "type": "string"
+    },
+    "rounding_adjustment": {
+     "type": "string"
+    },
+    "total": {
+     "type": "string"
+    },
+    "payment": {
+     "type": "string"
+    },
+    "change_due": {
+     "type": "string"
+    },
+    "total_items": {
+     "type": "string"
+    },
+    "gst_summary": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "tax_code": {
+        "type": "string"
+       },
+       "rate": {
+        "type": "string"
+       },
+       "amount": {
+        "type": "string"
+       },
+       "tax": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "tax_code",
+       "rate",
+       "amount",
+       "tax"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "stamp": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "company",
+    "date",
+    "address",
+    "total"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "3d9305ae-be52-491c-888f-39a9bc03369b",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 396,
+    "num_output_tokens": 302
+   },
+   "parse_job_id": "1434aab5-ebff-4eec-bd1a-cb916d41ee6c"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "2c4a13df-4cae-4839-b531-c782357818e6",
+  "from_ui": false,
+  "id": "e2576ac5-2568-477d-9013-5dbb751b339a",
+  "job_id": "d1d0eabf-1b0b-4e8f-b16b-4b8f272c4f3b",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 14:21:55.387969+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"zip\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's ZIP code as it appears\"\n    },\n    \"city\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's city as it appears\"\n    },\n    \"state\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's state as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"socialHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"doYouSmoke\",\n        \"doYouDrink\",\n        \"doYouExercise\"\n      ],\n      \"properties\": {\n        \"doYouDrink\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient drinks, must return true or false\"\n        },\n        \"doYouSmoke\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient smokes, must return true or false\"\n        },\n        \"packsPerWeek\": {\n          \"type\": \"number\",\n          \"description\": \"If applicable, number of packs per week\"\n        },\n        \"doYouExercise\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient exercises regularly, must return true or false\"\n        }\n      },\n      \"description\": \"Overview of patient's social history\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"chills\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chills, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"fatigue\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced fatigue, must return true or false\"\n        },\n        \"calfPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced calf pain, must return true or false\"\n        },\n        \"seizures\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced seizures, must return true or false\"\n        },\n        \"allergies\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has allergies, must return true or false\"\n        },\n        \"blackOuts\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blackouts, must return true or false\"\n        },\n        \"musclePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced muscle pain, must return true or false\"\n        },\n        \"blurredVision\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blurred vision, must return true or false\"\n        },\n        \"jointSwelling\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced joint swelling, must return true or false\"\n        },\n        \"dentalProblems\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced dental problems, must return true or false\"\n        },\n        \"coughingUpBlood\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has coughed up blood, must return true or false\"\n        },\n        \"excessiveStress\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive stress, must return true or false\"\n        },\n        \"excessiveThirst\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive thirst, must return true or false\"\n        },\n        \"excessiveBruising\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive bruising, must return true or false\"\n        },\n        \"shortnessOfBreath\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced shortness of breath, must return true or false\"\n        },\n        \"irregularHeartRate\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced an irregular heart rate, must return true or false\"\n        },\n        \"stomachTroubleOrUlcers\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced stomach trouble or ulcers, must return true or false\"\n        },\n        \"difficultyEmptyingBowelOrBladder\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has difficulty emptying their bowel or bladder, must return true or false\"\n        },\n        \"weightGainOrLossGreaterThan10Lbs\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced weight gain or loss greater than 10 pounds, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.4642928339308128,
+ "cost_per_page": 0.00109675,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"firstName\": \"Daniel\",\n  \"lastName\": \"Anderson\",\n  \"address\": \"2213 1/2 Mulberry Dr\",\n  \"city\": \"Waimanalo\",\n  \"state\": \"HI\",\n  \"zip\": \"96795\",\n  \"maritalStatus\": \"Widowed\",\n  \"socialHistory\": {\n    \"doYouSmoke\": false,\n    \"doYouDrink\": true,\n    \"doYouExercise\": false\n  },\n  \"reviewOfSymptoms\": {\n    \"chills\": false,\n    \"eyePain\": true,\n    \"fatigue\": false,\n    \"calfPain\": false,\n    \"seizures\": false,\n    \"allergies\": false,\n    \"blackOuts\": true,\n    \"musclePain\": false,\n    \"blurredVision\": false,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"coughingUpBlood\": true,\n    \"excessiveStress\": true,\n    \"excessiveThirst\": false,\n    \"excessiveBruising\": false,\n    \"shortnessOfBreath\": true,\n    \"irregularHeartRate\": true,\n    \"stomachTroubleOrUlcers\": false,\n    \"difficultyEmptyingBowelOrBladder\": false,\n    \"weightGainOrLossGreaterThan10Lbs\": false\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2509,
+  "output_tokens": 313,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:03:19 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2431",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"firstName\": \"Daniel\",\n  \"lastName\": \"Anderson\",\n  \"address\": \"2213 1/2 Mulberry Dr\",\n  \"city\": \"Waimanalo\",\n  \"state\": \"HI\",\n  \"zip\": \"96795\",\n  \"maritalStatus\": \"Widowed\",\n  \"socialHistory\": {\n    \"doYouSmoke\": false,\n    \"doYouDrink\": true,\n    \"doYouExercise\": false\n  },\n  \"reviewOfSymptoms\": {\n    \"chills\": false,\n    \"eyePain\": true,\n    \"fatigue\": false,\n    \"calfPain\": false,\n    \"seizures\": false,\n    \"allergies\": false,\n    \"blackOuts\": true,\n    \"musclePain\": false,\n    \"blurredVision\": false,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"coughingUpBlood\": true,\n    \"excessiveStress\": true,\n    \"excessiveThirst\": false,\n    \"excessiveBruising\": false,\n    \"shortnessOfBreath\": true,\n    \"irregularHeartRate\": true,\n    \"stomachTroubleOrUlcers\": false,\n    \"difficultyEmptyingBowelOrBladder\": false,\n    \"weightGainOrLossGreaterThan10Lbs\": false\n  }\n}",
+       "thought": null,
+       "thought_signature": "b\"\\x124\\n2\\x01\\x11M2\\x0f\\x1de\\xd2\\n\\xf0,>\\n\\xb7\\xb9\\x17E8\\x87wd\\xb9\\x1bo\\x92l%\\xa9\\xea(\\xfe\\\\\\xd3\\x05\\x1c\\xf1\\x15'\\xef\\xee=\\x00a\\xfdZ\\xfc\\xf3\\x1d\\xc6\\x04\"",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "Jtp5aqr5GKeVvdIP8LXEmQo",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 313,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 2509,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1089
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 1420
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2822,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

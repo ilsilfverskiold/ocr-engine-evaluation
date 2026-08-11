@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"etfName\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"autoReinvest\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Automatically reinvest dividends\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": \"\",\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": -73579.95,\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 14691.25,\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": -25497.13\n      },\n      {\n        \"yearToDate\": -217594.4,\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": 70374.61\n      },\n      {\n        \"yearToDate\": -50150.55,\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -9514.72\n      },\n      {\n        \"yearToDate\": 123685,\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": 34310.9\n      },\n      {\n        \"yearToDate\": -27602.05,\n        \"description\": \"Other\",\n        \"currentPeriod\": -1125.55\n      }\n    ],\n    \"ytdEndingBalance\": 634902.9,\n    \"currentPeriodEndingBalance\": 706538.11\n  }\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-93dfe71b7579adf6",
+   "object": "chat.completion",
+   "created": 1786376409,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": \"\",\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": -73579.95,\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 14691.25,\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": -25497.13\n      },\n      {\n        \"yearToDate\": -217594.4,\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": 70374.61\n      },\n      {\n        \"yearToDate\": -50150.55,\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -9514.72\n      },\n      {\n        \"yearToDate\": 123685,\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": 34310.9\n      },\n      {\n        \"yearToDate\": -27602.05,\n        \"description\": \"Other\",\n        \"currentPeriod\": -1125.55\n      }\n    ],\n    \"ytdEndingBalance\": 634902.9,\n    \"currentPeriodEndingBalance\": 706538.11\n  }\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 16662,
+    "total_tokens": 17383,
+    "completion_tokens": 721,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": \"\",\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": -73579.95,\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 14691.25,\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": -25497.13\n      },\n      {\n        \"yearToDate\": -217594.4,\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": 70374.61\n      },\n      {\n        \"yearToDate\": -50150.55,\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -9514.72\n      },\n      {\n        \"yearToDate\": 123685,\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": 34310.9\n      },\n      {\n        \"yearToDate\": -27602.05,\n        \"description\": \"Other\",\n        \"currentPeriod\": -1125.55\n      }\n    ],\n    \"ytdEndingBalance\": 634902.9,\n    \"currentPeriodEndingBalance\": 706538.11\n  }\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-93dfe71b7579adf6",
+    "object": "chat.completion",
+    "created": 1786376409,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"tableData\": [\n    {\n      \"etfName\": \"Technology Select Sector SPDR Fund\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Information Technology ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"SPDR S&P 500 ETF Trust\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Growth ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Invesco QQQ Trust Series I\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total International Stock ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard FTSE Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI Emerging Markets ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core S&P Mid-Cap ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Total Stock Market ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"iShares Core MSCI EAFE ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard Value ETF\",\n      \"assetClass\": \"Equity\"\n    },\n    {\n      \"etfName\": \"Vanguard S&P 500 ETF\",\n      \"assetClass\": \"Equity\"\n    }\n  ],\n  \"accountInfo\": {\n    \"autoReinvest\": \"YES\"\n  },\n  \"institution\": \"\",\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": -73579.95,\n        \"description\": \"Account Transfers Out\",\n        \"currentPeriod\": 0\n      },\n      {\n        \"yearToDate\": 14691.25,\n        \"description\": \"Aggregate Portfolio Movement\",\n        \"currentPeriod\": -25497.13\n      },\n      {\n        \"yearToDate\": -217594.4,\n        \"description\": \"Additional Deposits\",\n        \"currentPeriod\": 70374.61\n      },\n      {\n        \"yearToDate\": -50150.55,\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -9514.72\n      },\n      {\n        \"yearToDate\": 123685,\n        \"description\": \"Capital Appreciation\",\n        \"currentPeriod\": 34310.9\n      },\n      {\n        \"yearToDate\": -27602.05,\n        \"description\": \"Other\",\n        \"currentPeriod\": -1125.55\n      }\n    ],\n    \"ytdEndingBalance\": 634902.9,\n    \"currentPeriodEndingBalance\": 706538.11\n  }\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 16662,
+     "total_tokens": 17383,
+     "completion_tokens": 721,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"etfName\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"accountInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"autoReinvest\": {\n          \"enum\": [\n            \"YES\",\n            \"NO\"\n          ],\n          \"type\": \"string\",\n          \"description\": \"Automatically reinvest dividends\"\n        }\n      },\n      \"description\": \"Summary of account settings and investment elections\"\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_000.png",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

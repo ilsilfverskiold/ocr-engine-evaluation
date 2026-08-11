@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.2368922909954563,
+ "cost_per_page": 0.0009355,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"header\": {\n    \"invoice_no\": \"97159829\",\n    \"invoice_date\": \"09/18/2015\",\n    \"seller\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\",\n    \"client\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\",\n    \"seller_tax_id\": \"985-73-8194\",\n    \"client_tax_id\": \"994-72-1270\",\n    \"iban\": \"GB81LZWO32519172531418\"\n  },\n  \"items\": [\n    {\n      \"item_desc\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n      \"item_qty\": \"2,00\",\n      \"item_net_price\": \"444,60\",\n      \"item_net_worth\": \"889,20\",\n      \"item_vat\": \"10%\",\n      \"item_gross_worth\": \"978,12\"\n    }\n  ],\n  \"summary\": {\n    \"total_net_worth\": \"889,20\",\n    \"total_vat\": \"88,92\",\n    \"total_gross_worth\": \"978,12\"\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1552,
+  "output_tokens": 365,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 13:59:35 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2120",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"header\": {\n    \"invoice_no\": \"97159829\",\n    \"invoice_date\": \"09/18/2015\",\n    \"seller\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\",\n    \"client\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\",\n    \"seller_tax_id\": \"985-73-8194\",\n    \"client_tax_id\": \"994-72-1270\",\n    \"iban\": \"GB81LZWO32519172531418\"\n  },\n  \"items\": [\n    {\n      \"item_desc\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n      \"item_qty\": \"2,00\",\n      \"item_net_price\": \"444,60\",\n      \"item_net_worth\": \"889,20\",\n      \"item_vat\": \"10%\",\n      \"item_gross_worth\": \"978,12\"\n    }\n  ],\n  \"summary\": {\n    \"total_net_worth\": \"889,20\",\n    \"total_vat\": \"88,92\",\n    \"total_gross_worth\": \"978,12\"\n  }\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\xad!\\xccB?l/\\xfb\\xfb\\xf4\\xbb\\xa4a\\x8e\\x1a\\x9a*\\xd2\\xcbe\\xbb\\tZhm\\x1b\\xea\\x94\\xbf\\xa2`S\\x9a]B\\x95\\xab\\x1e\\x95\\xb5\\xd0\\xc6p\\x97X'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "Rdl5aq2wEbyRvdIPgsuHuQk",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 365,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1552,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 460
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1092
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 1917,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

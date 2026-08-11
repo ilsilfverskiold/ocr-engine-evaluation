@@ -1,0 +1,83 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 5.999105875031091,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"title\": \"Pay-In Sheet - 2025-09\", \"date\": \"2025-09\", \"distNumber\": \"359396\", \"manager\": \"Kim Abernathy\", \"consultants\": [{\"consultantName\": \"Blake McLaughlin\", \"idNumber\": \"9689414383\", \"sfmCode\": \"165296\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Holly Lind\", \"idNumber\": \"3466054262\", \"sfmCode\": \"173068\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Mathew Littel\", \"idNumber\": \"3950820184\", \"sfmCode\": \"540188\", \"sales\": 2210, \"puerReturns\": 0, \"total\": 2210}, {\"consultantName\": \"Homer Goyette\", \"idNumber\": \"1200040391\", \"sfmCode\": \"715373\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Eula Hintz\", \"idNumber\": \"2118768308\", \"sfmCode\": \"528564\", \"sales\": 1119, \"puerReturns\": 21, \"total\": 1119}, {\"consultantName\": \"Dr. Jeffrey Blanda\", \"idNumber\": \"3109403621\", \"sfmCode\": \"503684\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Marjorie Sanford\", \"idNumber\": \"7436294303\", \"sfmCode\": \"114025\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Jasmine Johnston\", \"idNumber\": \"2694407508\", \"sfmCode\": \"321175\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Dr. Andrea Weimann\", \"idNumber\": \"6150707543\", \"sfmCode\": \"274772\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Travis Wisoky\", \"idNumber\": \"6928799821\", \"sfmCode\": \"449858\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Chad Howell\", \"idNumber\": \"1111741445\", \"sfmCode\": \"974534\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Rick Koelpin\", \"idNumber\": \"5024605886\", \"sfmCode\": \"639258\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Dr. Carolyn Medhurst\", \"idNumber\": \"5501728225\", \"sfmCode\": \"845196\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Virginia Ward\", \"idNumber\": \"6616015097\", \"sfmCode\": \"323433\", \"sales\": 2803, \"puerReturns\": 0, \"total\": 3223.45}]}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Pay-In Sheet - 2025-09\n\nDist: 359396\n\nMan: Kim Abernathy\n\n|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Blake McLaughlin | 9689414383 | 165296 |  |  |  |  |  |  |   |\n|  Holly Lind | 3466054262 | 173068 |  |  |  |  |  |  |   |\n|  Mathew Littel | 3950820184 | 540188 | R2210.00 |  | R2210.00 |  |  |  | R2210.00  |\n|  Homer Goyette | 1200040391 | 715373 |  |  |  |  |  |  |   |\n|  Eula Hintz | 2118768308 | 528564 | R1140.00 | R21.00 | R1119.00 |  |  |  | R1119.00  |\n|  Dr. Jeffrey Blanda | 3109403621 | 503684 |  |  |  |  |  |  |   |\n|  Marjorie Sanford | 7436294303 | 114025 |  |  |  |  |  |  |   |\n|  Jasmine Johnston | 2694407508 | 321175 |  |  |  |  |  |  |   |\n|  Dr. Andrea Weimann | 6150707543 | 274772 |  |  |  |  |  |  |   |\n|  Travis Wisoky | 6928799821 | 449858 |  |  |  |  |  |  |   |\n|  Chad Howell | 1111741445 | 974534 |  |  |  |  |  |  |   |\n|  Rick Koelpin | 5024605886 | 639258 |  |  |  |  |  |  |   |\n|  Dr. Carolyn Medhurst | 5501728225 | 845196 |  |  |  |  |  |  |   |\n|  Virginia Ward | 6616015097 | 323433 | R2803.00 |  | R2803.00 | R420.45 |  | R420.45 | R3223.45  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1199,
+     "width": 2010
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 58,
+      "top_left_y": 86,
+      "bottom_right_x": 541,
+      "bottom_right_y": 124,
+      "content": "# Pay-In Sheet - 2025-09",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 58,
+      "top_left_y": 145,
+      "bottom_right_x": 239,
+      "bottom_right_y": 172,
+      "content": "Dist: 359396",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1008,
+      "top_left_y": 150,
+      "bottom_right_x": 1278,
+      "bottom_right_y": 180,
+      "content": "Man: Kim Abernathy",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 72,
+      "top_left_y": 229,
+      "bottom_right_x": 1932,
+      "bottom_right_y": 1132,
+      "content": "|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Blake McLaughlin | 9689414383 | 165296 |  |  |  |  |  |  |   |\n|  Holly Lind | 3466054262 | 173068 |  |  |  |  |  |  |   |\n|  Mathew Littel | 3950820184 | 540188 | R2210.00 |  | R2210.00 |  |  |  | R2210.00  |\n|  Homer Goyette | 1200040391 | 715373 |  |  |  |  |  |  |   |\n|  Eula Hintz | 2118768308 | 528564 | R1140.00 | R21.00 | R1119.00 |  |  |  | R1119.00  |\n|  Dr. Jeffrey Blanda | 3109403621 | 503684 |  |  |  |  |  |  |   |\n|  Marjorie Sanford | 7436294303 | 114025 |  |  |  |  |  |  |   |\n|  Jasmine Johnston | 2694407508 | 321175 |  |  |  |  |  |  |   |\n|  Dr. Andrea Weimann | 6150707543 | 274772 |  |  |  |  |  |  |   |\n|  Travis Wisoky | 6928799821 | 449858 |  |  |  |  |  |  |   |\n|  Chad Howell | 1111741445 | 974534 |  |  |  |  |  |  |   |\n|  Rick Koelpin | 5024605886 | 639258 |  |  |  |  |  |  |   |\n|  Dr. Carolyn Medhurst | 5501728225 | 845196 |  |  |  |  |  |  |   |\n|  Virginia Ward | 6616015097 | 323433 | R2803.00 |  | R2803.00 | R420.45 |  | R420.45 | R3223.45  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 332131
+  },
+  "document_annotation": "{\"title\": \"Pay-In Sheet - 2025-09\", \"date\": \"2025-09\", \"distNumber\": \"359396\", \"manager\": \"Kim Abernathy\", \"consultants\": [{\"consultantName\": \"Blake McLaughlin\", \"idNumber\": \"9689414383\", \"sfmCode\": \"165296\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Holly Lind\", \"idNumber\": \"3466054262\", \"sfmCode\": \"173068\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Mathew Littel\", \"idNumber\": \"3950820184\", \"sfmCode\": \"540188\", \"sales\": 2210, \"puerReturns\": 0, \"total\": 2210}, {\"consultantName\": \"Homer Goyette\", \"idNumber\": \"1200040391\", \"sfmCode\": \"715373\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Eula Hintz\", \"idNumber\": \"2118768308\", \"sfmCode\": \"528564\", \"sales\": 1119, \"puerReturns\": 21, \"total\": 1119}, {\"consultantName\": \"Dr. Jeffrey Blanda\", \"idNumber\": \"3109403621\", \"sfmCode\": \"503684\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Marjorie Sanford\", \"idNumber\": \"7436294303\", \"sfmCode\": \"114025\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Jasmine Johnston\", \"idNumber\": \"2694407508\", \"sfmCode\": \"321175\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Dr. Andrea Weimann\", \"idNumber\": \"6150707543\", \"sfmCode\": \"274772\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Travis Wisoky\", \"idNumber\": \"6928799821\", \"sfmCode\": \"449858\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Chad Howell\", \"idNumber\": \"1111741445\", \"sfmCode\": \"974534\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Rick Koelpin\", \"idNumber\": \"5024605886\", \"sfmCode\": \"639258\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Dr. Carolyn Medhurst\", \"idNumber\": \"5501728225\", \"sfmCode\": \"845196\", \"sales\": 0, \"total\": 0}, {\"consultantName\": \"Virginia Ward\", \"idNumber\": \"6616015097\", \"sfmCode\": \"323433\", \"sales\": 2803, \"puerReturns\": 0, \"total\": 3223.45}]}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

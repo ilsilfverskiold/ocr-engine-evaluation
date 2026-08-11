@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/financial_table/fintab_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"columns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"rows\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"label\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"object\",\n            \"additionalProperties\": {\n              \"type\": \"string\"\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.870799726333334,
+ "cost_per_page": 0.004074335010075333,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"columns\": [\n    \"31.7.17\",\n    \"31.7.16\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"1. Called up share capital\",\n      \"values\": {\n        \"Heaven a judgment\": \"890\",\n        \"Oval victoria bids\": \"396\"\n      }\n    },\n    {\n      \"label\": \"2. Revaluation reserve\",\n      \"values\": {\n        \"Drums mason packing\": \"307\",\n        \"Epa autumn korean\": \"603\",\n        \"Use output pillow pursuit\": \"799\",\n        \"British click applications titles\": \"279\",\n        \"Inspection\": \"70\"\n      }\n    },\n    {\n      \"label\": \"3. Creditors: amounts falling due after more than one year\",\n      \"values\": {\n        \"Parents weird barbara\": \"674\",\n        \"Refused laughing associated thongs\": \"511\",\n        \"Jm pack off order\": \"221\",\n        \"Creative achieve worn titanium\": \"68\",\n        \"Organisations pa squirting evolution\": \"542\",\n        \"Api\": \"680\",\n        \"Hartford expansys\": \"564\",\n        \"Mutual testing\": \"226\"\n      }\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-b9e9fff4a26c8e30",
+   "object": "chat.completion",
+   "created": 1786377067,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"columns\": [\n    \"31.7.17\",\n    \"31.7.16\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"1. Called up share capital\",\n      \"values\": {\n        \"Heaven a judgment\": \"890\",\n        \"Oval victoria bids\": \"396\"\n      }\n    },\n    {\n      \"label\": \"2. Revaluation reserve\",\n      \"values\": {\n        \"Drums mason packing\": \"307\",\n        \"Epa autumn korean\": \"603\",\n        \"Use output pillow pursuit\": \"799\",\n        \"British click applications titles\": \"279\",\n        \"Inspection\": \"70\"\n      }\n    },\n    {\n      \"label\": \"3. Creditors: amounts falling due after more than one year\",\n      \"values\": {\n        \"Parents weird barbara\": \"674\",\n        \"Refused laughing associated thongs\": \"511\",\n        \"Jm pack off order\": \"221\",\n        \"Creative achieve worn titanium\": \"68\",\n        \"Organisations pa squirting evolution\": \"542\",\n        \"Api\": \"680\",\n        \"Hartford expansys\": \"564\",\n        \"Mutual testing\": \"226\"\n      }\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 3265,
+    "total_tokens": 3558,
+    "completion_tokens": 293,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.870799726333334,
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "e64af0c5c3c14fb6aab4471e15cbd215",
+  "batch_gpu_seconds": 140.899193432,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.870799726333334,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"columns\": [\n    \"31.7.17\",\n    \"31.7.16\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"1. Called up share capital\",\n      \"values\": {\n        \"Heaven a judgment\": \"890\",\n        \"Oval victoria bids\": \"396\"\n      }\n    },\n    {\n      \"label\": \"2. Revaluation reserve\",\n      \"values\": {\n        \"Drums mason packing\": \"307\",\n        \"Epa autumn korean\": \"603\",\n        \"Use output pillow pursuit\": \"799\",\n        \"British click applications titles\": \"279\",\n        \"Inspection\": \"70\"\n      }\n    },\n    {\n      \"label\": \"3. Creditors: amounts falling due after more than one year\",\n      \"values\": {\n        \"Parents weird barbara\": \"674\",\n        \"Refused laughing associated thongs\": \"511\",\n        \"Jm pack off order\": \"221\",\n        \"Creative achieve worn titanium\": \"68\",\n        \"Organisations pa squirting evolution\": \"542\",\n        \"Api\": \"680\",\n        \"Hartford expansys\": \"564\",\n        \"Mutual testing\": \"226\"\n      }\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-b9e9fff4a26c8e30",
+    "object": "chat.completion",
+    "created": 1786377067,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"columns\": [\n    \"31.7.17\",\n    \"31.7.16\"\n  ],\n  \"rows\": [\n    {\n      \"label\": \"1. Called up share capital\",\n      \"values\": {\n        \"Heaven a judgment\": \"890\",\n        \"Oval victoria bids\": \"396\"\n      }\n    },\n    {\n      \"label\": \"2. Revaluation reserve\",\n      \"values\": {\n        \"Drums mason packing\": \"307\",\n        \"Epa autumn korean\": \"603\",\n        \"Use output pillow pursuit\": \"799\",\n        \"British click applications titles\": \"279\",\n        \"Inspection\": \"70\"\n      }\n    },\n    {\n      \"label\": \"3. Creditors: amounts falling due after more than one year\",\n      \"values\": {\n        \"Parents weird barbara\": \"674\",\n        \"Refused laughing associated thongs\": \"511\",\n        \"Jm pack off order\": \"221\",\n        \"Creative achieve worn titanium\": \"68\",\n        \"Organisations pa squirting evolution\": \"542\",\n        \"Api\": \"680\",\n        \"Hartford expansys\": \"564\",\n        \"Mutual testing\": \"226\"\n      }\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 3265,
+     "total_tokens": 3558,
+     "completion_tokens": 293,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"columns\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"rows\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"label\": {\n            \"type\": \"string\"\n          },\n          \"values\": {\n            \"type\": \"object\",\n            \"additionalProperties\": {\n              \"type\": \"string\"\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+  "gpu_seconds": 5.870799726333334,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/financial_table/fintab_001.png",
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true
+ }
+}

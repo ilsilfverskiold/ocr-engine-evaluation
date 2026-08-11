@@ -1,0 +1,372 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_002.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"company_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"gst_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"customer\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"cashier_no\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"unit_price_excluding_gst\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"subtotal\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_excluding_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_sales_inclusive_of_gst\": {\n      \"type\": \"string\"\n    },\n    \"rounding_adjustment\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment\": {\n      \"type\": \"string\"\n    },\n    \"change_due\": {\n      \"type\": \"string\"\n    },\n    \"total_items\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"rate\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 5.168510916992091,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"address\": \"LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA, 44300 BTG KALI, SELANGOR.\", \"cashier_no\": null, \"change_due\": \"0.00\", \"company\": \"SIN LIANHAP SDN BHD\", \"company_reg_no\": \"284922-D\", \"customer\": \"CASH CUSTOMER\", \"date\": \"05/02/2018\", \"document_type\": \"TAX INVOICE\", \"fax\": \"03-60752572\", \"gst_reg_no\": \"001610833920\", \"gst_summary\": [{\"amount\": \"5.89\", \"rate\": \"6\", \"tax\": \"0.41\", \"tax_code\": \"SR\"}], \"invoice_no\": \"H0003939\", \"items\": [{\"amount\": \"2.00\", \"description\": \"PPD 4MM DENLIME\", \"qty\": \"1.000 PC\", \"tax_code\": \"SR\", \"unit_price_excluding_gst\": \"2.00\"}, {\"amount\": \"5.30\", \"description\": \"6023# GARDEN\", \"qty\": \"1.000 PC\", \"tax_code\": \"SR\", \"unit_price_excluding_gst\": \"5.30\"}], \"payment\": \"7.30\", \"rounding_adjustment\": \"0.00\", \"stamp\": \"https://i.imgur.com/5QJQZ1L.png\", \"subtotal\": \"7.30\", \"tel\": \"03-60752222(HUNTING LINE)\", \"total\": \"7.30\", \"total_items\": \"2\", \"total_sales_excluding_gst\": \"6.89\", \"total_sales_inclusive_of_gst\": \"7.30\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# SIN LIANHAP SDN BHD\n\nLOT 13, JALAN\n\n# SIN LIANHAP SDN BHD\n\nLOT 13, JALAN IPOH,\n\nKG BATU 30, ULU YAM LAMA\n\n44300 BTG KALI, SELANGOR.\n\nTEL: 03-60752222(HUNTING LINE) FAX: 03-60752572\n\n( Company Reg No: 284922-D )\n\n(GST Reg No: 001610833920)\n\n# TAX INVOICE\n\n# CASH CUSTOMER\n\nInvoice No. : H0003939\n\nDate : 05/02/2018\n\nCashier # :\n\nRM Code\n\nPPD 4MM DENLIME\n\n1.887 SR\n\n1.000 PC x 2.00\n\n6023# GARDEN\n\n5.000 SR\n\n1.000 PC x 5.30\n\nSubtotal : 7.30\n\nTotal Sales Excluding GST : 6.89\n\nTotal Sales Inclusive of GST: 7.30\n\nBounding Adjustment : 0.00\n\nPayment : 7.30\n\nChange Due : 0.00\n\nTotal Item(s) : 2\n\nGST Summary\n\nSR @ 6\n\n![img-0.jpeg](img-0.jpeg)\n\nTax\n\n6.89 0.41\n\n*** THANK YOU ***\n\n*** PLEASE COME AGAIN ***",
+    "images": [
+     {
+      "id": "img-0.jpeg",
+      "top_left_x": 195,
+      "top_left_y": 1406,
+      "bottom_right_x": 383,
+      "bottom_right_y": 1597,
+      "image_base64": null,
+      "image_annotation": null
+     }
+    ],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1769,
+     "width": 593
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 167,
+      "top_left_y": 326,
+      "bottom_right_x": 408,
+      "bottom_right_y": 354,
+      "content": "# SIN LIANHAP SDN BHD",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 179,
+      "top_left_y": 358,
+      "bottom_right_x": 331,
+      "bottom_right_y": 384,
+      "content": "LOT 13, JALAN",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 169,
+      "top_left_y": 400,
+      "bottom_right_x": 410,
+      "bottom_right_y": 425,
+      "content": "# SIN LIANHAP SDN BHD",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 180,
+      "top_left_y": 429,
+      "bottom_right_x": 395,
+      "bottom_right_y": 457,
+      "content": "LOT 13, JALAN IPOH,",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 139,
+      "top_left_y": 460,
+      "bottom_right_x": 440,
+      "bottom_right_y": 487,
+      "content": "KG BATU 30, ULU YAM LAMA",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 139,
+      "top_left_y": 491,
+      "bottom_right_x": 435,
+      "bottom_right_y": 517,
+      "content": "44300 BTG KALI, SELANGOR.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 521,
+      "bottom_right_x": 496,
+      "bottom_right_y": 547,
+      "content": "TEL: 03-60752222(HUNTING LINE) FAX: 03-60752572",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 129,
+      "top_left_y": 552,
+      "bottom_right_x": 446,
+      "bottom_right_y": 584,
+      "content": "( Company Reg No: 284922-D )",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 147,
+      "top_left_y": 588,
+      "bottom_right_x": 435,
+      "bottom_right_y": 618,
+      "content": "(GST Reg No: 001610833920)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 210,
+      "top_left_y": 637,
+      "bottom_right_x": 348,
+      "bottom_right_y": 664,
+      "content": "# TAX INVOICE",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 44,
+      "top_left_y": 703,
+      "bottom_right_x": 234,
+      "bottom_right_y": 730,
+      "content": "# CASH CUSTOMER",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 42,
+      "top_left_y": 744,
+      "bottom_right_x": 328,
+      "bottom_right_y": 774,
+      "content": "Invoice No. : H0003939",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 44,
+      "top_left_y": 777,
+      "bottom_right_x": 338,
+      "bottom_right_y": 804,
+      "content": "Date : 05/02/2018",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 809,
+      "bottom_right_x": 221,
+      "bottom_right_y": 836,
+      "content": "Cashier # :",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 297,
+      "top_left_y": 857,
+      "bottom_right_x": 494,
+      "bottom_right_y": 885,
+      "content": "RM Code",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 892,
+      "bottom_right_x": 242,
+      "bottom_right_y": 921,
+      "content": "PPD 4MM DENLIME",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 287,
+      "top_left_y": 930,
+      "bottom_right_x": 507,
+      "bottom_right_y": 956,
+      "content": "1.887 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 57,
+      "top_left_y": 963,
+      "bottom_right_x": 505,
+      "bottom_right_y": 992,
+      "content": "1.000 PC x 2.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 46,
+      "top_left_y": 1008,
+      "bottom_right_x": 205,
+      "bottom_right_y": 1038,
+      "content": "6023# GARDEN",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 283,
+      "top_left_y": 1047,
+      "bottom_right_x": 505,
+      "bottom_right_y": 1073,
+      "content": "5.000 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 58,
+      "top_left_y": 1078,
+      "bottom_right_x": 506,
+      "bottom_right_y": 1107,
+      "content": "1.000 PC x 5.30",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 227,
+      "top_left_y": 1135,
+      "bottom_right_x": 505,
+      "bottom_right_y": 1172,
+      "content": "Subtotal : 7.30",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 58,
+      "top_left_y": 1181,
+      "bottom_right_x": 508,
+      "bottom_right_y": 1211,
+      "content": "Total Sales Excluding GST : 6.89",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 47,
+      "top_left_y": 1215,
+      "bottom_right_x": 508,
+      "bottom_right_y": 1243,
+      "content": "Total Sales Inclusive of GST: 7.30",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 111,
+      "top_left_y": 1248,
+      "bottom_right_x": 507,
+      "bottom_right_y": 1280,
+      "content": "Bounding Adjustment : 0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 212,
+      "top_left_y": 1302,
+      "bottom_right_x": 506,
+      "bottom_right_y": 1332,
+      "content": "Payment : 7.30",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 192,
+      "top_left_y": 1339,
+      "bottom_right_x": 508,
+      "bottom_right_y": 1371,
+      "content": "Change Due : 0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 46,
+      "top_left_y": 1406,
+      "bottom_right_x": 242,
+      "bottom_right_y": 1440,
+      "content": "Total Item(s) : 2",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 42,
+      "top_left_y": 1456,
+      "bottom_right_x": 187,
+      "bottom_right_y": 1487,
+      "content": "GST Summary",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 42,
+      "top_left_y": 1491,
+      "bottom_right_x": 143,
+      "bottom_right_y": 1523,
+      "content": "SR @ 6",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 195,
+      "top_left_y": 1406,
+      "bottom_right_x": 383,
+      "bottom_right_y": 1597,
+      "content": "![img-0.jpeg](img-0.jpeg)",
+      "image_id": "img-0.jpeg",
+      "confidence_scores": null,
+      "type": "image"
+     },
+     {
+      "top_left_x": 461,
+      "top_left_y": 1461,
+      "bottom_right_x": 498,
+      "bottom_right_y": 1487,
+      "content": "Tax",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 467,
+      "top_left_y": 1495,
+      "bottom_right_x": 507,
+      "bottom_right_y": 1521,
+      "content": "6.89 0.41",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 64,
+      "top_left_y": 1627,
+      "bottom_right_x": 470,
+      "bottom_right_y": 1663,
+      "content": "*** THANK YOU ***",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 47,
+      "top_left_y": 1666,
+      "bottom_right_x": 498,
+      "bottom_right_y": 1702,
+      "content": "*** PLEASE COME AGAIN ***",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 143734
+  },
+  "document_annotation": "{\"address\": \"LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA, 44300 BTG KALI, SELANGOR.\", \"cashier_no\": null, \"change_due\": \"0.00\", \"company\": \"SIN LIANHAP SDN BHD\", \"company_reg_no\": \"284922-D\", \"customer\": \"CASH CUSTOMER\", \"date\": \"05/02/2018\", \"document_type\": \"TAX INVOICE\", \"fax\": \"03-60752572\", \"gst_reg_no\": \"001610833920\", \"gst_summary\": [{\"amount\": \"5.89\", \"rate\": \"6\", \"tax\": \"0.41\", \"tax_code\": \"SR\"}], \"invoice_no\": \"H0003939\", \"items\": [{\"amount\": \"2.00\", \"description\": \"PPD 4MM DENLIME\", \"qty\": \"1.000 PC\", \"tax_code\": \"SR\", \"unit_price_excluding_gst\": \"2.00\"}, {\"amount\": \"5.30\", \"description\": \"6023# GARDEN\", \"qty\": \"1.000 PC\", \"tax_code\": \"SR\", \"unit_price_excluding_gst\": \"5.30\"}], \"payment\": \"7.30\", \"rounding_adjustment\": \"0.00\", \"stamp\": \"https://i.imgur.com/5QJQZ1L.png\", \"subtotal\": \"7.30\", \"tel\": \"03-60752222(HUNTING LINE)\", \"total\": \"7.30\", \"total_items\": \"2\", \"total_sales_excluding_gst\": \"6.89\", \"total_sales_inclusive_of_gst\": \"7.30\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

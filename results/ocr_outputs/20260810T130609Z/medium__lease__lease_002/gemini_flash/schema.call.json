@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"date\",\n    \"lessor\",\n    \"lessee\",\n    \"premises\",\n    \"lease\",\n    \"rent\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\",\n      \"format\": \"date\",\n      \"description\": \"Date of the lease, formatted as YYYY-MM-DD\"\n    },\n    \"rent\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"monthlyAmount\",\n        \"securityDeposit\"\n      ],\n      \"properties\": {\n        \"monthlyAmount\": {\n          \"type\": \"number\"\n        },\n        \"securityDeposit\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"lease\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"years\",\n        \"months\",\n        \"startDate\",\n        \"endDate\"\n      ],\n      \"properties\": {\n        \"years\": {\n          \"type\": \"number\"\n        },\n        \"months\": {\n          \"type\": \"number\"\n        },\n        \"endDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"End date of the lease, formatted as YYYY-MM-DD\"\n        },\n        \"startDate\": {\n          \"type\": \"string\",\n          \"format\": \"date\",\n          \"description\": \"Start date of the lease, formatted as YYYY-MM-DD\"\n        }\n      }\n    },\n    \"lessee\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"lessor\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"name\",\n        \"streetAddress\",\n        \"state\"\n      ],\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"premises\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"squareFeet\",\n        \"spaceType\",\n        \"streetAddress\"\n      ],\n      \"properties\": {\n        \"spaceType\": {\n          \"enum\": [\n            \"Office Space\",\n            \"Retail Space\",\n            \"Warehouse\",\n            \"Industrial Space\"\n          ],\n          \"type\": \"string\"\n        },\n        \"squareFeet\": {\n          \"type\": \"string\"\n        },\n        \"streetAddress\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 1.7202389589510858,
+ "cost_per_page": 0.000827,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"date\": \"2025-05-11\",\n  \"lessor\": {\n    \"name\": \"Jackie Gerhold\",\n    \"streetAddress\": \"653 Woodside Road\",\n    \"state\": \"California\"\n  },\n  \"lessee\": {\n    \"name\": \"Lemke Inc\",\n    \"streetAddress\": \"152 Letitia Landing\",\n    \"state\": \"California\"\n  },\n  \"premises\": {\n    \"squareFeet\": \"9388\",\n    \"spaceType\": \"Office Space\",\n    \"streetAddress\": \"17803 Gorczany Throughway\"\n  },\n  \"lease\": {\n    \"years\": 2,\n    \"months\": 10,\n    \"startDate\": \"2025-05-11\",\n    \"endDate\": \"2028-03-11\"\n  },\n  \"rent\": {\n    \"monthlyAmount\": 3400,\n    \"securityDeposit\": 2089\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1838,
+  "output_tokens": 245,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:02:22 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=1649",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"date\": \"2025-05-11\",\n  \"lessor\": {\n    \"name\": \"Jackie Gerhold\",\n    \"streetAddress\": \"653 Woodside Road\",\n    \"state\": \"California\"\n  },\n  \"lessee\": {\n    \"name\": \"Lemke Inc\",\n    \"streetAddress\": \"152 Letitia Landing\",\n    \"state\": \"California\"\n  },\n  \"premises\": {\n    \"squareFeet\": \"9388\",\n    \"spaceType\": \"Office Space\",\n    \"streetAddress\": \"17803 Gorczany Throughway\"\n  },\n  \"lease\": {\n    \"years\": 2,\n    \"months\": 10,\n    \"startDate\": \"2025-05-11\",\n    \"endDate\": \"2028-03-11\"\n  },\n  \"rent\": {\n    \"monthlyAmount\": 3400,\n    \"securityDeposit\": 2089\n  }\n}",
+       "thought": null,
+       "thought_signature": "b\"\\x124\\n2\\x01\\x11M2\\x0fs\\x88\\x0e\\xf2\\xe2\\x88\\xb9\\xed\\xf5\\xd1\\xa0\\x04\\x02\\xd3\\x8c\\xd0\\xbb\\x1f\\xb1\\xbf\\x85W\\x9a\\xa2Q\\x1a%n]Y\\xee'L<r\\xd7a5\\xe3\\x07\\xf8V.\\xf7\\x9d\"",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "7dl5apBsnOKewQ_AlY_RDA",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 245,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1838,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 753
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1085
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2083,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

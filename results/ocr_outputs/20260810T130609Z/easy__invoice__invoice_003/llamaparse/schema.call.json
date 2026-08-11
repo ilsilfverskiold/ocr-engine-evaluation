@@ -1,0 +1,234 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 23.182099167024717,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"26343874\", \"invoice_date\": \"07/17/2013\", \"seller\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\", \"client\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\", \"seller_tax_id\": \"916-97-6743\", \"client_tax_id\": \"913-80-4636\", \"iban\": \"GB78TZMX55978564099007\"}, \"items\": [{\"item_desc\": \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\", \"item_qty\": \"5,00\", \"item_net_price\": \"249,00\", \"item_net_worth\": \"1 245,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1 369,50\"}, {\"item_desc\": \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\", \"item_qty\": \"5,00\", \"item_net_price\": \"100,00\", \"item_net_worth\": \"500,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"550,00\"}, {\"item_desc\": \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\", \"item_qty\": \"4,00\", \"item_net_price\": \"252,00\", \"item_net_worth\": \"1 008,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1 108,80\"}, {\"item_desc\": \"Nintendo Game Boy Micro Console - Black (OXYSFBB) Console - Black (OXYSFBB)\", \"item_qty\": \"2,00\", \"item_net_price\": \"130,00\", \"item_net_worth\": \"260,00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"286,00\"}, {\"item_desc\": \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\", \"item_qty\": \"1,00\", \"item_net_price\": \"159,99\", \"item_net_worth\": \"159,99\", \"item_vat\": \"10%\", \"item_gross_worth\": \"175,99\"}], \"summary\": {\"total_net_worth\": \"$ 3 172,99\", \"total_vat\": \"$ 317,30\", \"total_gross_worth\": \"$ 3 490,29\"}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 14:18:34.408335+00:00",
+  "data": {
+   "header": {
+    "invoice_no": "26343874",
+    "invoice_date": "07/17/2013",
+    "seller": "Smith Ltd\n290 Jodi Gardens\nCharlesview, TN 10958",
+    "client": "Herring-Floyd\n8113 Hansen Cliff Apt. 826\nPort Alice, ID 99663",
+    "seller_tax_id": "916-97-6743",
+    "client_tax_id": "913-80-4636",
+    "iban": "GB78TZMX55978564099007"
+   },
+   "items": [
+    {
+     "item_desc": "Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787",
+     "item_qty": "5,00",
+     "item_net_price": "249,00",
+     "item_net_worth": "1 245,00",
+     "item_vat": "10%",
+     "item_gross_worth": "1 369,50"
+    },
+    {
+     "item_desc": "Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller",
+     "item_qty": "5,00",
+     "item_net_price": "100,00",
+     "item_net_worth": "500,00",
+     "item_vat": "10%",
+     "item_gross_worth": "550,00"
+    },
+    {
+     "item_desc": "PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested",
+     "item_qty": "4,00",
+     "item_net_price": "252,00",
+     "item_net_worth": "1 008,00",
+     "item_vat": "10%",
+     "item_gross_worth": "1 108,80"
+    },
+    {
+     "item_desc": "Nintendo Game Boy Micro Console - Black (OXYSFBB) Console - Black (OXYSFBB)",
+     "item_qty": "2,00",
+     "item_net_price": "130,00",
+     "item_net_worth": "260,00",
+     "item_vat": "10%",
+     "item_gross_worth": "286,00"
+    },
+    {
+     "item_desc": "Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT",
+     "item_qty": "1,00",
+     "item_net_price": "159,99",
+     "item_net_worth": "159,99",
+     "item_vat": "10%",
+     "item_gross_worth": "175,99"
+    }
+   ],
+   "summary": {
+    "total_net_worth": "$ 3 172,99",
+    "total_vat": "$ 317,30",
+    "total_gross_worth": "$ 3 490,29"
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "header": {
+     "type": "object",
+     "properties": {
+      "invoice_no": {
+       "type": "string"
+      },
+      "invoice_date": {
+       "type": "string"
+      },
+      "seller": {
+       "type": "string"
+      },
+      "client": {
+       "type": "string"
+      },
+      "seller_tax_id": {
+       "type": "string"
+      },
+      "client_tax_id": {
+       "type": "string"
+      },
+      "iban": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "invoice_no",
+      "invoice_date",
+      "seller",
+      "client",
+      "seller_tax_id",
+      "client_tax_id",
+      "iban"
+     ],
+     "additionalProperties": false
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "item_desc": {
+        "type": "string"
+       },
+       "item_qty": {
+        "type": "string"
+       },
+       "item_net_price": {
+        "type": "string"
+       },
+       "item_net_worth": {
+        "type": "string"
+       },
+       "item_vat": {
+        "type": "string"
+       },
+       "item_gross_worth": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "item_desc",
+       "item_qty",
+       "item_net_price",
+       "item_net_worth",
+       "item_vat",
+       "item_gross_worth"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "summary": {
+     "type": "object",
+     "properties": {
+      "total_net_worth": {
+       "type": "string"
+      },
+      "total_vat": {
+       "type": "string"
+      },
+      "total_gross_worth": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "total_net_worth",
+      "total_vat",
+      "total_gross_worth"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "header",
+    "items",
+    "summary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "ea4d8124-4505-4c6d-a443-500c700baaf5",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 574,
+    "num_output_tokens": 612
+   },
+   "parse_job_id": "c3c0936d-79ee-44a4-b092-65a3170730db"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "7803da2f-3260-44ec-870f-948805102769",
+  "from_ui": false,
+  "id": "1109e35a-00e6-43b5-bd1f-3bc5715fcaa4",
+  "job_id": "dd3fc963-7848-4049-8d6e-4114f326df7c",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 14:18:53.203590+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

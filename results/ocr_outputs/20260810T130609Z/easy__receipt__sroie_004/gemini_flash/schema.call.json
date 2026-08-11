@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_004.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"gst_no\": {\n      \"type\": \"string\"\n    },\n    \"tel_no\": {\n      \"type\": \"string\"\n    },\n    \"receipt_code\": {\n      \"type\": \"string\"\n    },\n    \"receipt_number\": {\n      \"type\": \"string\"\n    },\n    \"entry_date\": {\n      \"type\": \"string\"\n    },\n    \"entry_time\": {\n      \"type\": \"string\"\n    },\n    \"exit_date\": {\n      \"type\": \"string\"\n    },\n    \"exit_time\": {\n      \"type\": \"string\"\n    },\n    \"park_duration_format\": {\n      \"type\": \"string\"\n    },\n    \"park_duration\": {\n      \"type\": \"string\"\n    },\n    \"kind_of_payment\": {\n      \"type\": \"string\"\n    },\n    \"currency\": {\n      \"type\": \"string\"\n    },\n    \"parking_fee\": {\n      \"type\": \"string\"\n    },\n    \"add_gst\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"rate_note\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"footer_note\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 1.365767167066224,
+ "cost_per_page": 0.00086325,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"K0131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"*Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1569,
+  "output_tokens": 314,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:01:03 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=1333",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"K0131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"*Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+       "thought": null,
+       "thought_signature": "b\"\\x124\\n2\\x01\\x11M2\\x0fZ\\x19\\x8dI?#\\xb0\\xb4'\\xaekE\\xf4S\\xe2&<\\xaa\\r\\xe9F\\xee\\x99\\x13\\x03\\x94\\xe2\\t\\x8f\\x98E\\xacmO\\x916\\x02\\xe7\\x12\\xccB(f\\xb6\\x8c\"",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "ntl5atzEApPonsEP2bHPyQg",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 314,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1569,
+   "prompt_tokens_details": [
+    {
+     "modality": "IMAGE",
+     "token_count": 1113
+    },
+    {
+     "modality": "TEXT",
+     "token_count": 456
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 1883,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

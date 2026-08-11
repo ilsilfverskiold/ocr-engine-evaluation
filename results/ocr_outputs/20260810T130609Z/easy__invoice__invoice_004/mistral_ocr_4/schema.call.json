@@ -1,0 +1,210 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 7.135618333006278,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"25698672\", \"invoice_date\": \"2015-08-01\", \"seller\": \"Gordon, Alvarado and Jones\\n943 Sean Park Suite 284\\nNorth Derrick, OR 67536\", \"client\": \"Manning-Ho\\n92026 Michael Terrace Apt. 138\\nWest Michael, IL 42693\", \"seller_tax_id\": \"936-79-2794\", \"client_tax_id\": \"960-85-1578\", \"iban\": \"GB47JKAT88391563723291\"}, \"items\": [{\"item_desc\": \"CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences\", \"item_qty\": \"5.00\", \"item_net_price\": \"1.99\", \"item_net_worth\": \"9.95\", \"item_vat\": \"10%\", \"item_gross_worth\": \"10.94\"}, {\"item_desc\": \"Tales from the Buffalo Bills\", \"item_qty\": \"5.00\", \"item_net_price\": \"5.50\", \"item_net_worth\": \"27.50\", \"item_vat\": \"10%\", \"item_gross_worth\": \"30.25\"}, {\"item_desc\": \"A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook ☐☐☐☐☐☐☐☐\", \"item_qty\": \"4.00\", \"item_net_price\": \"19.50\", \"item_net_worth\": \"78.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"85.80\"}], \"summary\": {\"total_net_worth\": \"115.45\", \"total_vat\": \"11.55\", \"total_gross_worth\": \"127.00\"}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 25698672\n\nDate of issue:\n\n08/01/2015\n\nSeller:\n\nGordon, Alvarado and Jones\n\n943 Sean Park Suite 284\n\nNorth Derrick, OR 67536\n\nTax Id: 936-79-2794\n\nIBAN: GB47JKAT88391563723291\n\nClient:\n\nManning-Ho\n\n92026 Michael Terrace Apt. 138\n\nWest Michael, IL 42693\n\nTax Id: 960-85-1578\n\nITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences | 5,00 | each | 1,99 | 9,95 | 10% | 10,94  |\n|  2. | Tales from the Buffalo Bills | 5,00 | each | 5,50 | 27,50 | 10% | 30,25  |\n|  3. | A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook ☐☐☐☐☐☐☐☐ | 4,00 | each | 19,50 | 78,00 | 10% | 85,80  |\n\nSUMMARY\n\n|  VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- |\n|  10% | 115,45 | 11,55 | 127,00  |\n|  Total | $ 115,45 | $ 11,55 | $ 127,00  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 191,
+      "top_left_y": 102,
+      "bottom_right_x": 810,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 25698672",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1197,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "08/01/2015",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 657,
+      "bottom_right_x": 382,
+      "bottom_right_y": 716,
+      "content": "Seller:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 751,
+      "bottom_right_x": 795,
+      "bottom_right_y": 811,
+      "content": "Gordon, Alvarado and Jones",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 728,
+      "bottom_right_y": 853,
+      "content": "943 Sean Park Suite 284",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 864,
+      "bottom_right_x": 728,
+      "bottom_right_y": 913,
+      "content": "North Derrick, OR 67536",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 966,
+      "bottom_right_x": 638,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 936-79-2794",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 1022,
+      "bottom_right_x": 916,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB47JKAT88391563723291",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1232,
+      "top_left_y": 657,
+      "bottom_right_x": 1426,
+      "bottom_right_y": 716,
+      "content": "Client:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 751,
+      "bottom_right_x": 1505,
+      "bottom_right_y": 811,
+      "content": "Manning-Ho",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1922,
+      "bottom_right_y": 864,
+      "content": "92026 Michael Terrace Apt. 138",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 864,
+      "bottom_right_x": 1738,
+      "bottom_right_y": 913,
+      "content": "West Michael, IL 42693",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 966,
+      "bottom_right_x": 1681,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 960-85-1578",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1131,
+      "bottom_right_x": 377,
+      "bottom_right_y": 1187,
+      "content": "ITEMS",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1236,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 1808,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences | 5,00 | each | 1,99 | 9,95 | 10% | 10,94  |\n|  2. | Tales from the Buffalo Bills | 5,00 | each | 5,50 | 27,50 | 10% | 30,25  |\n|  3. | A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook ☐☐☐☐☐☐☐☐ | 4,00 | each | 19,50 | 78,00 | 10% | 85,80  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1875,
+      "bottom_right_x": 494,
+      "bottom_right_y": 1928,
+      "content": "SUMMARY",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 1973,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 2254,
+      "content": "|  VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- |\n|  10% | 115,45 | 11,55 | 127,00  |\n|  Total | $ 115,45 | $ 11,55 | $ 127,00  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 684818
+  },
+  "document_annotation": "{\"header\": {\"invoice_no\": \"25698672\", \"invoice_date\": \"2015-08-01\", \"seller\": \"Gordon, Alvarado and Jones\\n943 Sean Park Suite 284\\nNorth Derrick, OR 67536\", \"client\": \"Manning-Ho\\n92026 Michael Terrace Apt. 138\\nWest Michael, IL 42693\", \"seller_tax_id\": \"936-79-2794\", \"client_tax_id\": \"960-85-1578\", \"iban\": \"GB47JKAT88391563723291\"}, \"items\": [{\"item_desc\": \"CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences\", \"item_qty\": \"5.00\", \"item_net_price\": \"1.99\", \"item_net_worth\": \"9.95\", \"item_vat\": \"10%\", \"item_gross_worth\": \"10.94\"}, {\"item_desc\": \"Tales from the Buffalo Bills\", \"item_qty\": \"5.00\", \"item_net_price\": \"5.50\", \"item_net_worth\": \"27.50\", \"item_vat\": \"10%\", \"item_gross_worth\": \"30.25\"}, {\"item_desc\": \"A boy who grew up eating nightmare It's Okay to Not Be Okay Picturebook ☐☐☐☐☐☐☐☐\", \"item_qty\": \"4.00\", \"item_net_price\": \"19.50\", \"item_net_worth\": \"78.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"85.80\"}], \"summary\": {\"total_net_worth\": \"115.45\", \"total_vat\": \"11.55\", \"total_gross_worth\": \"127.00\"}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

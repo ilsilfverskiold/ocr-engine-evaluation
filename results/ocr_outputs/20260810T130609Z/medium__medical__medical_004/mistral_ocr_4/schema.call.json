@@ -1,0 +1,285 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"dob\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's date of birth as it appears\"\n    },\n    \"city\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's city as it appears\"\n    },\n    \"phone\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's phone number as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"spouseName\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's name\"\n    },\n    \"spousePhone\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's phone number as it appear\"\n    },\n    \"maritalStatus\": {\n      \"emum\": [\n        \"Single\",\n        \"Married\",\n        \"Divorced\",\n        \"Separated\",\n        \"Widowed\"\n      ],\n      \"type\": \"string\",\n      \"description\": \"Patient's marital status\"\n    },\n    \"isHospitalized\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if patient has been hospitalized in the past year, must return true or false\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"fever\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced a fever, must return true or false\"\n        },\n        \"chills\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chills, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"fatigue\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced fatigue, must return true or false\"\n        },\n        \"calfPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced calf pain, must return true or false\"\n        },\n        \"blackOuts\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blackouts, must return true or false\"\n        },\n        \"headaches\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced headaches, must return true or false\"\n        },\n        \"musclePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced muscle pain, must return true or false\"\n        },\n        \"blurredVision\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blurred vision, must return true or false\"\n        },\n        \"excessiveBruising\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive bruising, must return true or false\"\n        },\n        \"shortnessOfBreath\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced shortness of breath, must return true or false\"\n        },\n        \"tuberculosisExposure\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has been exposed to tuberculosis, must return true or false\"\n        },\n        \"difficultyEmptyingBowelOrBladder\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has difficulty emptying their bowel or bladder, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    },\n    \"previousHealthHistory\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"primaryCarePhysician\"\n      ],\n      \"properties\": {\n        \"lastSeenDate\": {\n          \"type\": \"string\",\n          \"description\": \"Date last seen by physician\"\n        },\n        \"prescriptionDrugs\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"other\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              },\n              \"description\": \"List of other prescription drugs that patient uses, must return null if not provided\"\n            },\n            \"insulin\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses insulin, must return true or false\"\n            },\n            \"painPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses pain pills, must return true or false\"\n            },\n            \"muscleRelaxers\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses muscle relaxers, must return true or false\"\n            },\n            \"antidepressants\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses antidepressants, must return true or false\"\n            },\n            \"antiInflammatory\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses anti-inflammatories, must return true or false\"\n            },\n            \"birthControlPills\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses birth control, must return true or false\"\n            },\n            \"bloodPressureMedication\": {\n              \"type\": \"boolean\",\n              \"description\": \"Indicates if patient uses blood pressure medication, must return true or false\"\n            }\n          },\n          \"description\": \"Details of prescription drugs currently taken\"\n        },\n        \"accidentsOrInjuries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of accidents or injuries that patient has experienced, must return null if not provided\"\n        },\n        \"overTheCounterDrugs\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of over-the-counter drugs that patient uses, must return null if not provided\"\n        },\n        \"primaryCarePhysician\": {\n          \"type\": \"string\",\n          \"description\": \"Name of primary care physician\"\n        },\n        \"vitaminsOrSupplements\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          },\n          \"description\": \"List of vitamins or supplements that patient takes, must return null if not provided\"\n        },\n        \"receivedChiropracticCare\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient received chiropractic care, must return true or false\"\n        }\n      },\n      \"description\": \"Details of patient's previous health history\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 8.541930915904231,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"firstName\": \"Daniel\", \"lastName\": \"Miller\", \"address\": \"7098 West Eagle St\", \"city\": \"Waimanalo\", \"phone\": \"603 916-8665\", \"dob\": \"July 20, 1972\", \"maritalStatus\": \"Single\", \"isHospitalized\": false, \"reviewOfSymptoms\": {\"fever\": true, \"chills\": true, \"eyePain\": false, \"fatigue\": true, \"calfPain\": false, \"blackOuts\": false, \"headaches\": true, \"musclePain\": false, \"blurredVision\": true, \"excessiveBruising\": true, \"shortnessOfBreath\": true, \"tuberculosisExposure\": false, \"difficultyEmptyingBowelOrBladder\": true, \"hearingLoss\": true, \"seizures\": true, \"stomachTroubleOrUlcers\": true, \"irregularHeartRate\": true, \"allergies\": true, \"doubleVision\": true, \"enlargedGlands\": false, \"excessiveThirst\": false, \"jointSwelling\": false, \"coughing\": false, \"coughingUpBlood\": false, \"dentalProblems\": false, \"excessiveStress\": false, \"weightGainOrLossGreaterThan10Lbs\": false}, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Emily Anderson\", \"lastSeenDate\": \"08/30/1958\", \"prescriptionDrugs\": {\"antidepressants\": false, \"antiInflammatory\": false, \"birthControlPills\": true, \"bloodPressureMedication\": true, \"dietPills\": false, \"bloodSugarMedication\": false, \"muscleRelaxers\": true, \"insulin\": true, \"painPills\": false, \"sleepingPills\": true, \"other\": [\"amoxicillin\"]}, \"overTheCounterDrugs\": null, \"accidentsOrInjuries\": null, \"vitaminsOrSupplements\": [\"resveratrol\", \"vitamin b3\"], \"receivedChiropracticCare\": true}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Patient Demographics Form\n\n|  Daniel | Miller  |\n| --- | --- |\n|  First Name | Last Name  |\n\nSingle ☐ Married ☐ Divorced ☐ Separated ☐ Widowed ☑\n\nMarital Status\n\n7098 West Eagle St\n\nAddress\n\n|  Waimanalo | HI | 96795  |\n| --- | --- | --- |\n|  City | State | Zip  |\n\n603 916-8665 July 20, 1972\n\nPhone\n\nDOB\n\nSpouse Name\n\nSpouse Phone\n\nIs the requested medication NEW ☐ or a CONTINUATION ☑ of THERAPY? If so, start date: ____________\n\nHave you been hospitalized in the past year? Yes ☐ No ☑\n\n## Review of Symptoms\n\n|  Allergies ☑ | Black Outs ☐  |\n| --- | --- |\n|  Blurred Vision ☑ | Calf Pain ☐  |\n|  Chest Pain ☐ | Chills ☑  |\n|  Coughing ☐ | Coughing Up Blood ☐  |\n|  Dental Problems ☐ | Difficulty Emptying Bowel Or Bladder ☑  |\n|  Double Vision ☑ | Enlarged Glands ☐  |\n|  Excessive Bruising ☑ | Excessive Stress ☐  |\n|  Excessive Thirst ☐ | Eye Pain ☐  |\n|  Fatigue ☑ | Fever ☑  |\n|  Headaches ☑ | Hearing Loss ☑  |\n|  Irregular Heart Rate ☑ | Joint Swelling ☐  |\n|  Muscle Pain ☐ | Seizures ☑  |\n|  Shortness Of Breath ☑ | Stomach Trouble Or Ulcers ☑  |\n|  Tuberculosis Exposure ☐ | Weight Gain Or Loss Greater Than 10 Lbs ☐  |\n\n## Previous Health History\n\n|  Dr. Emily Anderson | 08/30/1958  |\n| --- | --- |\n|  Primary Care Physician | Last Seen Date  |\n\nHave you received chiropractic care? Yes ☑ No ☐\n\nHave you received acupuncture care? Yes ☐ No ☑\n\nPrescription Drugs:\n\n|  Antidepressants ☐ | Anti Inflammatory ☐  |\n| --- | --- |\n|  Birth Control Pills ☑ | Blood Pressure Medication ☑  |\n|  Diet Pills ☐ | Blood Sugar Medication ☐  |\n|  Muscle Relaxers ☑ | Insulin ☑  |\n|  Pain Pills ☐ | Sleeping Pills ☑  |\n|  Other: amoxicillin |   |\n\nOver-the-Counter Drugs\n\nAccidents or Injuries\n\nresveratrol, vitamin b3\n\nVitamins or Supplements",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3045,
+     "width": 1518
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 35,
+      "top_left_y": 46,
+      "bottom_right_x": 448,
+      "bottom_right_y": 88,
+      "content": "# Patient Demographics Form",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 158,
+      "bottom_right_x": 1492,
+      "bottom_right_y": 244,
+      "content": "|  Daniel | Miller  |\n| --- | --- |\n|  First Name | Last Name  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 38,
+      "top_left_y": 293,
+      "bottom_right_x": 834,
+      "bottom_right_y": 335,
+      "content": "Single ☐ Married ☐ Divorced ☐ Separated ☐ Widowed ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 40,
+      "top_left_y": 338,
+      "bottom_right_x": 181,
+      "bottom_right_y": 369,
+      "content": "Marital Status",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 40,
+      "top_left_y": 424,
+      "bottom_right_x": 295,
+      "bottom_right_y": 463,
+      "content": "7098 West Eagle St",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 40,
+      "top_left_y": 472,
+      "bottom_right_x": 123,
+      "bottom_right_y": 500,
+      "content": "Address",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 558,
+      "bottom_right_x": 1488,
+      "bottom_right_y": 643,
+      "content": "|  Waimanalo | HI | 96795  |\n| --- | --- | --- |\n|  City | State | Zip  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 689,
+      "bottom_right_x": 702,
+      "bottom_right_y": 728,
+      "content": "603 916-8665 July 20, 1972",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 38,
+      "top_left_y": 738,
+      "bottom_right_x": 103,
+      "bottom_right_y": 765,
+      "content": "Phone",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 524,
+      "top_left_y": 738,
+      "bottom_right_x": 579,
+      "bottom_right_y": 765,
+      "content": "DOB",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 866,
+      "bottom_right_x": 176,
+      "bottom_right_y": 899,
+      "content": "Spouse Name",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 523,
+      "top_left_y": 869,
+      "bottom_right_x": 664,
+      "bottom_right_y": 902,
+      "content": "Spouse Phone",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 26,
+      "top_left_y": 939,
+      "bottom_right_x": 1488,
+      "bottom_right_y": 985,
+      "content": "Is the requested medication NEW ☐ or a CONTINUATION ☑ of THERAPY? If so, start date: ____________",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 26,
+      "top_left_y": 1009,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1052,
+      "content": "Have you been hospitalized in the past year? Yes ☐ No ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 27,
+      "top_left_y": 1085,
+      "bottom_right_x": 283,
+      "bottom_right_y": 1122,
+      "content": "## Review of Symptoms",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 26,
+      "top_left_y": 1161,
+      "bottom_right_x": 1343,
+      "bottom_right_y": 1804,
+      "content": "|  Allergies ☑ | Black Outs ☐  |\n| --- | --- |\n|  Blurred Vision ☑ | Calf Pain ☐  |\n|  Chest Pain ☐ | Chills ☑  |\n|  Coughing ☐ | Coughing Up Blood ☐  |\n|  Dental Problems ☐ | Difficulty Emptying Bowel Or Bladder ☑  |\n|  Double Vision ☑ | Enlarged Glands ☐  |\n|  Excessive Bruising ☑ | Excessive Stress ☐  |\n|  Excessive Thirst ☐ | Eye Pain ☐  |\n|  Fatigue ☑ | Fever ☑  |\n|  Headaches ☑ | Hearing Loss ☑  |\n|  Irregular Heart Rate ☑ | Joint Swelling ☐  |\n|  Muscle Pain ☐ | Seizures ☑  |\n|  Shortness Of Breath ☑ | Stomach Trouble Or Ulcers ☑  |\n|  Tuberculosis Exposure ☐ | Weight Gain Or Loss Greater Than 10 Lbs ☐  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 1838,
+      "bottom_right_x": 316,
+      "bottom_right_y": 1875,
+      "content": "## Previous Health History",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 26,
+      "top_left_y": 1960,
+      "bottom_right_x": 1480,
+      "bottom_right_y": 2042,
+      "content": "|  Dr. Emily Anderson | 08/30/1958  |\n| --- | --- |\n|  Primary Care Physician | Last Seen Date  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 21,
+      "top_left_y": 2079,
+      "bottom_right_x": 693,
+      "bottom_right_y": 2121,
+      "content": "Have you received chiropractic care? Yes ☑ No ☐",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 21,
+      "top_left_y": 2149,
+      "bottom_right_x": 697,
+      "bottom_right_y": 2192,
+      "content": "Have you received acupuncture care? Yes ☐ No ☑",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 27,
+      "top_left_y": 2225,
+      "bottom_right_x": 281,
+      "bottom_right_y": 2268,
+      "content": "Prescription Drugs:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 27,
+      "top_left_y": 2280,
+      "bottom_right_x": 1150,
+      "bottom_right_y": 2548,
+      "content": "|  Antidepressants ☐ | Anti Inflammatory ☐  |\n| --- | --- |\n|  Birth Control Pills ☑ | Blood Pressure Medication ☑  |\n|  Diet Pills ☐ | Blood Sugar Medication ☐  |\n|  Muscle Relaxers ☑ | Insulin ☑  |\n|  Pain Pills ☐ | Sleeping Pills ☑  |\n|  Other: amoxicillin |   |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 2679,
+      "bottom_right_x": 264,
+      "bottom_right_y": 2713,
+      "content": "Over-the-Counter Drugs",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 2813,
+      "bottom_right_x": 231,
+      "bottom_right_y": 2847,
+      "content": "Accidents or Injuries",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 2899,
+      "bottom_right_x": 319,
+      "bottom_right_y": 2935,
+      "content": "resveratrol, vitamin b3",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 24,
+      "top_left_y": 2944,
+      "bottom_right_x": 270,
+      "bottom_right_y": 2978,
+      "content": "Vitamins or Supplements",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 818829
+  },
+  "document_annotation": "{\"firstName\": \"Daniel\", \"lastName\": \"Miller\", \"address\": \"7098 West Eagle St\", \"city\": \"Waimanalo\", \"phone\": \"603 916-8665\", \"dob\": \"July 20, 1972\", \"maritalStatus\": \"Single\", \"isHospitalized\": false, \"reviewOfSymptoms\": {\"fever\": true, \"chills\": true, \"eyePain\": false, \"fatigue\": true, \"calfPain\": false, \"blackOuts\": false, \"headaches\": true, \"musclePain\": false, \"blurredVision\": true, \"excessiveBruising\": true, \"shortnessOfBreath\": true, \"tuberculosisExposure\": false, \"difficultyEmptyingBowelOrBladder\": true, \"hearingLoss\": true, \"seizures\": true, \"stomachTroubleOrUlcers\": true, \"irregularHeartRate\": true, \"allergies\": true, \"doubleVision\": true, \"enlargedGlands\": false, \"excessiveThirst\": false, \"jointSwelling\": false, \"coughing\": false, \"coughingUpBlood\": false, \"dentalProblems\": false, \"excessiveStress\": false, \"weightGainOrLossGreaterThan10Lbs\": false}, \"previousHealthHistory\": {\"primaryCarePhysician\": \"Dr. Emily Anderson\", \"lastSeenDate\": \"08/30/1958\", \"prescriptionDrugs\": {\"antidepressants\": false, \"antiInflammatory\": false, \"birthControlPills\": true, \"bloodPressureMedication\": true, \"dietPills\": false, \"bloodSugarMedication\": false, \"muscleRelaxers\": true, \"insulin\": true, \"painPills\": false, \"sleepingPills\": true, \"other\": [\"amoxicillin\"]}, \"overTheCounterDrugs\": null, \"accidentsOrInjuries\": null, \"vitaminsOrSupplements\": [\"resveratrol\", \"vitamin b3\"], \"receivedChiropracticCare\": true}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

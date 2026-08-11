@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/scanned_legacy/scanned_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"division\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"security_notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CC\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Ref\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"blend_percent\": {\n      \"type\": \"array\",\n      \"description\": \"Blend (%) sub-block of the trial table, one entry per component\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"component\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"specifications\": {\n      \"type\": \"array\",\n      \"description\": \"Remaining rows of the trial table, one entry per printed row\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"parameter\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          },\n          \"common\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"description\": \"Value printed once across both columns, null when each trial has its own value\"\n          }\n        }\n      }\n    },\n    \"signature_initials\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"typist_reference\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"document_code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp_date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"bates_number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"TO\",\n    \"FROM\",\n    \"DATE\",\n    \"SUBJECT\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 16.223261749953963,
+ "cost_per_page": 0.020199,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"company\": \"BROWN & WILLIAMSON TOBACCO CORPORATION\",\n  \"division\": \"RESEARCH & DEVELOPMENT\",\n  \"document_type\": \"INTERNAL CORRESPONDENCE\",\n  \"security_notice\": \"SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\",\n  \"TO\": \"MR. P. H. HARPER\",\n  \"CC\": \"MR. T. E. SANDEFUR\\nDR. P. L. AULBACH\",\n  \"FROM\": \"MR. D. S. ROTH\",\n  \"DATE\": \"JANUARY 13, 1983\",\n  \"SUBJECT\": \"KENT 80/KS TAR REDUCTION - FINLAND/907\",\n  \"Ref\": \"S/R 107/82\",\n  \"blend_percent\": [\n    {\n      \"component\": \"MGLF-31\",\n      \"trial_1\": \"69.9\",\n      \"trial_2\": \"69.9\"\n    },\n    {\n      \"component\": \"Oriental\",\n      \"trial_1\": \"10.3\",\n      \"trial_2\": \"10.3\"\n    },\n    {\n      \"component\": \"MRT\",\n      \"trial_1\": \"5.0\",\n      \"trial_2\": \"0.0\"\n    },\n    {\n      \"component\": \"F.C. WTS\",\n      \"trial_1\": \"14.8\",\n      \"trial_2\": \"19.8\"\n    }\n  ],\n  \"specifications\": [\n    {\n      \"parameter\": \"Final Casing\",\n      \"trial_1\": \"MGE-651\",\n      \"trial_2\": \"MGE-651\",\n      \"common\": null\n    },\n    {\n      \"parameter\": \"Final Flavor\",\n      \"trial_1\": \"MGE-603\",\n      \"trial_2\": \"MGE-603\",\n      \"common\": null\n    },\n    {\n      \"parameter\": \"Cigarette Paper\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"Current KENT\"\n    },\n    {\n      \"parameter\": \"Density\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"KENT GOLDEN LIGHTS (Less 2%)\"\n    },\n    {\n      \"parameter\": \"Filter Tow\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"KENT GOLDEN LIGHTS\"\n    },\n    {\n      \"parameter\": \"Plugwrap\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"9500 Coresta\"\n    },\n    {\n      \"parameter\": \"Tipping\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"1100 Coresta MMP*\"\n    },\n    {\n      \"parameter\": \"Vent Target\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"42-44%\"\n    }\n  ],\n  \"signature_initials\": \"D. S. R.\",\n  \"typist_reference\": \"DSR/bfw\",\n  \"document_code\": \"0014x\",\n  \"received_stamp\": \"RECEIVED\",\n  \"received_stamp_date\": \"JAN 18 1983\",\n  \"bates_number\": \"620441151\"\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 2363,
+  "output_tokens": 874,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduPn5stRTY226eA9ZcDU",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"company\": \"BROWN & WILLIAMSON TOBACCO CORPORATION\",\n  \"division\": \"RESEARCH & DEVELOPMENT\",\n  \"document_type\": \"INTERNAL CORRESPONDENCE\",\n  \"security_notice\": \"SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\",\n  \"TO\": \"MR. P. H. HARPER\",\n  \"CC\": \"MR. T. E. SANDEFUR\\nDR. P. L. AULBACH\",\n  \"FROM\": \"MR. D. S. ROTH\",\n  \"DATE\": \"JANUARY 13, 1983\",\n  \"SUBJECT\": \"KENT 80/KS TAR REDUCTION - FINLAND/907\",\n  \"Ref\": \"S/R 107/82\",\n  \"blend_percent\": [\n    {\n      \"component\": \"MGLF-31\",\n      \"trial_1\": \"69.9\",\n      \"trial_2\": \"69.9\"\n    },\n    {\n      \"component\": \"Oriental\",\n      \"trial_1\": \"10.3\",\n      \"trial_2\": \"10.3\"\n    },\n    {\n      \"component\": \"MRT\",\n      \"trial_1\": \"5.0\",\n      \"trial_2\": \"0.0\"\n    },\n    {\n      \"component\": \"F.C. WTS\",\n      \"trial_1\": \"14.8\",\n      \"trial_2\": \"19.8\"\n    }\n  ],\n  \"specifications\": [\n    {\n      \"parameter\": \"Final Casing\",\n      \"trial_1\": \"MGE-651\",\n      \"trial_2\": \"MGE-651\",\n      \"common\": null\n    },\n    {\n      \"parameter\": \"Final Flavor\",\n      \"trial_1\": \"MGE-603\",\n      \"trial_2\": \"MGE-603\",\n      \"common\": null\n    },\n    {\n      \"parameter\": \"Cigarette Paper\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"Current KENT\"\n    },\n    {\n      \"parameter\": \"Density\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"KENT GOLDEN LIGHTS (Less 2%)\"\n    },\n    {\n      \"parameter\": \"Filter Tow\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"KENT GOLDEN LIGHTS\"\n    },\n    {\n      \"parameter\": \"Plugwrap\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"9500 Coresta\"\n    },\n    {\n      \"parameter\": \"Tipping\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"1100 Coresta MMP*\"\n    },\n    {\n      \"parameter\": \"Vent Target\",\n      \"trial_1\": null,\n      \"trial_2\": null,\n      \"common\": \"42-44%\"\n    }\n  ],\n  \"signature_initials\": \"D. S. R.\",\n  \"typist_reference\": \"DSR/bfw\",\n  \"document_code\": \"0014x\",\n  \"received_stamp\": \"RECEIVED\",\n  \"received_stamp_date\": \"JAN 18 1983\",\n  \"bates_number\": \"620441151\"\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 2363,
+   "output_tokens": 874,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

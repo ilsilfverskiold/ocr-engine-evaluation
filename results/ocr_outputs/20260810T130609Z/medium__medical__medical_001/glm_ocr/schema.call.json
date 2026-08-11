@@ -1,0 +1,121 @@
+{
+ "engine": "glm_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "请按下列JSON格式输出图中信息:\n\n{\n  \"dob\": \"\",\n  \"state\": \"\",\n  \"address\": \"\",\n  \"lastName\": \"\",\n  \"firstName\": \"\",\n  \"spousePhone\": \"\",\n  \"isNewTherapy\": \"\",\n  \"isHospitalized\": \"\",\n  \"reviewOfSymptoms\": {\n    \"chills\": \"\",\n    \"eyePain\": \"\",\n    \"fatigue\": \"\",\n    \"coughing\": \"\",\n    \"allergies\": \"\",\n    \"blackOuts\": \"\",\n    \"chestPain\": \"\",\n    \"hearingLoss\": \"\",\n    \"jointSwelling\": \"\",\n    \"dentalProblems\": \"\",\n    \"excessiveThirst\": \"\",\n    \"excessiveBruising\": \"\",\n    \"tuberculosisExposure\": \"\",\n    \"difficultyEmptyingBowelOrBladder\": \"\"\n  },\n  \"familyHealthHistory\": [\n    {\n      \"relation\": \"\",\n      \"ageAtDeath\": \"\",\n      \"ageIfLiving\": \"\",\n      \"chronicHealthProblems\": [\n        \"\"\n      ]\n    }\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "zai-org/GLM-OCR via vllm-server",
+ "latency_seconds": 2.9446446508333346,
+ "cost_per_page": 0.0009010612631550004,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"dob\": \"10-06-1961\",\n  \"state\": \"HI\",\n  \"address\": \"8574 Aspen Ave\",\n  \"lastName\": \"Brown\",\n  \"firstName\": \"Daniel\",\n  \"spousePhone\": \"\",\n  \"isNewTherapy\": true,\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"coughing\": true,\n    \"allergies\": true,\n    \"blackOuts\": true,\n    \"chestPain\": true,\n    \"hearingLoss\": true,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"excessiveThirst\": true,\n    \"excessiveBruising\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"familyHealthHistory\": [\n    {\n      \"relation\": \"Father\",\n      \"ageAtDeath\": 55,\n      \"ageIfLiving\": 55,\n      \"chronicHealthProblems\": [\"diabetes, dementia\"]\n    },\n    {\n      \"relation\": \"Sister\",\n      \"ageAtDeath\": 27,\n      \"ageIfLiving\": 27,\n      \"chronicHealthProblems\": [\"adhd\"]\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-898d15b8f3e1ad65",
+   "object": "chat.completion",
+   "created": 1786375368,
+   "prompt_routed_experts": null,
+   "model": "glm-ocr",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"dob\": \"10-06-1961\",\n  \"state\": \"HI\",\n  \"address\": \"8574 Aspen Ave\",\n  \"lastName\": \"Brown\",\n  \"firstName\": \"Daniel\",\n  \"spousePhone\": \"\",\n  \"isNewTherapy\": true,\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"coughing\": true,\n    \"allergies\": true,\n    \"blackOuts\": true,\n    \"chestPain\": true,\n    \"hearingLoss\": true,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"excessiveThirst\": true,\n    \"excessiveBruising\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"familyHealthHistory\": [\n    {\n      \"relation\": \"Father\",\n      \"ageAtDeath\": 55,\n      \"ageIfLiving\": 55,\n      \"chronicHealthProblems\": [\"diabetes, dementia\"]\n    },\n    {\n      \"relation\": \"Sister\",\n      \"ageAtDeath\": 27,\n      \"ageIfLiving\": 27,\n      \"chronicHealthProblems\": [\"adhd\"]\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-1cced44d",
+   "usage": {
+    "prompt_tokens": 4296,
+    "total_tokens": 4625,
+    "completion_tokens": 329,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A10",
+  "gpu_seconds": 2.9446446508333346,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "6bdca971d7724fa0824bf8c68d25dab3",
+  "batch_gpu_seconds": 70.67147162000003,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 2.9446446508333346,
+  "gpu_rate_usd_per_second": 0.000306,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"dob\": \"10-06-1961\",\n  \"state\": \"HI\",\n  \"address\": \"8574 Aspen Ave\",\n  \"lastName\": \"Brown\",\n  \"firstName\": \"Daniel\",\n  \"spousePhone\": \"\",\n  \"isNewTherapy\": true,\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"coughing\": true,\n    \"allergies\": true,\n    \"blackOuts\": true,\n    \"chestPain\": true,\n    \"hearingLoss\": true,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"excessiveThirst\": true,\n    \"excessiveBruising\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"familyHealthHistory\": [\n    {\n      \"relation\": \"Father\",\n      \"ageAtDeath\": 55,\n      \"ageIfLiving\": 55,\n      \"chronicHealthProblems\": [\"diabetes, dementia\"]\n    },\n    {\n      \"relation\": \"Sister\",\n      \"ageAtDeath\": 27,\n      \"ageIfLiving\": 27,\n      \"chronicHealthProblems\": [\"adhd\"]\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-898d15b8f3e1ad65",
+    "object": "chat.completion",
+    "created": 1786375368,
+    "prompt_routed_experts": null,
+    "model": "glm-ocr",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"dob\": \"10-06-1961\",\n  \"state\": \"HI\",\n  \"address\": \"8574 Aspen Ave\",\n  \"lastName\": \"Brown\",\n  \"firstName\": \"Daniel\",\n  \"spousePhone\": \"\",\n  \"isNewTherapy\": true,\n  \"isHospitalized\": false,\n  \"reviewOfSymptoms\": {\n    \"chills\": true,\n    \"eyePain\": true,\n    \"fatigue\": true,\n    \"coughing\": true,\n    \"allergies\": true,\n    \"blackOuts\": true,\n    \"chestPain\": true,\n    \"hearingLoss\": true,\n    \"jointSwelling\": true,\n    \"dentalProblems\": true,\n    \"excessiveThirst\": true,\n    \"excessiveBruising\": true,\n    \"tuberculosisExposure\": true,\n    \"difficultyEmptyingBowelOrBladder\": true\n  },\n  \"familyHealthHistory\": [\n    {\n      \"relation\": \"Father\",\n      \"ageAtDeath\": 55,\n      \"ageIfLiving\": 55,\n      \"chronicHealthProblems\": [\"diabetes, dementia\"]\n    },\n    {\n      \"relation\": \"Sister\",\n      \"ageAtDeath\": 27,\n      \"ageIfLiving\": 27,\n      \"chronicHealthProblems\": [\"adhd\"]\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-1cced44d",
+    "usage": {
+     "prompt_tokens": 4296,
+     "total_tokens": 4625,
+     "completion_tokens": 329,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "gpu_seconds": 2.9446446508333346,
+  "gpu_type": "A10",
+  "model_version": "zai-org/GLM-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_001.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

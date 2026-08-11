@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"Revenue by Geography and Segment\",\n  \"required\": [\n    \"geographyRevenue\",\n    \"productRevenue\"\n  ],\n  \"properties\": {\n    \"productRevenue\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"totalRevenueBillions\",\n        \"segments\"\n      ],\n      \"properties\": {\n        \"segments\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"segmentName\",\n              \"revenueBillions\"\n            ],\n            \"properties\": {\n              \"segmentName\": {\n                \"type\": \"string\",\n                \"description\": \"Name of the product segment\"\n              },\n              \"revenueBillions\": {\n                \"type\": \"number\",\n                \"description\": \"Revenue for this segment in billions of USD\"\n              }\n            }\n          },\n          \"description\": \"Breakdown of revenue by product segment (in billions USD)\"\n        },\n        \"totalRevenueBillions\": {\n          \"type\": \"number\",\n          \"description\": \"Total BD revenue in billions of USD\"\n        }\n      },\n      \"description\": \"Detailed product/segment breakdown of total BD revenue\"\n    },\n    \"geographyRevenue\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"region\",\n          \"revenueMillions\"\n        ],\n        \"properties\": {\n          \"region\": {\n            \"enum\": [\n              \"United States\",\n              \"Europe\",\n              \"Africa\",\n              \"South America\",\n              \"Greater Asia\",\n              \"South East Asia\",\n              \"Middle East\",\n              \"Other\"\n            ],\n            \"type\": \"string\",\n            \"description\": \"Name of the region or country group\"\n          },\n          \"revenueMillions\": {\n            \"type\": \"number\",\n            \"description\": \"Revenue in millions of USD\"\n          }\n        }\n      },\n      \"description\": \"Revenue by geography (in millions USD)\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.870799726333334,
+ "cost_per_page": 0.004074335010075333,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"productRevenue\": {\n    \"segments\": [\n      {\n        \"segmentName\": \"Diabetes Care\",\n        \"revenueBillions\": 1.1\n      },\n      {\n        \"segmentName\": \"Medication Management Solutions\",\n        \"revenueBillions\": 2.6\n      },\n      {\n        \"segmentName\": \"Medication Delivery Solutions\",\n        \"revenueBillions\": 3.9\n      },\n      {\n        \"segmentName\": \"Pharmaceutical Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Preanalytical Systems\",\n        \"revenueBillions\": 1.6\n      },\n      {\n        \"segmentName\": \"Diagnostic Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Biosciences\",\n        \"revenueBillions\": 1.2\n      },\n      {\n        \"segmentName\": \"Surgery\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Peripheral Intervention\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Urology and Critical Care\",\n        \"revenueBillions\": 1.1\n      }\n    ],\n    \"totalRevenueBillions\": 17.3\n  },\n  \"geographyRevenue\": [\n    {\n      \"region\": \"United States\",\n      \"revenueMillions\": 9730\n    },\n    {\n      \"region\": \"Europe\",\n      \"revenueMillions\": 3359\n    },\n    {\n      \"region\": \"Greater Asia\",\n      \"revenueMillions\": 2726\n    },\n    {\n      \"region\": \"Other\",\n      \"revenueMillions\": 1476\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-8cae6c003b421f17",
+   "object": "chat.completion",
+   "created": 1786377057,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"productRevenue\": {\n    \"segments\": [\n      {\n        \"segmentName\": \"Diabetes Care\",\n        \"revenueBillions\": 1.1\n      },\n      {\n        \"segmentName\": \"Medication Management Solutions\",\n        \"revenueBillions\": 2.6\n      },\n      {\n        \"segmentName\": \"Medication Delivery Solutions\",\n        \"revenueBillions\": 3.9\n      },\n      {\n        \"segmentName\": \"Pharmaceutical Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Preanalytical Systems\",\n        \"revenueBillions\": 1.6\n      },\n      {\n        \"segmentName\": \"Diagnostic Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Biosciences\",\n        \"revenueBillions\": 1.2\n      },\n      {\n        \"segmentName\": \"Surgery\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Peripheral Intervention\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Urology and Critical Care\",\n        \"revenueBillions\": 1.1\n      }\n    ],\n    \"totalRevenueBillions\": 17.3\n  },\n  \"geographyRevenue\": [\n    {\n      \"region\": \"United States\",\n      \"revenueMillions\": 9730\n    },\n    {\n      \"region\": \"Europe\",\n      \"revenueMillions\": 3359\n    },\n    {\n      \"region\": \"Greater Asia\",\n      \"revenueMillions\": 2726\n    },\n    {\n      \"region\": \"Other\",\n      \"revenueMillions\": 1476\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 2975,
+    "total_tokens": 3378,
+    "completion_tokens": 403,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.870799726333334,
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "e64af0c5c3c14fb6aab4471e15cbd215",
+  "batch_gpu_seconds": 140.899193432,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.870799726333334,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"productRevenue\": {\n    \"segments\": [\n      {\n        \"segmentName\": \"Diabetes Care\",\n        \"revenueBillions\": 1.1\n      },\n      {\n        \"segmentName\": \"Medication Management Solutions\",\n        \"revenueBillions\": 2.6\n      },\n      {\n        \"segmentName\": \"Medication Delivery Solutions\",\n        \"revenueBillions\": 3.9\n      },\n      {\n        \"segmentName\": \"Pharmaceutical Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Preanalytical Systems\",\n        \"revenueBillions\": 1.6\n      },\n      {\n        \"segmentName\": \"Diagnostic Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Biosciences\",\n        \"revenueBillions\": 1.2\n      },\n      {\n        \"segmentName\": \"Surgery\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Peripheral Intervention\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Urology and Critical Care\",\n        \"revenueBillions\": 1.1\n      }\n    ],\n    \"totalRevenueBillions\": 17.3\n  },\n  \"geographyRevenue\": [\n    {\n      \"region\": \"United States\",\n      \"revenueMillions\": 9730\n    },\n    {\n      \"region\": \"Europe\",\n      \"revenueMillions\": 3359\n    },\n    {\n      \"region\": \"Greater Asia\",\n      \"revenueMillions\": 2726\n    },\n    {\n      \"region\": \"Other\",\n      \"revenueMillions\": 1476\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-8cae6c003b421f17",
+    "object": "chat.completion",
+    "created": 1786377057,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"productRevenue\": {\n    \"segments\": [\n      {\n        \"segmentName\": \"Diabetes Care\",\n        \"revenueBillions\": 1.1\n      },\n      {\n        \"segmentName\": \"Medication Management Solutions\",\n        \"revenueBillions\": 2.6\n      },\n      {\n        \"segmentName\": \"Medication Delivery Solutions\",\n        \"revenueBillions\": 3.9\n      },\n      {\n        \"segmentName\": \"Pharmaceutical Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Preanalytical Systems\",\n        \"revenueBillions\": 1.6\n      },\n      {\n        \"segmentName\": \"Diagnostic Systems\",\n        \"revenueBillions\": 1.5\n      },\n      {\n        \"segmentName\": \"Biosciences\",\n        \"revenueBillions\": 1.2\n      },\n      {\n        \"segmentName\": \"Surgery\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Peripheral Intervention\",\n        \"revenueBillions\": 1.4\n      },\n      {\n        \"segmentName\": \"Urology and Critical Care\",\n        \"revenueBillions\": 1.1\n      }\n    ],\n    \"totalRevenueBillions\": 17.3\n  },\n  \"geographyRevenue\": [\n    {\n      \"region\": \"United States\",\n      \"revenueMillions\": 9730\n    },\n    {\n      \"region\": \"Europe\",\n      \"revenueMillions\": 3359\n    },\n    {\n      \"region\": \"Greater Asia\",\n      \"revenueMillions\": 2726\n    },\n    {\n      \"region\": \"Other\",\n      \"revenueMillions\": 1476\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 2975,
+     "total_tokens": 3378,
+     "completion_tokens": 403,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"title\": \"Revenue by Geography and Segment\",\n  \"required\": [\n    \"geographyRevenue\",\n    \"productRevenue\"\n  ],\n  \"properties\": {\n    \"productRevenue\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"totalRevenueBillions\",\n        \"segments\"\n      ],\n      \"properties\": {\n        \"segments\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"segmentName\",\n              \"revenueBillions\"\n            ],\n            \"properties\": {\n              \"segmentName\": {\n                \"type\": \"string\",\n                \"description\": \"Name of the product segment\"\n              },\n              \"revenueBillions\": {\n                \"type\": \"number\",\n                \"description\": \"Revenue for this segment in billions of USD\"\n              }\n            }\n          },\n          \"description\": \"Breakdown of revenue by product segment (in billions USD)\"\n        },\n        \"totalRevenueBillions\": {\n          \"type\": \"number\",\n          \"description\": \"Total BD revenue in billions of USD\"\n        }\n      },\n      \"description\": \"Detailed product/segment breakdown of total BD revenue\"\n    },\n    \"geographyRevenue\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"region\",\n          \"revenueMillions\"\n        ],\n        \"properties\": {\n          \"region\": {\n            \"enum\": [\n              \"United States\",\n              \"Europe\",\n              \"Africa\",\n              \"South America\",\n              \"Greater Asia\",\n              \"South East Asia\",\n              \"Middle East\",\n              \"Other\"\n            ],\n            \"type\": \"string\",\n            \"description\": \"Name of the region or country group\"\n          },\n          \"revenueMillions\": {\n            \"type\": \"number\",\n            \"description\": \"Revenue in millions of USD\"\n          }\n        }\n      },\n      \"description\": \"Revenue by geography (in millions USD)\"\n    }\n  }\n}",
+  "gpu_seconds": 5.870799726333334,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_002.png",
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true
+ }
+}

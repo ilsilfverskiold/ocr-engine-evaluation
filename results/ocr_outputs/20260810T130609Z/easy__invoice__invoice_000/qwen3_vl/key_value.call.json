@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "response_format": "json",
+ "json_schema_sent": false,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.588990255500003,
+ "cost_per_page": 0.003878759237317002,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"Invoice no:\": \"97159829\",\n  \"Date of issue:\": \"09/18/2015\",\n  \"Seller:\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\\nTax Id: 985-73-8194\\nIBAN: GB81LZWO32519172531418\",\n  \"Client:\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\\nTax Id: 994-72-1270\",\n  \"ITEMS\": {\n    \"No.\": \"1.\",\n    \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n    \"Qty\": \"2,00\",\n    \"UM\": \"each\",\n    \"Net price\": \"444,60\",\n    \"Net worth\": \"889,20\",\n    \"VAT [%]\": \"10%\",\n    \"Gross worth\": \"978,12\"\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"889,20\",\n    \"VAT\": \"88,92\",\n    \"Gross worth\": \"978,12\",\n    \"Total\": \"$ 889,20 $ 88,92 $ 978,12\"\n  }\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-af050faeac97f84a",
+   "object": "chat.completion",
+   "created": 1786375770,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"Invoice no:\": \"97159829\",\n  \"Date of issue:\": \"09/18/2015\",\n  \"Seller:\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\\nTax Id: 985-73-8194\\nIBAN: GB81LZWO32519172531418\",\n  \"Client:\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\\nTax Id: 994-72-1270\",\n  \"ITEMS\": {\n    \"No.\": \"1.\",\n    \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n    \"Qty\": \"2,00\",\n    \"UM\": \"each\",\n    \"Net price\": \"444,60\",\n    \"Net worth\": \"889,20\",\n    \"VAT [%]\": \"10%\",\n    \"Gross worth\": \"978,12\"\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"889,20\",\n    \"VAT\": \"88,92\",\n    \"Gross worth\": \"978,12\",\n    \"Total\": \"$ 889,20 $ 88,92 $ 978,12\"\n  }\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 8630,
+    "total_tokens": 8990,
+    "completion_tokens": 360,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.588990255500003,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "3516d3f0c65f4d999380951f51cfa194",
+  "batch_gpu_seconds": 134.13576613200007,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.588990255500003,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"Invoice no:\": \"97159829\",\n  \"Date of issue:\": \"09/18/2015\",\n  \"Seller:\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\\nTax Id: 985-73-8194\\nIBAN: GB81LZWO32519172531418\",\n  \"Client:\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\\nTax Id: 994-72-1270\",\n  \"ITEMS\": {\n    \"No.\": \"1.\",\n    \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n    \"Qty\": \"2,00\",\n    \"UM\": \"each\",\n    \"Net price\": \"444,60\",\n    \"Net worth\": \"889,20\",\n    \"VAT [%]\": \"10%\",\n    \"Gross worth\": \"978,12\"\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"889,20\",\n    \"VAT\": \"88,92\",\n    \"Gross worth\": \"978,12\",\n    \"Total\": \"$ 889,20 $ 88,92 $ 978,12\"\n  }\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-af050faeac97f84a",
+    "object": "chat.completion",
+    "created": 1786375770,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"Invoice no:\": \"97159829\",\n  \"Date of issue:\": \"09/18/2015\",\n  \"Seller:\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\\nTax Id: 985-73-8194\\nIBAN: GB81LZWO32519172531418\",\n  \"Client:\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\\nTax Id: 994-72-1270\",\n  \"ITEMS\": {\n    \"No.\": \"1.\",\n    \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\",\n    \"Qty\": \"2,00\",\n    \"UM\": \"each\",\n    \"Net price\": \"444,60\",\n    \"Net worth\": \"889,20\",\n    \"VAT [%]\": \"10%\",\n    \"Gross worth\": \"978,12\"\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"889,20\",\n    \"VAT\": \"88,92\",\n    \"Gross worth\": \"978,12\",\n    \"Total\": \"$ 889,20 $ 88,92 $ 978,12\"\n  }\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 8630,
+     "total_tokens": 8990,
+     "completion_tokens": 360,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "gpu_seconds": 5.588990255500003,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

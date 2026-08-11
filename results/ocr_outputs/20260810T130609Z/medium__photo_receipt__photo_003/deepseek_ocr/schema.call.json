@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"slip_number\": {\n          \"type\": \"string\"\n        },\n        \"till_number\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.0519300707916663,
+ "cost_per_page": 0.0007300394691294163,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"items\":[{\"quantity\":1,\"unit_price\":1,\"description\":\"\",\"total_price\":1},{\"quantity\":1,\"unit_price\":1,\"description\":\"\",\"total_price\":1}],\"totals\":{\"total\":1},\"store_info\":{\"name\":\"\"},\"cashier_info\":{\"date\":\"\",\"name\":\"\",\"time\":\"\",\"slip_number\":\"\",\"till_number\":\"\",\"cashier_number\":\"\"},\"customer_name\":\"\"}",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.0519300707916663,
+  "startup_gpu_seconds": 200.825494387,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "fddc4e0672e042afbc354eb4ace4dc7b",
+  "batch_gpu_seconds": 25.246321698999992,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.0519300707916663,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"items\":[{\"quantity\":1,\"unit_price\":1,\"description\":\"\",\"total_price\":1},{\"quantity\":1,\"unit_price\":1,\"description\":\"\",\"total_price\":1}],\"totals\":{\"total\":1},\"store_info\":{\"name\":\"\"},\"cashier_info\":{\"date\":\"\",\"name\":\"\",\"time\":\"\",\"slip_number\":\"\",\"till_number\":\"\",\"cashier_number\":\"\"},\"customer_name\":\"\"}",
+  "structured_output": {},
+  "gpu_seconds": 1.0519300707916663,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_003.png",
+  "startup_gpu_seconds": 200.825494387,
+  "is_cold_start": true
+ }
+}

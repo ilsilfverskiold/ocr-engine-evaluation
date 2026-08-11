@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.0519300707916663,
+ "cost_per_page": 0.0007300394691294163,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"date\": \"2025-09-01\",\"title\": \"Pay-In Sheet - 2025-09\",\"manager\": \"Kim Abernathy\",\"distNumber\": \"359396\",\"consultants\": [{\"sales\": 165296,\"sfmCode\": \"9689414383\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Blake McLaughlin\"},{\"sales\": 173068,\"sfmCode\": \"3466054262\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Mathew Littel\"},{\"sales\": 540188,\"sfmCode\": \"3950820184\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Homer Goyette\"},{\"sales\": 715373,\"sfmCode\": \"1200040391\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Eula Hintz\"},{\"sales\": 528564,\"sfmCode\": \"2118768308\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Jeffrey Blanda\"},{\"sales\": 503684,\"sfmCode\": \"3109403621\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Marjorie Sanford\"},{\"sales\": 114025,\"sfmCode\": \"7436294303\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Jasmine Johnston\"},{\"sales\": 321175,\"sfmCode\": \"2694407508\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Andrea Weimann\"},{\"sales\": 274772,\"sfmCode\": \"6150707543\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Travis Wisoky\"},{\"sales\": 449858,\"sfmCode\": \"6928799821\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Chad Howell\"},{\"sales\": 974534,\"sfmCode\": \"1111741445\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Rick Koelpin\"},{\"sales\": 639258,\"sfmCode\": \"5024605886\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Carolyn Medhurst\"},{\"sales\": 845196,\"sfmCode\": \"5501728225\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Virginia Ward\"},{\"sales\": 323433,\"sfmCode\": \"6616015097\",\"idNumber\": \"R2803.00\",\"puerReturns\": 0,\"consultantName\": \"Virginia Ward\"}\n  ]\n}",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.0519300707916663,
+  "startup_gpu_seconds": 200.825494387,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "fddc4e0672e042afbc354eb4ace4dc7b",
+  "batch_gpu_seconds": 25.246321698999992,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.0519300707916663,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"date\": \"2025-09-01\",\"title\": \"Pay-In Sheet - 2025-09\",\"manager\": \"Kim Abernathy\",\"distNumber\": \"359396\",\"consultants\": [{\"sales\": 165296,\"sfmCode\": \"9689414383\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Blake McLaughlin\"},{\"sales\": 173068,\"sfmCode\": \"3466054262\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Mathew Littel\"},{\"sales\": 540188,\"sfmCode\": \"3950820184\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Homer Goyette\"},{\"sales\": 715373,\"sfmCode\": \"1200040391\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Eula Hintz\"},{\"sales\": 528564,\"sfmCode\": \"2118768308\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Jeffrey Blanda\"},{\"sales\": 503684,\"sfmCode\": \"3109403621\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Marjorie Sanford\"},{\"sales\": 114025,\"sfmCode\": \"7436294303\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Jasmine Johnston\"},{\"sales\": 321175,\"sfmCode\": \"2694407508\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Andrea Weimann\"},{\"sales\": 274772,\"sfmCode\": \"6150707543\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Travis Wisoky\"},{\"sales\": 449858,\"sfmCode\": \"6928799821\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Chad Howell\"},{\"sales\": 974534,\"sfmCode\": \"1111741445\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Rick Koelpin\"},{\"sales\": 639258,\"sfmCode\": \"5024605886\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Dr. Carolyn Medhurst\"},{\"sales\": 845196,\"sfmCode\": \"5501728225\",\"idNumber\": \"R2210.00\",\"puerReturns\": 0,\"consultantName\": \"Virginia Ward\"},{\"sales\": 323433,\"sfmCode\": \"6616015097\",\"idNumber\": \"R2803.00\",\"puerReturns\": 0,\"consultantName\": \"Virginia Ward\"}\n  ]\n}",
+  "structured_output": {},
+  "gpu_seconds": 1.0519300707916663,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_002.png",
+  "startup_gpu_seconds": 200.825494387,
+  "is_cold_start": true
+ }
+}

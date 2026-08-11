@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerSales\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Sales\"\n          },\n          \"puerTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Total\"\n          },\n          \"grandTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Grand Total\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 3.123428583960049,
+ "cost_per_page": 0.00213625,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-08\",\n  \"distNumber\": \"201840\",\n  \"manager\": \"Juan Brown\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Mathew Bailey\",\n      \"idNumber\": \"8737908414\",\n      \"sfmCode\": \"104061\",\n      \"sales\": 2985.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 2673.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Christian Bergnaum I\",\n      \"idNumber\": \"8879526006\",\n      \"sfmCode\": \"163809\",\n      \"sales\": 946.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 778.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Brooke Waters\",\n      \"idNumber\": \"2846455971\",\n      \"sfmCode\": \"496432\",\n      \"sales\": 3971.0,\n      \"puerSales\": 595.65,\n      \"puerTotal\": 595.65,\n      \"grandTotal\": 4566.65,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Myron Hagenes\",\n      \"idNumber\": \"3067691502\",\n      \"sfmCode\": \"974002\",\n      \"sales\": 3725.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 3233.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kelli Predovic\",\n      \"idNumber\": \"8309953719\",\n      \"sfmCode\": \"176320\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Viola McLaughlin\",\n      \"idNumber\": \"7527042004\",\n      \"sfmCode\": \"249761\",\n      \"sales\": 623.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 623.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Garrett Lakin\",\n      \"idNumber\": \"1430566822\",\n      \"sfmCode\": \"335846\",\n      \"sales\": 3242.0,\n      \"puerSales\": 486.3,\n      \"puerTotal\": 486.3,\n      \"grandTotal\": 3728.3,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Louise Strosin\",\n      \"idNumber\": \"8829580805\",\n      \"sfmCode\": \"199309\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Byron Becker\",\n      \"idNumber\": \"9742676352\",\n      \"sfmCode\": \"166436\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Traci Kautzer\",\n      \"idNumber\": \"3571071141\",\n      \"sfmCode\": \"678067\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Alice Schinner\",\n      \"idNumber\": \"8735278269\",\n      \"sfmCode\": \"650760\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1507,
+  "output_tokens": 1173,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:03:59 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=3018",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"title\": \"Pay-In Sheet\",\n  \"date\": \"2025-08\",\n  \"distNumber\": \"201840\",\n  \"manager\": \"Juan Brown\",\n  \"consultants\": [\n    {\n      \"consultantName\": \"Mathew Bailey\",\n      \"idNumber\": \"8737908414\",\n      \"sfmCode\": \"104061\",\n      \"sales\": 2985.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 2673.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Christian Bergnaum I\",\n      \"idNumber\": \"8879526006\",\n      \"sfmCode\": \"163809\",\n      \"sales\": 946.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 778.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Brooke Waters\",\n      \"idNumber\": \"2846455971\",\n      \"sfmCode\": \"496432\",\n      \"sales\": 3971.0,\n      \"puerSales\": 595.65,\n      \"puerTotal\": 595.65,\n      \"grandTotal\": 4566.65,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Myron Hagenes\",\n      \"idNumber\": \"3067691502\",\n      \"sfmCode\": \"974002\",\n      \"sales\": 3725.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 3233.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Kelli Predovic\",\n      \"idNumber\": \"8309953719\",\n      \"sfmCode\": \"176320\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Dr. Viola McLaughlin\",\n      \"idNumber\": \"7527042004\",\n      \"sfmCode\": \"249761\",\n      \"sales\": 623.0,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": 623.0,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Garrett Lakin\",\n      \"idNumber\": \"1430566822\",\n      \"sfmCode\": \"335846\",\n      \"sales\": 3242.0,\n      \"puerSales\": 486.3,\n      \"puerTotal\": 486.3,\n      \"grandTotal\": 3728.3,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Louise Strosin\",\n      \"idNumber\": \"8829580805\",\n      \"sfmCode\": \"199309\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Byron Becker\",\n      \"idNumber\": \"9742676352\",\n      \"sfmCode\": \"166436\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Traci Kautzer\",\n      \"idNumber\": \"3571071141\",\n      \"sfmCode\": \"678067\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    },\n    {\n      \"consultantName\": \"Alice Schinner\",\n      \"idNumber\": \"8735278269\",\n      \"sfmCode\": \"650760\",\n      \"sales\": null,\n      \"puerSales\": null,\n      \"puerTotal\": null,\n      \"grandTotal\": null,\n      \"puerReturns\": null\n    }\n  ]\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\x14jm\\xc7\\xb9\\xeae\\xfd\\xa9y\\xd7\\x0b\\xa0\\xe2\\x0e\\xcc\\xc9\\x905i\\xbc8\\x01\\xc2w~6%T\\x86Z\\x95}\\xc54Pkf\\xfb\\x0b7\\x1eKTC'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "TNp5asruEL6LvdIPlPaA0Ag",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 1173,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1507,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 427
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1080
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2680,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

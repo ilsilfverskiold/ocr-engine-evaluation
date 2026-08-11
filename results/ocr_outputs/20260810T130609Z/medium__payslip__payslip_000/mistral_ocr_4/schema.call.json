@@ -1,0 +1,83 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"returns\": {\n            \"type\": \"number\",\n            \"description\": \"BB Returns\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"puerSales\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Sales\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 5.38511324999854,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"title\": \"Pay-In Sheet - 2025-05\", \"date\": \"2025-05\", \"distNumber\": \"551652\", \"manager\": \"Priscilla Wiza\", \"consultants\": [{\"consultantName\": \"Jacquelyn Greenholt\", \"idNumber\": \"7600712352\", \"sfmCode\": \"156011\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Harry Kessler\", \"idNumber\": \"8352646461\", \"sfmCode\": \"987129\", \"sales\": 3468, \"total\": 2867, \"returns\": 601, \"puerSales\": 0}, {\"consultantName\": \"Patsy Zieme\", \"idNumber\": \"5065593708\", \"sfmCode\": \"128331\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Herbert Feeney\", \"idNumber\": \"3647622222\", \"sfmCode\": \"392526\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Anne Nicolas\", \"idNumber\": \"4594175251\", \"sfmCode\": \"874939\", \"sales\": 909, \"total\": 909, \"returns\": 0, \"puerSales\": 136.35}, {\"consultantName\": \"Sandra Roob\", \"idNumber\": \"5409630699\", \"sfmCode\": \"423592\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Frank Corkery\", \"idNumber\": \"5911325117\", \"sfmCode\": \"838701\", \"sales\": 2627, \"total\": 2627, \"returns\": 0, \"puerSales\": 394.05}, {\"consultantName\": \"Kelly Spinka\", \"idNumber\": \"6747182124\", \"sfmCode\": \"429182\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Alison Kassulke\", \"idNumber\": \"3571611755\", \"sfmCode\": \"673783\", \"sales\": 3282, \"total\": 2656, \"returns\": 626, \"puerSales\": 398.4}]}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Pay-In Sheet - 2025-05\n\nDist: 551652\n\nMan: Priscilla Wiza\n\n|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Jacquelyn Greenholt | 7600712352 | 156011 |  |  |  |  |  |  |   |\n|  Harry Kessler | 8352646461 | 987129 | R3468.00 | R601.00 | R2867.00 |  |  |  | R2867.00  |\n|  Patsy Zieme | 5065593708 | 128331 |  |  |  |  |  |  |   |\n|  Herbert Feeney | 3647622222 | 392526 |  |  |  |  |  |  |   |\n|  Anne Nicolas | 4594175251 | 874939 | R909.00 |  | R909.00 | R136.35 |  | R136.35 | R1045.35  |\n|  Sandra Roob | 5409630699 | 423592 |  |  |  |  |  |  |   |\n|  Frank Corkery | 5911325117 | 838701 | R2627.00 |  | R2627.00 | R394.05 |  | R394.05 | R3021.05  |\n|  Kelly Spinka | 6747182124 | 429182 |  |  |  |  |  |  |   |\n|  Alison Kassulke | 3571611755 | 673783 | R3282.00 | R626.00 | R2656.00 | R398.40 | R93.90 | R304.50 | R2960.50  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 906,
+     "width": 1896
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 53,
+      "top_left_y": 85,
+      "bottom_right_x": 480,
+      "bottom_right_y": 128,
+      "content": "# Pay-In Sheet - 2025-05",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 55,
+      "top_left_y": 146,
+      "bottom_right_x": 194,
+      "bottom_right_y": 175,
+      "content": "Dist: 551652",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 953,
+      "top_left_y": 146,
+      "bottom_right_x": 1165,
+      "bottom_right_y": 173,
+      "content": "Man: Priscilla Wiza",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 55,
+      "top_left_y": 212,
+      "bottom_right_x": 1837,
+      "bottom_right_y": 856,
+      "content": "|  Consultant Name | ID Number | SFM Code | BB Sales | BB Returns | BB Total | Puer Sales | Puer Returns | Puer Total | Grand Total  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  Jacquelyn Greenholt | 7600712352 | 156011 |  |  |  |  |  |  |   |\n|  Harry Kessler | 8352646461 | 987129 | R3468.00 | R601.00 | R2867.00 |  |  |  | R2867.00  |\n|  Patsy Zieme | 5065593708 | 128331 |  |  |  |  |  |  |   |\n|  Herbert Feeney | 3647622222 | 392526 |  |  |  |  |  |  |   |\n|  Anne Nicolas | 4594175251 | 874939 | R909.00 |  | R909.00 | R136.35 |  | R136.35 | R1045.35  |\n|  Sandra Roob | 5409630699 | 423592 |  |  |  |  |  |  |   |\n|  Frank Corkery | 5911325117 | 838701 | R2627.00 |  | R2627.00 | R394.05 |  | R394.05 | R3021.05  |\n|  Kelly Spinka | 6747182124 | 429182 |  |  |  |  |  |  |   |\n|  Alison Kassulke | 3571611755 | 673783 | R3282.00 | R626.00 | R2656.00 | R398.40 | R93.90 | R304.50 | R2960.50  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 135896
+  },
+  "document_annotation": "{\"title\": \"Pay-In Sheet - 2025-05\", \"date\": \"2025-05\", \"distNumber\": \"551652\", \"manager\": \"Priscilla Wiza\", \"consultants\": [{\"consultantName\": \"Jacquelyn Greenholt\", \"idNumber\": \"7600712352\", \"sfmCode\": \"156011\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Harry Kessler\", \"idNumber\": \"8352646461\", \"sfmCode\": \"987129\", \"sales\": 3468, \"total\": 2867, \"returns\": 601, \"puerSales\": 0}, {\"consultantName\": \"Patsy Zieme\", \"idNumber\": \"5065593708\", \"sfmCode\": \"128331\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Herbert Feeney\", \"idNumber\": \"3647622222\", \"sfmCode\": \"392526\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Anne Nicolas\", \"idNumber\": \"4594175251\", \"sfmCode\": \"874939\", \"sales\": 909, \"total\": 909, \"returns\": 0, \"puerSales\": 136.35}, {\"consultantName\": \"Sandra Roob\", \"idNumber\": \"5409630699\", \"sfmCode\": \"423592\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Frank Corkery\", \"idNumber\": \"5911325117\", \"sfmCode\": \"838701\", \"sales\": 2627, \"total\": 2627, \"returns\": 0, \"puerSales\": 394.05}, {\"consultantName\": \"Kelly Spinka\", \"idNumber\": \"6747182124\", \"sfmCode\": \"429182\", \"sales\": 0, \"total\": 0, \"returns\": 0, \"puerSales\": 0}, {\"consultantName\": \"Alison Kassulke\", \"idNumber\": \"3571611755\", \"sfmCode\": \"673783\", \"sales\": 3282, \"total\": 2656, \"returns\": 626, \"puerSales\": 398.4}]}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

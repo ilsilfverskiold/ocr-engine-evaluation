@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_005.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"gst_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"bill_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"table_no\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"unit_price\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"note\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"subtotal\": {\n      \"type\": \"string\"\n    },\n    \"discount\": {\n      \"type\": \"string\"\n    },\n    \"service_charge_rate\": {\n      \"type\": \"string\"\n    },\n    \"service_charge\": {\n      \"type\": \"string\"\n    },\n    \"gst\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"net_total\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"percent\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"UROKO JAPANESE CUISINE SDN BHD\",\n  \"address\": \"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR.\",\n  \"tel\": \"03-7932 1023\",\n  \"gst_reg_no\": \"001126838272\",\n  \"bill_no\": \"01H-25029\",\n  \"date\": \"20/03/2018\",\n  \"datetime\": \"6:41:02 PM\",\n  \"cashier\": \"RESAN\",\n  \"table_no\": \"S09\",\n  \"items\": [\n    {\n      \"qty\": \"1\",\n      \"description\": \"KO NABE INANIWA UDON @ 24.00\",\n      \"unit_price\": \"24.00 SR\",\n      \"amount\": \"24.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GREEN TEA @ 1.00\",\n      \"unit_price\": \"1.00 SR\",\n      \"amount\": \"1.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GYOZA 5pcs @ 15.00\",\n      \"unit_price\": \"15.00 SR\",\n      \"amount\": \"15.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GARLIC CHAHAN @\",\n      \"unit_price\": \"6.00 SR\",\n      \"amount\": \"6.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    }\n  ],\n  \"total_qty\": \"4\",\n  \"subtotal\": \"46.00\",\n  \"discount\": \"(.00)\",\n  \"service_charge_rate\": \"10.00%\",\n  \"service_charge\": \"4.00\",\n  \"gst\": \"3.00\",\n  \"total\": \"53.00\",\n  \"net_total\": \"53.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6.00\",\n      \"amount\": \"50.00\",\n      \"tax\": \"3.00\"\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-a77ae7a1c62e3436",
+   "object": "chat.completion",
+   "created": 1786376401,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"company\": \"UROKO JAPANESE CUISINE SDN BHD\",\n  \"address\": \"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR.\",\n  \"tel\": \"03-7932 1023\",\n  \"gst_reg_no\": \"001126838272\",\n  \"bill_no\": \"01H-25029\",\n  \"date\": \"20/03/2018\",\n  \"datetime\": \"6:41:02 PM\",\n  \"cashier\": \"RESAN\",\n  \"table_no\": \"S09\",\n  \"items\": [\n    {\n      \"qty\": \"1\",\n      \"description\": \"KO NABE INANIWA UDON @ 24.00\",\n      \"unit_price\": \"24.00 SR\",\n      \"amount\": \"24.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GREEN TEA @ 1.00\",\n      \"unit_price\": \"1.00 SR\",\n      \"amount\": \"1.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GYOZA 5pcs @ 15.00\",\n      \"unit_price\": \"15.00 SR\",\n      \"amount\": \"15.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GARLIC CHAHAN @\",\n      \"unit_price\": \"6.00 SR\",\n      \"amount\": \"6.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    }\n  ],\n  \"total_qty\": \"4\",\n  \"subtotal\": \"46.00\",\n  \"discount\": \"(.00)\",\n  \"service_charge_rate\": \"10.00%\",\n  \"service_charge\": \"4.00\",\n  \"gst\": \"3.00\",\n  \"total\": \"53.00\",\n  \"net_total\": \"53.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6.00\",\n      \"amount\": \"50.00\",\n      \"tax\": \"3.00\"\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 1218,
+    "total_tokens": 1800,
+    "completion_tokens": 582,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"company\": \"UROKO JAPANESE CUISINE SDN BHD\",\n  \"address\": \"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR.\",\n  \"tel\": \"03-7932 1023\",\n  \"gst_reg_no\": \"001126838272\",\n  \"bill_no\": \"01H-25029\",\n  \"date\": \"20/03/2018\",\n  \"datetime\": \"6:41:02 PM\",\n  \"cashier\": \"RESAN\",\n  \"table_no\": \"S09\",\n  \"items\": [\n    {\n      \"qty\": \"1\",\n      \"description\": \"KO NABE INANIWA UDON @ 24.00\",\n      \"unit_price\": \"24.00 SR\",\n      \"amount\": \"24.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GREEN TEA @ 1.00\",\n      \"unit_price\": \"1.00 SR\",\n      \"amount\": \"1.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GYOZA 5pcs @ 15.00\",\n      \"unit_price\": \"15.00 SR\",\n      \"amount\": \"15.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GARLIC CHAHAN @\",\n      \"unit_price\": \"6.00 SR\",\n      \"amount\": \"6.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    }\n  ],\n  \"total_qty\": \"4\",\n  \"subtotal\": \"46.00\",\n  \"discount\": \"(.00)\",\n  \"service_charge_rate\": \"10.00%\",\n  \"service_charge\": \"4.00\",\n  \"gst\": \"3.00\",\n  \"total\": \"53.00\",\n  \"net_total\": \"53.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6.00\",\n      \"amount\": \"50.00\",\n      \"tax\": \"3.00\"\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-a77ae7a1c62e3436",
+    "object": "chat.completion",
+    "created": 1786376401,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"company\": \"UROKO JAPANESE CUISINE SDN BHD\",\n  \"address\": \"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR.\",\n  \"tel\": \"03-7932 1023\",\n  \"gst_reg_no\": \"001126838272\",\n  \"bill_no\": \"01H-25029\",\n  \"date\": \"20/03/2018\",\n  \"datetime\": \"6:41:02 PM\",\n  \"cashier\": \"RESAN\",\n  \"table_no\": \"S09\",\n  \"items\": [\n    {\n      \"qty\": \"1\",\n      \"description\": \"KO NABE INANIWA UDON @ 24.00\",\n      \"unit_price\": \"24.00 SR\",\n      \"amount\": \"24.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GREEN TEA @ 1.00\",\n      \"unit_price\": \"1.00 SR\",\n      \"amount\": \"1.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GYOZA 5pcs @ 15.00\",\n      \"unit_price\": \"15.00 SR\",\n      \"amount\": \"15.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    },\n    {\n      \"qty\": \"1\",\n      \"description\": \"GARLIC CHAHAN @\",\n      \"unit_price\": \"6.00 SR\",\n      \"amount\": \"6.00 SR\",\n      \"tax_code\": \"[T A]\",\n      \"note\": null\n    }\n  ],\n  \"total_qty\": \"4\",\n  \"subtotal\": \"46.00\",\n  \"discount\": \"(.00)\",\n  \"service_charge_rate\": \"10.00%\",\n  \"service_charge\": \"4.00\",\n  \"gst\": \"3.00\",\n  \"total\": \"53.00\",\n  \"net_total\": \"53.00\",\n  \"gst_summary\": [\n    {\n      \"tax_code\": \"SR\",\n      \"percent\": \"6.00\",\n      \"amount\": \"50.00\",\n      \"tax\": \"3.00\"\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 1218,
+     "total_tokens": 1800,
+     "completion_tokens": 582,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"gst_reg_no\": {\n      \"type\": \"string\"\n    },\n    \"bill_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"table_no\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"unit_price\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"note\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"subtotal\": {\n      \"type\": \"string\"\n    },\n    \"discount\": {\n      \"type\": \"string\"\n    },\n    \"service_charge_rate\": {\n      \"type\": \"string\"\n    },\n    \"service_charge\": {\n      \"type\": \"string\"\n    },\n    \"gst\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"net_total\": {\n      \"type\": \"string\"\n    },\n    \"gst_summary\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"tax_code\": {\n            \"type\": \"string\"\n          },\n          \"percent\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_005.jpg",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

@@ -1,0 +1,524 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"discount\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          },\n          \"discount_description\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"total_price_with_discount\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"subtotal\": {\n          \"type\": \"number\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_name\": {\n      \"type\": \"string\"\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"slip_number\": {\n          \"type\": \"string\"\n        },\n        \"till_number\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 10.595775333000347,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"cashier_info\": {\"cashier_number\": \"113\", \"date\": \"04.04.24\", \"name\": \"Ntswaki Mogadime\", \"slip_number\": \"2338\", \"time\": \"15:12\", \"till_number\": \"003\"}, \"customer_name\": \"Loyalty Customer\", \"items\": [{\"description\": \"L/STAR TOMATO 400GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 2, \"total_price\": 49.98, \"total_price_with_discount\": 49.98, \"unit_price\": 24.99}, {\"description\": \"CHIEF'S CHOICE INDINA W PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.586, \"total_price\": 54.49, \"total_price_with_discount\": 54.49, \"unit_price\": 92.9}, {\"description\": \"CHIEF'S CHOICE INDINA W PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.56, \"total_price\": 52.07, \"total_price_with_discount\": 52.07, \"unit_price\": 92.9}, {\"description\": \"KNORR SOUP 50GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 4, \"total_price\": 23.96, \"total_price_with_discount\": 23.96, \"unit_price\": 5.99}, {\"description\": \"ROYCO SMOKEY BBQ 40GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 20.99, \"total_price_with_discount\": 20.99, \"unit_price\": 20.99}, {\"description\": \"TOMATOES LOOSE PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1.282, \"total_price\": 41.01, \"total_price_with_discount\": 41.01, \"unit_price\": 31.99}, {\"description\": \"BEEF LIVER PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1.216, \"total_price\": 60.79, \"total_price_with_discount\": 60.79, \"unit_price\": 49.99}, {\"description\": \"ONIONS LOOSE KG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.838, \"total_price\": 10.89, \"total_price_with_discount\": 10.89, \"unit_price\": 12.99}, {\"description\": \"SPAR CARR VT1 1'S\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 2, \"total_price\": 2.4, \"total_price_with_discount\": 2.4, \"unit_price\": 1.2}, {\"description\": \"SPAR MILK F/CR 1LT\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 19.49, \"total_price_with_discount\": 19.49, \"unit_price\": 19.49}, {\"description\": \"LIQUI FRUIT M/OR 300ML\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 16.99, \"total_price_with_discount\": 16.99, \"unit_price\": 16.99}, {\"description\": \"KOO BAKED BEANS 410GR\", \"discount\": 6.98, \"discount_description\": \"BUY 2 FOR R29.00\", \"quantity\": 2, \"total_price\": 35.98, \"total_price_with_discount\": 29, \"unit_price\": 17.99}], \"store_name\": \"Superspar Groblersdal Mall\", \"totals\": {\"subtotal\": 382.06, \"total\": 381.06, \"total_items\": 18}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Good Products, Good Service, Good Advice\n\nOn id For You\n\nGood Products, Good Service, Good Advice\n\nGroblersdal Mall\n\nSuperspar\n\nTel: 0 3 262 2494\n\nTel: 0 3 262 2495\n\nVAT: 4740276029\n\nCustomer: Loyalty Customer\n\nR\n\nL/STAR TOMATO 400GR\n\n2 @ 24.9% 49.98 *\n\nCHIEF'S CHOICE INDINA W PKG\n\n0.586kg @ 92.9% R /kg 54.49 A\n\nCHIEF'S CHOICE INDINA W PKG\n\n0.560kg @ 92.9% R /kg 52.07 A\n\nKNORR SOUP 50GR\n\n4 @ 5.9% 23.96 A\n\nROYCO SMOKEY BBQ 40GR 20.99 A\n\nTOMATOES LOOSE PKG\n\n1.282kg @ 31.9% R /kg 41.01 *\n\nBEEF LIVER PKG\n\n1.216kg @ 49.9% R /kg 60.79 A\n\nONIONS LOOSE KG\n\n0.838kg @ 12.9% R /kg 10.89 *\n\nSPAR CARR VT1 1'S\n\n2 @ 1.2% 2.40 A\n\nSPAR MILK F/CR 1LT 19.49 *\n\nLIQUI FRUIT M/OR 300ML 16.99 A\n\nKOO BAKED BEANS 410GR\n\n2 @ 17.9% 35.98 A\n\nBUY 2 FOR R29.00 -6.98\n\nTOTAL FOR 18 ITEMS 382.06\n\nREWARDS Buy 2 Koo Baked 1.00\n\nTOTAL 381.06\n\nTENDERED EFT C/Card 381.06\n\nLoyalty Number: 8808157274367\n\nPOINTS EARNED:\n\nThis Sale: 189\n\nTAX INVOICE\n\n|  VAT rate | excl. | TAX | incl.  |\n| --- | --- | --- | --- |\n|  0.00% | 121.37 | 0.00 | 121.37 *  |\n|  15.00% | 226.69 | 34.00 | 260.69 A  |\n\nToday SPAR Saved You 15.98\n\nHi mosothoane, Card Number:\n\n***6482, Thank you for swiping your\n\nSPAR Rewards Card.\n\nSLIP / TILL / CASHIER / DATE / TIME\n\n2338 003 113 04.04.24 15:12\n\nCASHIER NAME: Ntswaki Mogadime\n\nTHANK YOU FOR SHOPPING\n\nAT GROBLERSDAL MALL SUPERSPAR\n\nHAVE A LOVELY DAY!\n\nCell No:\n\nGood Products, Good Service, Good Advice",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1920,
+     "width": 1080
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 278,
+      "top_left_y": 81,
+      "bottom_right_x": 815,
+      "bottom_right_y": 111,
+      "content": "Good Products, Good Service, Good Advice",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 480,
+      "top_left_y": 206,
+      "bottom_right_x": 609,
+      "bottom_right_y": 225,
+      "content": "On id For You",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 438,
+      "top_left_y": 225,
+      "bottom_right_x": 661,
+      "bottom_right_y": 244,
+      "content": "Good Products, Good Service, Good Advice",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 438,
+      "top_left_y": 263,
+      "bottom_right_x": 651,
+      "bottom_right_y": 298,
+      "content": "Groblersdal Mall",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 476,
+      "top_left_y": 298,
+      "bottom_right_x": 598,
+      "bottom_right_y": 325,
+      "content": "Superspar",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 426,
+      "top_left_y": 321,
+      "bottom_right_x": 651,
+      "bottom_right_y": 348,
+      "content": "Tel: 0 3 262 2494",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 426,
+      "top_left_y": 348,
+      "bottom_right_x": 651,
+      "bottom_right_y": 375,
+      "content": "Tel: 0 3 262 2495",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 438,
+      "top_left_y": 375,
+      "bottom_right_x": 638,
+      "bottom_right_y": 402,
+      "content": "VAT: 4740276029",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 390,
+      "bottom_right_x": 612,
+      "bottom_right_y": 432,
+      "content": "Customer: Loyalty Customer",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 739,
+      "top_left_y": 423,
+      "bottom_right_x": 758,
+      "bottom_right_y": 454,
+      "content": "R",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 442,
+      "bottom_right_x": 825,
+      "bottom_right_y": 480,
+      "content": "L/STAR TOMATO 400GR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 332,
+      "top_left_y": 480,
+      "bottom_right_x": 825,
+      "bottom_right_y": 505,
+      "content": "2 @ 24.9% 49.98 *",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 502,
+      "bottom_right_x": 825,
+      "bottom_right_y": 530,
+      "content": "CHIEF'S CHOICE INDINA W PKG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 530,
+      "bottom_right_x": 825,
+      "bottom_right_y": 557,
+      "content": "0.586kg @ 92.9% R /kg 54.49 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 555,
+      "bottom_right_x": 825,
+      "bottom_right_y": 582,
+      "content": "CHIEF'S CHOICE INDINA W PKG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 582,
+      "bottom_right_x": 825,
+      "bottom_right_y": 609,
+      "content": "0.560kg @ 92.9% R /kg 52.07 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 607,
+      "bottom_right_x": 825,
+      "bottom_right_y": 636,
+      "content": "KNORR SOUP 50GR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 332,
+      "top_left_y": 636,
+      "bottom_right_x": 825,
+      "bottom_right_y": 661,
+      "content": "4 @ 5.9% 23.96 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 659,
+      "bottom_right_x": 825,
+      "bottom_right_y": 686,
+      "content": "ROYCO SMOKEY BBQ 40GR 20.99 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 686,
+      "bottom_right_x": 825,
+      "bottom_right_y": 713,
+      "content": "TOMATOES LOOSE PKG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 713,
+      "bottom_right_x": 825,
+      "bottom_right_y": 738,
+      "content": "1.282kg @ 31.9% R /kg 41.01 *",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 738,
+      "bottom_right_x": 825,
+      "bottom_right_y": 765,
+      "content": "BEEF LIVER PKG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 765,
+      "bottom_right_x": 825,
+      "bottom_right_y": 790,
+      "content": "1.216kg @ 49.9% R /kg 60.79 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 790,
+      "bottom_right_x": 825,
+      "bottom_right_y": 817,
+      "content": "ONIONS LOOSE KG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 817,
+      "bottom_right_x": 825,
+      "bottom_right_y": 842,
+      "content": "0.838kg @ 12.9% R /kg 10.89 *",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 842,
+      "bottom_right_x": 825,
+      "bottom_right_y": 867,
+      "content": "SPAR CARR VT1 1'S",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 332,
+      "top_left_y": 867,
+      "bottom_right_x": 825,
+      "bottom_right_y": 892,
+      "content": "2 @ 1.2% 2.40 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 892,
+      "bottom_right_x": 825,
+      "bottom_right_y": 917,
+      "content": "SPAR MILK F/CR 1LT 19.49 *",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 917,
+      "bottom_right_x": 825,
+      "bottom_right_y": 944,
+      "content": "LIQUI FRUIT M/OR 300ML 16.99 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 944,
+      "bottom_right_x": 825,
+      "bottom_right_y": 971,
+      "content": "KOO BAKED BEANS 410GR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 332,
+      "top_left_y": 971,
+      "bottom_right_x": 825,
+      "bottom_right_y": 996,
+      "content": "2 @ 17.9% 35.98 A",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 289,
+      "top_left_y": 996,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1021,
+      "content": "BUY 2 FOR R29.00 -6.98",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1021,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1046,
+      "content": "TOTAL FOR 18 ITEMS 382.06",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1046,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1072,
+      "content": "REWARDS Buy 2 Koo Baked 1.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1072,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1097,
+      "content": "TOTAL 381.06",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1097,
+      "bottom_right_x": 796,
+      "bottom_right_y": 1124,
+      "content": "TENDERED EFT C/Card 381.06",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1124,
+      "bottom_right_x": 644,
+      "bottom_right_y": 1151,
+      "content": "Loyalty Number: 8808157274367",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1151,
+      "bottom_right_x": 444,
+      "bottom_right_y": 1178,
+      "content": "POINTS EARNED:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 289,
+      "top_left_y": 1178,
+      "bottom_right_x": 714,
+      "bottom_right_y": 1207,
+      "content": "This Sale: 189",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 471,
+      "top_left_y": 1226,
+      "bottom_right_x": 619,
+      "bottom_right_y": 1257,
+      "content": "TAX INVOICE",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 257,
+      "top_left_y": 1257,
+      "bottom_right_x": 827,
+      "bottom_right_y": 1345,
+      "content": "|  VAT rate | excl. | TAX | incl.  |\n| --- | --- | --- | --- |\n|  0.00% | 121.37 | 0.00 | 121.37 *  |\n|  15.00% | 226.69 | 34.00 | 260.69 A  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 259,
+      "top_left_y": 1361,
+      "bottom_right_x": 799,
+      "bottom_right_y": 1428,
+      "content": "Today SPAR Saved You 15.98",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 253,
+      "top_left_y": 1441,
+      "bottom_right_x": 614,
+      "bottom_right_y": 1478,
+      "content": "Hi mosothoane, Card Number:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 253,
+      "top_left_y": 1478,
+      "bottom_right_x": 811,
+      "bottom_right_y": 1505,
+      "content": "***6482, Thank you for swiping your",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 253,
+      "top_left_y": 1505,
+      "bottom_right_x": 490,
+      "bottom_right_y": 1532,
+      "content": "SPAR Rewards Card.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 249,
+      "top_left_y": 1551,
+      "bottom_right_x": 811,
+      "bottom_right_y": 1582,
+      "content": "SLIP / TILL / CASHIER / DATE / TIME",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 1582,
+      "bottom_right_x": 811,
+      "bottom_right_y": 1611,
+      "content": "2338 003 113 04.04.24 15:12",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 249,
+      "top_left_y": 1611,
+      "bottom_right_x": 657,
+      "bottom_right_y": 1639,
+      "content": "CASHIER NAME: Ntswaki Mogadime",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 385,
+      "top_left_y": 1639,
+      "bottom_right_x": 686,
+      "bottom_right_y": 1668,
+      "content": "THANK YOU FOR SHOPPING",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 246,
+      "top_left_y": 1664,
+      "bottom_right_x": 644,
+      "bottom_right_y": 1695,
+      "content": "AT GROBLERSDAL MALL SUPERSPAR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 246,
+      "top_left_y": 1695,
+      "bottom_right_x": 489,
+      "bottom_right_y": 1728,
+      "content": "HAVE A LOVELY DAY!",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 244,
+      "top_left_y": 1795,
+      "bottom_right_x": 354,
+      "bottom_right_y": 1828,
+      "content": "Cell No:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 257,
+      "top_left_y": 1826,
+      "bottom_right_x": 811,
+      "bottom_right_y": 1864,
+      "content": "Good Products, Good Service, Good Advice",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 2125436
+  },
+  "document_annotation": "{\"cashier_info\": {\"cashier_number\": \"113\", \"date\": \"04.04.24\", \"name\": \"Ntswaki Mogadime\", \"slip_number\": \"2338\", \"time\": \"15:12\", \"till_number\": \"003\"}, \"customer_name\": \"Loyalty Customer\", \"items\": [{\"description\": \"L/STAR TOMATO 400GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 2, \"total_price\": 49.98, \"total_price_with_discount\": 49.98, \"unit_price\": 24.99}, {\"description\": \"CHIEF'S CHOICE INDINA W PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.586, \"total_price\": 54.49, \"total_price_with_discount\": 54.49, \"unit_price\": 92.9}, {\"description\": \"CHIEF'S CHOICE INDINA W PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.56, \"total_price\": 52.07, \"total_price_with_discount\": 52.07, \"unit_price\": 92.9}, {\"description\": \"KNORR SOUP 50GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 4, \"total_price\": 23.96, \"total_price_with_discount\": 23.96, \"unit_price\": 5.99}, {\"description\": \"ROYCO SMOKEY BBQ 40GR\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 20.99, \"total_price_with_discount\": 20.99, \"unit_price\": 20.99}, {\"description\": \"TOMATOES LOOSE PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1.282, \"total_price\": 41.01, \"total_price_with_discount\": 41.01, \"unit_price\": 31.99}, {\"description\": \"BEEF LIVER PKG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1.216, \"total_price\": 60.79, \"total_price_with_discount\": 60.79, \"unit_price\": 49.99}, {\"description\": \"ONIONS LOOSE KG\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 0.838, \"total_price\": 10.89, \"total_price_with_discount\": 10.89, \"unit_price\": 12.99}, {\"description\": \"SPAR CARR VT1 1'S\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 2, \"total_price\": 2.4, \"total_price_with_discount\": 2.4, \"unit_price\": 1.2}, {\"description\": \"SPAR MILK F/CR 1LT\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 19.49, \"total_price_with_discount\": 19.49, \"unit_price\": 19.49}, {\"description\": \"LIQUI FRUIT M/OR 300ML\", \"discount\": 0, \"discount_description\": \"\", \"quantity\": 1, \"total_price\": 16.99, \"total_price_with_discount\": 16.99, \"unit_price\": 16.99}, {\"description\": \"KOO BAKED BEANS 410GR\", \"discount\": 6.98, \"discount_description\": \"BUY 2 FOR R29.00\", \"quantity\": 2, \"total_price\": 35.98, \"total_price_with_discount\": 29, \"unit_price\": 17.99}], \"store_name\": \"Superspar Groblersdal Mall\", \"totals\": {\"subtotal\": 382.06, \"total\": 381.06, \"total_items\": 18}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

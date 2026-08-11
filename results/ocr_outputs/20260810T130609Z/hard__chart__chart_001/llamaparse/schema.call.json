@@ -1,0 +1,202 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\",\n      \"description\": \"\"\n    },\n    \"eduction_investments\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"month\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"education_type\": {\n            \"enum\": [\n              \"preschool\",\n              \"k-12\",\n              \"higher\",\n              \"online\",\n              \"vocational\"\n            ],\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"investment_amount\": {\n            \"type\": \"string\",\n            \"description\": \"in millions\"\n          }\n        },\n        \"description\": \"\"\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 26.786750000086613,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"title\": \"2022 Education Industry Investment Analysis (Millions)\", \"eduction_investments\": [{\"month\": \"January\", \"education_type\": \"preschool\", \"investment_amount\": \"45.1\"}, {\"month\": \"February\", \"education_type\": \"preschool\", \"investment_amount\": \"32.7\"}, {\"month\": \"March\", \"education_type\": \"preschool\", \"investment_amount\": \"9.8\"}, {\"month\": \"January\", \"education_type\": \"k-12\", \"investment_amount\": \"52.6\"}, {\"month\": \"February\", \"education_type\": \"k-12\", \"investment_amount\": \"38.4\"}, {\"month\": \"March\", \"education_type\": \"k-12\", \"investment_amount\": \"14.2\"}, {\"month\": \"January\", \"education_type\": \"higher\", \"investment_amount\": \"57.8\"}, {\"month\": \"February\", \"education_type\": \"higher\", \"investment_amount\": \"41.5\"}, {\"month\": \"March\", \"education_type\": \"higher\", \"investment_amount\": \"12.9\"}, {\"month\": \"January\", \"education_type\": \"online\", \"investment_amount\": \"48.5\"}, {\"month\": \"February\", \"education_type\": \"online\", \"investment_amount\": \"33.9\"}, {\"month\": \"March\", \"education_type\": \"online\", \"investment_amount\": \"10.5\"}, {\"month\": \"January\", \"education_type\": \"vocational\", \"investment_amount\": \"53.2\"}, {\"month\": \"February\", \"education_type\": \"vocational\", \"investment_amount\": \"43.2\"}, {\"month\": \"March\", \"education_type\": \"vocational\", \"investment_amount\": \"11.7\"}]}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:38:58.339480+00:00",
+  "data": {
+   "title": "2022 Education Industry Investment Analysis (Millions)",
+   "eduction_investments": [
+    {
+     "month": "January",
+     "education_type": "preschool",
+     "investment_amount": "45.1"
+    },
+    {
+     "month": "February",
+     "education_type": "preschool",
+     "investment_amount": "32.7"
+    },
+    {
+     "month": "March",
+     "education_type": "preschool",
+     "investment_amount": "9.8"
+    },
+    {
+     "month": "January",
+     "education_type": "k-12",
+     "investment_amount": "52.6"
+    },
+    {
+     "month": "February",
+     "education_type": "k-12",
+     "investment_amount": "38.4"
+    },
+    {
+     "month": "March",
+     "education_type": "k-12",
+     "investment_amount": "14.2"
+    },
+    {
+     "month": "January",
+     "education_type": "higher",
+     "investment_amount": "57.8"
+    },
+    {
+     "month": "February",
+     "education_type": "higher",
+     "investment_amount": "41.5"
+    },
+    {
+     "month": "March",
+     "education_type": "higher",
+     "investment_amount": "12.9"
+    },
+    {
+     "month": "January",
+     "education_type": "online",
+     "investment_amount": "48.5"
+    },
+    {
+     "month": "February",
+     "education_type": "online",
+     "investment_amount": "33.9"
+    },
+    {
+     "month": "March",
+     "education_type": "online",
+     "investment_amount": "10.5"
+    },
+    {
+     "month": "January",
+     "education_type": "vocational",
+     "investment_amount": "53.2"
+    },
+    {
+     "month": "February",
+     "education_type": "vocational",
+     "investment_amount": "43.2"
+    },
+    {
+     "month": "March",
+     "education_type": "vocational",
+     "investment_amount": "11.7"
+    }
+   ]
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "title": {
+     "description": "",
+     "type": "string"
+    },
+    "eduction_investments": {
+     "type": "array",
+     "items": {
+      "description": "",
+      "type": "object",
+      "properties": {
+       "month": {
+        "description": "",
+        "type": "string"
+       },
+       "education_type": {
+        "description": "",
+        "type": "string",
+        "enum": [
+         "preschool",
+         "k-12",
+         "higher",
+         "online",
+         "vocational"
+        ]
+       },
+       "investment_amount": {
+        "description": "in millions",
+        "type": "string"
+       }
+      },
+      "required": [
+       "month",
+       "education_type",
+       "investment_amount"
+      ],
+      "additionalProperties": false
+     }
+    }
+   },
+   "required": [
+    "title",
+    "eduction_investments"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "f49b5de4-235f-43df-84d1-cf763961cb3b",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 167,
+    "num_output_tokens": 273
+   },
+   "parse_job_id": "b19f2e24-b1d1-459d-8671-6860122a2a56"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "3025877f-0e1f-4479-9401-5e2d366c5aae",
+  "from_ui": false,
+  "id": "bea88550-5997-4421-9cc5-0b33b50d2911",
+  "job_id": "b7269012-30de-4492-a829-773621153ccb",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:39:21.789759+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

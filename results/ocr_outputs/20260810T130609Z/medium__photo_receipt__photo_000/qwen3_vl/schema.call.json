@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\",\n            \"description\": \"don't include #product id\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.870799726333334,
+ "cost_per_page": 0.004074335010075333,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.5,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.2,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.4\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.8,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.8\n    }\n  ],\n  \"totals\": {\n    \"total\": 27,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": \"null\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-ad26b56e2a8dff1e",
+   "object": "chat.completion",
+   "created": 1786376954,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.5,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.2,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.4\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.8,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.8\n    }\n  ],\n  \"totals\": {\n    \"total\": 27,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": \"null\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 1916,
+    "total_tokens": 2184,
+    "completion_tokens": 268,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.870799726333334,
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "e64af0c5c3c14fb6aab4471e15cbd215",
+  "batch_gpu_seconds": 140.899193432,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.870799726333334,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.5,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.2,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.4\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.8,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.8\n    }\n  ],\n  \"totals\": {\n    \"total\": 27,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": \"null\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-ad26b56e2a8dff1e",
+    "object": "chat.completion",
+    "created": 1786376954,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.5,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.2,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.4\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.8,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.8\n    }\n  ],\n  \"totals\": {\n    \"total\": 27,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": \"null\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 1916,
+     "total_tokens": 2184,
+     "completion_tokens": 268,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\",\n            \"description\": \"don't include #product id\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+  "gpu_seconds": 5.870799726333334,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_000.png",
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true
+ }
+}

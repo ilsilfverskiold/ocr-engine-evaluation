@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_005.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"additionalProperties\": {\n    \"type\": [\n      \"string\",\n      \"null\"\n    ]\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 7.4904517595,
+ "cost_per_page": 0.0051983735210929995,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\",\n  \"COURT\": \"San Francisco Superior Court - No. 996382\",\n  \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\",\n  \"DATE FILED\": \"August 3, 1998\",\n  \"CASE TYPE\": \"Asbestos\",\n  \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith& Tigerman Stephen M. Tigerman 101 California Street, Suite 2200 San Francisco, California 94111 415/986-5566\",\n  \"LORILLARD COUNSEL\": null,\n  \"JUDGE\": null,\n  \"TRIAL DATE\": null\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-b6afe13a564c81ea",
+   "object": "chat.completion",
+   "created": 1786377548,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\",\n  \"COURT\": \"San Francisco Superior Court - No. 996382\",\n  \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\",\n  \"DATE FILED\": \"August 3, 1998\",\n  \"CASE TYPE\": \"Asbestos\",\n  \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith& Tigerman Stephen M. Tigerman 101 California Street, Suite 2200 San Francisco, California 94111 415/986-5566\",\n  \"LORILLARD COUNSEL\": null,\n  \"JUDGE\": null,\n  \"TRIAL DATE\": null\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 817,
+    "total_tokens": 1004,
+    "completion_tokens": 187,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 7.4904517595,
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "487960dfbcaa4442ae0577bab3ee6854",
+  "batch_gpu_seconds": 179.770842228,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 7.4904517595,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\",\n  \"COURT\": \"San Francisco Superior Court - No. 996382\",\n  \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\",\n  \"DATE FILED\": \"August 3, 1998\",\n  \"CASE TYPE\": \"Asbestos\",\n  \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith& Tigerman Stephen M. Tigerman 101 California Street, Suite 2200 San Francisco, California 94111 415/986-5566\",\n  \"LORILLARD COUNSEL\": null,\n  \"JUDGE\": null,\n  \"TRIAL DATE\": null\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-b6afe13a564c81ea",
+    "object": "chat.completion",
+    "created": 1786377548,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\",\n  \"COURT\": \"San Francisco Superior Court - No. 996382\",\n  \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\",\n  \"DATE FILED\": \"August 3, 1998\",\n  \"CASE TYPE\": \"Asbestos\",\n  \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith& Tigerman Stephen M. Tigerman 101 California Street, Suite 2200 San Francisco, California 94111 415/986-5566\",\n  \"LORILLARD COUNSEL\": null,\n  \"JUDGE\": null,\n  \"TRIAL DATE\": null\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 817,
+     "total_tokens": 1004,
+     "completion_tokens": 187,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"additionalProperties\": {\n    \"type\": [\n      \"string\",\n      \"null\"\n    ]\n  }\n}",
+  "gpu_seconds": 7.4904517595,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_005.png",
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true
+ }
+}

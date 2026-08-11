@@ -1,0 +1,202 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 10.352507792063989,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"62517865\", \"invoice_date\": \"06/02/2015\", \"seller\": \"Trujillo-Hunt\", \"client\": \"Lee and Sons\", \"seller_tax_id\": \"992-71-8540\", \"client_tax_id\": \"929-86-0601\", \"iban\": \"GB73HCPH34959888432899\"}, \"items\": [{\"item_desc\": \"Care & Repair of Furniture\", \"item_qty\": \"2,00\", \"item_net_price\": \"4,25\", \"item_net_worth\": \"8,50\", \"item_vat\": \"10%\", \"item_gross_worth\": \"9,35\"}], \"summary\": {\"total_net_worth\": \"8,50\", \"total_vat\": \"0,85\", \"total_gross_worth\": \"9,35\"}}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 14:17:38.092660+00:00",
+  "data": {
+   "header": {
+    "invoice_no": "62517865",
+    "invoice_date": "06/02/2015",
+    "seller": "Trujillo-Hunt",
+    "client": "Lee and Sons",
+    "seller_tax_id": "992-71-8540",
+    "client_tax_id": "929-86-0601",
+    "iban": "GB73HCPH34959888432899"
+   },
+   "items": [
+    {
+     "item_desc": "Care & Repair of Furniture",
+     "item_qty": "2,00",
+     "item_net_price": "4,25",
+     "item_net_worth": "8,50",
+     "item_vat": "10%",
+     "item_gross_worth": "9,35"
+    }
+   ],
+   "summary": {
+    "total_net_worth": "8,50",
+    "total_vat": "0,85",
+    "total_gross_worth": "9,35"
+   }
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "header": {
+     "type": "object",
+     "properties": {
+      "invoice_no": {
+       "type": "string"
+      },
+      "invoice_date": {
+       "type": "string"
+      },
+      "seller": {
+       "type": "string"
+      },
+      "client": {
+       "type": "string"
+      },
+      "seller_tax_id": {
+       "type": "string"
+      },
+      "client_tax_id": {
+       "type": "string"
+      },
+      "iban": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "invoice_no",
+      "invoice_date",
+      "seller",
+      "client",
+      "seller_tax_id",
+      "client_tax_id",
+      "iban"
+     ],
+     "additionalProperties": false
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "item_desc": {
+        "type": "string"
+       },
+       "item_qty": {
+        "type": "string"
+       },
+       "item_net_price": {
+        "type": "string"
+       },
+       "item_net_worth": {
+        "type": "string"
+       },
+       "item_vat": {
+        "type": "string"
+       },
+       "item_gross_worth": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "item_desc",
+       "item_qty",
+       "item_net_price",
+       "item_net_worth",
+       "item_vat",
+       "item_gross_worth"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "summary": {
+     "type": "object",
+     "properties": {
+      "total_net_worth": {
+       "type": "string"
+      },
+      "total_vat": {
+       "type": "string"
+      },
+      "total_gross_worth": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "total_net_worth",
+      "total_vat",
+      "total_gross_worth"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "required": [
+    "header",
+    "items",
+    "summary"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "ea4d8124-4505-4c6d-a443-500c700baaf5",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 290,
+    "num_output_tokens": 153
+   },
+   "parse_job_id": "30bae378-49d9-4277-a485-72af9e8f61e5"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "60cd727d-88bb-4000-bb90-fd9a76e5f843",
+  "from_ui": false,
+  "id": "40087354-2cf5-4124-aacd-2bd3c07932ff",
+  "job_id": "8a220dc3-6ad4-4bb7-bd02-47667741b82a",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 14:17:44.414727+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

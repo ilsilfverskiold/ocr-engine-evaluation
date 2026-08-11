@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"subtotal\": {\n          \"type\": \"number\",\n          \"description\": \"\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.745917792082764,
+ "cost_per_page": 0.00094625,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Afr ca\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"05:55:31\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": null\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1547,
+  "output_tokens": 373,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:05:42 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2703",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Afr ca\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"05:55:31\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": null\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0fBS\\xf6v\\xcdW\\xf9\\xc2\\xc1\\xeb\\xe5\\x86-X\\xeb\\xf8\\xce\\xf8\\xf4\\xb53\\xf4\\x93\\xcc\\\\4\\xf6l\\x05)\\x8dR\\xc5\\xd5\\x972{xq\\x7f^\\xf1\\x89\\xd6}'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "tNp5ao3jH8iOvdIP5pqEkQo",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 373,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1547,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 447
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1100
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 1920,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

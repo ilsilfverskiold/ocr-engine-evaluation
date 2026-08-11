@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.240260134624999,
+ "cost_per_page": 0.0008607405334297493,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"items\": [{\"item_desc\": \"12\",\"item_qty\": \"Marble Lapis Inlay Chess Table Top With 2\",\"item_net_price\": \"2,00\",\"item_net_worth\": \"444,60\",\"item_vat\": \"889,20\",\"item_gross_worth\": \"10%\"}],\"summary\": {\"total_net_worth\": \"978,12\",\"total_vat\": \"978,12\",\"total_gross_worth\": \"978,12\"} }",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.240260134624999,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "9fe83e24018a4e3ab3800633cd302f4d",
+  "batch_gpu_seconds": 29.766243230999976,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.240260134624999,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"items\": [{\"item_desc\": \"12\",\"item_qty\": \"Marble Lapis Inlay Chess Table Top With 2\",\"item_net_price\": \"2,00\",\"item_net_worth\": \"444,60\",\"item_vat\": \"889,20\",\"item_gross_worth\": \"10%\"}],\"summary\": {\"total_net_worth\": \"978,12\",\"total_vat\": \"978,12\",\"total_gross_worth\": \"978,12\"} }",
+  "structured_output": {},
+  "gpu_seconds": 1.240260134624999,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

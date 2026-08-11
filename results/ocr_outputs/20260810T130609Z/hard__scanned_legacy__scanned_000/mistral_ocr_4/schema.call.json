@@ -1,0 +1,245 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/scanned_legacy/scanned_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"division\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"security_notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CC\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Ref\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"blend_percent\": {\n      \"type\": \"array\",\n      \"description\": \"Blend (%) sub-block of the trial table, one entry per component\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"component\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"specifications\": {\n      \"type\": \"array\",\n      \"description\": \"Remaining rows of the trial table, one entry per printed row\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"parameter\": {\n            \"type\": \"string\"\n          },\n          \"trial_1\": {\n            \"type\": \"string\"\n          },\n          \"trial_2\": {\n            \"type\": \"string\"\n          },\n          \"common\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"description\": \"Value printed once across both columns, null when each trial has its own value\"\n          }\n        }\n      }\n    },\n    \"signature_initials\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"typist_reference\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"document_code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"received_stamp_date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"bates_number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"TO\",\n    \"FROM\",\n    \"DATE\",\n    \"SUBJECT\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 6.568306959001347,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"company\": \"BROWN & WILLIAMSON TOBACCO CORPORATION\", \"division\": \"RESEARCH & DEVELOPMENT\", \"document_type\": \"INTERNAL CORRESPONDENCE\", \"security_notice\": \"SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\", \"TO\": \"MR. P. H. HARPER\", \"CC\": \"MR. T. E. SANDEFUR, DR. P. L. AULBACH\", \"FROM\": \"MR. D. S. ROTH\", \"DATE\": \"JANUARY 13, 1983\", \"SUBJECT\": \"KENT 80/KS TAR REDUCTION - FINLAND/907\", \"Ref\": \"S/R 107/82\", \"blend_percent\": [{\"component\": \"MGLF-31\", \"trial_1\": \"69.9\", \"trial_2\": \"69.9\"}, {\"component\": \"Oriental\", \"trial_1\": \"10.3\", \"trial_2\": \"10.3\"}, {\"component\": \"MRT\", \"trial_1\": \"5.0\", \"trial_2\": \"0.0\"}, {\"component\": \"F.C. WTS\", \"trial_1\": \"14.8\", \"trial_2\": \"19.8\"}], \"specifications\": [{\"parameter\": \"Final Casing\", \"trial_1\": \"MGE-651\", \"trial_2\": \"MGE-651\", \"common\": \"MGE-651\"}, {\"parameter\": \"Final Flavor\", \"trial_1\": \"MGE-603\", \"trial_2\": \"MGE-603\", \"common\": \"MGE-603\"}, {\"parameter\": \"Cigarette Paper\", \"trial_1\": null, \"trial_2\": \"Current KENT\", \"common\": null}, {\"parameter\": \"Density\", \"trial_1\": null, \"trial_2\": \"KENT GOLDEN LIGHTS (Less 2%)\", \"common\": null}, {\"parameter\": \"Filter Tow\", \"trial_1\": null, \"trial_2\": \"KENT GOLDEN LIGHTS\", \"common\": null}, {\"parameter\": \"Plugwrap\", \"trial_1\": null, \"trial_2\": \"9500 Coresta\", \"common\": null}, {\"parameter\": \"Tipping\", \"trial_1\": null, \"trial_2\": \"1100 Coresta MMP*\", \"common\": null}, {\"parameter\": \"Vent Target\", \"trial_1\": null, \"trial_2\": \"42-44%\", \"common\": null}], \"signature_initials\": \"DSR\", \"typist_reference\": \"DSR/bfw\", \"document_code\": \"0014x\", \"received_stamp\": \"RECEIVED\", \"received_stamp_date\": \"JAN 18 1983\", \"bates_number\": \"620441151\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# BROWN & WILLIAMSON TOBACCO CORPORATION\n\n# RESEARCH & DEVELOPMENT\n\n# INTERNAL CORRESPONDENCE\n\nTO: MR. P. H. HARPER\n\nCC: MR. T. E. SANDEFUR\n\nDR. P. L. AULBACH\n\nFROM: MR. D. S. ROTH\n\nDATE: JANUARY 13, 1983\n\nSUBJECT: KENT 80/KS TAR REDUCTION - FINLAND/907\n\nRef S/R 107/82\n\nSECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\n\nAfter evaluations and rejections of tar reduction samples 49B, 50B, and 51B we have reviewed deliveries and designs of several KENT products to find one which meets the 10.0 mg/cig. (DPM) and 0.7 mg/cig. nicotine constraints.\n\nWe propose the following two trials.\n\n|   | Trial 1 | Trial 2  |\n| --- | --- | --- |\n|  •Blend (%): |  |   |\n|  MGLF-31 | 69.9 | 69.9  |\n|  Oriental | 10.3 | 10.3  |\n|  MRT | 5.0 | 0.0  |\n|  F.C. WTS | 14.8 | 19.8  |\n|  •Final Casing | MGE-651 | MGE-651  |\n|  •Final Flavor | MGE-603 | MGE-603  |\n|  •Cigarette Paper | --- | Current KENT  |\n|  •Density | --- | KENT GOLDEN LIGHTS (Less 2%)  |\n|  •Filter Tow | --- | KENT GOLDEN LIGHTS  |\n|  •Plugwrap | --- | 9500 Coresta  |\n|  •Tipping | --- | 1100 Coresta MMP*  |\n|  •Vent Target | --- | 42-44%  |\n\n*We recommend the micromechanically perforated tipping because this is the only type of tipping with essentially invisible perforations at this high porosity level.\n\nD. S. Roth\n\nD. S. R.\n\nDSR/bfw\n\n0014x\n\nRECEIVED\n\nJAN 18 1983\n\n620441151",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3283,
+     "width": 2544
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 810,
+      "top_left_y": 194,
+      "bottom_right_x": 1777,
+      "bottom_right_y": 246,
+      "content": "# BROWN & WILLIAMSON TOBACCO CORPORATION",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 1006,
+      "top_left_y": 299,
+      "bottom_right_x": 1581,
+      "bottom_right_y": 355,
+      "content": "# RESEARCH & DEVELOPMENT",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 1001,
+      "top_left_y": 401,
+      "bottom_right_x": 1592,
+      "bottom_right_y": 450,
+      "content": "# INTERNAL CORRESPONDENCE",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 369,
+      "top_left_y": 601,
+      "bottom_right_x": 1016,
+      "bottom_right_y": 651,
+      "content": "TO: MR. P. H. HARPER",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 697,
+      "bottom_right_x": 1067,
+      "bottom_right_y": 743,
+      "content": "CC: MR. T. E. SANDEFUR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 598,
+      "top_left_y": 749,
+      "bottom_right_x": 1042,
+      "bottom_right_y": 795,
+      "content": "DR. P. L. AULBACH",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 841,
+      "bottom_right_x": 968,
+      "bottom_right_y": 894,
+      "content": "FROM: MR. D. S. ROTH",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 940,
+      "bottom_right_x": 1016,
+      "bottom_right_y": 992,
+      "content": "DATE: JANUARY 13, 1983",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 1038,
+      "bottom_right_x": 1569,
+      "bottom_right_y": 1091,
+      "content": "SUBJECT: KENT 80/KS TAR REDUCTION - FINLAND/907",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 1144,
+      "bottom_right_x": 738,
+      "bottom_right_y": 1193,
+      "content": "Ref S/R 107/82",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1431,
+      "top_left_y": 463,
+      "bottom_right_x": 2429,
+      "bottom_right_y": 756,
+      "content": "SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 369,
+      "top_left_y": 1285,
+      "bottom_right_x": 2175,
+      "bottom_right_y": 1495,
+      "content": "After evaluations and rejections of tar reduction samples 49B, 50B, and 51B we have reviewed deliveries and designs of several KENT products to find one which meets the 10.0 mg/cig. (DPM) and 0.7 mg/cig. nicotine constraints.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 372,
+      "top_left_y": 1538,
+      "bottom_right_x": 1291,
+      "bottom_right_y": 1594,
+      "content": "We propose the following two trials.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 379,
+      "top_left_y": 1627,
+      "bottom_right_x": 1935,
+      "bottom_right_y": 2386,
+      "content": "|   | Trial 1 | Trial 2  |\n| --- | --- | --- |\n|  •Blend (%): |  |   |\n|  MGLF-31 | 69.9 | 69.9  |\n|  Oriental | 10.3 | 10.3  |\n|  MRT | 5.0 | 0.0  |\n|  F.C. WTS | 14.8 | 19.8  |\n|  •Final Casing | MGE-651 | MGE-651  |\n|  •Final Flavor | MGE-603 | MGE-603  |\n|  •Cigarette Paper | --- | Current KENT  |\n|  •Density | --- | KENT GOLDEN LIGHTS (Less 2%)  |\n|  •Filter Tow | --- | KENT GOLDEN LIGHTS  |\n|  •Plugwrap | --- | 9500 Coresta  |\n|  •Tipping | --- | 1100 Coresta MMP*  |\n|  •Vent Target | --- | 42-44%  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 377,
+      "top_left_y": 2419,
+      "bottom_right_x": 2157,
+      "bottom_right_y": 2590,
+      "content": "*We recommend the micromechanically perforated tipping because this is the only type of tipping with essentially invisible perforations at this high porosity level.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 387,
+      "top_left_y": 2603,
+      "bottom_right_x": 901,
+      "bottom_right_y": 2793,
+      "content": "D. S. Roth",
+      "confidence_scores": null,
+      "type": "signature"
+     },
+     {
+      "top_left_x": 387,
+      "top_left_y": 2790,
+      "bottom_right_x": 593,
+      "bottom_right_y": 2833,
+      "content": "D. S. R.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 387,
+      "top_left_y": 2879,
+      "bottom_right_x": 576,
+      "bottom_right_y": 2928,
+      "content": "DSR/bfw",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 390,
+      "top_left_y": 2984,
+      "bottom_right_x": 530,
+      "bottom_right_y": 3033,
+      "content": "0014x",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1767,
+      "top_left_y": 2760,
+      "bottom_right_x": 2215,
+      "bottom_right_y": 2849,
+      "content": "RECEIVED",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1813,
+      "top_left_y": 2872,
+      "bottom_right_x": 2134,
+      "bottom_right_y": 2941,
+      "content": "JAN 18 1983",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1874,
+      "top_left_y": 3023,
+      "bottom_right_x": 2294,
+      "bottom_right_y": 3106,
+      "content": "620441151",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 126270
+  },
+  "document_annotation": "{\"company\": \"BROWN & WILLIAMSON TOBACCO CORPORATION\", \"division\": \"RESEARCH & DEVELOPMENT\", \"document_type\": \"INTERNAL CORRESPONDENCE\", \"security_notice\": \"SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.\", \"TO\": \"MR. P. H. HARPER\", \"CC\": \"MR. T. E. SANDEFUR, DR. P. L. AULBACH\", \"FROM\": \"MR. D. S. ROTH\", \"DATE\": \"JANUARY 13, 1983\", \"SUBJECT\": \"KENT 80/KS TAR REDUCTION - FINLAND/907\", \"Ref\": \"S/R 107/82\", \"blend_percent\": [{\"component\": \"MGLF-31\", \"trial_1\": \"69.9\", \"trial_2\": \"69.9\"}, {\"component\": \"Oriental\", \"trial_1\": \"10.3\", \"trial_2\": \"10.3\"}, {\"component\": \"MRT\", \"trial_1\": \"5.0\", \"trial_2\": \"0.0\"}, {\"component\": \"F.C. WTS\", \"trial_1\": \"14.8\", \"trial_2\": \"19.8\"}], \"specifications\": [{\"parameter\": \"Final Casing\", \"trial_1\": \"MGE-651\", \"trial_2\": \"MGE-651\", \"common\": \"MGE-651\"}, {\"parameter\": \"Final Flavor\", \"trial_1\": \"MGE-603\", \"trial_2\": \"MGE-603\", \"common\": \"MGE-603\"}, {\"parameter\": \"Cigarette Paper\", \"trial_1\": null, \"trial_2\": \"Current KENT\", \"common\": null}, {\"parameter\": \"Density\", \"trial_1\": null, \"trial_2\": \"KENT GOLDEN LIGHTS (Less 2%)\", \"common\": null}, {\"parameter\": \"Filter Tow\", \"trial_1\": null, \"trial_2\": \"KENT GOLDEN LIGHTS\", \"common\": null}, {\"parameter\": \"Plugwrap\", \"trial_1\": null, \"trial_2\": \"9500 Coresta\", \"common\": null}, {\"parameter\": \"Tipping\", \"trial_1\": null, \"trial_2\": \"1100 Coresta MMP*\", \"common\": null}, {\"parameter\": \"Vent Target\", \"trial_1\": null, \"trial_2\": \"42-44%\", \"common\": null}], \"signature_initials\": \"DSR\", \"typist_reference\": \"DSR/bfw\", \"document_code\": \"0014x\", \"received_stamp\": \"RECEIVED\", \"received_stamp_date\": \"JAN 18 1983\", \"bates_number\": \"620441151\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

@@ -1,0 +1,33 @@
+# Secrets
+.env
+
+# Document images + GT sidecars live on HuggingFace
+# (https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark).
+# Fetch with: python scripts/download_data.py
+# The three corpus metadata files are committed — the report needs them.
+documents/*
+!documents/manifest.json
+!documents/gt_limitations.json
+!documents/gt_provenance.json
+
+# Run logs are local noise; everything else in results/ is committed
+# (reference run, raw engine outputs, judge caches) so --report works
+# straight after clone.
+results/logs/
+
+# Python
+__pycache__/
+*.py[co]
+.venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Modal local state
+.modal/
+
+# Test cache
+.pytest_cache/

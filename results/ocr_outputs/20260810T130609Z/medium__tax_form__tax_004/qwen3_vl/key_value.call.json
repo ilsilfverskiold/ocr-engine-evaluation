@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_004.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "response_format": "json",
+ "json_schema_sent": false,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.862737404250008,
+ "cost_per_page": 0.004068739758549505,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"Form\": \"1040\",\n  \"Department of the Treasury—Internal Revenue Service\": \"U.S. Individual Income Tax Return\",\n  \"For the year Jan. 1–Dec. 31, 2024, or other tax year beginning\": \"1/01\",\n  \"ending\": \"12/31\",\n  \"OMB No.\": \"1545-0074\",\n  \"IRS Use Only—Do not write or staple in this space.\": \"See separate instructions.\",\n  \"Your first name and middle initial\": \"Alisa E\",\n  \"Last name\": \"Will\",\n  \"If joint return, spouse’s first name and middle initial\": \"Jammie B\",\n  \"Last name\": \"Pfannerstill\",\n  \"Home address (number and street). If you have a P.O. box, see instructions.\": \"2424 Oberbrunner Crescent\",\n  \"Apt. no.\": \"Suite 979\",\n  \"City, town, or post office. If you have a foreign address, also complete spaces below.\": \"Delano\",\n  \"State\": \"VA\",\n  \"ZIP code\": \"22386\",\n  \"Foreign country name\": null,\n  \"Foreign province/state/county\": null,\n  \"Foreign postal code\": null,\n  \"Your social security number\": \"503-22-1665\",\n  \"Spouse's social security number\": \"744-07-9614\",\n  \"Presidential Election Campaign Check here if you, or your spouse if filing jointly, want $3 to go to this fund. Checking a box below will not change your tax or refund.\": \"You\",\n  \"Filing Status\": \"Married filing separately (MFS)\",\n  \"Digital Assets At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)\": \"Yes\",\n  \"Standard Deduction Someone can claim:\": \"You as a dependent\",\n  \"Age/Blindness You:\": \"Are blind\",\n  \"Spouse:\": \"Is blind\",\n  \"Dependents (see instructions):\": null,\n  \"If more than four dependents, see instructions and check here .\": null,\n  \"Income 1a Total amount from Form(s) W-2, box 1 (see instructions)\": \"116682\",\n  \"b Household employee wages not reported on Form(s) W-2 .\": \"2882\",\n  \"c Tip income not reported on Form(s) W-2 (see instructions)\": \"7756\",\n  \"d Medicaid waiver payments not reported on Form(s) W-2, line 26\": \"1870\",\n  \"e Taxable dependent care benefits from Form 2441, line 26\": null,\n  \"f Employer-provided adoption benefits from Form 8919, line 6\": null,\n  \"g Wages from Form 8919, line 6\": \"1490\",\n  \"h Other earned income (see instructions)\": null,\n  \"i Nontaxable combat pay election (see instructions)\": null,\n  \"z Add lines 1a through 1h\": \"8810\",\n  \"2a Tax-exempt interest\": \"7953\",\n  \"3a Qualified dividends\": \"2152\",\n  \"4a IRA distributions\": \"9755\",\n  \"5a Pensions and annuities\": \"7872\",\n  \"6a Social security benefits\": null,\n  \"7 Capital gain or (loss). Attach Schedule D if required. If not required, check here\": \"4927\",\n  \"8 Additional income from Schedule 1, line 10\": \"9415\",\n  \"9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income\": \"153832\",\n  \"10 Adjustments to income from Schedule 1, line 26. This is your adjusted gross income\": \"153832\",\n  \"11 Standard deduction or itemized deductions (from Schedule A)\": \"322\",\n  \"12 Qualified business income deduction from Form 8995 or Form 8995-A\": \"322\",\n  \"13 Add lines 12 and 13 . If zero or less, enter -0-. This is your taxable income\": \"153510\",\n  \"For Disclosure, Privacy Act, and Paperwork Reduction Act Notice, see separate instructions.\": null,\n  \"Cat. No.\": \"11320B\",\n  \"Form 1040 (2024)\": \"Form 1040 (2024)\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-9f2e0c6c85eec6f2",
+   "object": "chat.completion",
+   "created": 1786376032,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"Form\": \"1040\",\n  \"Department of the Treasury—Internal Revenue Service\": \"U.S. Individual Income Tax Return\",\n  \"For the year Jan. 1–Dec. 31, 2024, or other tax year beginning\": \"1/01\",\n  \"ending\": \"12/31\",\n  \"OMB No.\": \"1545-0074\",\n  \"IRS Use Only—Do not write or staple in this space.\": \"See separate instructions.\",\n  \"Your first name and middle initial\": \"Alisa E\",\n  \"Last name\": \"Will\",\n  \"If joint return, spouse’s first name and middle initial\": \"Jammie B\",\n  \"Last name\": \"Pfannerstill\",\n  \"Home address (number and street). If you have a P.O. box, see instructions.\": \"2424 Oberbrunner Crescent\",\n  \"Apt. no.\": \"Suite 979\",\n  \"City, town, or post office. If you have a foreign address, also complete spaces below.\": \"Delano\",\n  \"State\": \"VA\",\n  \"ZIP code\": \"22386\",\n  \"Foreign country name\": null,\n  \"Foreign province/state/county\": null,\n  \"Foreign postal code\": null,\n  \"Your social security number\": \"503-22-1665\",\n  \"Spouse's social security number\": \"744-07-9614\",\n  \"Presidential Election Campaign Check here if you, or your spouse if filing jointly, want $3 to go to this fund. Checking a box below will not change your tax or refund.\": \"You\",\n  \"Filing Status\": \"Married filing separately (MFS)\",\n  \"Digital Assets At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)\": \"Yes\",\n  \"Standard Deduction Someone can claim:\": \"You as a dependent\",\n  \"Age/Blindness You:\": \"Are blind\",\n  \"Spouse:\": \"Is blind\",\n  \"Dependents (see instructions):\": null,\n  \"If more than four dependents, see instructions and check here .\": null,\n  \"Income 1a Total amount from Form(s) W-2, box 1 (see instructions)\": \"116682\",\n  \"b Household employee wages not reported on Form(s) W-2 .\": \"2882\",\n  \"c Tip income not reported on Form(s) W-2 (see instructions)\": \"7756\",\n  \"d Medicaid waiver payments not reported on Form(s) W-2, line 26\": \"1870\",\n  \"e Taxable dependent care benefits from Form 2441, line 26\": null,\n  \"f Employer-provided adoption benefits from Form 8919, line 6\": null,\n  \"g Wages from Form 8919, line 6\": \"1490\",\n  \"h Other earned income (see instructions)\": null,\n  \"i Nontaxable combat pay election (see instructions)\": null,\n  \"z Add lines 1a through 1h\": \"8810\",\n  \"2a Tax-exempt interest\": \"7953\",\n  \"3a Qualified dividends\": \"2152\",\n  \"4a IRA distributions\": \"9755\",\n  \"5a Pensions and annuities\": \"7872\",\n  \"6a Social security benefits\": null,\n  \"7 Capital gain or (loss). Attach Schedule D if required. If not required, check here\": \"4927\",\n  \"8 Additional income from Schedule 1, line 10\": \"9415\",\n  \"9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income\": \"153832\",\n  \"10 Adjustments to income from Schedule 1, line 26. This is your adjusted gross income\": \"153832\",\n  \"11 Standard deduction or itemized deductions (from Schedule A)\": \"322\",\n  \"12 Qualified business income deduction from Form 8995 or Form 8995-A\": \"322\",\n  \"13 Add lines 12 and 13 . If zero or less, enter -0-. This is your taxable income\": \"153510\",\n  \"For Disclosure, Privacy Act, and Paperwork Reduction Act Notice, see separate instructions.\": null,\n  \"Cat. No.\": \"11320B\",\n  \"Form 1040 (2024)\": \"Form 1040 (2024)\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 3707,
+    "total_tokens": 4803,
+    "completion_tokens": 1096,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.862737404250008,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "109550d600c9445b9b188cd754fc064c",
+  "batch_gpu_seconds": 140.70569770200018,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.862737404250008,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"Form\": \"1040\",\n  \"Department of the Treasury—Internal Revenue Service\": \"U.S. Individual Income Tax Return\",\n  \"For the year Jan. 1–Dec. 31, 2024, or other tax year beginning\": \"1/01\",\n  \"ending\": \"12/31\",\n  \"OMB No.\": \"1545-0074\",\n  \"IRS Use Only—Do not write or staple in this space.\": \"See separate instructions.\",\n  \"Your first name and middle initial\": \"Alisa E\",\n  \"Last name\": \"Will\",\n  \"If joint return, spouse’s first name and middle initial\": \"Jammie B\",\n  \"Last name\": \"Pfannerstill\",\n  \"Home address (number and street). If you have a P.O. box, see instructions.\": \"2424 Oberbrunner Crescent\",\n  \"Apt. no.\": \"Suite 979\",\n  \"City, town, or post office. If you have a foreign address, also complete spaces below.\": \"Delano\",\n  \"State\": \"VA\",\n  \"ZIP code\": \"22386\",\n  \"Foreign country name\": null,\n  \"Foreign province/state/county\": null,\n  \"Foreign postal code\": null,\n  \"Your social security number\": \"503-22-1665\",\n  \"Spouse's social security number\": \"744-07-9614\",\n  \"Presidential Election Campaign Check here if you, or your spouse if filing jointly, want $3 to go to this fund. Checking a box below will not change your tax or refund.\": \"You\",\n  \"Filing Status\": \"Married filing separately (MFS)\",\n  \"Digital Assets At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)\": \"Yes\",\n  \"Standard Deduction Someone can claim:\": \"You as a dependent\",\n  \"Age/Blindness You:\": \"Are blind\",\n  \"Spouse:\": \"Is blind\",\n  \"Dependents (see instructions):\": null,\n  \"If more than four dependents, see instructions and check here .\": null,\n  \"Income 1a Total amount from Form(s) W-2, box 1 (see instructions)\": \"116682\",\n  \"b Household employee wages not reported on Form(s) W-2 .\": \"2882\",\n  \"c Tip income not reported on Form(s) W-2 (see instructions)\": \"7756\",\n  \"d Medicaid waiver payments not reported on Form(s) W-2, line 26\": \"1870\",\n  \"e Taxable dependent care benefits from Form 2441, line 26\": null,\n  \"f Employer-provided adoption benefits from Form 8919, line 6\": null,\n  \"g Wages from Form 8919, line 6\": \"1490\",\n  \"h Other earned income (see instructions)\": null,\n  \"i Nontaxable combat pay election (see instructions)\": null,\n  \"z Add lines 1a through 1h\": \"8810\",\n  \"2a Tax-exempt interest\": \"7953\",\n  \"3a Qualified dividends\": \"2152\",\n  \"4a IRA distributions\": \"9755\",\n  \"5a Pensions and annuities\": \"7872\",\n  \"6a Social security benefits\": null,\n  \"7 Capital gain or (loss). Attach Schedule D if required. If not required, check here\": \"4927\",\n  \"8 Additional income from Schedule 1, line 10\": \"9415\",\n  \"9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income\": \"153832\",\n  \"10 Adjustments to income from Schedule 1, line 26. This is your adjusted gross income\": \"153832\",\n  \"11 Standard deduction or itemized deductions (from Schedule A)\": \"322\",\n  \"12 Qualified business income deduction from Form 8995 or Form 8995-A\": \"322\",\n  \"13 Add lines 12 and 13 . If zero or less, enter -0-. This is your taxable income\": \"153510\",\n  \"For Disclosure, Privacy Act, and Paperwork Reduction Act Notice, see separate instructions.\": null,\n  \"Cat. No.\": \"11320B\",\n  \"Form 1040 (2024)\": \"Form 1040 (2024)\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-9f2e0c6c85eec6f2",
+    "object": "chat.completion",
+    "created": 1786376032,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"Form\": \"1040\",\n  \"Department of the Treasury—Internal Revenue Service\": \"U.S. Individual Income Tax Return\",\n  \"For the year Jan. 1–Dec. 31, 2024, or other tax year beginning\": \"1/01\",\n  \"ending\": \"12/31\",\n  \"OMB No.\": \"1545-0074\",\n  \"IRS Use Only—Do not write or staple in this space.\": \"See separate instructions.\",\n  \"Your first name and middle initial\": \"Alisa E\",\n  \"Last name\": \"Will\",\n  \"If joint return, spouse’s first name and middle initial\": \"Jammie B\",\n  \"Last name\": \"Pfannerstill\",\n  \"Home address (number and street). If you have a P.O. box, see instructions.\": \"2424 Oberbrunner Crescent\",\n  \"Apt. no.\": \"Suite 979\",\n  \"City, town, or post office. If you have a foreign address, also complete spaces below.\": \"Delano\",\n  \"State\": \"VA\",\n  \"ZIP code\": \"22386\",\n  \"Foreign country name\": null,\n  \"Foreign province/state/county\": null,\n  \"Foreign postal code\": null,\n  \"Your social security number\": \"503-22-1665\",\n  \"Spouse's social security number\": \"744-07-9614\",\n  \"Presidential Election Campaign Check here if you, or your spouse if filing jointly, want $3 to go to this fund. Checking a box below will not change your tax or refund.\": \"You\",\n  \"Filing Status\": \"Married filing separately (MFS)\",\n  \"Digital Assets At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)\": \"Yes\",\n  \"Standard Deduction Someone can claim:\": \"You as a dependent\",\n  \"Age/Blindness You:\": \"Are blind\",\n  \"Spouse:\": \"Is blind\",\n  \"Dependents (see instructions):\": null,\n  \"If more than four dependents, see instructions and check here .\": null,\n  \"Income 1a Total amount from Form(s) W-2, box 1 (see instructions)\": \"116682\",\n  \"b Household employee wages not reported on Form(s) W-2 .\": \"2882\",\n  \"c Tip income not reported on Form(s) W-2 (see instructions)\": \"7756\",\n  \"d Medicaid waiver payments not reported on Form(s) W-2, line 26\": \"1870\",\n  \"e Taxable dependent care benefits from Form 2441, line 26\": null,\n  \"f Employer-provided adoption benefits from Form 8919, line 6\": null,\n  \"g Wages from Form 8919, line 6\": \"1490\",\n  \"h Other earned income (see instructions)\": null,\n  \"i Nontaxable combat pay election (see instructions)\": null,\n  \"z Add lines 1a through 1h\": \"8810\",\n  \"2a Tax-exempt interest\": \"7953\",\n  \"3a Qualified dividends\": \"2152\",\n  \"4a IRA distributions\": \"9755\",\n  \"5a Pensions and annuities\": \"7872\",\n  \"6a Social security benefits\": null,\n  \"7 Capital gain or (loss). Attach Schedule D if required. If not required, check here\": \"4927\",\n  \"8 Additional income from Schedule 1, line 10\": \"9415\",\n  \"9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income\": \"153832\",\n  \"10 Adjustments to income from Schedule 1, line 26. This is your adjusted gross income\": \"153832\",\n  \"11 Standard deduction or itemized deductions (from Schedule A)\": \"322\",\n  \"12 Qualified business income deduction from Form 8995 or Form 8995-A\": \"322\",\n  \"13 Add lines 12 and 13 . If zero or less, enter -0-. This is your taxable income\": \"153510\",\n  \"For Disclosure, Privacy Act, and Paperwork Reduction Act Notice, see separate instructions.\": null,\n  \"Cat. No.\": \"11320B\",\n  \"Form 1040 (2024)\": \"Form 1040 (2024)\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 3707,
+     "total_tokens": 4803,
+     "completion_tokens": 1096,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "gpu_seconds": 5.862737404250008,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_004.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

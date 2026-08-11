@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_003.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"gst_id_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"time\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"receipt_no\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"price\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"amount\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"cash\": {\n      \"type\": \"string\"\n    },\n    \"change\": {\n      \"type\": \"string\"\n    },\n    \"gst_included_in_total\": {\n      \"type\": \"string\"\n    },\n    \"footer_note\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"SWC ENTERPRISE SDN BHD\",\n  \"registration_no\": \"(1125830-V)\",\n  \"address\": \"No. 5-7, Jalan Mahagoni 7/1, Sekyosen 4, Bandar Utama, 44300 Batang Kali, Selangor.\",\n  \"tel\": \"03-6057 1377\",\n  \"document_type\": \"TAX INVOICE\",\n  \"gst_id_no\": \"002017808384\",\n  \"date\": \"08/01/2018\",\n  \"time\": \"11:07:06\",\n  \"cashier\": \"123\",\n  \"receipt_no\": \"0100080332\",\n  \"items\": [\n    {\n      \"description\": \"20X30 BEG 1KG91X30)\",\n      \"qty\": \"1\",\n      \"price\": \"8.00\",\n      \"amount\": \"8.00\"\n    }\n  ],\n  \"total_qty\": \"1\",\n  \"total\": \"8.00\",\n  \"cash\": \"10.00\",\n  \"change\": \"2.00\",\n  \"gst_included_in_total\": \"0.45\",\n  \"footer_note\": \"Thank You ! Please Come Again ! Goods Sold Only Exchangable Within 3 Days !\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-aa2125aa18d4707f",
+   "object": "chat.completion",
+   "created": 1786376393,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"company\": \"SWC ENTERPRISE SDN BHD\",\n  \"registration_no\": \"(1125830-V)\",\n  \"address\": \"No. 5-7, Jalan Mahagoni 7/1, Sekyosen 4, Bandar Utama, 44300 Batang Kali, Selangor.\",\n  \"tel\": \"03-6057 1377\",\n  \"document_type\": \"TAX INVOICE\",\n  \"gst_id_no\": \"002017808384\",\n  \"date\": \"08/01/2018\",\n  \"time\": \"11:07:06\",\n  \"cashier\": \"123\",\n  \"receipt_no\": \"0100080332\",\n  \"items\": [\n    {\n      \"description\": \"20X30 BEG 1KG91X30)\",\n      \"qty\": \"1\",\n      \"price\": \"8.00\",\n      \"amount\": \"8.00\"\n    }\n  ],\n  \"total_qty\": \"1\",\n  \"total\": \"8.00\",\n  \"cash\": \"10.00\",\n  \"change\": \"2.00\",\n  \"gst_included_in_total\": \"0.45\",\n  \"footer_note\": \"Thank You ! Please Come Again ! Goods Sold Only Exchangable Within 3 Days !\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 1007,
+    "total_tokens": 1331,
+    "completion_tokens": 324,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"company\": \"SWC ENTERPRISE SDN BHD\",\n  \"registration_no\": \"(1125830-V)\",\n  \"address\": \"No. 5-7, Jalan Mahagoni 7/1, Sekyosen 4, Bandar Utama, 44300 Batang Kali, Selangor.\",\n  \"tel\": \"03-6057 1377\",\n  \"document_type\": \"TAX INVOICE\",\n  \"gst_id_no\": \"002017808384\",\n  \"date\": \"08/01/2018\",\n  \"time\": \"11:07:06\",\n  \"cashier\": \"123\",\n  \"receipt_no\": \"0100080332\",\n  \"items\": [\n    {\n      \"description\": \"20X30 BEG 1KG91X30)\",\n      \"qty\": \"1\",\n      \"price\": \"8.00\",\n      \"amount\": \"8.00\"\n    }\n  ],\n  \"total_qty\": \"1\",\n  \"total\": \"8.00\",\n  \"cash\": \"10.00\",\n  \"change\": \"2.00\",\n  \"gst_included_in_total\": \"0.45\",\n  \"footer_note\": \"Thank You ! Please Come Again ! Goods Sold Only Exchangable Within 3 Days !\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-aa2125aa18d4707f",
+    "object": "chat.completion",
+    "created": 1786376393,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"company\": \"SWC ENTERPRISE SDN BHD\",\n  \"registration_no\": \"(1125830-V)\",\n  \"address\": \"No. 5-7, Jalan Mahagoni 7/1, Sekyosen 4, Bandar Utama, 44300 Batang Kali, Selangor.\",\n  \"tel\": \"03-6057 1377\",\n  \"document_type\": \"TAX INVOICE\",\n  \"gst_id_no\": \"002017808384\",\n  \"date\": \"08/01/2018\",\n  \"time\": \"11:07:06\",\n  \"cashier\": \"123\",\n  \"receipt_no\": \"0100080332\",\n  \"items\": [\n    {\n      \"description\": \"20X30 BEG 1KG91X30)\",\n      \"qty\": \"1\",\n      \"price\": \"8.00\",\n      \"amount\": \"8.00\"\n    }\n  ],\n  \"total_qty\": \"1\",\n  \"total\": \"8.00\",\n  \"cash\": \"10.00\",\n  \"change\": \"2.00\",\n  \"gst_included_in_total\": \"0.45\",\n  \"footer_note\": \"Thank You ! Please Come Again ! Goods Sold Only Exchangable Within 3 Days !\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 1007,
+     "total_tokens": 1331,
+     "completion_tokens": 324,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"gst_id_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"time\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"receipt_no\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"price\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"amount\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"total_qty\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"cash\": {\n      \"type\": \"string\"\n    },\n    \"change\": {\n      \"type\": \"string\"\n    },\n    \"gst_included_in_total\": {\n      \"type\": \"string\"\n    },\n    \"footer_note\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_003.jpg",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

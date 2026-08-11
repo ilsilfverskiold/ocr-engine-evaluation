@@ -1,0 +1,55 @@
+{
+ "engine": "claude_sonnet_4_6",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\",\n            \"description\": \"don't include #product id\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "claude-sonnet-4-6",
+ "latency_seconds": 6.59517629200127,
+ "cost_per_page": 0.009249,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "```json\n{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.50,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13.00\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.20,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.40\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.80,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.80\n    }\n  ],\n  \"totals\": {\n    \"total\": 27.00,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": null\n}\n```",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1548,
+  "output_tokens": 307,
+  "leg": "schema",
+  "stop_reason": "end_turn"
+ },
+ "raw_response": {
+  "id": "msg_011CduNb3JBZTS5b3JQ3DFVD",
+  "container": null,
+  "content": [
+   {
+    "citations": null,
+    "text": "```json\n{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"unit_price\": 6.50,\n      \"description\": \"taucu kisar\",\n      \"total_price\": 13.00\n    },\n    {\n      \"quantity\": 2,\n      \"unit_price\": 4.20,\n      \"description\": \"Teh wangi ros 180g\",\n      \"total_price\": 8.40\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 4.80,\n      \"description\": \"ASAM JAWA 1KG\",\n      \"total_price\": 4.80\n    }\n  ],\n  \"totals\": {\n    \"total\": 27.00,\n    \"total_items\": 5\n  },\n  \"store_info\": {\n    \"tel\": \"03-7846 1113\",\n    \"name\": \"SEMBOYAN TEGAS SDN BHD\"\n  },\n  \"cashier_info\": {\n    \"date\": \"06-03-2018\",\n    \"name\": \"CASHIER 4\",\n    \"time\": \"07:24:06\"\n  },\n  \"customer_name\": null\n}\n```",
+    "type": "text"
+   }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "inference_geo": "global",
+   "input_tokens": 1548,
+   "output_tokens": 307,
+   "output_tokens_details": null,
+   "server_tool_use": null,
+   "service_tier": "standard"
+  }
+ }
+}

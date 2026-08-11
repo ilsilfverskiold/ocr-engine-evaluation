@@ -1,0 +1,314 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"discount\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          },\n          \"discount_description\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"total_price_with_discount\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"subtotal\": {\n          \"type\": \"number\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_name\": {\n      \"type\": \"string\"\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"slip_number\": {\n          \"type\": \"string\"\n        },\n        \"till_number\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 26.75105545797851,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"items\": [{\"discount\": 0.0, \"quantity\": 2.0, \"unit_price\": 24.99, \"description\": \"L/STAR TOMATO 400GR\", \"total_price\": 49.98, \"discount_description\": \"\", \"total_price_with_discount\": 49.98}, {\"discount\": 0.0, \"quantity\": 0.586, \"unit_price\": 92.99, \"description\": \"CHIEF'S CHOICE INDUNA W PKG\", \"total_price\": 54.49, \"discount_description\": \"\", \"total_price_with_discount\": 54.49}, {\"discount\": 0.0, \"quantity\": 0.56, \"unit_price\": 92.99, \"description\": \"CHIEF'S CHOICE INDUNA W PKG\", \"total_price\": 52.07, \"discount_description\": \"\", \"total_price_with_discount\": 52.07}, {\"discount\": 0.0, \"quantity\": 4.0, \"unit_price\": 5.99, \"description\": \"KNORR SOUP 50GR\", \"total_price\": 23.96, \"discount_description\": \"\", \"total_price_with_discount\": 23.96}, {\"discount\": 0.0, \"quantity\": 1.0, \"unit_price\": 20.99, \"description\": \"ROYCO SMOKEY BBQ 40GR\", \"total_price\": 20.99, \"discount_description\": \"\", \"total_price_with_discount\": 20.99}, {\"discount\": 0.0, \"quantity\": 1.282, \"unit_price\": 31.99, \"description\": \"TOMATOES LOOSE PKG\", \"total_price\": 41.01, \"discount_description\": \"\", \"total_price_with_discount\": 41.01}, {\"discount\": 0.0, \"quantity\": 1.216, \"unit_price\": 49.99, \"description\": \"BEEF LIVER PKG\", \"total_price\": 60.79, \"discount_description\": \"\", \"total_price_with_discount\": 60.79}, {\"discount\": 0.0, \"quantity\": 0.838, \"unit_price\": 12.99, \"description\": \"ONIONS LOOSE KG\", \"total_price\": 10.89, \"discount_description\": \"\", \"total_price_with_discount\": 10.89}, {\"discount\": 0.0, \"quantity\": 2.0, \"unit_price\": 1.2, \"description\": \"SPAR CARR VT1 1'S\", \"total_price\": 2.4, \"discount_description\": \"\", \"total_price_with_discount\": 2.4}, {\"discount\": 0.0, \"quantity\": 1.0, \"unit_price\": 19.49, \"description\": \"SPAR MILK F/CR 1LT\", \"total_price\": 19.49, \"discount_description\": \"\", \"total_price_with_discount\": 19.49}, {\"discount\": 0.0, \"quantity\": 1.0, \"unit_price\": 16.99, \"description\": \"LIQUI FRUIT M/OR 300ML\", \"total_price\": 16.99, \"discount_description\": \"\", \"total_price_with_discount\": 16.99}, {\"discount\": 6.98, \"quantity\": 2.0, \"unit_price\": 17.99, \"description\": \"KOO BAKED BEANS 410GR\", \"total_price\": 35.98, \"discount_description\": \"BUY 2 FOR R29.00\", \"total_price_with_discount\": 29.0}], \"totals\": {\"total\": 381.06, \"subtotal\": 382.06, \"total_items\": 18.0}, \"store_name\": \"Groblersdal Mall Superspar\", \"cashier_info\": {\"date\": \"04.04.24\", \"name\": \"Ntswaki Mogadime\", \"time\": \"15:12\", \"slip_number\": \"2338\", \"till_number\": \"003\", \"cashier_number\": \"113\"}, \"customer_name\": \"Loyalty Customer\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:26:02.561965+00:00",
+  "data": {
+   "items": [
+    {
+     "discount": 0.0,
+     "quantity": 2.0,
+     "unit_price": 24.99,
+     "description": "L/STAR TOMATO 400GR",
+     "total_price": 49.98,
+     "discount_description": "",
+     "total_price_with_discount": 49.98
+    },
+    {
+     "discount": 0.0,
+     "quantity": 0.586,
+     "unit_price": 92.99,
+     "description": "CHIEF'S CHOICE INDUNA W PKG",
+     "total_price": 54.49,
+     "discount_description": "",
+     "total_price_with_discount": 54.49
+    },
+    {
+     "discount": 0.0,
+     "quantity": 0.56,
+     "unit_price": 92.99,
+     "description": "CHIEF'S CHOICE INDUNA W PKG",
+     "total_price": 52.07,
+     "discount_description": "",
+     "total_price_with_discount": 52.07
+    },
+    {
+     "discount": 0.0,
+     "quantity": 4.0,
+     "unit_price": 5.99,
+     "description": "KNORR SOUP 50GR",
+     "total_price": 23.96,
+     "discount_description": "",
+     "total_price_with_discount": 23.96
+    },
+    {
+     "discount": 0.0,
+     "quantity": 1.0,
+     "unit_price": 20.99,
+     "description": "ROYCO SMOKEY BBQ 40GR",
+     "total_price": 20.99,
+     "discount_description": "",
+     "total_price_with_discount": 20.99
+    },
+    {
+     "discount": 0.0,
+     "quantity": 1.282,
+     "unit_price": 31.99,
+     "description": "TOMATOES LOOSE PKG",
+     "total_price": 41.01,
+     "discount_description": "",
+     "total_price_with_discount": 41.01
+    },
+    {
+     "discount": 0.0,
+     "quantity": 1.216,
+     "unit_price": 49.99,
+     "description": "BEEF LIVER PKG",
+     "total_price": 60.79,
+     "discount_description": "",
+     "total_price_with_discount": 60.79
+    },
+    {
+     "discount": 0.0,
+     "quantity": 0.838,
+     "unit_price": 12.99,
+     "description": "ONIONS LOOSE KG",
+     "total_price": 10.89,
+     "discount_description": "",
+     "total_price_with_discount": 10.89
+    },
+    {
+     "discount": 0.0,
+     "quantity": 2.0,
+     "unit_price": 1.2,
+     "description": "SPAR CARR VT1 1'S",
+     "total_price": 2.4,
+     "discount_description": "",
+     "total_price_with_discount": 2.4
+    },
+    {
+     "discount": 0.0,
+     "quantity": 1.0,
+     "unit_price": 19.49,
+     "description": "SPAR MILK F/CR 1LT",
+     "total_price": 19.49,
+     "discount_description": "",
+     "total_price_with_discount": 19.49
+    },
+    {
+     "discount": 0.0,
+     "quantity": 1.0,
+     "unit_price": 16.99,
+     "description": "LIQUI FRUIT M/OR 300ML",
+     "total_price": 16.99,
+     "discount_description": "",
+     "total_price_with_discount": 16.99
+    },
+    {
+     "discount": 6.98,
+     "quantity": 2.0,
+     "unit_price": 17.99,
+     "description": "KOO BAKED BEANS 410GR",
+     "total_price": 35.98,
+     "discount_description": "BUY 2 FOR R29.00",
+     "total_price_with_discount": 29.0
+    }
+   ],
+   "totals": {
+    "total": 381.06,
+    "subtotal": 382.06,
+    "total_items": 18.0
+   },
+   "store_name": "Groblersdal Mall Superspar",
+   "cashier_info": {
+    "date": "04.04.24",
+    "name": "Ntswaki Mogadime",
+    "time": "15:12",
+    "slip_number": "2338",
+    "till_number": "003",
+    "cashier_number": "113"
+   },
+   "customer_name": "Loyalty Customer"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "discount": {
+        "description": "",
+        "type": "number"
+       },
+       "quantity": {
+        "type": "number"
+       },
+       "unit_price": {
+        "type": "number"
+       },
+       "description": {
+        "type": "string"
+       },
+       "total_price": {
+        "type": "number"
+       },
+       "discount_description": {
+        "description": "",
+        "type": "string"
+       },
+       "total_price_with_discount": {
+        "description": "",
+        "type": "number"
+       }
+      },
+      "required": [
+       "discount",
+       "quantity",
+       "unit_price",
+       "description",
+       "total_price",
+       "discount_description",
+       "total_price_with_discount"
+      ],
+      "additionalProperties": false
+     }
+    },
+    "totals": {
+     "type": "object",
+     "properties": {
+      "total": {
+       "type": "number"
+      },
+      "subtotal": {
+       "type": "number"
+      },
+      "total_items": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "total",
+      "subtotal",
+      "total_items"
+     ],
+     "additionalProperties": false
+    },
+    "store_name": {
+     "type": "string"
+    },
+    "cashier_info": {
+     "type": "object",
+     "properties": {
+      "date": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      },
+      "time": {
+       "type": "string"
+      },
+      "slip_number": {
+       "type": "string"
+      },
+      "till_number": {
+       "type": "string"
+      },
+      "cashier_number": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "date",
+      "name",
+      "time",
+      "slip_number",
+      "till_number",
+      "cashier_number"
+     ],
+     "additionalProperties": false
+    },
+    "customer_name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "totals",
+    "store_name",
+    "cashier_info",
+    "customer_name"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "9d67f45e-370d-4992-a580-2a4b482ed669",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 674,
+    "num_output_tokens": 658
+   },
+   "parse_job_id": "fe7a3861-7ec7-496d-8162-1ce3068b7396"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "4814836d-73fe-4681-8c4d-df43804c8e7d",
+  "from_ui": false,
+  "id": "fac010ea-dbc7-4b23-8dc5-ea34494759c6",
+  "job_id": "6b4c81a4-5c25-4d35-8add-5e105393c353",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:26:22.801006+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

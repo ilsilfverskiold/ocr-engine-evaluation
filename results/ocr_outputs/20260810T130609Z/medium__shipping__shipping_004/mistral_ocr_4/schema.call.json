@@ -1,0 +1,119 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/shipping/shipping_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\",\n      \"description\": \"Document title as printed\"\n    },\n    \"carrier\": {\n      \"type\": \"string\",\n      \"description\": \"Carrier whose logo appears on the invoice\"\n    },\n    \"documentNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Unique identifier for the invoice\"\n    },\n    \"clientNumber\": {\n      \"type\": \"string\",\n      \"description\": \"Unique identifier for the client\"\n    },\n    \"issueDate\": {\n      \"type\": \"string\",\n      \"description\": \"Date the invoice was issued\"\n    },\n    \"page\": {\n      \"type\": \"string\",\n      \"description\": \"Page indicator in the header block\"\n    },\n    \"pageFooter\": {\n      \"type\": \"string\",\n      \"description\": \"Page indicator printed at the foot of the page\"\n    },\n    \"shipments\": {\n      \"type\": \"array\",\n      \"description\": \"Every shipment row printed in the table, in page order\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"shipmentNumber\"\n        ],\n        \"properties\": {\n          \"shipmentNumber\": {\n            \"type\": \"string\"\n          },\n          \"referenceNumber\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"date\": {\n            \"type\": \"string\"\n          },\n          \"sender\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"company\": {\n                \"type\": \"string\"\n              },\n              \"address\": {\n                \"type\": \"string\"\n              },\n              \"city\": {\n                \"type\": \"string\"\n              },\n              \"zipCode\": {\n                \"type\": \"string\"\n              }\n            }\n          },\n          \"recipient\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"company\": {\n                \"type\": \"string\"\n              },\n              \"address\": {\n                \"type\": \"string\"\n              },\n              \"city\": {\n                \"type\": \"string\"\n              },\n              \"zipCode\": {\n                \"type\": \"string\"\n              }\n            }\n          },\n          \"typeOfService\": {\n            \"type\": \"string\"\n          },\n          \"weightInKg\": {\n            \"type\": \"number\"\n          },\n          \"numberOfShipments\": {\n            \"type\": \"number\"\n          },\n          \"baseCharge\": {\n            \"type\": \"number\"\n          },\n          \"additionalCharges\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"required\": [\n                \"description\"\n              ],\n              \"properties\": {\n                \"description\": {\n                  \"type\": \"string\"\n                },\n                \"amount\": {\n                  \"type\": \"number\"\n                },\n                \"vat\": {\n                  \"type\": \"number\",\n                  \"description\": \"Value from the VAT / Code column\"\n                },\n                \"grossValue\": {\n                  \"type\": \"number\"\n                }\n              }\n            }\n          }\n        }\n      }\n    },\n    \"mostRecentShipment\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"shipmentNumber\"\n      ],\n      \"description\": \"Shipment with the most recent date (closest to today's date), always the last item in the list\",\n      \"properties\": {\n        \"sender\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"company\"\n          ],\n          \"properties\": {\n            \"city\": {\n              \"type\": \"string\",\n              \"description\": \"City of the sender as it appears, excluding zip code\"\n            },\n            \"address\": {\n              \"type\": \"string\",\n              \"description\": \"Street address of the sender as it appears, only including number and street\"\n            },\n            \"company\": {\n              \"type\": \"string\",\n              \"description\": \"Sender's company name as it appears\"\n            }\n          }\n        },\n        \"recipient\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"company\"\n          ],\n          \"properties\": {\n            \"address\": {\n              \"type\": \"string\",\n              \"description\": \"Street address of the recipient as it appears, only including number and street\"\n            },\n            \"company\": {\n              \"type\": \"string\",\n              \"description\": \"Recipient's company name as it appears\"\n            },\n            \"zipCode\": {\n              \"type\": \"string\",\n              \"description\": \"Zip code of the recipient as it appears\"\n            }\n          }\n        },\n        \"weightInKg\": {\n          \"type\": \"number\",\n          \"description\": \"Weight of the shipment in kilograms\"\n        },\n        \"shipmentNumber\": {\n          \"type\": \"string\",\n          \"description\": \"Unique identifier for the shipment\"\n        },\n        \"additionalCharges\": {\n          \"type\": \"array\",\n          \"description\": \"Details of additional charges applied to the shipment\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\"\n            ],\n            \"properties\": {\n              \"amount\": {\n                \"type\": \"number\",\n                \"description\": \"Amount of the additional charge\"\n              },\n              \"totalVAT\": {\n                \"type\": \"number\",\n                \"description\": \"Total VAT applied to the additional charge\"\n              },\n              \"grossValue\": {\n                \"type\": \"number\",\n                \"description\": \"Gross value of the charge, including VAT\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the additional charge as it appears\"\n              }\n            }\n          }\n        },\n        \"numberOfShipments\": {\n          \"type\": \"number\",\n          \"description\": \"Total number of shipments\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 11.408571583102457,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"title\": \"VAT BILLING RECEIPT\", \"carrier\": \"UPS\", \"documentNumber\": \"GOBLH2SNVT\", \"clientNumber\": \"419355310\", \"issueDate\": \"2004-07-07\", \"page\": \"43 of 75\", \"pageFooter\": \"43\", \"shipments\": [{\"shipmentNumber\": \"7783076164\", \"referenceNumber\": null, \"date\": \"1963-09-21\", \"sender\": {\"company\": \"POUROS - KSHLERIN\", \"address\": \"2477 Bernhard Junctions\", \"city\": \"EAST DARIOFURT\", \"zipCode\": \"55052-4067\"}, \"recipient\": {\"company\": \"HANE, HEGMANN AND JASKOLSKI\", \"address\": \"54816 N Jefferson Street\", \"city\": \"COSTA MESA\", \"zipCode\": \"33645-7445\"}, \"typeOfService\": \"EXPRESS WORLDWIDE\", \"weightInKg\": 40, \"numberOfShipments\": 7, \"baseCharge\": 78.51, \"additionalCharges\": [{\"description\": \"HANDLING CHARGE\", \"amount\": 7.4, \"vat\": 0.99, \"grossValue\": 11.47}, {\"description\": \"REMOTE AREA SURCHARGE\", \"amount\": 8.44, \"vat\": 0.85, \"grossValue\": 28.31}, {\"description\": \"STORAGE FEE\", \"amount\": 3.42, \"vat\": 0.91, \"grossValue\": 21.52}, {\"description\": \"FUEL EFFICIENCY LEVY\", \"amount\": 2.97, \"vat\": 3.13, \"grossValue\": 21.19}, {\"description\": \"OUT-OF-HOURS DELIVERY FEE\", \"amount\": 6.03, \"vat\": 4.95, \"grossValue\": 47.74}]}, {\"shipmentNumber\": \"3615423843\", \"referenceNumber\": null, \"date\": \"1982-08-14\", \"sender\": {\"company\": \"BAYER, CORMIER AND TERRY\", \"address\": \"2922 Maste Key\", \"city\": \"NEW NORWOOD\", \"zipCode\": \"23585-4721\"}, \"recipient\": {\"company\": \"SCHOWALTER, STEHR AND GUSIKOWSKI\", \"address\": \"551 St John's Road\", \"city\": \"PORT KENNEDYWORTH\", \"zipCode\": \"27259-2342\"}, \"typeOfService\": \"ECONOMY SELECT\", \"weightInKg\": 7.5, \"numberOfShipments\": 4, \"baseCharge\": 199.78, \"additionalCharges\": [{\"description\": \"EXPRESS HANDLING FEE\", \"amount\": 9.52, \"vat\": 2.13, \"grossValue\": 34.57}, {\"description\": \"CUSTOMS DUTY\", \"amount\": 2.23, \"vat\": 2.52, \"grossValue\": 43.92}, {\"description\": \"WEEKEND DELIVERY FEE\", \"amount\": 8.08, \"vat\": 3.34, \"grossValue\": 49.37}, {\"description\": \"SECURITY SURCHARGE\", \"amount\": 5.08, \"vat\": 1.94, \"grossValue\": 23.41}, {\"description\": \"OVERSIZED PACKAGE FEE\", \"amount\": 6.4, \"vat\": 2.36, \"grossValue\": 14.36}]}, {\"shipmentNumber\": \"0199849294\", \"referenceNumber\": \"WH4EHYLISO\", \"date\": \"1987-01-13\", \"sender\": {\"company\": \"WEST - HUDSON\", \"address\": \"1611 Liberty Street\", \"city\": \"CLINTFORT\", \"zipCode\": \"29805-0058\"}, \"recipient\": {\"company\": \"BEIER LLC\", \"address\": \"527 Emard Common\", \"city\": \"FORT DELLAFURT\", \"zipCode\": \"76630-3695\"}, \"typeOfService\": \"DOMESTIC PRIORITY\", \"weightInKg\": 10.1, \"numberOfShipments\": 9, \"baseCharge\": 85.85, \"additionalCharges\": [{\"description\": \"LATE PAYMENT PENALTY\", \"amount\": 2.84, \"vat\": 3.2, \"grossValue\": 27.94}, {\"description\": \"URBAN CONGESTION CHARGE\", \"amount\": 9.16, \"vat\": 1.66, \"grossValue\": 14.27}]}], \"mostRecentShipment\": {\"shipmentNumber\": \"0199849294\", \"sender\": {\"company\": \"WEST - HUDSON\", \"address\": \"1611 Liberty Street\", \"city\": \"CLINTFORT\"}, \"recipient\": {\"company\": \"BEIER LLC\", \"address\": \"527 Emard Common\", \"zipCode\": \"76630-3695\"}, \"weightInKg\": 10.1, \"numberOfShipments\": 9, \"additionalCharges\": [{\"description\": \"LATE PAYMENT PENALTY\", \"amount\": 2.84, \"totalVAT\": 3.2, \"grossValue\": 27.94}, {\"description\": \"URBAN CONGESTION CHARGE\", \"amount\": 9.16, \"totalVAT\": 1.66, \"grossValue\": 14.27}]}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "ups\n\nVAT BILLING RECEIPT\n\nDocument Number: GOBLH2SNVT\n\nClient Number: 419355310\n\nIssue Date: 07-07-2004\n\nPage: 43 of 75\n\n|  Shipment Number | Sender / Reference Number | Date | Dispatch Station / Sender | Receiving Station / Recipient | Type of Service / Charge | Weight in Kg | Number of Shipments | Base Charge | Description of Additional Charges | Additional Charges | VAT / Code | Gross Value  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  7783076164 |  | 09-21-1963 |  |  | EXPRESS WORLDWIDE | 40 | 7 | 78.51 | HANDLING CHARGE | 7.4 | 0.99 | 11.47  |\n|   |  |  | POUROS - KSHLERIN | HANE, HEGMANN AND JASKOLSKI |  |  |  |  | REMOTE AREA SURCHARGE | 8.44 | 0.85 | 28.31  |\n|   |  |  | 2477 Bernhard Junctions | 54816 N Jefferson Street |  |  |  |  | STORAGE FEE | 3.42 | 0.91 | 21.52  |\n|   |  |  | EAST DARIOFURT, 55052-4067 | COSTA MESA, 33645-7445 |  |  |  |  | FUEL EFFICIENCY LEVY | 2.97 | 3.13 | 21.19  |\n|   |  |  |  |  |  |  |  |  | OUT-OF-HOURS DELIVERY FEE | 6.03 | 4.95 | 47.74  |\n|  3615423843 |  | 08-14-1982 |  |  | ECONOMY SELECT | 7.5 | 4 | 199.78 | EXPRESS HANDLING FEE | 9.52 | 2.13 | 34.57  |\n|   |  |  | BAYER, CORMIER AND TERRY | SCHOWALTER, STEHR AND GUSIKOWSKI |  |  |  |  | CUSTOMS DUTY | 2.23 | 2.52 | 43.92  |\n|   |  |  | 2922 Maste Key | 551 St John's Road |  |  |  |  | WEEKEND DELIVERY FEE | 8.08 | 3.34 | 49.37  |\n|   |  |  | NEW NORWOOD, 23585-4721 | PORT KENNEDYWORTH, 27259-2342 |  |  |  |  | SECURITY SURCHARGE | 5.08 | 1.94 | 23.41  |\n|   |  |  |  |  |  |  |  |  | OVERSIZED PACKAGE FEE | 6.4 | 2.36 | 14.36  |\n|  0199849294 | WH4EHYLISO | 01-13-1987 |  |  | DOMESTIC PRIORITY | 10.1 | 9 | 85.85 | LATE PAYMENT PENALTY | 2.84 | 3.2 | 27.94  |\n|   |  |  | WEST - HUDSON | BEIER LLC |  |  |  |  | URBAN CONGESTION CHARGE | 9.16 | 1.66 | 14.27  |\n|   |  |  | 1611 Liberty Street | 527 Emard Common |  |  |  |  |  |  |  |   |\n|   |  |  | CLINTFORT, 29805-0058 | FORT DELLAFURT, 76630-3695 |  |  |  |  |  |  |  |   |\n\nPage 43",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1479,
+     "width": 1883
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 117,
+      "top_left_y": 86,
+      "bottom_right_x": 204,
+      "bottom_right_y": 181,
+      "content": "ups",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 264,
+      "top_left_y": 108,
+      "bottom_right_x": 822,
+      "bottom_right_y": 152,
+      "content": "VAT BILLING RECEIPT",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 1557,
+      "top_left_y": 92,
+      "bottom_right_x": 1806,
+      "bottom_right_y": 108,
+      "content": "Document Number: GOBLH2SNVT",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 1559,
+      "top_left_y": 111,
+      "bottom_right_x": 1745,
+      "bottom_right_y": 127,
+      "content": "Client Number: 419355310",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 1559,
+      "top_left_y": 130,
+      "bottom_right_x": 1717,
+      "bottom_right_y": 145,
+      "content": "Issue Date: 07-07-2004",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 1559,
+      "top_left_y": 148,
+      "bottom_right_x": 1657,
+      "bottom_right_y": 163,
+      "content": "Page: 43 of 75",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 206,
+      "bottom_right_x": 1832,
+      "bottom_right_y": 1325,
+      "content": "|  Shipment Number | Sender / Reference Number | Date | Dispatch Station / Sender | Receiving Station / Recipient | Type of Service / Charge | Weight in Kg | Number of Shipments | Base Charge | Description of Additional Charges | Additional Charges | VAT / Code | Gross Value  |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  7783076164 |  | 09-21-1963 |  |  | EXPRESS WORLDWIDE | 40 | 7 | 78.51 | HANDLING CHARGE | 7.4 | 0.99 | 11.47  |\n|   |  |  | POUROS - KSHLERIN | HANE, HEGMANN AND JASKOLSKI |  |  |  |  | REMOTE AREA SURCHARGE | 8.44 | 0.85 | 28.31  |\n|   |  |  | 2477 Bernhard Junctions | 54816 N Jefferson Street |  |  |  |  | STORAGE FEE | 3.42 | 0.91 | 21.52  |\n|   |  |  | EAST DARIOFURT, 55052-4067 | COSTA MESA, 33645-7445 |  |  |  |  | FUEL EFFICIENCY LEVY | 2.97 | 3.13 | 21.19  |\n|   |  |  |  |  |  |  |  |  | OUT-OF-HOURS DELIVERY FEE | 6.03 | 4.95 | 47.74  |\n|  3615423843 |  | 08-14-1982 |  |  | ECONOMY SELECT | 7.5 | 4 | 199.78 | EXPRESS HANDLING FEE | 9.52 | 2.13 | 34.57  |\n|   |  |  | BAYER, CORMIER AND TERRY | SCHOWALTER, STEHR AND GUSIKOWSKI |  |  |  |  | CUSTOMS DUTY | 2.23 | 2.52 | 43.92  |\n|   |  |  | 2922 Maste Key | 551 St John's Road |  |  |  |  | WEEKEND DELIVERY FEE | 8.08 | 3.34 | 49.37  |\n|   |  |  | NEW NORWOOD, 23585-4721 | PORT KENNEDYWORTH, 27259-2342 |  |  |  |  | SECURITY SURCHARGE | 5.08 | 1.94 | 23.41  |\n|   |  |  |  |  |  |  |  |  | OVERSIZED PACKAGE FEE | 6.4 | 2.36 | 14.36  |\n|  0199849294 | WH4EHYLISO | 01-13-1987 |  |  | DOMESTIC PRIORITY | 10.1 | 9 | 85.85 | LATE PAYMENT PENALTY | 2.84 | 3.2 | 27.94  |\n|   |  |  | WEST - HUDSON | BEIER LLC |  |  |  |  | URBAN CONGESTION CHARGE | 9.16 | 1.66 | 14.27  |\n|   |  |  | 1611 Liberty Street | 527 Emard Common |  |  |  |  |  |  |  |   |\n|   |  |  | CLINTFORT, 29805-0058 | FORT DELLAFURT, 76630-3695 |  |  |  |  |  |  |  |   |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 66,
+      "top_left_y": 1361,
+      "bottom_right_x": 175,
+      "bottom_right_y": 1395,
+      "content": "Page 43",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 313754
+  },
+  "document_annotation": "{\"title\": \"VAT BILLING RECEIPT\", \"carrier\": \"UPS\", \"documentNumber\": \"GOBLH2SNVT\", \"clientNumber\": \"419355310\", \"issueDate\": \"2004-07-07\", \"page\": \"43 of 75\", \"pageFooter\": \"43\", \"shipments\": [{\"shipmentNumber\": \"7783076164\", \"referenceNumber\": null, \"date\": \"1963-09-21\", \"sender\": {\"company\": \"POUROS - KSHLERIN\", \"address\": \"2477 Bernhard Junctions\", \"city\": \"EAST DARIOFURT\", \"zipCode\": \"55052-4067\"}, \"recipient\": {\"company\": \"HANE, HEGMANN AND JASKOLSKI\", \"address\": \"54816 N Jefferson Street\", \"city\": \"COSTA MESA\", \"zipCode\": \"33645-7445\"}, \"typeOfService\": \"EXPRESS WORLDWIDE\", \"weightInKg\": 40, \"numberOfShipments\": 7, \"baseCharge\": 78.51, \"additionalCharges\": [{\"description\": \"HANDLING CHARGE\", \"amount\": 7.4, \"vat\": 0.99, \"grossValue\": 11.47}, {\"description\": \"REMOTE AREA SURCHARGE\", \"amount\": 8.44, \"vat\": 0.85, \"grossValue\": 28.31}, {\"description\": \"STORAGE FEE\", \"amount\": 3.42, \"vat\": 0.91, \"grossValue\": 21.52}, {\"description\": \"FUEL EFFICIENCY LEVY\", \"amount\": 2.97, \"vat\": 3.13, \"grossValue\": 21.19}, {\"description\": \"OUT-OF-HOURS DELIVERY FEE\", \"amount\": 6.03, \"vat\": 4.95, \"grossValue\": 47.74}]}, {\"shipmentNumber\": \"3615423843\", \"referenceNumber\": null, \"date\": \"1982-08-14\", \"sender\": {\"company\": \"BAYER, CORMIER AND TERRY\", \"address\": \"2922 Maste Key\", \"city\": \"NEW NORWOOD\", \"zipCode\": \"23585-4721\"}, \"recipient\": {\"company\": \"SCHOWALTER, STEHR AND GUSIKOWSKI\", \"address\": \"551 St John's Road\", \"city\": \"PORT KENNEDYWORTH\", \"zipCode\": \"27259-2342\"}, \"typeOfService\": \"ECONOMY SELECT\", \"weightInKg\": 7.5, \"numberOfShipments\": 4, \"baseCharge\": 199.78, \"additionalCharges\": [{\"description\": \"EXPRESS HANDLING FEE\", \"amount\": 9.52, \"vat\": 2.13, \"grossValue\": 34.57}, {\"description\": \"CUSTOMS DUTY\", \"amount\": 2.23, \"vat\": 2.52, \"grossValue\": 43.92}, {\"description\": \"WEEKEND DELIVERY FEE\", \"amount\": 8.08, \"vat\": 3.34, \"grossValue\": 49.37}, {\"description\": \"SECURITY SURCHARGE\", \"amount\": 5.08, \"vat\": 1.94, \"grossValue\": 23.41}, {\"description\": \"OVERSIZED PACKAGE FEE\", \"amount\": 6.4, \"vat\": 2.36, \"grossValue\": 14.36}]}, {\"shipmentNumber\": \"0199849294\", \"referenceNumber\": \"WH4EHYLISO\", \"date\": \"1987-01-13\", \"sender\": {\"company\": \"WEST - HUDSON\", \"address\": \"1611 Liberty Street\", \"city\": \"CLINTFORT\", \"zipCode\": \"29805-0058\"}, \"recipient\": {\"company\": \"BEIER LLC\", \"address\": \"527 Emard Common\", \"city\": \"FORT DELLAFURT\", \"zipCode\": \"76630-3695\"}, \"typeOfService\": \"DOMESTIC PRIORITY\", \"weightInKg\": 10.1, \"numberOfShipments\": 9, \"baseCharge\": 85.85, \"additionalCharges\": [{\"description\": \"LATE PAYMENT PENALTY\", \"amount\": 2.84, \"vat\": 3.2, \"grossValue\": 27.94}, {\"description\": \"URBAN CONGESTION CHARGE\", \"amount\": 9.16, \"vat\": 1.66, \"grossValue\": 14.27}]}], \"mostRecentShipment\": {\"shipmentNumber\": \"0199849294\", \"sender\": {\"company\": \"WEST - HUDSON\", \"address\": \"1611 Liberty Street\", \"city\": \"CLINTFORT\"}, \"recipient\": {\"company\": \"BEIER LLC\", \"address\": \"527 Emard Common\", \"zipCode\": \"76630-3695\"}, \"weightInKg\": 10.1, \"numberOfShipments\": 9, \"additionalCharges\": [{\"description\": \"LATE PAYMENT PENALTY\", \"amount\": 2.84, \"totalVAT\": 3.2, \"grossValue\": 27.94}, {\"description\": \"URBAN CONGESTION CHARGE\", \"amount\": 9.16, \"totalVAT\": 1.66, \"grossValue\": 14.27}]}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

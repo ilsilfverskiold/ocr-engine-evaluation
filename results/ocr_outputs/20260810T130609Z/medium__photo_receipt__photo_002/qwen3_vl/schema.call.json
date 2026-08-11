@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"subtotal\": {\n          \"type\": \"number\",\n          \"description\": \"\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.870799726333334,
+ "cost_per_page": 0.004074335010075333,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Africa\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"06:57:05\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": \"null\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-bd9b438436f1cf60",
+   "object": "chat.completion",
+   "created": 1786376958,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Africa\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"06:57:05\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": \"null\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 2415,
+    "total_tokens": 2738,
+    "completion_tokens": 323,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.870799726333334,
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "e64af0c5c3c14fb6aab4471e15cbd215",
+  "batch_gpu_seconds": 140.899193432,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.870799726333334,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Africa\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"06:57:05\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": \"null\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-bd9b438436f1cf60",
+    "object": "chat.completion",
+    "created": 1786376958,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"items\": [\n    {\n      \"quantity\": 1,\n      \"unit_price\": 17.0,\n      \"description\": \"RegCokeNoSugar\",\n      \"total_price\": 17.0\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 30.9,\n      \"description\": \"Boerie HashBrown\",\n      \"total_price\": 30.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 41.9,\n      \"description\": \"Boerie and Egg EVM\",\n      \"total_price\": 41.9\n    },\n    {\n      \"quantity\": 1,\n      \"unit_price\": 0.0,\n      \"description\": \"Short Filter Milk\",\n      \"total_price\": 0.0\n    }\n  ],\n  \"totals\": {\n    \"total\": 89.8,\n    \"subtotal\": 89.8,\n    \"total_items\": 4\n  },\n  \"store_info\": {\n    \"tel\": \"011 974 2297\",\n    \"name\": \"McDonald's South Africa\"\n  },\n  \"cashier_info\": {\n    \"date\": \"04/04/2024\",\n    \"name\": \"MAUREEN TUTJA\",\n    \"time\": \"06:57:05\",\n    \"cashier_number\": \"28\"\n  },\n  \"customer_name\": \"null\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 2415,
+     "total_tokens": 2738,
+     "completion_tokens": 323,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"quantity\": {\n            \"type\": \"number\"\n          },\n          \"unit_price\": {\n            \"type\": \"number\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"total_price\": {\n            \"type\": \"number\"\n          }\n        }\n      }\n    },\n    \"totals\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total\": {\n          \"type\": \"number\"\n        },\n        \"subtotal\": {\n          \"type\": \"number\",\n          \"description\": \"\"\n        },\n        \"total_items\": {\n          \"type\": \"number\"\n        }\n      }\n    },\n    \"store_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"tel\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        },\n        \"name\": {\n          \"type\": \"string\",\n          \"description\": \"\"\n        }\n      }\n    },\n    \"cashier_info\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"date\": {\n          \"type\": \"string\"\n        },\n        \"name\": {\n          \"type\": \"string\"\n        },\n        \"time\": {\n          \"type\": \"string\"\n        },\n        \"cashier_number\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"customer_name\": {\n      \"type\": \"string\"\n    }\n  }\n}",
+  "gpu_seconds": 5.870799726333334,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_002.png",
+  "startup_gpu_seconds": 130.595495278,
+  "is_cold_start": true
+ }
+}

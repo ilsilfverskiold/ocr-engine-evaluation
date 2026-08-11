@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"tableData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"symbol\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"assetClass\": {\n            \"type\": \"string\",\n            \"description\": \"\"\n          },\n          \"closingPrice\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"oneDayChange\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          },\n          \"avgDailyVolume\": {\n            \"type\": \"number\",\n            \"description\": \"\"\n          }\n        }\n      }\n    },\n    \"institution\": {\n      \"type\": \"string\",\n      \"description\": \"Name of the financial institution\"\n    },\n    \"clientServices\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"contactInfo\": {\n          \"type\": \"string\",\n          \"description\": \"Phone number of the client representative\"\n        },\n        \"consultantName\": {\n          \"type\": \"string\",\n          \"description\": \"Full name of the client representative\"\n        }\n      },\n      \"description\": \"Client representative\"\n    },\n    \"portfolioSummary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"changes\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"description\",\n              \"currentPeriod\",\n              \"yearToDate\"\n            ],\n            \"properties\": {\n              \"yearToDate\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded year to date\"\n              },\n              \"description\": {\n                \"type\": \"string\",\n                \"description\": \"Description of the change\"\n              },\n              \"currentPeriod\": {\n                \"type\": \"number\",\n                \"description\": \"Amount recorded during the current period\"\n              }\n            }\n          },\n          \"description\": \"Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list.\"\n        },\n        \"ytdEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The year to date ending balance of the portfolio\"\n        },\n        \"currentPeriodEndingBalance\": {\n          \"type\": \"number\",\n          \"description\": \"The current ending balance of the portfolio\"\n        }\n      },\n      \"description\": \"Overview of the portfolio with balances and changes\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 4.081188875017688,
+ "cost_per_page": 0.001376,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial\",\n  \"clientServices\": {\n    \"contactInfo\": \"(119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -44186.57,\n        \"yearToDate\": -51065.10\n      },\n      {\n        \"description\": \"Unrealized Capital Gains\",\n        \"currentPeriod\": 5180.37,\n        \"yearToDate\": 107527.40\n      },\n      {\n        \"description\": \"Total Portfolio Performance\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": -212041.40\n      },\n      {\n        \"description\": \"Reinvested Dividends\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": 55968.00\n      },\n      {\n        \"description\": \"Strategic Rebalancing\",\n        \"currentPeriod\": 926.29,\n        \"yearToDate\": 20993.63\n      },\n      {\n        \"description\": \"Distributions\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": -19454.85\n      },\n      {\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 45983.90,\n        \"yearToDate\": 72674.00\n      },\n      {\n        \"description\": \"Other Expenditures (Gains)\",\n        \"currentPeriod\": -30448.23,\n        \"yearToDate\": -42531.10\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 1724,
+  "output_tokens": 630,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:01:48 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=4038",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial\",\n  \"clientServices\": {\n    \"contactInfo\": \"(119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"description\": \"Performance Fees\",\n        \"currentPeriod\": -44186.57,\n        \"yearToDate\": -51065.10\n      },\n      {\n        \"description\": \"Unrealized Capital Gains\",\n        \"currentPeriod\": 5180.37,\n        \"yearToDate\": 107527.40\n      },\n      {\n        \"description\": \"Total Portfolio Performance\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": -212041.40\n      },\n      {\n        \"description\": \"Reinvested Dividends\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": 55968.00\n      },\n      {\n        \"description\": \"Strategic Rebalancing\",\n        \"currentPeriod\": 926.29,\n        \"yearToDate\": 20993.63\n      },\n      {\n        \"description\": \"Distributions\",\n        \"currentPeriod\": 0.0,\n        \"yearToDate\": -19454.85\n      },\n      {\n        \"description\": \"Automatic Transfers In\",\n        \"currentPeriod\": 45983.90,\n        \"yearToDate\": 72674.00\n      },\n      {\n        \"description\": \"Other Expenditures (Gains)\",\n        \"currentPeriod\": -30448.23,\n        \"yearToDate\": -42531.10\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f \\xe6\"\\x9e\\xf5\\xed\\xbe\\xac\\x8c\\xf8\\x15\\xfbh#T\\xdc\\xfb\\x03idi\\xb9~\\xa9\\x93\\xb8\\xd8\\xf1\\xa4oJAJ\\xa2;h\\xd3K \\x15&\\xa9\\xe4G\\xa3'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "ytl5atDGCurxvdIPuJTzwAk",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 630,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 1724,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 644
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1080
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 2354,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

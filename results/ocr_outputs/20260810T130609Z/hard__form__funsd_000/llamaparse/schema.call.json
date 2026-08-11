@@ -1,0 +1,323 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"transmission_header_source\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Sending station name in the fax strip across the top edge\"\n    },\n    \"transmission_header_fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Fax number as printed in the transmission strip\"\n    },\n    \"transmission_header_timestamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Date and time as printed in the transmission strip\"\n    },\n    \"transmission_header_page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Page marker as printed in the transmission strip\"\n    },\n    \"issuer_title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"issuer_name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"document_title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FAX NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FAX NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PHONE NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"NUMBER OF PAGES INCLUDING COVER SHEET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SENDER/PHONE NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPECIAL INSTRUCTIONS\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"instruction_banner\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_tagline\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"printed_on_notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"bates_number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"TO\",\n    \"DATE\",\n    \"FAX NUMBER\",\n    \"NUMBER OF PAGES INCLUDING COVER SHEET\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 19.991589082987048,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"transmission_header_source\": \"ATT. GEN. ADMIN. OFFICE\", \"transmission_header_fax\": \"614-466-5087\", \"transmission_header_timestamp\": \"Dec 10 '98 17:46\", \"transmission_header_page\": \"P.01\", \"issuer_title\": null, \"issuer_name\": \"Attorney General Betty D. Montgomery\", \"document_title\": \"CONFIDENTIAL FACSIMILE TRANSMISSION COVER SHEET\", \"FAX NO.\": \"(614) 466-5087\", \"TO\": \"George Baroody\", \"FAX NUMBER\": \"(336) 335-7392\", \"PHONE NUMBER\": \"(336) 335-7363\", \"DATE\": \"12/10/98\", \"NUMBER OF PAGES INCLUDING COVER SHEET\": \"3\", \"SENDER/PHONE NUMBER\": \"June Flynn for Eric Brown/(614) 466-8980\", \"SPECIAL INSTRUCTIONS\": \"\", \"instruction_banner\": \"IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY, PLEASE CONTACT SENDER AS SOON AS POSSIBLE\", \"footer_address\": \"State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428\", \"footer_website\": \"www.ag.state.oh.us\", \"footer_tagline\": \"An Equal Opportunity Employer\", \"printed_on_notice\": \"Printed on Recycled Paper logo\", \"bates_number\": \"82092117\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:41:40.257587+00:00",
+  "data": {
+   "transmission_header_source": "ATT. GEN. ADMIN. OFFICE",
+   "transmission_header_fax": "614-466-5087",
+   "transmission_header_timestamp": "Dec 10 '98 17:46",
+   "transmission_header_page": "P.01",
+   "issuer_title": null,
+   "issuer_name": "Attorney General Betty D. Montgomery",
+   "document_title": "CONFIDENTIAL FACSIMILE TRANSMISSION COVER SHEET",
+   "FAX NO.": "(614) 466-5087",
+   "TO": "George Baroody",
+   "FAX NUMBER": "(336) 335-7392",
+   "PHONE NUMBER": "(336) 335-7363",
+   "DATE": "12/10/98",
+   "NUMBER OF PAGES INCLUDING COVER SHEET": "3",
+   "SENDER/PHONE NUMBER": "June Flynn for Eric Brown/(614) 466-8980",
+   "SPECIAL INSTRUCTIONS": "",
+   "instruction_banner": "IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY, PLEASE CONTACT SENDER AS SOON AS POSSIBLE",
+   "footer_address": "State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428",
+   "footer_website": "www.ag.state.oh.us",
+   "footer_tagline": "An Equal Opportunity Employer",
+   "printed_on_notice": "Printed on Recycled Paper logo",
+   "bates_number": "82092117"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "transmission_header_source": {
+     "description": "Sending station name in the fax strip across the top edge",
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "transmission_header_fax": {
+     "description": "Fax number as printed in the transmission strip",
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "transmission_header_timestamp": {
+     "description": "Date and time as printed in the transmission strip",
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "transmission_header_page": {
+     "description": "Page marker as printed in the transmission strip",
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "issuer_title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "issuer_name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "document_title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "FAX NO.": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "TO": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "FAX NUMBER": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "PHONE NUMBER": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "DATE": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "NUMBER OF PAGES INCLUDING COVER SHEET": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "SENDER/PHONE NUMBER": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "SPECIAL INSTRUCTIONS": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "instruction_banner": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "footer_address": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "footer_website": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "footer_tagline": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "printed_on_notice": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "bates_number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "TO",
+    "DATE",
+    "FAX NUMBER",
+    "NUMBER OF PAGES INCLUDING COVER SHEET"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "950022b0-10f9-4a93-b514-2ce93699a660",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 393,
+    "num_output_tokens": 259
+   },
+   "parse_job_id": "bb456c71-d0df-4f07-961e-821087441a56"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "e0adf849-dac0-4537-bcc7-0a21092f1265",
+  "from_ui": false,
+  "id": "b457bfa1-35b4-4a01-8f35-a29c73231684",
+  "job_id": "24a8a2e8-6d07-4a49-b0ed-a49771f43627",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:41:56.195480+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

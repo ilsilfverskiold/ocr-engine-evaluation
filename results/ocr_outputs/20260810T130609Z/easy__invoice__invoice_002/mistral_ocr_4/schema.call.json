@@ -1,0 +1,210 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"header\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"invoice_no\": {\n          \"type\": \"string\"\n        },\n        \"invoice_date\": {\n          \"type\": \"string\"\n        },\n        \"seller\": {\n          \"type\": \"string\"\n        },\n        \"client\": {\n          \"type\": \"string\"\n        },\n        \"seller_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"client_tax_id\": {\n          \"type\": \"string\"\n        },\n        \"iban\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"item_desc\": {\n            \"type\": \"string\"\n          },\n          \"item_qty\": {\n            \"type\": \"string\"\n          },\n          \"item_net_price\": {\n            \"type\": \"string\"\n          },\n          \"item_net_worth\": {\n            \"type\": \"string\"\n          },\n          \"item_vat\": {\n            \"type\": \"string\"\n          },\n          \"item_gross_worth\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"summary\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"total_net_worth\": {\n          \"type\": \"string\"\n        },\n        \"total_vat\": {\n          \"type\": \"string\"\n        },\n        \"total_gross_worth\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 9.076513584004715,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"header\": {\"invoice_no\": \"16662010\", \"invoice_date\": \"2016-08-28\", \"seller\": \"Smith-Cook\\n174 Justin Causeway\\nWest Michaelmouth, ME 69894\", \"client\": \"Snyder-Johnson\\n05173 Heather Mill\\nJenniferfort, WV 79662\", \"seller_tax_id\": \"959-84-2124\", \"client_tax_id\": \"938-85-4960\", \"iban\": \"GB20BAKH22085364527355\"}, \"items\": [{\"item_desc\": \"Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 59\", \"item_qty\": \"1.00\", \"item_net_price\": \"65.00\", \"item_net_worth\": \"65.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"71.50\"}, {\"item_desc\": \"New Sony Playstation 4 Slim 1TB 3 Game Bundle Console. Sealed!!!\", \"item_qty\": \"3.00\", \"item_net_price\": \"399.99\", \"item_net_worth\": \"1199.97\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1319.97\"}, {\"item_desc\": \"Atari Flashback 4 Classic Game Console 75 built in games Space Invaders Asteroid\", \"item_qty\": \"4.00\", \"item_net_price\": \"8.50\", \"item_net_worth\": \"34.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"37.40\"}, {\"item_desc\": \"Sony PlayStation 1 PS1 Console model scph-7501\", \"item_qty\": \"4.00\", \"item_net_price\": \"14.99\", \"item_net_worth\": \"59.96\", \"item_vat\": \"10%\", \"item_gross_worth\": \"65.96\"}, {\"item_desc\": \"Nintendo Wii Console - 2 Remotes w/ Covers, Nunchucks, Sensor Sega Game Bundle\", \"item_qty\": \"1.00\", \"item_net_price\": \"85.00\", \"item_net_worth\": \"85.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"93.50\"}, {\"item_desc\": \"Sony PlayStation 3 PS3 Super Slim Black Console 20 GB *Tested* Console & Cables\", \"item_qty\": \"4.00\", \"item_net_price\": \"99.95\", \"item_net_worth\": \"399.80\", \"item_vat\": \"10%\", \"item_gross_worth\": \"439.78\"}, {\"item_desc\": \"Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 55\", \"item_qty\": \"3.00\", \"item_net_price\": \"70.00\", \"item_net_worth\": \"210.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"231.00\"}], \"summary\": {\"total_net_worth\": \"2053.73\", \"total_vat\": \"205.37\", \"total_gross_worth\": \"2259.10\"}}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 16662010\n\nDate of issue:\n\n08/28/2016\n\n# Seller:\n\nSmith-Cook\n\n174 Justin Causeway\n\nWest Michaelmouth, ME 69894\n\nTax Id: 959-84-2124\n\nIBAN: GB20BAKH22085364527355\n\n# Client:\n\nSnyder-Johnson\n\n05173 Heather Mill\n\nJenniferfort, WV 79662\n\nTax Id: 938-85-4960\n\n# ITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 59 | 1,00 | each | 65,00 | 65,00 | 10% | 71,50  |\n|  2. | New Sony Playstation 4 Slim 1TB 3 Game Bundle Console. Sealed!!! | 3,00 | each | 399,99 | 1 199,97 | 10% | 1 319,97  |\n|  3. | Atari Flashback 4 Classic Game Console 75 built in games Space Invaders Asteroid | 4,00 | each | 8,50 | 34,00 | 10% | 37,40  |\n|  4. | Sony PlayStation 1 PS1 Console model scph-7501 | 4,00 | each | 14,99 | 59,96 | 10% | 65,96  |\n|  5. | Nintendo Wii Console - 2 Remotes w/ Covers, Nunchucks, Sensor Sega Game Bundle | 1,00 | each | 85,00 | 85,00 | 10% | 93,50  |\n|  6. | Sony PlayStation 3 PS3 Super Slim Black Console 20 GB *Tested* Console & Cables | 4,00 | each | 99,95 | 399,80 | 10% | 439,78  |\n|  7. | Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 55 | 3,00 | each | 70,00 | 210,00 | 10% | 231,00  |\n\n# SUMMARY\n\n|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 2 053,73 | 205,37 | 2 259,10  |\n|  **Total** |  | **$ 2 053,73** | **$ 205,37** | **$ 2 259,10**  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 194,
+      "top_left_y": 105,
+      "bottom_right_x": 810,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 16662010",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1197,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "08/28/2016",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 657,
+      "bottom_right_x": 380,
+      "bottom_right_y": 716,
+      "content": "# Seller:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 204,
+      "top_left_y": 751,
+      "bottom_right_x": 457,
+      "bottom_right_y": 804,
+      "content": "Smith-Cook",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 651,
+      "bottom_right_y": 864,
+      "content": "174 Justin Causeway",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 864,
+      "bottom_right_x": 862,
+      "bottom_right_y": 913,
+      "content": "West Michaelmouth, ME 69894",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 966,
+      "bottom_right_x": 638,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 959-84-2124",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 1022,
+      "bottom_right_x": 941,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB20BAKH22085364527355",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1232,
+      "top_left_y": 657,
+      "bottom_right_x": 1426,
+      "bottom_right_y": 716,
+      "content": "# Client:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 751,
+      "bottom_right_x": 1579,
+      "bottom_right_y": 804,
+      "content": "Snyder-Johnson",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1652,
+      "bottom_right_y": 853,
+      "content": "05173 Heather Mill",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 864,
+      "bottom_right_x": 1729,
+      "bottom_right_y": 917,
+      "content": "Jenniferfort, WV 79662",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 966,
+      "bottom_right_x": 1679,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 938-85-4960",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1131,
+      "bottom_right_x": 373,
+      "bottom_right_y": 1187,
+      "content": "# ITEMS",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1236,
+      "bottom_right_x": 2285,
+      "bottom_right_y": 2623,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 59 | 1,00 | each | 65,00 | 65,00 | 10% | 71,50  |\n|  2. | New Sony Playstation 4 Slim 1TB 3 Game Bundle Console. Sealed!!! | 3,00 | each | 399,99 | 1 199,97 | 10% | 1 319,97  |\n|  3. | Atari Flashback 4 Classic Game Console 75 built in games Space Invaders Asteroid | 4,00 | each | 8,50 | 34,00 | 10% | 37,40  |\n|  4. | Sony PlayStation 1 PS1 Console model scph-7501 | 4,00 | each | 14,99 | 59,96 | 10% | 65,96  |\n|  5. | Nintendo Wii Console - 2 Remotes w/ Covers, Nunchucks, Sensor Sega Game Bundle | 1,00 | each | 85,00 | 85,00 | 10% | 93,50  |\n|  6. | Sony PlayStation 3 PS3 Super Slim Black Console 20 GB *Tested* Console & Cables | 4,00 | each | 99,95 | 399,80 | 10% | 439,78  |\n|  7. | Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 55 | 3,00 | each | 70,00 | 210,00 | 10% | 231,00  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 2686,
+      "bottom_right_x": 494,
+      "bottom_right_y": 2742,
+      "content": "# SUMMARY",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 2788,
+      "bottom_right_x": 2285,
+      "bottom_right_y": 3073,
+      "content": "|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 2 053,73 | 205,37 | 2 259,10  |\n|  **Total** |  | **$ 2 053,73** | **$ 205,37** | **$ 2 259,10**  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 1045366
+  },
+  "document_annotation": "{\"header\": {\"invoice_no\": \"16662010\", \"invoice_date\": \"2016-08-28\", \"seller\": \"Smith-Cook\\n174 Justin Causeway\\nWest Michaelmouth, ME 69894\", \"client\": \"Snyder-Johnson\\n05173 Heather Mill\\nJenniferfort, WV 79662\", \"seller_tax_id\": \"959-84-2124\", \"client_tax_id\": \"938-85-4960\", \"iban\": \"GB20BAKH22085364527355\"}, \"items\": [{\"item_desc\": \"Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 59\", \"item_qty\": \"1.00\", \"item_net_price\": \"65.00\", \"item_net_worth\": \"65.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"71.50\"}, {\"item_desc\": \"New Sony Playstation 4 Slim 1TB 3 Game Bundle Console. Sealed!!!\", \"item_qty\": \"3.00\", \"item_net_price\": \"399.99\", \"item_net_worth\": \"1199.97\", \"item_vat\": \"10%\", \"item_gross_worth\": \"1319.97\"}, {\"item_desc\": \"Atari Flashback 4 Classic Game Console 75 built in games Space Invaders Asteroid\", \"item_qty\": \"4.00\", \"item_net_price\": \"8.50\", \"item_net_worth\": \"34.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"37.40\"}, {\"item_desc\": \"Sony PlayStation 1 PS1 Console model scph-7501\", \"item_qty\": \"4.00\", \"item_net_price\": \"14.99\", \"item_net_worth\": \"59.96\", \"item_vat\": \"10%\", \"item_gross_worth\": \"65.96\"}, {\"item_desc\": \"Nintendo Wii Console - 2 Remotes w/ Covers, Nunchucks, Sensor Sega Game Bundle\", \"item_qty\": \"1.00\", \"item_net_price\": \"85.00\", \"item_net_worth\": \"85.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"93.50\"}, {\"item_desc\": \"Sony PlayStation 3 PS3 Super Slim Black Console 20 GB *Tested* Console & Cables\", \"item_qty\": \"4.00\", \"item_net_price\": \"99.95\", \"item_net_worth\": \"399.80\", \"item_vat\": \"10%\", \"item_gross_worth\": \"439.78\"}, {\"item_desc\": \"Nintendo Gameboy Pocket Console Green with Box MGB-001 Japan Tested Working 55\", \"item_qty\": \"3.00\", \"item_net_price\": \"70.00\", \"item_net_worth\": \"210.00\", \"item_vat\": \"10%\", \"item_gross_worth\": \"231.00\"}], \"summary\": {\"total_net_worth\": \"2053.73\", \"total_vat\": \"205.37\", \"total_gross_worth\": \"2259.10\"}}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

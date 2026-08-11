@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_004.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"gst_no\": {\n      \"type\": \"string\"\n    },\n    \"tel_no\": {\n      \"type\": \"string\"\n    },\n    \"receipt_code\": {\n      \"type\": \"string\"\n    },\n    \"receipt_number\": {\n      \"type\": \"string\"\n    },\n    \"entry_date\": {\n      \"type\": \"string\"\n    },\n    \"entry_time\": {\n      \"type\": \"string\"\n    },\n    \"exit_date\": {\n      \"type\": \"string\"\n    },\n    \"exit_time\": {\n      \"type\": \"string\"\n    },\n    \"park_duration_format\": {\n      \"type\": \"string\"\n    },\n    \"park_duration\": {\n      \"type\": \"string\"\n    },\n    \"kind_of_payment\": {\n      \"type\": \"string\"\n    },\n    \"currency\": {\n      \"type\": \"string\"\n    },\n    \"parking_fee\": {\n      \"type\": \"string\"\n    },\n    \"add_gst\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"rate_note\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"footer_note\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"KO131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-aecdd8be1a6cbc0d",
+   "object": "chat.completion",
+   "created": 1786376399,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"KO131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 869,
+    "total_tokens": 1150,
+    "completion_tokens": 281,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"KO131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-aecdd8be1a6cbc0d",
+    "object": "chat.completion",
+    "created": 1786376399,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"company\": \"SECURE PARKING CORPORATION S/B\",\n  \"address\": \"Riverwalk Village Batu 3, Jalan Ipoh 51200 KL.\",\n  \"gst_no\": \"000296652800\",\n  \"tel_no\": \"1300881698\",\n  \"receipt_code\": \"C13\",\n  \"receipt_number\": \"KO131800235697\",\n  \"entry_date\": \"23.03.18\",\n  \"entry_time\": \"14:59\",\n  \"exit_date\": \"23.03.18\",\n  \"exit_time\": \"15:27\",\n  \"park_duration_format\": \"D:HH:MM\",\n  \"park_duration\": \"0:00:28\",\n  \"kind_of_payment\": \"CASH\",\n  \"currency\": \"RM\",\n  \"parking_fee\": \"0.94\",\n  \"add_gst\": \"0.06\",\n  \"total\": \"1.00\",\n  \"rate_note\": \"Rate incl. 6% GST\",\n  \"date\": \"23.03.18\",\n  \"footer_note\": \"THANK YOU FOR YOUR VISIT\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 869,
+     "total_tokens": 1150,
+     "completion_tokens": 281,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"gst_no\": {\n      \"type\": \"string\"\n    },\n    \"tel_no\": {\n      \"type\": \"string\"\n    },\n    \"receipt_code\": {\n      \"type\": \"string\"\n    },\n    \"receipt_number\": {\n      \"type\": \"string\"\n    },\n    \"entry_date\": {\n      \"type\": \"string\"\n    },\n    \"entry_time\": {\n      \"type\": \"string\"\n    },\n    \"exit_date\": {\n      \"type\": \"string\"\n    },\n    \"exit_time\": {\n      \"type\": \"string\"\n    },\n    \"park_duration_format\": {\n      \"type\": \"string\"\n    },\n    \"park_duration\": {\n      \"type\": \"string\"\n    },\n    \"kind_of_payment\": {\n      \"type\": \"string\"\n    },\n    \"currency\": {\n      \"type\": \"string\"\n    },\n    \"parking_fee\": {\n      \"type\": \"string\"\n    },\n    \"add_gst\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"rate_note\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"footer_note\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_004.jpg",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "engine": "deepseek_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_000.jpg",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Output only JSON.\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": {\n      \"type\": \"string\"\n    },\n    \"registration_no\": {\n      \"type\": \"string\"\n    },\n    \"address\": {\n      \"type\": \"string\"\n    },\n    \"tel\": {\n      \"type\": \"string\"\n    },\n    \"fax\": {\n      \"type\": \"string\"\n    },\n    \"email\": {\n      \"type\": \"string\"\n    },\n    \"document_type\": {\n      \"type\": \"string\"\n    },\n    \"invoice_no\": {\n      \"type\": \"string\"\n    },\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"datetime\": {\n      \"type\": \"string\"\n    },\n    \"cashier\": {\n      \"type\": \"string\"\n    },\n    \"sales_person\": {\n      \"type\": \"string\"\n    },\n    \"bill_to\": {\n      \"type\": \"string\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"code\": {\n            \"type\": \"string\"\n          },\n          \"description\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"string\"\n          },\n          \"price\": {\n            \"type\": \"string\"\n          },\n          \"amount\": {\n            \"type\": \"string\"\n          },\n          \"tax_code\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    },\n    \"total_exclude_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_gst\": {\n      \"type\": \"string\"\n    },\n    \"total_inclusive_gst\": {\n      \"type\": \"string\"\n    },\n    \"round_amount\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"string\"\n    },\n    \"payment_method\": {\n      \"type\": \"string\"\n    },\n    \"payment_amount\": {\n      \"type\": \"string\"\n    },\n    \"card_number\": {\n      \"type\": \"string\"\n    },\n    \"approval_code\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"company\",\n    \"date\",\n    \"address\",\n    \"total\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+ "latency_seconds": 1.240260134624999,
+ "cost_per_page": 0.0008607405334297493,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"company\": \"*** COPY *** OJC MARKETING SDN BHD R0C NO: 538358-H NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR Tel:07-388 2218 Fax:07-388 8218 Email: ng@ojcgroup.com},\"\n\n  ,\"address\": \"THE PEAK QUARRY WORKS 000000111 1 193.00 193.00 SR KINGS SAFETY SHOES KWD 805\",\"date\": \"15/01/2019 11:05:16 AM\",\"cashier\": \"NG CHUAN MIN\",\"sales_person\": \"FATIN\",\"bill_to\": \"THE PEAK QUARRY WORKS\",\"items\": [{\"code\": \"4318\", \"description\": \"Approval Code:000\"}],\"total_exclude_gst\": \"0.00\",\"total_gst\": \"0.00\",\"total_inclusive_gst\": \"0.00\",\"round_amount\": \"0.00\",\"total\": \"193.00\",\"payment_method\": \"VISA CARD\",\"payment_amount\": \"193.00\",\"card_number\": \"XXXXXXXXXXXX4318\",\"approval_code\": \"193.00\"}",
+ "structured_output": {},
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 1.240260134624999,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "9fe83e24018a4e3ab3800633cd302f4d",
+  "batch_gpu_seconds": 29.766243230999976,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 1.240260134624999,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\"company\": \"*** COPY *** OJC MARKETING SDN BHD R0C NO: 538358-H NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR Tel:07-388 2218 Fax:07-388 8218 Email: ng@ojcgroup.com},\"\n\n  ,\"address\": \"THE PEAK QUARRY WORKS 000000111 1 193.00 193.00 SR KINGS SAFETY SHOES KWD 805\",\"date\": \"15/01/2019 11:05:16 AM\",\"cashier\": \"NG CHUAN MIN\",\"sales_person\": \"FATIN\",\"bill_to\": \"THE PEAK QUARRY WORKS\",\"items\": [{\"code\": \"4318\", \"description\": \"Approval Code:000\"}],\"total_exclude_gst\": \"0.00\",\"total_gst\": \"0.00\",\"total_inclusive_gst\": \"0.00\",\"round_amount\": \"0.00\",\"total\": \"193.00\",\"payment_method\": \"VISA CARD\",\"payment_amount\": \"193.00\",\"card_number\": \"XXXXXXXXXXXX4318\",\"approval_code\": \"193.00\"}",
+  "structured_output": {},
+  "gpu_seconds": 1.240260134624999,
+  "gpu_type": "A100-80GB",
+  "model_version": "deepseek-ai/DeepSeek-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_000.jpg",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

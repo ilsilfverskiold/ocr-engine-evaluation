@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_002.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "response_format": "json",
+ "json_schema_sent": false,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 5.862737404250008,
+ "cost_per_page": 0.004068739758549505,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n    \"ORD\": \"1871\",\n    \"McDonald's South Afr ca\": \"Isando\",\n    \"Restaurant #\": \"197019.\",\n    \"www.mcdonalds.co.zi\": \"Isando\",\n    \"Tel\": \"011 974 2297. Vat: 42:0257911\",\n    \"Crew id\": \"28 - MAUREEN TUTJA\",\n    \"TAX INVOICE\": \"MFY Side 1\",\n    \"ORD #71 -REG #18-\": \"04/04/2024 03:55:31\",\n    \"TOTAL\": \"89.80\",\n    \"QTY ITEM\": \"1 RegCokeNoSugar 17.00\",\n    \"QTY ITEM\": \"1 Boerie HashBrown 30.90\",\n    \"QTY ITEM\": \"1 Boerie and Egg EVM 41.90\",\n    \"QTY ITEM\": \"1 Short Filter Milk 0.00\",\n    \"Rounding Adjustment\": \"0.00\",\n    \"Subtotal\": \"89.80\",\n    \"Take-Out Total (incl VAT)\": \"89.80\",\n    \"Cashless\": \"89.80\",\n    \"TOTAL INCLUDES VAT OF 15%\": \"11.72\",\n    \"-- Cashless transaction information --\": \"\",\n    \"DATE & TIME\": \"04/04/2024 06 57:05\",\n    \"MID\": \"10000000141277:\",\n    \"TID\": \"ZA019419\",\n    \"PAN ENTRY\": \"Contactless ICC\",\n    \"ACCOUNT\": \"Default\",\n    \"CARD & EXP\": \"01/29\",\n    \"APP ID\": \"A000000041010\",\n    \"APP NAME\": \"Savings\",\n    \"APP PAN SEQ#\": \"000\",\n    \"APP EFF&EXP\": \"08/23 01/2!\",\n    \"CARD TYPE\": \"CAPITEC\",\n    \"AUTH & STAN\": \"427547 374510\",\n    \"CRYPTOGRAM\": \"ARQC-365EED6221 235DD2\",\n    \"VERIFICATION\": \"None\",\n    \"PURCHASE\": \"89.80\",\n    \"TOTAL ZAR\": \"89.80\",\n    \"APPROVED - 00\": \"\",\n    \"No signature required on PIN verification\": \"\",\n    \"Thank you for visiting us today\": \"\",\n    \"Rate your experience with us today\": \"Go to www.rateurvisit.co.za\",\n    \"For allergen info please refer to\": \"www.mcdonalds.co.za\",\n    \"Your view is important to us\": \"Please visit https://www.rateurvisit.co.za/survey\",\n    \"And use this code\": \"CD4VH-UDRXM-MCGM-7UCCC-1C3H6-N\",\n    \"Alternatively, scan this QR code\": \"\",\n    \"Thank you\": \"\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-8a54fad3a23c9bb3",
+   "object": "chat.completion",
+   "created": 1786375951,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n    \"ORD\": \"1871\",\n    \"McDonald's South Afr ca\": \"Isando\",\n    \"Restaurant #\": \"197019.\",\n    \"www.mcdonalds.co.zi\": \"Isando\",\n    \"Tel\": \"011 974 2297. Vat: 42:0257911\",\n    \"Crew id\": \"28 - MAUREEN TUTJA\",\n    \"TAX INVOICE\": \"MFY Side 1\",\n    \"ORD #71 -REG #18-\": \"04/04/2024 03:55:31\",\n    \"TOTAL\": \"89.80\",\n    \"QTY ITEM\": \"1 RegCokeNoSugar 17.00\",\n    \"QTY ITEM\": \"1 Boerie HashBrown 30.90\",\n    \"QTY ITEM\": \"1 Boerie and Egg EVM 41.90\",\n    \"QTY ITEM\": \"1 Short Filter Milk 0.00\",\n    \"Rounding Adjustment\": \"0.00\",\n    \"Subtotal\": \"89.80\",\n    \"Take-Out Total (incl VAT)\": \"89.80\",\n    \"Cashless\": \"89.80\",\n    \"TOTAL INCLUDES VAT OF 15%\": \"11.72\",\n    \"-- Cashless transaction information --\": \"\",\n    \"DATE & TIME\": \"04/04/2024 06 57:05\",\n    \"MID\": \"10000000141277:\",\n    \"TID\": \"ZA019419\",\n    \"PAN ENTRY\": \"Contactless ICC\",\n    \"ACCOUNT\": \"Default\",\n    \"CARD & EXP\": \"01/29\",\n    \"APP ID\": \"A000000041010\",\n    \"APP NAME\": \"Savings\",\n    \"APP PAN SEQ#\": \"000\",\n    \"APP EFF&EXP\": \"08/23 01/2!\",\n    \"CARD TYPE\": \"CAPITEC\",\n    \"AUTH & STAN\": \"427547 374510\",\n    \"CRYPTOGRAM\": \"ARQC-365EED6221 235DD2\",\n    \"VERIFICATION\": \"None\",\n    \"PURCHASE\": \"89.80\",\n    \"TOTAL ZAR\": \"89.80\",\n    \"APPROVED - 00\": \"\",\n    \"No signature required on PIN verification\": \"\",\n    \"Thank you for visiting us today\": \"\",\n    \"Rate your experience with us today\": \"Go to www.rateurvisit.co.za\",\n    \"For allergen info please refer to\": \"www.mcdonalds.co.za\",\n    \"Your view is important to us\": \"Please visit https://www.rateurvisit.co.za/survey\",\n    \"And use this code\": \"CD4VH-UDRXM-MCGM-7UCCC-1C3H6-N\",\n    \"Alternatively, scan this QR code\": \"\",\n    \"Thank you\": \"\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 2090,
+    "total_tokens": 2793,
+    "completion_tokens": 703,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 5.862737404250008,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "109550d600c9445b9b188cd754fc064c",
+  "batch_gpu_seconds": 140.70569770200018,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 5.862737404250008,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n    \"ORD\": \"1871\",\n    \"McDonald's South Afr ca\": \"Isando\",\n    \"Restaurant #\": \"197019.\",\n    \"www.mcdonalds.co.zi\": \"Isando\",\n    \"Tel\": \"011 974 2297. Vat: 42:0257911\",\n    \"Crew id\": \"28 - MAUREEN TUTJA\",\n    \"TAX INVOICE\": \"MFY Side 1\",\n    \"ORD #71 -REG #18-\": \"04/04/2024 03:55:31\",\n    \"TOTAL\": \"89.80\",\n    \"QTY ITEM\": \"1 RegCokeNoSugar 17.00\",\n    \"QTY ITEM\": \"1 Boerie HashBrown 30.90\",\n    \"QTY ITEM\": \"1 Boerie and Egg EVM 41.90\",\n    \"QTY ITEM\": \"1 Short Filter Milk 0.00\",\n    \"Rounding Adjustment\": \"0.00\",\n    \"Subtotal\": \"89.80\",\n    \"Take-Out Total (incl VAT)\": \"89.80\",\n    \"Cashless\": \"89.80\",\n    \"TOTAL INCLUDES VAT OF 15%\": \"11.72\",\n    \"-- Cashless transaction information --\": \"\",\n    \"DATE & TIME\": \"04/04/2024 06 57:05\",\n    \"MID\": \"10000000141277:\",\n    \"TID\": \"ZA019419\",\n    \"PAN ENTRY\": \"Contactless ICC\",\n    \"ACCOUNT\": \"Default\",\n    \"CARD & EXP\": \"01/29\",\n    \"APP ID\": \"A000000041010\",\n    \"APP NAME\": \"Savings\",\n    \"APP PAN SEQ#\": \"000\",\n    \"APP EFF&EXP\": \"08/23 01/2!\",\n    \"CARD TYPE\": \"CAPITEC\",\n    \"AUTH & STAN\": \"427547 374510\",\n    \"CRYPTOGRAM\": \"ARQC-365EED6221 235DD2\",\n    \"VERIFICATION\": \"None\",\n    \"PURCHASE\": \"89.80\",\n    \"TOTAL ZAR\": \"89.80\",\n    \"APPROVED - 00\": \"\",\n    \"No signature required on PIN verification\": \"\",\n    \"Thank you for visiting us today\": \"\",\n    \"Rate your experience with us today\": \"Go to www.rateurvisit.co.za\",\n    \"For allergen info please refer to\": \"www.mcdonalds.co.za\",\n    \"Your view is important to us\": \"Please visit https://www.rateurvisit.co.za/survey\",\n    \"And use this code\": \"CD4VH-UDRXM-MCGM-7UCCC-1C3H6-N\",\n    \"Alternatively, scan this QR code\": \"\",\n    \"Thank you\": \"\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-8a54fad3a23c9bb3",
+    "object": "chat.completion",
+    "created": 1786375951,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n    \"ORD\": \"1871\",\n    \"McDonald's South Afr ca\": \"Isando\",\n    \"Restaurant #\": \"197019.\",\n    \"www.mcdonalds.co.zi\": \"Isando\",\n    \"Tel\": \"011 974 2297. Vat: 42:0257911\",\n    \"Crew id\": \"28 - MAUREEN TUTJA\",\n    \"TAX INVOICE\": \"MFY Side 1\",\n    \"ORD #71 -REG #18-\": \"04/04/2024 03:55:31\",\n    \"TOTAL\": \"89.80\",\n    \"QTY ITEM\": \"1 RegCokeNoSugar 17.00\",\n    \"QTY ITEM\": \"1 Boerie HashBrown 30.90\",\n    \"QTY ITEM\": \"1 Boerie and Egg EVM 41.90\",\n    \"QTY ITEM\": \"1 Short Filter Milk 0.00\",\n    \"Rounding Adjustment\": \"0.00\",\n    \"Subtotal\": \"89.80\",\n    \"Take-Out Total (incl VAT)\": \"89.80\",\n    \"Cashless\": \"89.80\",\n    \"TOTAL INCLUDES VAT OF 15%\": \"11.72\",\n    \"-- Cashless transaction information --\": \"\",\n    \"DATE & TIME\": \"04/04/2024 06 57:05\",\n    \"MID\": \"10000000141277:\",\n    \"TID\": \"ZA019419\",\n    \"PAN ENTRY\": \"Contactless ICC\",\n    \"ACCOUNT\": \"Default\",\n    \"CARD & EXP\": \"01/29\",\n    \"APP ID\": \"A000000041010\",\n    \"APP NAME\": \"Savings\",\n    \"APP PAN SEQ#\": \"000\",\n    \"APP EFF&EXP\": \"08/23 01/2!\",\n    \"CARD TYPE\": \"CAPITEC\",\n    \"AUTH & STAN\": \"427547 374510\",\n    \"CRYPTOGRAM\": \"ARQC-365EED6221 235DD2\",\n    \"VERIFICATION\": \"None\",\n    \"PURCHASE\": \"89.80\",\n    \"TOTAL ZAR\": \"89.80\",\n    \"APPROVED - 00\": \"\",\n    \"No signature required on PIN verification\": \"\",\n    \"Thank you for visiting us today\": \"\",\n    \"Rate your experience with us today\": \"Go to www.rateurvisit.co.za\",\n    \"For allergen info please refer to\": \"www.mcdonalds.co.za\",\n    \"Your view is important to us\": \"Please visit https://www.rateurvisit.co.za/survey\",\n    \"And use this code\": \"CD4VH-UDRXM-MCGM-7UCCC-1C3H6-N\",\n    \"Alternatively, scan this QR code\": \"\",\n    \"Thank you\": \"\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 2090,
+     "total_tokens": 2793,
+     "completion_tokens": 703,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "gpu_seconds": 5.862737404250008,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_002.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

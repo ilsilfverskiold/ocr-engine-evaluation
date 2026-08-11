@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"grandTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Grand Total\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.7279638215416675,
+ "cost_per_page": 0.002587206892149917,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"date\": \"2026-01\",\n  \"title\": \"Pay-In Sheet - 2026-01\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"distNumber\": \"465861\",\n  \"consultants\": [\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"543582\",\n      \"idNumber\": \"9959969283\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Ellen Cassin-Hahn III\"\n    },\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"215197\",\n      \"idNumber\": \"4430267226\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Jackie Bechtelar\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"380948\",\n      \"idNumber\": \"4607562519\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Freda Jacobson\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"979151\",\n      \"idNumber\": \"6848749229\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Roger Smith\"\n    },\n    {\n      \"sales\": 2158,\n      \"total\": 2158,\n      \"sfmCode\": \"433979\",\n      \"idNumber\": \"3777397080\",\n      \"grandTotal\": 2481.7,\n      \"puerReturns\": 323.7,\n      \"consultantName\": \"Bernice Grady PhD\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"239919\",\n      \"idNumber\": \"2254324813\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Dr. Wesley Douglas\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"436334\",\n      \"idNumber\": \"1198930306\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Darrell Medhurst\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"455045\",\n      \"idNumber\": \"1694377270\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Clinton Doyle\"\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-b87ba1b8b0945606",
+   "object": "chat.completion",
+   "created": 1786376471,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"date\": \"2026-01\",\n  \"title\": \"Pay-In Sheet - 2026-01\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"distNumber\": \"465861\",\n  \"consultants\": [\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"543582\",\n      \"idNumber\": \"9959969283\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Ellen Cassin-Hahn III\"\n    },\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"215197\",\n      \"idNumber\": \"4430267226\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Jackie Bechtelar\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"380948\",\n      \"idNumber\": \"4607562519\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Freda Jacobson\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"979151\",\n      \"idNumber\": \"6848749229\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Roger Smith\"\n    },\n    {\n      \"sales\": 2158,\n      \"total\": 2158,\n      \"sfmCode\": \"433979\",\n      \"idNumber\": \"3777397080\",\n      \"grandTotal\": 2481.7,\n      \"puerReturns\": 323.7,\n      \"consultantName\": \"Bernice Grady PhD\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"239919\",\n      \"idNumber\": \"2254324813\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Dr. Wesley Douglas\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"436334\",\n      \"idNumber\": \"1198930306\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Darrell Medhurst\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"455045\",\n      \"idNumber\": \"1694377270\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Clinton Doyle\"\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 2898,
+    "total_tokens": 3697,
+    "completion_tokens": 799,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.7279638215416675,
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "96d1e9fa6ed944e0a5c062dc12d31a2d",
+  "batch_gpu_seconds": 89.47113171700002,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 3.7279638215416675,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"date\": \"2026-01\",\n  \"title\": \"Pay-In Sheet - 2026-01\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"distNumber\": \"465861\",\n  \"consultants\": [\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"543582\",\n      \"idNumber\": \"9959969283\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Ellen Cassin-Hahn III\"\n    },\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"215197\",\n      \"idNumber\": \"4430267226\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Jackie Bechtelar\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"380948\",\n      \"idNumber\": \"4607562519\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Freda Jacobson\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"979151\",\n      \"idNumber\": \"6848749229\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Roger Smith\"\n    },\n    {\n      \"sales\": 2158,\n      \"total\": 2158,\n      \"sfmCode\": \"433979\",\n      \"idNumber\": \"3777397080\",\n      \"grandTotal\": 2481.7,\n      \"puerReturns\": 323.7,\n      \"consultantName\": \"Bernice Grady PhD\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"239919\",\n      \"idNumber\": \"2254324813\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Dr. Wesley Douglas\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"436334\",\n      \"idNumber\": \"1198930306\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Darrell Medhurst\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"455045\",\n      \"idNumber\": \"1694377270\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Clinton Doyle\"\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-b87ba1b8b0945606",
+    "object": "chat.completion",
+    "created": 1786376471,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"date\": \"2026-01\",\n  \"title\": \"Pay-In Sheet - 2026-01\",\n  \"manager\": \"Lawrence Jacobi\",\n  \"distNumber\": \"465861\",\n  \"consultants\": [\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"543582\",\n      \"idNumber\": \"9959969283\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Ellen Cassin-Hahn III\"\n    },\n    {\n      \"sales\": 3578,\n      \"total\": 3578,\n      \"sfmCode\": \"215197\",\n      \"idNumber\": \"4430267226\",\n      \"grandTotal\": 4114.7,\n      \"puerReturns\": 536.7,\n      \"consultantName\": \"Jackie Bechtelar\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"380948\",\n      \"idNumber\": \"4607562519\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Freda Jacobson\"\n    },\n    {\n      \"sales\": 4584,\n      \"total\": 4584,\n      \"sfmCode\": \"979151\",\n      \"idNumber\": \"6848749229\",\n      \"grandTotal\": 5271.6,\n      \"puerReturns\": 687.6,\n      \"consultantName\": \"Roger Smith\"\n    },\n    {\n      \"sales\": 2158,\n      \"total\": 2158,\n      \"sfmCode\": \"433979\",\n      \"idNumber\": \"3777397080\",\n      \"grandTotal\": 2481.7,\n      \"puerReturns\": 323.7,\n      \"consultantName\": \"Bernice Grady PhD\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"239919\",\n      \"idNumber\": \"2254324813\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Dr. Wesley Douglas\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"436334\",\n      \"idNumber\": \"1198930306\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Darrell Medhurst\"\n    },\n    {\n      \"sales\": 2621,\n      \"total\": 2500,\n      \"sfmCode\": \"455045\",\n      \"idNumber\": \"1694377270\",\n      \"grandTotal\": 2500,\n      \"puerReturns\": 121,\n      \"consultantName\": \"Clinton Doyle\"\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 2898,
+     "total_tokens": 3697,
+     "completion_tokens": 799,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"title\",\n    \"date\",\n    \"distNumber\",\n    \"manager\",\n    \"consultants\"\n  ],\n  \"properties\": {\n    \"date\": {\n      \"type\": \"string\"\n    },\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"manager\": {\n      \"type\": \"string\"\n    },\n    \"distNumber\": {\n      \"type\": \"string\"\n    },\n    \"consultants\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"consultantName\",\n          \"idNumber\",\n          \"sfmCode\"\n        ],\n        \"properties\": {\n          \"sales\": {\n            \"type\": \"number\",\n            \"description\": \"BB Sales\"\n          },\n          \"total\": {\n            \"type\": \"number\",\n            \"description\": \"BB Total\"\n          },\n          \"sfmCode\": {\n            \"type\": \"string\"\n          },\n          \"idNumber\": {\n            \"type\": \"string\"\n          },\n          \"grandTotal\": {\n            \"type\": \"number\",\n            \"description\": \"Grand Total\"\n          },\n          \"puerReturns\": {\n            \"type\": \"number\",\n            \"description\": \"Puer Returns\"\n          },\n          \"consultantName\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}",
+  "gpu_seconds": 3.7279638215416675,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/payslip/payslip_003.png",
+  "startup_gpu_seconds": 130.548779548,
+  "is_cold_start": true
+ }
+}

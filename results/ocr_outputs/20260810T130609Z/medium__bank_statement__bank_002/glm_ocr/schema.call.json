@@ -1,0 +1,121 @@
+{
+ "engine": "glm_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "请按下列JSON格式输出图中信息:\n\n{\n  \"tableData\": [\n    {\n      \"symbol\": \"\",\n      \"assetClass\": \"\",\n      \"closingPrice\": \"\",\n      \"oneDayChange\": \"\",\n      \"avgDailyVolume\": \"\"\n    }\n  ],\n  \"institution\": \"\",\n  \"clientServices\": {\n    \"contactInfo\": \"\",\n    \"consultantName\": \"\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": \"\",\n        \"description\": \"\",\n        \"currentPeriod\": \"\"\n      }\n    ],\n    \"ytdEndingBalance\": \"\",\n    \"currentPeriodEndingBalance\": \"\"\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "zai-org/GLM-OCR via vllm-server",
+ "latency_seconds": 2.9446446508333346,
+ "cost_per_page": 0.0009010612631550004,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial Brokerage Account Statement\",\n  \"clientServices\": {\n    \"contactInfo\": \"ID: Xbr0ssu4v\\nBusiness: (119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 2017,\n        \"description\": \"Twelve month(s) ending 10/31/2017\",\n        \"currentPeriod\": 2017\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-b6721e0b6e1060da",
+   "object": "chat.completion",
+   "created": 1786375329,
+   "prompt_routed_experts": null,
+   "model": "glm-ocr",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial Brokerage Account Statement\",\n  \"clientServices\": {\n    \"contactInfo\": \"ID: Xbr0ssu4v\\nBusiness: (119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 2017,\n        \"description\": \"Twelve month(s) ending 10/31/2017\",\n        \"currentPeriod\": 2017\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-1cced44d",
+   "usage": {
+    "prompt_tokens": 6195,
+    "total_tokens": 6508,
+    "completion_tokens": 313,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A10",
+  "gpu_seconds": 2.9446446508333346,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "6bdca971d7724fa0824bf8c68d25dab3",
+  "batch_gpu_seconds": 70.67147162000003,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 2.9446446508333346,
+  "gpu_rate_usd_per_second": 0.000306,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial Brokerage Account Statement\",\n  \"clientServices\": {\n    \"contactInfo\": \"ID: Xbr0ssu4v\\nBusiness: (119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 2017,\n        \"description\": \"Twelve month(s) ending 10/31/2017\",\n        \"currentPeriod\": 2017\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-b6721e0b6e1060da",
+    "object": "chat.completion",
+    "created": 1786375329,
+    "prompt_routed_experts": null,
+    "model": "glm-ocr",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"tableData\": [\n    {\n      \"symbol\": \"VWO\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 44.11,\n      \"oneDayChange\": -0.0088,\n      \"avgDailyVolume\": 8214263\n    },\n    {\n      \"symbol\": \"IEFA\",\n      \"assetClass\": \"Equity\",\n      \"closingPrice\": 70.32,\n      \"oneDayChange\": -0.0066,\n      \"avgDailyVolume\": 8199248\n    }\n  ],\n  \"institution\": \"Ameriprise Financial Brokerage Account Statement\",\n  \"clientServices\": {\n    \"contactInfo\": \"ID: Xbr0ssu4v\\nBusiness: (119) 544-7071\",\n    \"consultantName\": \"Dr. Stephen Russel\"\n  },\n  \"portfolioSummary\": {\n    \"changes\": [\n      {\n        \"yearToDate\": 2017,\n        \"description\": \"Twelve month(s) ending 10/31/2017\",\n        \"currentPeriod\": 2017\n      }\n    ],\n    \"ytdEndingBalance\": 349460.58,\n    \"currentPeriodEndingBalance\": 311439.76\n  }\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-1cced44d",
+    "usage": {
+     "prompt_tokens": 6195,
+     "total_tokens": 6508,
+     "completion_tokens": 313,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "gpu_seconds": 2.9446446508333346,
+  "gpu_type": "A10",
+  "model_version": "zai-org/GLM-OCR via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_002.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

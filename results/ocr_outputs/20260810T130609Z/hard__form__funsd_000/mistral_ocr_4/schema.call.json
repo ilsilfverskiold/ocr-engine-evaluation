@@ -1,0 +1,237 @@
+{
+ "engine": "mistral_ocr",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"transmission_header_source\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Sending station name in the fax strip across the top edge\"\n    },\n    \"transmission_header_fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Fax number as printed in the transmission strip\"\n    },\n    \"transmission_header_timestamp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Date and time as printed in the transmission strip\"\n    },\n    \"transmission_header_page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ],\n      \"description\": \"Page marker as printed in the transmission strip\"\n    },\n    \"issuer_title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"issuer_name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"document_title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FAX NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FAX NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PHONE NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"NUMBER OF PAGES INCLUDING COVER SHEET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SENDER/PHONE NUMBER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPECIAL INSTRUCTIONS\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"instruction_banner\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"footer_tagline\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"printed_on_notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"bates_number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"TO\",\n    \"DATE\",\n    \"FAX NUMBER\",\n    \"NUMBER OF PAGES INCLUDING COVER SHEET\"\n  ]\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "mistral-ocr-latest",
+ "latency_seconds": 3.999047041987069,
+ "cost_per_page": 0.001,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"FAX NO.\": \"(614) 466-5087\", \"TO\": \"George Baroody\", \"FAX NUMBER\": \"(336) 335-7392\", \"PHONE NUMBER\": \"(336) 335-7363\", \"DATE\": \"12/10/98\", \"NUMBER OF PAGES INCLUDING COVER SHEET\": \"3\", \"SENDER/PHONE NUMBER\": \"June Flynn for Eric Brown/(614) 466-8980\", \"SPECIAL INSTRUCTIONS\": \"IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY, PLEASE CONTACT SENDER AS SOON AS POSSIBLE\", \"transmission_header_source\": \"Att. Gen. Admin. Office\", \"transmission_header_fax\": \"614-466-5087\", \"transmission_header_timestamp\": \"Dec 10 '98 17:46 P.01\", \"issuer_title\": \"Attorney General\", \"issuer_name\": \"Betty D. Montgomery\", \"document_title\": \"CONFIDENTIAL FACSIMILE TRANSMISSION COVER SHEET\", \"footer_address\": \"State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428\", \"footer_website\": \"www.ag.state.oh.us\", \"footer_tagline\": \"An Equal Opportunity Employer\", \"printed_on_notice\": \"Printed on Recycled Paper\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "ATT. GEN. ADMIN. OFFICE Fax:614-466-5087\n\nDec 10 '98 17:46 P.01\n\n![img-0.jpeg](img-0.jpeg)\n\nAttorney General\nBetty D. Montgomery\n\n# CONFIDENTIAL FACSIMILE\nTRANSMISSION COVER SHEET\n\nFAX NO. (614) 466-5087\n\nTO: George Baroody\n\nFAX NUMBER: (336) 335-7392\n\nPHONE NUMBER: (336) 335-7363\n\nDATE: 12/10/98\n\nNUMBER OF PAGES INCLUDING COVER SHEET: 3\n\nSENDER/PHONE NUMBER: June Flynn for Eric Brown/(614) 466-8980\n\nSPECIAL INSTRUCTIONS:\n\n# IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY,\nPLEASE CONTACT SENDER\nAS SOON AS POSSIBLE\n\nNOTE: THIS MESSAGE IS INTENDED ONLY FOR THE USE OF THE INDIVIDUAL OR ENTITY TO WHOM IT IS ADDRESSED AND MAY CONTAIN INFORMATION THAT IS PRIVILEGED, CONFIDENTIAL, AND EXEMPT FROM DISCLOSURE UNDER APPLICABLE LAW. If the reader of this message is not the intended recipient or the employee or agent responsible for delivering the message to the intended recipient, you are hereby notified that any dissemination, distribution, copying, or conveying of this communication in any manner is strictly prohibited. If you have received this communication in error, please notify us immediately by telephone and return the original message to us at the address below via the U.S. Postal Service. Thank you for your cooperation.\n\n82092117\n\nState Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428\n\nwww.ag.state.oh.us\n\nAn Equal Opportunity Employer\n\nPrinted on Recycled Paper",
+    "images": [
+     {
+      "id": "img-0.jpeg",
+      "top_left_x": 60,
+      "top_left_y": 128,
+      "bottom_right_x": 143,
+      "bottom_right_y": 212,
+      "image_base64": null,
+      "image_annotation": null
+     }
+    ],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1000,
+     "width": 754
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 100,
+      "top_left_y": 83,
+      "bottom_right_x": 352,
+      "bottom_right_y": 98,
+      "content": "ATT. GEN. ADMIN. OFFICE Fax:614-466-5087",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 417,
+      "top_left_y": 83,
+      "bottom_right_x": 589,
+      "bottom_right_y": 98,
+      "content": "Dec 10 '98 17:46 P.01",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 60,
+      "top_left_y": 128,
+      "bottom_right_x": 143,
+      "bottom_right_y": 212,
+      "content": "![img-0.jpeg](img-0.jpeg)",
+      "image_id": "img-0.jpeg",
+      "confidence_scores": null,
+      "type": "image"
+     },
+     {
+      "top_left_x": 146,
+      "top_left_y": 150,
+      "bottom_right_x": 306,
+      "bottom_right_y": 188,
+      "content": "Attorney General\nBetty D. Montgomery",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 262,
+      "top_left_y": 249,
+      "bottom_right_x": 467,
+      "bottom_right_y": 280,
+      "content": "# CONFIDENTIAL FACSIMILE\nTRANSMISSION COVER SHEET",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 293,
+      "top_left_y": 296,
+      "bottom_right_x": 435,
+      "bottom_right_y": 313,
+      "content": "FAX NO. (614) 466-5087",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 344,
+      "bottom_right_x": 235,
+      "bottom_right_y": 359,
+      "content": "TO: George Baroody",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 375,
+      "bottom_right_x": 350,
+      "bottom_right_y": 391,
+      "content": "FAX NUMBER: (336) 335-7392",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 383,
+      "top_left_y": 375,
+      "bottom_right_x": 626,
+      "bottom_right_y": 392,
+      "content": "PHONE NUMBER: (336) 335-7363",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 406,
+      "bottom_right_x": 235,
+      "bottom_right_y": 422,
+      "content": "DATE: 12/10/98",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 439,
+      "bottom_right_x": 472,
+      "bottom_right_y": 455,
+      "content": "NUMBER OF PAGES INCLUDING COVER SHEET: 3",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 471,
+      "bottom_right_x": 536,
+      "bottom_right_y": 487,
+      "content": "SENDER/PHONE NUMBER: June Flynn for Eric Brown/(614) 466-8980",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 503,
+      "bottom_right_x": 274,
+      "bottom_right_y": 518,
+      "content": "SPECIAL INSTRUCTIONS:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 172,
+      "top_left_y": 598,
+      "bottom_right_x": 555,
+      "bottom_right_y": 646,
+      "content": "# IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY,\nPLEASE CONTACT SENDER\nAS SOON AS POSSIBLE",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 100,
+      "top_left_y": 691,
+      "bottom_right_x": 626,
+      "bottom_right_y": 814,
+      "content": "NOTE: THIS MESSAGE IS INTENDED ONLY FOR THE USE OF THE INDIVIDUAL OR ENTITY TO WHOM IT IS ADDRESSED AND MAY CONTAIN INFORMATION THAT IS PRIVILEGED, CONFIDENTIAL, AND EXEMPT FROM DISCLOSURE UNDER APPLICABLE LAW. If the reader of this message is not the intended recipient or the employee or agent responsible for delivering the message to the intended recipient, you are hereby notified that any dissemination, distribution, copying, or conveying of this communication in any manner is strictly prohibited. If you have received this communication in error, please notify us immediately by telephone and return the original message to us at the address below via the U.S. Postal Service. Thank you for your cooperation.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 631,
+      "top_left_y": 773,
+      "bottom_right_x": 652,
+      "bottom_right_y": 876,
+      "content": "82092117",
+      "confidence_scores": null,
+      "type": "aside_text"
+     },
+     {
+      "top_left_x": 179,
+      "top_left_y": 887,
+      "bottom_right_x": 537,
+      "bottom_right_y": 901,
+      "content": "State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 310,
+      "top_left_y": 902,
+      "bottom_right_x": 408,
+      "bottom_right_y": 914,
+      "content": "www.ag.state.oh.us",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 289,
+      "top_left_y": 914,
+      "bottom_right_x": 431,
+      "bottom_right_y": 927,
+      "content": "An Equal Opportunity Employer",
+      "confidence_scores": null,
+      "type": "footer"
+     },
+     {
+      "top_left_x": 289,
+      "top_left_y": 941,
+      "bottom_right_x": 426,
+      "bottom_right_y": 953,
+      "content": "Printed on Recycled Paper",
+      "confidence_scores": null,
+      "type": "footer"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-latest",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 106037
+  },
+  "document_annotation": "{\"FAX NO.\": \"(614) 466-5087\", \"TO\": \"George Baroody\", \"FAX NUMBER\": \"(336) 335-7392\", \"PHONE NUMBER\": \"(336) 335-7363\", \"DATE\": \"12/10/98\", \"NUMBER OF PAGES INCLUDING COVER SHEET\": \"3\", \"SENDER/PHONE NUMBER\": \"June Flynn for Eric Brown/(614) 466-8980\", \"SPECIAL INSTRUCTIONS\": \"IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY, PLEASE CONTACT SENDER AS SOON AS POSSIBLE\", \"transmission_header_source\": \"Att. Gen. Admin. Office\", \"transmission_header_fax\": \"614-466-5087\", \"transmission_header_timestamp\": \"Dec 10 '98 17:46 P.01\", \"issuer_title\": \"Attorney General\", \"issuer_name\": \"Betty D. Montgomery\", \"document_title\": \"CONFIDENTIAL FACSIMILE TRANSMISSION COVER SHEET\", \"footer_address\": \"State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428\", \"footer_website\": \"www.ag.state.oh.us\", \"footer_tagline\": \"An Equal Opportunity Employer\", \"printed_on_notice\": \"Printed on Recycled Paper\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

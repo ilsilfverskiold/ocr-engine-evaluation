@@ -1,0 +1,107 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"income\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"line1\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Total amount from Form W-2 box 1.\"\n            },\n            \"c\": {\n              \"type\": \"number\",\n              \"description\": \"Tip income not reported on line 1a.\"\n            },\n            \"d\": {\n              \"type\": \"number\",\n              \"description\": \"Medicaid waiver payments not reported on Form W-2\"\n            },\n            \"e\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable dependent care benefits from Form 2441.\"\n            }\n          }\n        },\n        \"line2\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable interest.\"\n            }\n          }\n        },\n        \"line3\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Qualified dividends.\"\n            }\n          }\n        },\n        \"line6\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"a\",\n            \"b\",\n            \"c\"\n          ],\n          \"properties\": {\n            \"a\": {\n              \"type\": \"number\",\n              \"description\": \"Social security benefits.\"\n            },\n            \"b\": {\n              \"type\": \"number\",\n              \"description\": \"Taxable amount.\"\n            },\n            \"c\": {\n              \"type\": \"boolean\",\n              \"description\": \"Whether the taxpayer elected to use the lump sum election method. Return false unless box is checked.\"\n            }\n          }\n        },\n        \"line7\": {\n          \"type\": \"number\",\n          \"description\": \"Capital gain or loss\"\n        },\n        \"line10\": {\n          \"type\": \"number\",\n          \"description\": \"Adjustments to income from Schedule 1\"\n        },\n        \"line13\": {\n          \"type\": \"number\",\n          \"description\": \"Qualified business income deduction \"\n        },\n        \"line14\": {\n          \"type\": \"number\",\n          \"description\": \"Total of lines 12 and 13\"\n        }\n      },\n      \"description\": \"Income items from Form 1040\"\n    },\n    \"spouse\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"spouseSsn\": {\n          \"type\": \"string\",\n          \"description\": \"Spouse social security number. Return in the following format: 123-45-6789\"\n        },\n        \"spouseLastName\": {\n          \"type\": \"string\"\n        },\n        \"spouseMiddleInitial\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"address\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"address1\",\n        \"address2\",\n        \"city\",\n        \"state\",\n        \"zipCode\"\n      ],\n      \"properties\": {\n        \"city\": {\n          \"type\": \"string\"\n        },\n        \"state\": {\n          \"type\": \"string\"\n        },\n        \"zipCode\": {\n          \"type\": \"string\"\n        },\n        \"address1\": {\n          \"type\": \"string\",\n          \"description\": \"Address line one. Excludes Suites / Apartment numbers.\"\n        },\n        \"address2\": {\n          \"type\": \"string\",\n          \"description\": \"Address line two\"\n        }\n      }\n    },\n    \"taxPeriod\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"taxYearEnd\": {\n          \"type\": \"string\",\n          \"description\": \"Last 2 digits of the tax year (ex: 22)\"\n        },\n        \"taxDateStart\": {\n          \"type\": \"string\",\n          \"description\": \"Month and day tax year start (ex: 1/01)\"\n        }\n      }\n    },\n    \"dependents\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"firstName\",\n          \"lastName\",\n          \"ssn\",\n          \"relationship\",\n          \"childTaxCredit\",\n          \"otherCredit\"\n        ],\n        \"properties\": {\n          \"ssn\": {\n            \"type\": \"string\",\n            \"description\": \"Dependent social security number. Return in the following format: 123-45-6789\"\n          },\n          \"lastName\": {\n            \"type\": \"string\"\n          },\n          \"firstName\": {\n            \"type\": \"string\"\n          },\n          \"otherCredit\": {\n            \"type\": \"boolean\",\n            \"description\": \"Does the dependent qualify for other credit. Return false unless box is checked\"\n          },\n          \"relationship\": {\n            \"type\": \"string\"\n          },\n          \"childTaxCredit\": {\n            \"type\": \"boolean\",\n            \"description\": \"Does the dependent qualify for child tax credit. Return false unless box is checked\"\n          }\n        }\n      },\n      \"description\": \"List of dependents and their information. Return null if there are no dependents.\"\n    },\n    \"ageBlindness\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"bornBeforeJanuary\",\n        \"blind\",\n        \"spouseBornBeforeJanuary\",\n        \"spouseBlind\"\n      ],\n      \"properties\": {\n        \"blind\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Taxpayer is blind. Return false unless box is checked.\"\n        },\n        \"spouseBlind\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse is blind. Return false unless box is checked.\"\n        },\n        \"bornBeforeJanuary\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Taxpayer born before January 2, 1960. Return false unless box is checked.\"\n        },\n        \"spouseBornBeforeJanuary\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse born before January 2, 1960. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Taxpayer and Spouse age and blindess classification.\"\n    },\n    \"filingStatus\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"single\",\n        \"HOH\",\n        \"MFJ\",\n        \"MFS\",\n        \"QSS\",\n        \"nonResident\"\n      ],\n      \"properties\": {\n        \"HOH\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Head of household. Return false unless box is checked.\"\n        },\n        \"MFJ\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Married filing jointly. Return false unless box is checked.\"\n        },\n        \"MFS\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Married filing separately. Return false unless box is checked.\"\n        },\n        \"QSS\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Qualifying surviving spouse. Return false unless box is checked.\"\n        },\n        \"single\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Single. Return false unless box is checked.\"\n        },\n        \"nonResident\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Taxpayer filing status.\"\n    },\n    \"personalInfo\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"middleInitial\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"digitalAssets\": {\n      \"type\": \"boolean\",\n      \"description\": \"Receive, sell, exchange, or otherwise dispose of digital assets\"\n    },\n    \"standardDeductions\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"youAreDependent\",\n        \"spouseIsDependent\",\n        \"spouseItemizes\"\n      ],\n      \"properties\": {\n        \"spouseItemizes\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Spouse itemizes on a separate return. Return false unless box is checked.\"\n        },\n        \"youAreDependent\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Someone can claim you as a dependent. Return false unless box is checked.\"\n        },\n        \"spouseIsDependent\": {\n          \"not\": {\n            \"type\": \"null\"\n          },\n          \"type\": \"boolean\",\n          \"description\": \"Someone can claim your spouse as a dependent. Return false unless box is checked.\"\n        }\n      },\n      \"description\": \"Standard Deductions.\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 2.514566875062883,
+ "cost_per_page": 0.00186725,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"income\": {\n    \"line1\": {\n      \"a\": 86630,\n      \"c\": 1363,\n      \"d\": null,\n      \"e\": 4907\n    },\n    \"line2\": {\n      \"b\": 1403\n    },\n    \"line3\": {\n      \"a\": null\n    },\n    \"line6\": {\n      \"a\": null,\n      \"b\": null,\n      \"c\": false\n    },\n    \"line7\": 8241,\n    \"line10\": 4146,\n    \"line13\": 6613,\n    \"line14\": 14662\n  },\n  \"address\": {\n    \"city\": \"Findlay\",\n    \"state\": \"WY\",\n    \"zipCode\": \"82446\",\n    \"address1\": \"7568 Buford Parks\",\n    \"address2\": \"Apt. 738\"\n  },\n  \"taxPeriod\": {\n    \"taxYearEnd\": \"24\",\n    \"taxDateStart\": \"1/01\"\n  },\n  \"dependents\": [\n    {\n      \"ssn\": \"495-68-6179\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Katarina\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    },\n    {\n      \"ssn\": \"440-13-0331\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Gabe\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    },\n    {\n      \"ssn\": \"143-76-5810\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Noble\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    }\n  ],\n  \"ageBlindness\": {\n    \"blind\": true,\n    \"spouseBlind\": false,\n    \"bornBeforeJanuary\": true,\n    \"spouseBornBeforeJanuary\": false\n  },\n  \"filingStatus\": {\n    \"single\": false,\n    \"HOH\": true,\n    \"MFJ\": false,\n    \"MFS\": false,\n    \"QSS\": false,\n    \"nonResident\": false\n  },\n  \"personalInfo\": {\n    \"middleInitial\": \"B\"\n  },\n  \"digitalAssets\": false,\n  \"standardDeductions\": {\n    \"spouseItemizes\": false,\n    \"youAreDependent\": false,\n    \"spouseIsDependent\": true\n  }\n}",
+ "structured_output": {},
+ "metadata": {
+  "input_tokens": 3479,
+  "output_tokens": 665,
+  "leg": "schema"
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Mon, 10 Aug 2026 14:08:05 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=2397",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"income\": {\n    \"line1\": {\n      \"a\": 86630,\n      \"c\": 1363,\n      \"d\": null,\n      \"e\": 4907\n    },\n    \"line2\": {\n      \"b\": 1403\n    },\n    \"line3\": {\n      \"a\": null\n    },\n    \"line6\": {\n      \"a\": null,\n      \"b\": null,\n      \"c\": false\n    },\n    \"line7\": 8241,\n    \"line10\": 4146,\n    \"line13\": 6613,\n    \"line14\": 14662\n  },\n  \"address\": {\n    \"city\": \"Findlay\",\n    \"state\": \"WY\",\n    \"zipCode\": \"82446\",\n    \"address1\": \"7568 Buford Parks\",\n    \"address2\": \"Apt. 738\"\n  },\n  \"taxPeriod\": {\n    \"taxYearEnd\": \"24\",\n    \"taxDateStart\": \"1/01\"\n  },\n  \"dependents\": [\n    {\n      \"ssn\": \"495-68-6179\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Katarina\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    },\n    {\n      \"ssn\": \"440-13-0331\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Gabe\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    },\n    {\n      \"ssn\": \"143-76-5810\",\n      \"lastName\": \"O'Conner\",\n      \"firstName\": \"Noble\",\n      \"otherCredit\": false,\n      \"relationship\": \"parent\",\n      \"childTaxCredit\": true\n    }\n  ],\n  \"ageBlindness\": {\n    \"blind\": true,\n    \"spouseBlind\": false,\n    \"bornBeforeJanuary\": true,\n    \"spouseBornBeforeJanuary\": false\n  },\n  \"filingStatus\": {\n    \"single\": false,\n    \"HOH\": true,\n    \"MFJ\": false,\n    \"MFS\": false,\n    \"QSS\": false,\n    \"nonResident\": false\n  },\n  \"personalInfo\": {\n    \"middleInitial\": \"B\"\n  },\n  \"digitalAssets\": false,\n  \"standardDeductions\": {\n    \"spouseItemizes\": false,\n    \"youAreDependent\": false,\n    \"spouseIsDependent\": true\n  }\n}",
+       "thought": null,
+       "thought_signature": "b'\\x124\\n2\\x01\\x11M2\\x0f\\xac\\xd6\\xbb\\x1f\\xc5o\\x99Z\\x95\\xa9\\x96\\x16\\x8f\\x9d\\xeb\\x8a\\x0cB\\x1fr\\xce9B\\xe1Tt\\xb8\\x0c;\\xb4|l7\\xb75\\xff-\\xe9PD\\xd3\\xa7M\\t\\xc7'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "Q9t5ao39OfXGnsEPl6SamAg",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 665,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 3479,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 2377
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1102
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 4144,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

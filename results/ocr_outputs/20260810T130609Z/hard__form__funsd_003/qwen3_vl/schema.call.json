@@ -1,0 +1,122 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBMISSION DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PRE-SELL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"BIGIF / 2 FOR 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"$7.00 CARTON COUPON/BUYDOWN\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DISTRIBUTION_WITHIN_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"DISTRIBUTION_OUTSIDE_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 7.4904517595,
+ "cost_per_page": 0.0051983735210929995,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeepsport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Stco Serva\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": \"21\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": \"82\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": \"106\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": \"87\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": \"23\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": \"35\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ]\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-87ea7b34185fa41a",
+   "object": "chat.completion",
+   "created": 1786377542,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeepsport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Stco Serva\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": \"21\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": \"82\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": \"106\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": \"87\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": \"23\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": \"35\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ]\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 1210,
+    "total_tokens": 1934,
+    "completion_tokens": 724,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 7.4904517595,
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true,
+  "measurement_scope": "modal_batch",
+  "batch_id": "487960dfbcaa4442ae0577bab3ee6854",
+  "batch_gpu_seconds": 179.770842228,
+  "batch_size": 24,
+  "effective_gpu_seconds_per_document": 7.4904517595,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeepsport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Stco Serva\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": \"21\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": \"82\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": \"106\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": \"87\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": \"23\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": \"35\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ]\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-87ea7b34185fa41a",
+    "object": "chat.completion",
+    "created": 1786377542,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"TO\": \"K. A. Sparrow\",\n  \"FROM\": \"R. E. Lane\",\n  \"SUBMISSION DATE\": \"JUNE 30\",\n  \"SUBJECT\": \"STYLE LOW PRICE - PROGRESS REPORT\",\n  \"PRE-SELL\": \"Overall pre-sell efforts were successful. Retail accounts that previously stocked Style Full Price accepted the introduction of the low price.\",\n  \"BIGIF / 2 FOR 1\": \"Proved to be an excellent tool for pulling the balance of Style Full Price packs through the system. This aided the field greatly during the transition.\",\n  \"$7.00 CARTON COUPON/BUYDOWN\": \"Effective in those retail calls that we could not exchange product out of. Those situations were limited.\",\n  \"DISTRIBUTION_WITHIN_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"M. Maskos & Sons\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Pollock Candy and Cigar\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"McKeepsport Candy Co.\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Stco Serva\",\n      \"IND/LOR VOLUME\": \"521/42\",\n      \"NO. OF STORES\": \"150\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Sheetz\",\n      \"IND/LOR VOLUME\": \"137/20\",\n      \"NO. OF STORES\": \"183\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Thrift/Eckerd\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ],\n  \"DISTRIBUTION_OUTSIDE_REGION\": [\n    {\n      \"NAME OF ACCOUNT\": \"Kroger\",\n      \"IND/LOR VOLUME\": \"21\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Rich Oil\",\n      \"IND/LOR VOLUME\": \"82\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Super America\",\n      \"IND/LOR VOLUME\": \"106\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"CVS\",\n      \"IND/LOR VOLUME\": \"87\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"W H Smith\",\n      \"IND/LOR VOLUME\": \"23\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"7-11 318 Zon\",\n      \"IND/LOR VOLUME\": \"35\",\n      \"NO. OF STORES\": null\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Dairy Marts\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": \"43\"\n    },\n    {\n      \"NAME OF ACCOUNT\": \"Widman Drugs\",\n      \"IND/LOR VOLUME\": null,\n      \"NO. OF STORES\": null\n    }\n  ]\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 1210,
+     "total_tokens": 1934,
+     "completion_tokens": 724,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"TO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FROM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBMISSION DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUBJECT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PRE-SELL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"BIGIF / 2 FOR 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"$7.00 CARTON COUPON/BUYDOWN\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DISTRIBUTION_WITHIN_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    },\n    \"DISTRIBUTION_OUTSIDE_REGION\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"NAME OF ACCOUNT\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"IND/LOR VOLUME\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          },\n          \"NO. OF STORES\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ]\n          }\n        }\n      }\n    }\n  }\n}",
+  "gpu_seconds": 7.4904517595,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_003.png",
+  "startup_gpu_seconds": 115.545474538,
+  "is_cold_start": true
+ }
+}

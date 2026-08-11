@@ -1,0 +1,270 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"required\": [\n    \"firstName\",\n    \"lastName\",\n    \"address\"\n  ],\n  \"properties\": {\n    \"dob\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's date of birth as it appears\"\n    },\n    \"state\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's state as it appears\"\n    },\n    \"address\": {\n      \"type\": \"string\",\n      \"description\": \"Street address of the patient as it appears, only including number and street\"\n    },\n    \"lastName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's last name\"\n    },\n    \"firstName\": {\n      \"type\": \"string\",\n      \"description\": \"Patient's first name\"\n    },\n    \"spousePhone\": {\n      \"type\": \"string\",\n      \"description\": \"Spouse's phone number as it appear\"\n    },\n    \"isNewTherapy\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if requested medicine is new, must return true or false\"\n    },\n    \"isHospitalized\": {\n      \"type\": \"boolean\",\n      \"description\": \"Indicates if patient has been hospitalized in the past year, must return true or false\"\n    },\n    \"reviewOfSymptoms\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"chills\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chills, must return true or false\"\n        },\n        \"eyePain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced eye pain, must return true or false\"\n        },\n        \"fatigue\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced fatigue, must return true or false\"\n        },\n        \"coughing\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced persistent coughing, must return true or false\"\n        },\n        \"allergies\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has allergies, must return true or false\"\n        },\n        \"blackOuts\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced blackouts, must return true or false\"\n        },\n        \"chestPain\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced chest pain, must return true or false\"\n        },\n        \"hearingLoss\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced hearing loss, must return true or false\"\n        },\n        \"jointSwelling\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced joint swelling, must return true or false\"\n        },\n        \"dentalProblems\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced dental problems, must return true or false\"\n        },\n        \"excessiveThirst\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive thirst, must return true or false\"\n        },\n        \"excessiveBruising\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has experienced excessive bruising, must return true or false\"\n        },\n        \"tuberculosisExposure\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has been exposed to tuberculosis, must return true or false\"\n        },\n        \"difficultyEmptyingBowelOrBladder\": {\n          \"type\": \"boolean\",\n          \"description\": \"Indicates if patient has difficulty emptying their bowel or bladder, must return true or false\"\n        }\n      },\n      \"description\": \"Indicates if specific symptoms are present or not\"\n    },\n    \"familyHealthHistory\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"relation\"\n        ],\n        \"properties\": {\n          \"relation\": {\n            \"type\": \"string\",\n            \"description\": \"Relation to patient\"\n          },\n          \"ageAtDeath\": {\n            \"type\": \"number\",\n            \"description\": \"If applicable, age at death\"\n          },\n          \"ageIfLiving\": {\n            \"type\": \"number\",\n            \"description\": \"Age if living\"\n          },\n          \"chronicHealthProblems\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"string\"\n            },\n            \"description\": \"List of chronic health problems, must return null if not provided\"\n          }\n        }\n      },\n      \"description\": \"Patient's family health history, must return null if not provided\"\n    }\n  }\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "model_version": "llama-extract",
+ "latency_seconds": 30.011345415958203,
+ "cost_per_page": 0.003,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"dob\": \"10-06-1961\", \"state\": \"HI\", \"address\": \"8574 Aspen Ave\", \"lastName\": \"Brown\", \"firstName\": \"Daniel\", \"isNewTherapy\": false, \"isHospitalized\": true, \"reviewOfSymptoms\": {\"chills\": true, \"eyePain\": false, \"fatigue\": false, \"coughing\": true, \"allergies\": true, \"blackOuts\": true, \"chestPain\": true, \"hearingLoss\": false, \"jointSwelling\": false, \"dentalProblems\": false, \"excessiveThirst\": false, \"excessiveBruising\": true, \"tuberculosisExposure\": true, \"difficultyEmptyingBowelOrBladder\": true}, \"familyHealthHistory\": [{\"relation\": \"Father\", \"ageIfLiving\": 55.0, \"chronicHealthProblems\": [\"diabetes\", \"dementia\"]}, {\"relation\": \"Sister\", \"ageIfLiving\": 27.0, \"chronicHealthProblems\": [\"adhd\"]}]}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-08-10 15:18:07.903792+00:00",
+  "data": {
+   "dob": "10-06-1961",
+   "state": "HI",
+   "address": "8574 Aspen Ave",
+   "lastName": "Brown",
+   "firstName": "Daniel",
+   "isNewTherapy": false,
+   "isHospitalized": true,
+   "reviewOfSymptoms": {
+    "chills": true,
+    "eyePain": false,
+    "fatigue": false,
+    "coughing": true,
+    "allergies": true,
+    "blackOuts": true,
+    "chestPain": true,
+    "hearingLoss": false,
+    "jointSwelling": false,
+    "dentalProblems": false,
+    "excessiveThirst": false,
+    "excessiveBruising": true,
+    "tuberculosisExposure": true,
+    "difficultyEmptyingBowelOrBladder": true
+   },
+   "familyHealthHistory": [
+    {
+     "relation": "Father",
+     "ageIfLiving": 55.0,
+     "chronicHealthProblems": [
+      "diabetes",
+      "dementia"
+     ]
+    },
+    {
+     "relation": "Sister",
+     "ageIfLiving": 27.0,
+     "chronicHealthProblems": [
+      "adhd"
+     ]
+    }
+   ]
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "dob": {
+     "description": "Patient's date of birth as it appears",
+     "type": "string"
+    },
+    "state": {
+     "description": "Patient's state as it appears",
+     "type": "string"
+    },
+    "address": {
+     "description": "Street address of the patient as it appears, only including number and street",
+     "type": "string"
+    },
+    "lastName": {
+     "description": "Patient's last name",
+     "type": "string"
+    },
+    "firstName": {
+     "description": "Patient's first name",
+     "type": "string"
+    },
+    "spousePhone": {
+     "description": "Spouse's phone number as it appear",
+     "type": "string"
+    },
+    "isNewTherapy": {
+     "description": "Indicates if requested medicine is new, must return true or false",
+     "type": "boolean"
+    },
+    "isHospitalized": {
+     "description": "Indicates if patient has been hospitalized in the past year, must return true or false",
+     "type": "boolean"
+    },
+    "reviewOfSymptoms": {
+     "description": "Indicates if specific symptoms are present or not",
+     "type": "object",
+     "properties": {
+      "chills": {
+       "description": "Indicates if patient has experienced chills, must return true or false",
+       "type": "boolean"
+      },
+      "eyePain": {
+       "description": "Indicates if patient has experienced eye pain, must return true or false",
+       "type": "boolean"
+      },
+      "fatigue": {
+       "description": "Indicates if patient has experienced fatigue, must return true or false",
+       "type": "boolean"
+      },
+      "coughing": {
+       "description": "Indicates if patient has experienced persistent coughing, must return true or false",
+       "type": "boolean"
+      },
+      "allergies": {
+       "description": "Indicates if patient has allergies, must return true or false",
+       "type": "boolean"
+      },
+      "blackOuts": {
+       "description": "Indicates if patient has experienced blackouts, must return true or false",
+       "type": "boolean"
+      },
+      "chestPain": {
+       "description": "Indicates if patient has experienced chest pain, must return true or false",
+       "type": "boolean"
+      },
+      "hearingLoss": {
+       "description": "Indicates if patient has experienced hearing loss, must return true or false",
+       "type": "boolean"
+      },
+      "jointSwelling": {
+       "description": "Indicates if patient has experienced joint swelling, must return true or false",
+       "type": "boolean"
+      },
+      "dentalProblems": {
+       "description": "Indicates if patient has experienced dental problems, must return true or false",
+       "type": "boolean"
+      },
+      "excessiveThirst": {
+       "description": "Indicates if patient has experienced excessive thirst, must return true or false",
+       "type": "boolean"
+      },
+      "excessiveBruising": {
+       "description": "Indicates if patient has experienced excessive bruising, must return true or false",
+       "type": "boolean"
+      },
+      "tuberculosisExposure": {
+       "description": "Indicates if patient has been exposed to tuberculosis, must return true or false",
+       "type": "boolean"
+      },
+      "difficultyEmptyingBowelOrBladder": {
+       "description": "Indicates if patient has difficulty emptying their bowel or bladder, must return true or false",
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "chills",
+      "eyePain",
+      "fatigue",
+      "coughing",
+      "allergies",
+      "blackOuts",
+      "chestPain",
+      "hearingLoss",
+      "jointSwelling",
+      "dentalProblems",
+      "excessiveThirst",
+      "excessiveBruising",
+      "tuberculosisExposure",
+      "difficultyEmptyingBowelOrBladder"
+     ],
+     "additionalProperties": false
+    },
+    "familyHealthHistory": {
+     "description": "Patient's family health history, must return null if not provided",
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "relation": {
+        "description": "Relation to patient",
+        "type": "string"
+       },
+       "ageAtDeath": {
+        "description": "If applicable, age at death",
+        "type": "number"
+       },
+       "ageIfLiving": {
+        "description": "Age if living",
+        "type": "number"
+       },
+       "chronicHealthProblems": {
+        "description": "List of chronic health problems, must return null if not provided",
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "required": [
+       "relation"
+      ],
+      "additionalProperties": false
+     }
+    }
+   },
+   "required": [
+    "firstName",
+    "lastName",
+    "address"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "d1ce141f-e341-43f9-bb73-a991206c3ab8",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 491,
+    "num_output_tokens": 302
+   },
+   "parse_job_id": "bb0e1cb3-389a-4a94-b8c3-59a48d6235dc"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "8ff1a6d4-81df-410f-bfda-66d21ce501f2",
+  "from_ui": false,
+  "id": "71a80a9e-46f8-43e5-acd2-54cbc7ab6920",
+  "job_id": "e5f98677-e312-4688-8b93-2ed3083eda8f",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-08-10 15:18:33.475932+00:00"
+ },
+ "metadata": {},
+ "raw_response": {}
+}
