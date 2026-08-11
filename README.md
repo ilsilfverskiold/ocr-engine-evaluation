@@ -128,7 +128,7 @@ are scored by an LLM judge — each for a specific reason, stated below.
 
 | Leg | Default scoring | With `--skip-judge` | Why a judge at all |
 |---|---|---|---|
-| `text` | **Deterministic** — GT coverage: share of unique reference words present | same | — |
+| `text` | **Deterministic** — GT coverage: share of unique reference words present — for the 82 gold-GT docs; the 11 silver-GT docs get a **judged estimate** | the 82 deterministic scores are unchanged; the 11 judged docs carry no score at all | 11 documents have no usable reference text — without the judge they cannot be scored |
 | `geometry` | **Deterministic** — words located: text match + box centers agree | same | — |
 | `markdown` | **LLM judge** — element accuracy against a checklist built from the page image | deterministic structural F1 vs. the reference markdown | our hand-written markdown references encode *one* valid rendering and are over-segmented — engines that correctly merge text into flowing prose scored low against them |
 | `tables` | **LLM judge** — cell accuracy against a checklist built from the page image | TEDS (tree edit distance) vs. the reference table | same problem: a byte-perfect table scored 0.846 against our reference for its HTML dialect; TEDS stays in the metrics as a diagnostic |
