@@ -1,9 +1,10 @@
 # Scoring design: how each leg is prompted and scored
 
-Seven legs, each measuring a different job people actually do with OCR. This
+Six legs, each measuring a different job people actually do with OCR. This
 document fixes, per leg: **what we ask the engine for**, **which engines can
 answer**, **how the answer is scored**, and **what we normalise so we measure
-content rather than formatting**.
+content rather than formatting**. A seventh section covers the document judge
+— not a leg, but the estimate used where text ground truth is unusable.
 
 The governing principle: **a benchmark must hold one variable still.** Engines
 legitimately return different shapes — in production you would adapt your
@@ -334,17 +335,21 @@ compare engines within a document, not across sources.
 
 ---
 
-## Leg 7 — Document judge (silver-GT pages)
+## The document judge (silver-GT pages) — an estimate, not a leg
 
-**Ask:** nothing extra from the engine — this leg evaluates the engine's default
+The judge estimates text accuracy where there is no gold ground truth. It does
+not appear in `--legs`, and its scores are labelled as judged in the report and
+kept separate from the deterministic text scores.
+
+**Ask:** nothing extra from the engine — it evaluates the engine's default
 conversion output, same as leg 1.
 
 **Engines:** all 14.
 
 **Applies to:** the 11 documents whose machine-generated ground-truth text is
 too unreliable to score against (6 newspaper, 5 report pages — 42–66% of the
-page missing from GT). These are evaluated by the judge instead of the text
-leg.
+page missing from GT). These get the judged estimate instead of a text-leg
+score.
 
 **Score:** **element accuracy** —
 `(correct + 0.5 × partial) / total_checklist_items`, judged by an LLM.
@@ -427,7 +432,7 @@ definitive.
 | key_value | ~60 of 65 with structured GT | chart/financial_table excluded (< 3 scalar fields) |
 | schema | 65 of 93 | docs without `_structured_gt.json` |
 | geometry | 17 of 93 | most documents (only SROIE, FUNSD, SynFinTabs) |
-| judge | 11 of 93 | only silver-GT documents (newspaper, report) |
+| (document judge) | 11 of 93 | the silver-GT documents — an estimate, not a leg |
 
 Engines are never penalised for missing GT — the doc is reported "not
 applicable". But sparse GT means some legs rest on fewer data points than
@@ -469,7 +474,8 @@ additional cost not reflected in per-engine pricing (tracked separately as
 
 Legs 1–3 all score from one default conversion call per (engine, document).
 Legs 4–5 each need a schema-prompted call. Leg 6 needs its own geometry call.
-Leg 7 (judge) uses the same default conversion output as legs 1–3, so no
-additional engine call is needed — only the judge's LLM calls.
+The document judge scores the same default conversion output as legs 1–3, so
+it costs no extra engine call — only its own LLM calls.
 The judge adds one Gemini call per (document, engine) pair for schema,
-key_value, tables, and the document judge, minus items settled locally.
+key_value, tables, markdown, and the document judge, minus items settled
+locally.
