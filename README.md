@@ -15,6 +15,7 @@ python run_benchmark.py --report 20260810T130609Z    # view the reference run
 
 Look into a routing calculator based on these results here: [artifact](https://claude.ai/code/artifact/d92e781d-11e6-4dd1-ae0f-d98eb5e2e4b0
 )
+
 ---
 
 ## Getting started
