@@ -39,10 +39,30 @@ from evaluation.structured_metrics import (
     walk_fields,
 )
 
-MODEL = "gemini-2.5-pro"
+MODEL = "gemini-2.5-pro"   # override with --judge-model (env OCR_JUDGE_MODEL)
 
-INPUT_PRICE_PER_TOKEN = 1.25 / 1_000_000
-OUTPUT_PRICE_PER_TOKEN = 10.00 / 1_000_000
+PRICING = {
+    "gemini-2.5-flash":      {"input": 0.30 / 1_000_000, "output": 2.50 / 1_000_000},
+    "gemini-2.5-pro":        {"input": 1.25 / 1_000_000, "output": 10.00 / 1_000_000},
+    "gemini-3.5-flash":      {"input": 1.50 / 1_000_000, "output": 9.00 / 1_000_000},
+    "gemini-3.5-flash-lite": {"input": 0.30 / 1_000_000, "output": 2.50 / 1_000_000},
+    "gemini-3.6-flash":      {"input": 1.50 / 1_000_000, "output": 7.50 / 1_000_000},
+}
+
+
+def _model() -> str:
+    return os.environ.get("OCR_JUDGE_MODEL") or MODEL
+
+
+def _thinking_config(model: str):
+    from google.genai import types
+    if model == "gemini-2.5-pro":
+        return None          # dynamic thinking — the pre-override behaviour
+    if model in ("gemini-2.5-flash", "gemini-3.5-flash"):
+        return types.ThinkingConfig(thinking_budget=0)
+    if model in ("gemini-3.5-flash-lite", "gemini-3.6-flash"):
+        return types.ThinkingConfig(thinking_level="MINIMAL")
+    return None
 
 CACHE_DIR = Path(__file__).parent.parent / "results" / "schema_judge_cache"
 
@@ -226,11 +246,13 @@ def _call(client, contents, schema) -> tuple[dict, object]:
     last: Exception | None = None
     for attempt in range(MAX_RETRIES):
         try:
+            model = _model()
             response = client.models.generate_content(
-                model=MODEL,
+                model=model,
                 contents=contents,
                 config=types.GenerateContentConfig(
                     temperature=0,
+                    thinking_config=_thinking_config(model),
                     response_mime_type="application/json",
                     response_schema=schema,
                 ),
@@ -246,9 +268,10 @@ def _call(client, contents, schema) -> tuple[dict, object]:
 def _cost(usage) -> float:
     if usage is None:
         return 0.0
+    prices = PRICING.get(_model(), PRICING[MODEL])
     prompt_tokens = getattr(usage, "prompt_token_count", 0) or 0
     output_tokens = getattr(usage, "candidates_token_count", 0) or 0
-    return prompt_tokens * INPUT_PRICE_PER_TOKEN + output_tokens * OUTPUT_PRICE_PER_TOKEN
+    return prompt_tokens * prices["input"] + output_tokens * prices["output"]
 
 
 def _verify_locally(item: SchemaChecklistItem, engine_text: str) -> str | None:

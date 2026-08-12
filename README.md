@@ -53,7 +53,12 @@ Tesseract and Docling run on your CPU with no API keys:
 python run_benchmark.py --engines tesseract,docling --tiers easy --skip-judge
 ```
 
-### 4. Run with cloud engines
+That covers 12 easy documents on the legs these two engines can answer —
+text, markdown, tables (docling) and text, geometry (tesseract) — all scored
+deterministically. `--skip-judge` drops the judge-only legs (key_value,
+schema), which neither engine could answer anyway.
+
+### 4. Set up cloud engines
 
 Copy `.env.example` to `.env` and fill in only the keys for the engines you
 want. Engines whose keys are missing are reported by `--check`; you simply
@@ -67,6 +72,30 @@ modal setup
 python scripts/setup_modal.py     # stores your HuggingFace token as a Modal secret
 python scripts/deploy_modal.py    # deploys the six GPU apps
 ```
+
+### 5. Run a benchmark
+
+```bash
+python run_benchmark.py --check                              # keys and deployments OK?
+python run_benchmark.py --estimate                           # what will it cost?
+
+# start small: one cheap engine, one tier, one leg
+python run_benchmark.py --engines mistral_ocr --tiers easy --legs text --skip-judge
+
+# then whatever combination you actually care about (LLM judge skipped)
+python run_benchmark.py --engines gemini_flash,mistral_ocr_4,glm_ocr \
+    --tiers easy,medium,hard --legs text,markdown,tables
+
+# or the whole thing
+python run_benchmark.py
+
+# re-print the finished run, free
+python run_benchmark.py --report    
+```
+
+The rest of this README explains how to pick engines and legs, what
+`--skip-judge` changes for each leg, and what different flag combinations
+actually run.
 
 ---
 
@@ -158,14 +187,15 @@ are scored by an LLM judge — each for a specific reason, stated below.
 | `geometry` | **Deterministic** — words located: text match + box centers agree | same | — |
 | `markdown` | **LLM judge** — element accuracy against a checklist built from the page image | deterministic structural F1 vs. the reference markdown | our hand-written markdown references encode *one* valid rendering and are over-segmented — engines that correctly merge text into flowing prose scored low against them |
 | `tables` | **LLM judge** — cell accuracy against a checklist built from the page image | TEDS (tree edit distance) vs. the reference table | same problem: a byte-perfect table scored 0.846 against our reference for its HTML dialect; TEDS stays in the metrics as a diagnostic |
-| `key_value` | **LLM judge** — field accuracy, matching by *value* | unchanged — still judged (no deterministic scorer exists) | engines legitimately name fields differently — `"company"` vs `"Company Name"`. Deterministic key-matching punished naming, not extraction |
-| `schema` | **LLM judge** — field accuracy, matching by *value* | unchanged — still judged (no deterministic scorer exists) | same — and Textract returns FORMS pairs, not JSON, so there is no key to match deterministically |
+| `key_value` | **LLM judge** — field accuracy, matching by *value* | not run — judge-only, no deterministic scorer exists | engines legitimately name fields differently — `"company"` vs `"Company Name"`. Deterministic key-matching punished naming, not extraction |
+| `schema` | **LLM judge** — field accuracy, matching by *value* | not run — judge-only, no deterministic scorer exists | same — and Textract returns FORMS pairs, not JSON, so there is no key to match deterministically |
 
-So `--skip-judge` changes exactly three things: markdown falls back to the
-deterministic structural F1, tables falls back to TEDS, and the silver-text
-estimate (below) is skipped. It does **not** affect schema or key_value —
-those have no non-judge way to be scored, so selecting them always needs
-`GOOGLE_API_KEY`, flag or no flag.
+So `--skip-judge` means: markdown falls back to the deterministic structural
+F1, tables falls back to TEDS, the silver-text estimate (below) is skipped —
+and the judge-only legs do not run at all. With the default all-legs
+selection they are dropped automatically; asking for them explicitly
+(`--legs schema --skip-judge`) is refused with an error, because there is no
+non-judge way to score them.
 
 One honest caveat about the fallbacks: the deterministic markdown and tables
 scorers are exactly what the judge was built to replace. They compare against
@@ -183,31 +213,33 @@ They are directional, not definitive. So the text story is: **gold GT for 82
 documents, a judged estimate for the other 11** — and `--skip-judge` means
 those 11 simply carry no score.
 
-### Worked examples — what actually runs
+### Worked examples — from free to judged
 
-`--tiers easy --legs schema --skip-judge`
-: 12 easy documents have schema GT, so all 12 are called. Schema is
-judge-scored — the flag does not change that — so this still makes Gemini
-verdict calls and still needs `GOOGLE_API_KEY`. The flag saves nothing here;
-it only matters for markdown, tables, and the silver-text estimate.
-
-`--engines docling --legs markdown` (no flag)
-: docling emits markdown, so it competes on all 57 markdown-GT documents. With
-`GOOGLE_API_KEY` set, scoring is the markdown judge — one cached checklist per
-document (shared with every other engine, so if the reference run already
-built it, it is free) plus one verdict call per document. Without the key,
-scoring falls back to the deterministic F1 automatically — same run, judge
-quality traded for zero judge cost.
+`--engines tesseract --tiers easy --legs text --skip-judge`
+: the smallest run there is: one free local engine, 12 documents, one leg,
+scored deterministically against gold GT. No keys, no cost — this is the
+command to check your setup works end to end.
 
 `--engines tesseract,docling --tiers easy --skip-judge`
-: entirely free: local engines, deterministic text/tables/markdown scoring,
-no API keys at all.
+: still free. Both local engines, everything they can answer (text, markdown,
+tables, geometry), all scored deterministically. The judge-only legs are
+dropped automatically.
 
-The pattern for spending less: the judge is the main non-engine cost, so run
-cheap first (`--skip-judge`, or just the deterministic legs) to check your
-setup and get rough rankings, and pay for judged runs when the numbers need
-to hold up. `--estimate` prints both parts — engine cost and judge cost —
-before anything is spent.
+`--engines docling --legs markdown`
+: same engine, judge on. Docling competes on all 57 markdown-GT documents;
+with `GOOGLE_API_KEY` set the markdown judge scores it — checklists are
+cached and shared across engines, one verdict call per document. Without the
+key it falls back to the deterministic F1 on its own.
+
+`--engines gemini_flash --tiers easy --legs schema`
+: structured extraction, which is always judged: 12 easy documents, one
+schema-prompted call each, field accuracy matched by value. Needs
+`GOOGLE_API_KEY` for both the engine and the judge. Adding `--skip-judge`
+here is refused — schema has no deterministic scorer, so there is nothing to
+fall back to.
+
+`--estimate` prints engine cost and judge cost separately for whatever
+combination you build, before anything is spent.
 
 Full methodology, prompts, and normalisation rules per leg:
 [docs/scoring-design.md](docs/scoring-design.md).
@@ -240,17 +272,37 @@ exactly; only undecided items reach the model.
 All verdicts are cached under `results/*_judge_cache/`, and the reference
 run's caches ship with this repo — re-scoring the reference run costs nothing.
 
-### Which model judges what
+### Which model judges what, and how to change it
 
-All judges are Gemini models, called with your `GOOGLE_API_KEY`. Defaults, and
-the file whose constant to edit to change them:
+All judges are Gemini models, called with your `GOOGLE_API_KEY`. One flag
+overrides the model for every judge in the run:
 
-| Judge | Checklist model | Verdict model | Change it in |
-|---|---|---|---|
-| markdown | `gemini-2.5-pro` | `gemini-3.6-flash` | `evaluation/markdown_judge.py` |
-| tables | `gemini-3.6-flash` | `gemini-3.6-flash` | `evaluation/table_judge.py` |
-| schema + key_value | — (deterministic) | `gemini-2.5-pro` | `evaluation/schema_judge.py` |
-| document judge (silver text) | `gemini-3.6-flash` | `gemini-3.6-flash` | `evaluation/judge.py` |
+```bash
+python run_benchmark.py --engines gemini_flash --legs tables \
+    --judge-model gemini-2.5-flash
+```
+
+(Equivalently, set `OCR_JUDGE_MODEL` in your `.env`.) An unknown model name
+fails immediately and lists the supported ones. Without the flag, each judge
+uses its default:
+
+| Judge | Checklist model | Verdict model |
+|---|---|---|
+| markdown | `gemini-2.5-pro` (not affected by the flag) | `gemini-3.6-flash` |
+| tables | `gemini-3.6-flash` | `gemini-3.6-flash` |
+| schema + key_value | — (deterministic, no model) | `gemini-2.5-pro` |
+| document judge (silver text) | `gemini-3.6-flash` | `gemini-3.6-flash` |
+
+Two things worth knowing. The markdown *checklist* model stays at its default
+even under the flag — checklists are cached and shared across engines, and
+keeping the checklist builder fixed keeps every engine measured against the
+same reference. And cached checklists/verdicts are reused regardless of the
+flag: to re-judge existing documents with a different model you must clear
+the relevant `results/*_judge_cache/` entries first.
+
+Per-judge defaults live as constants at the top of `evaluation/judge.py`,
+`evaluation/table_judge.py`, `evaluation/markdown_judge.py` and
+`evaluation/schema_judge.py` if you want finer control than one global flag.
 
 Supported models and per-million-token pricing:
 
@@ -293,7 +345,7 @@ penalised.
 | `mistral_ocr_4` | Mistral API | $0.0040 | text, markdown, tables, schema² |
 | `llamaparse` | LlamaCloud | $0.00375 | text, markdown, tables, schema² |
 | `gemini_flash` | Google API | ~$0.0007 | all six legs |
-| `claude_sonnet_4_6` | Anthropic API | ~$0.0120 | all six legs |
+| `claude_sonnet_4_6` | Anthropic API | ~$0.0120 | all six legs³ |
 | `mineru` | Modal GPU | ~$0.0009 | text, markdown, tables |
 | `glm_ocr` | Modal GPU | ~$0.0006 | text, markdown, tables, key_value, schema |
 | `paddleocr_vl` | Modal GPU | ~$0.0014 | text, markdown, tables |
@@ -307,6 +359,14 @@ the judge checks whether each expected field value appears in the output
 regardless of format.
 ² via the vendor's own extraction feature (Mistral Annotations, LlamaExtract) —
 their documented structured path, not a prompt we invented.
+³ one asymmetry to know about: for schema/key_value, Gemini runs with the
+provider's JSON mode enabled, but Claude does not — the Anthropic API has no
+JSON mode and the current model rejects assistant prefill, so Claude answers
+from the prompt's "Output only JSON" instruction alone, at temperature 0. This
+costs it little in *our* scores, because the judge matches expected values
+against the raw output and never parses the JSON — but it means the benchmark
+does not test Claude's guaranteed-structure path (forced tool use), which is
+what you would use in production.
 
 ## What it costs to run
 
@@ -373,9 +433,9 @@ python run_benchmark.py --rerun-errors
 ```
 
 Useful flags: `--tiers easy,medium,hard`, `--max-docs N` for a quick check,
-`--skip-judge` to score markdown/tables deterministically and skip the
-silver-text estimate (schema/key_value stay judged — see the scoring table
-above), `--workers N` to cap parallelism.
+`--skip-judge` to run without any Gemini calls — markdown/tables score
+deterministically, the silver-text estimate is skipped, and the judge-only
+legs (key_value, schema) are dropped — and `--workers N` to cap parallelism.
 
 **How a run executes.** Local CPU engines go first, one at a time, one document
 at a time — your machine never runs two engines at once (first runs also
@@ -415,7 +475,13 @@ Benchmarks are only as good as their reference data, and pretending otherwise
 produces numbers that describe the annotation rather than the engines. Every
 known problem with this corpus is recorded in
 [documents/gt_limitations.json](documents/gt_limitations.json) and **printed
-with every run**. In brief:
+with every run**.
+
+Judge scoring changed how much of this matters. The markdown and tables
+headline scores no longer compare against our references at all — the judge
+builds its checklist from the page image — so weaknesses in those references
+now only affect the deterministic `--skip-judge` fallbacks. What still
+reaches the headline numbers:
 
 - **11 documents cannot be scored on text at all.** Their ground truth was
   machine-generated when the corpus was built and is too unreliable (42–66% of
@@ -423,16 +489,21 @@ with every run**. In brief:
   them was attempted and declined — multi-column newspapers, a rotated numeric
   table, a handwritten ledger — because a model transcription would have added
   more error than it removed.
-- **8 documents have model-transcribed ground truth**, checked against the
-  consensus of 14 engines, replacing text that was unusable.
+- **8 documents have model-transcribed text ground truth**, checked against
+  the consensus of 14 engines, replacing text that was unusable. The text leg
+  scores against it directly.
 - **17 documents had their schemas extended by hand**, because the source
   datasets scope their annotations to the task *they* were built for. SROIE
   ships four fields where its receipts carry about twenty-five extractable
   values — which put 12 of 14 engines at a perfect score and measured nothing.
-- **5 fabricated table references were removed** — they described schema field
-  names rather than the columns printed on the page.
+  The schema/key_value judge checks values *from this annotation* — it fixes
+  how matching is done, not where the expected values come from.
 - **6 handwriting pages are composites** of individual line images, so the
   handwriting is genuine but the page layout is synthetic.
+
+And one that now only limits coverage: **5 fabricated table references were
+removed** (they described schema field names rather than the columns printed
+on the page), so those 5 documents simply do not compete in the tables leg.
 
 ## Documentation
 

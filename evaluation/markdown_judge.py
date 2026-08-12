@@ -365,9 +365,15 @@ def judge_markdown(
     client=None,
     use_cache: bool = True,
     checklist_model: str = DEFAULT_CHECKLIST_MODEL,
-    verdict_model: str = DEFAULT_VERDICT_MODEL,
+    verdict_model: str | None = None,
 ) -> MarkdownJudgeResult:
-    """Stages 1-3 for one (document, engine) pair."""
+    """Stages 1-3 for one (document, engine) pair.
+
+    ``verdict_model`` honours the --judge-model override (OCR_JUDGE_MODEL);
+    the checklist model stays fixed because checklists are cached and shared.
+    """
+    verdict_model = (verdict_model or os.environ.get("OCR_JUDGE_MODEL")
+                     or DEFAULT_VERDICT_MODEL)
     try:
         cache_path = _verdict_cache_path(
             Path(document_path).stem, engine_name

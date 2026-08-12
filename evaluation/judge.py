@@ -275,9 +275,10 @@ def _sample_checklist(items: list[ChecklistItem]) -> list[ChecklistItem]:
 
 def build_checklist(
     document_path: Path, client=None, use_cache: bool = True,
-    model: str = DEFAULT_MODEL,
+    model: str | None = None,
 ) -> tuple[list[ChecklistItem], float]:
     """Stage 1. Engine-blind, cached — every engine is checked against the same list."""
+    model = model or os.environ.get("OCR_JUDGE_MODEL") or DEFAULT_MODEL
     cache_path = CACHE_DIR / f"{Path(document_path).stem}.json"
     if use_cache and cache_path.exists():
         cached = json.loads(cache_path.read_text(encoding="utf-8"))
@@ -341,13 +342,14 @@ def judge_document(
     engine_name: str = "",
     client=None,
     use_cache: bool = True,
-    model: str = DEFAULT_MODEL,
+    model: str | None = None,
 ) -> JudgeResult:
     """Stages 1-3 for one (document, engine) pair.
 
     The model never returns a score. It returns observations; the arithmetic
     below is ours.
     """
+    model = model or os.environ.get("OCR_JUDGE_MODEL") or DEFAULT_MODEL
     try:
         if client is None:
             client = make_client()

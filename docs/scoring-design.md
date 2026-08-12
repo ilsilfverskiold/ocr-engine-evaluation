@@ -224,8 +224,13 @@ engine is asked for the same structure. An engine returning a different shape
 has not expressed a preference — it failed to follow the instruction, which is
 a real and reportable result.
 
-**Engines (8):** gemini_flash and claude_sonnet_4_6 natively (JSON mode /
-tool use); qwen3_vl, glm_ocr and deepseek_ocr by prompt — glm_ocr through its
+**Engines (8):** gemini_flash with the provider's JSON mode enabled
+(`response_mime_type="application/json"`); claude_sonnet_4_6 by prompt at
+temperature 0 — the Anthropic API has no JSON mode, the current model rejects
+assistant prefill, and we have not implemented forced tool use, so the prompt's
+own "Output only JSON" instruction is the only enforcement (the judge matches
+by value against the raw output, so fenced or imperfect JSON is not penalised
+in scoring); qwen3_vl, glm_ocr and deepseek_ocr by prompt — glm_ocr through its
 card's own Chinese extraction prompt, with the schema rendered as an *empty
 example object* rather than a JSON Schema document, because that is the form
 the card demonstrates and handing it the schema document makes it echo the

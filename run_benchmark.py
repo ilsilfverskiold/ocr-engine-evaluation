@@ -1684,6 +1684,11 @@ def parse_args():
                         f"Known: {', '.join(ALL_LEGS)}")
     p.add_argument("--skip-judge", action="store_true",
                    help="Skip the LLM judge on silver-GT documents")
+    p.add_argument("--judge-model", default=None, metavar="MODEL",
+                   help="Override the Gemini model used for judge verdicts "
+                        "(all judges). Supported: gemini-2.5-flash, "
+                        "gemini-2.5-pro, gemini-3.5-flash, "
+                        "gemini-3.5-flash-lite, gemini-3.6-flash")
     p.add_argument("--estimate", action="store_true",
                    help="Print cost estimate and exit — no API calls")
     p.add_argument("--check", action="store_true",
@@ -1795,6 +1800,28 @@ def main() -> None:
     if unknown:
         print(f"Unknown engine(s): {', '.join(unknown)}. Known: {', '.join(ENGINES)}")
         sys.exit(1)
+
+    if args.judge_model:
+        from evaluation.judge import PRICING as _judge_pricing
+        if args.judge_model not in _judge_pricing:
+            print(f"Unknown judge model: {args.judge_model}. "
+                  f"Supported: {', '.join(sorted(_judge_pricing))}")
+            sys.exit(1)
+        # The judges read this at call time — one flag reaches all of them.
+        os.environ["OCR_JUDGE_MODEL"] = args.judge_model
+
+    # key_value and schema have no deterministic scorer — they are judged or
+    # they are nothing. Asking for them together with --skip-judge is a
+    # contradiction: refuse an explicit ask, silently drop them from the
+    # default all-legs selection.
+    judge_only = [l for l in legs if l in ("key_value", "schema")]
+    if args.skip_judge and judge_only:
+        if args.legs.strip().lower() != "all":
+            print(f"--skip-judge cannot run judge-only leg(s): "
+                  f"{', '.join(judge_only)}. These legs have no deterministic "
+                  f"scorer — drop them from --legs, or drop --skip-judge.")
+            sys.exit(1)
+        legs = [l for l in legs if l not in ("key_value", "schema")]
 
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     log = setup_logging(ts)
