@@ -237,3 +237,61 @@ need a separate quote; compute estimates do not imply a commercial licence.
    per-pass estimates. Record provider charges, credits and startup separately.
 5. Compare like metrics with like metrics against the preserved baseline;
    deferred judges can later supply the original judged headlines.
+
+## Follow-up audit: flaws versus measurement limits
+
+The user asked whether the existing benchmark itself has flaws. The following
+were checked against code and saved run `20260810T130609Z`; no scores were
+changed and no judges were called. This is a targeted audit, not proof that
+every historical result is affected or a completed ranking-impact analysis.
+
+1. **Confirmed false-positive field verification.**
+   `evaluation/schema_judge.py::_verify_locally` removes punctuation and
+   accepts an expected value as a substring anywhere in the output. Direct
+   local calls reproduced all three incorrect `correct` verdicts:
+   expected `total=100`, output `{"total":1000}`;
+   expected `total=12.34`, output `{"total":1234}`;
+   expected `total=100`, output `{"subtotal":100,"total":900}`.
+   These local verdicts bypass the judge in both schema and KV scoring.
+   This is a correctness defect, beyond harmless formatting tolerance.
+   Historical incidence and ranking impact remain unmeasured. A fix should
+   preserve numeric meaning and field association, with ambiguous cases sent
+   to the judge; do not restore brittle exact schema-key matching for all
+   engine formats.
+2. **Schema task and headline do not establish the same capability.** The ask
+   is to fill a schema, but the scorer checks whether its values occur in
+   output, including raw text. A high score does not establish valid JSON,
+   correct nesting/types, or correctly assigned fields. Preserve value
+   recovery as useful evidence, but add separate schema-conformance and
+   association measurements if claiming schema-following quality. KV also
+   needs label/value association beyond value presence.
+3. **Verdict-cache identity is insufficient for reruns.** The schema/KV
+   verdict path uses document stem and engine name (KV has an engine suffix),
+   without output, prompt, model revision, GT or judge/scorer hashes. The
+   cache is read before the current output is evaluated. A changed response
+   under the same engine ID can reuse an old verdict. This is a confirmed
+   invalidation risk, not a demonstrated occurrence in the baseline. Later
+   rescoring must use content/configuration-aware cache keys.
+4. **Eligibility policy is inconsistent.** DeepSeek v1's KV exclusion after
+   failed attempts conflicts with the written rule that promptable engines
+   remain eligible despite poor scores; schema remains enabled. This calls
+   for a consistent task-support policy, not automatically adding arbitrary
+   prompting to every fixed OCR pipeline. Keep historical results intact.
+5. **Historical Mistral identity is unresolved.** All 158 saved inference
+   entries use `mistral-ocr-latest`. The row name/current runner cannot prove
+   which service revision produced them. Label that limitation and pin new
+   versions; do not retrospectively rename the baseline as a verified version.
+6. **Accuracy averages are conditional on successful calls.**
+   `aggregate_legs` drops rows carrying `error`. Comparing saved error keys
+   against later successful `(engine, document, leg)` records leaves five
+   unresolved Marker geometry cases. Other saved error rows were recovered;
+   counting all error rows would overstate failures. The report does expose
+   inference errors, but accuracy alone is not end-to-end reliability.
+   Show completion coverage alongside quality, with any failure-adjusted
+   metric separately labelled.
+
+Text GT coverage's insensitivity to extra words, repetition and word order is
+an explicitly documented design limit, rather than a newly discovered bug.
+It should be read with CER/WER/precision and repetition indicators. The
+no-judge collection/filtering limitations above concern the planned extension;
+they do not establish that the prior judged run omitted those 11 pages.

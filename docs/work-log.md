@@ -66,3 +66,17 @@ planner; arithmetic checked locally; public primary-source prices rechecked;
 local documentation links and Git whitespace checked. No engine/scorer code,
 run outputs or deployments changed; no inference or judge calls were made.
 Only this nested repository's documentation is included in the commit.
+
+## 2026-09-30 — Targeted audit of existing benchmark flaws
+
+- Reproduced three false-positive local schema/KV verdicts without calling a
+  judge: numeric substring, decimal stripping, and wrong-field association.
+- Recorded schema-conformance measurement gaps and insufficient verdict-cache
+  identity, distinguishing demonstrated code behavior from unmeasured impact
+  on historical results.
+- Rechecked saved Mistral identities and error recovery. Five Marker geometry
+  document/leg errors remain without a successful replacement; other saved
+  errors were recovered. Accuracy aggregation excludes error rows.
+- Added the findings to the leg/cost document. No benchmark code, cached
+  verdicts or saved scores changed. Validation used read-only inspection,
+  local verifier calls, and Git whitespace checks; no paid/model calls ran.
