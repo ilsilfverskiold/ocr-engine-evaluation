@@ -37,3 +37,32 @@ The parent repository was not staged or committed.
 Next: the implementation agent should read the handoff and referenced Modal
 skill, resolve the remaining dependency/asset contracts, and build within this
 repository. Record changes and validation here as work progresses.
+
+## 2026-09-30 — Benchmark-leg audit and preliminary costs
+
+User clarification: establish which benchmark legs each candidate can enter,
+how those legs are scored, and preliminary implementation/run costs. Continue
+research/documentation only; another agent will implement.
+
+- Re-read executable pass planning, registry, GT eligibility, scorers and
+  no-judge CLI behavior. Enumerated all existing engines' pass plans locally.
+- Computed live corpus counts: 93 total; 82 text, 57 Markdown, 42 tables,
+  65 schema, 17 geometry. KV has 65 pass-eligible but 56 scoreable references.
+  Confirmed no-judge GT filtering retains only 82 pages; grounded
+  Markdown/table/geometry union is 63.
+- Recorded stale geometry/table/KV prose and the historical DeepSeek KV
+  exclusion's conflict with the stated interface-based eligibility rule.
+- Checked upstream Chandra and Surya custom-prompt interfaces; expanded
+  extraction candidates instead of assuming that OCR task examples define
+  their entire callable interface.
+- Wrote [leg/pass/cost matrix](engine-leg-and-cost-matrix.md), including all
+  16 distinct engines, unresolved contracts, deterministic versus judged
+  metrics, API estimates, request rounding and conditional Modal scenarios.
+- Linked the original handoff to the more precise matrix and added the new
+  Surya/Chandra interface findings.
+
+Validation: read-only Python imports of the actual corpus loader and pass
+planner; arithmetic checked locally; public primary-source prices rechecked;
+local documentation links and Git whitespace checked. No engine/scorer code,
+run outputs or deployments changed; no inference or judge calls were made.
+Only this nested repository's documentation is included in the commit.

@@ -7,6 +7,12 @@ This is the handoff for a separate implementation agent. Commit and log future
 work in the `ocr-benchmark` Git repository only. The user explicitly deferred
 judging; do not start judges as part of implementation or smoke testing.
 
+Read the companion [benchmark-leg and cost matrix](engine-leg-and-cost-matrix.md)
+before assigning engine eligibility. It covers all six legs, actual scorer/GT
+rules, shared inference passes, deferred judging and preliminary spend. Its
+leg matrix supersedes the abbreviated suggestions below, including prompted
+extraction candidates for Ovis, DeepSeek 2, Surya 2, Chandra 2 and dots.mocr.
+
 ## Scope and existing baseline
 
 The target is this `ocr-benchmark/` repository, not the older parent project.
@@ -153,6 +159,11 @@ budget. Code is Apache-2.0; weights have modified OpenRAIL-M terms.
 [Repository](https://github.com/datalab-to/surya),
 [settings](https://github.com/datalab-to/surya/blob/master/surya/settings.py).
 
+The manager's `BatchInputItem` also exposes a caller `prompt` override and
+guided JSON. Use that interface for separate KV/schema candidates while
+retaining the official predictor for conversion; preserve raw generation.
+See the companion matrix for source links and eligibility distinctions.
+
 ### MinerU 4.0
 
 4.0 is an application/pipeline release. Its tiers are Flash, Basic, Standard
@@ -268,6 +279,11 @@ runtime stack and processor settings before deployment.
 [repository](https://github.com/datalab-to/chandra),
 [settings](https://github.com/datalab-to/chandra/blob/master/chandra/settings.py).
 
+`BatchInputItem.prompt` is a real custom-prompt route, forwarded by the vLLM
+backend. Chandra is therefore also a KV/schema candidate. Its manager applies
+layout parsers to all replies, so extraction must preserve `raw` independently
+of rendered HTML/Markdown. See the companion matrix for the source check.
+
 ### dots.mocr
 
 Canonical HF location now resolves to `dots-studio/dots.mocr` (3B, MIT);
@@ -349,6 +365,9 @@ quality together. Never use multi-replica wall time as GPU cost.
 Observed Modal GPU-only rates: L4 $0.000222/s, A10 $0.000306/s, L40S
 $0.000542/s, A100-80GB $0.000694/s. CPU/RAM, startup and idle may add charges;
 no per-page cost or speedup is predicted here. [Modal pricing](https://modal.com/pricing).
+The companion [cost matrix](engine-leg-and-cost-matrix.md#preliminary-spend-modal-and-local-engines)
+provides explicit runtime sensitivity scenarios, CPU/RAM arithmetic and hosted
+API totals without presenting unmeasured throughput as a prediction.
 
 ## Changes needed when implementation begins
 
