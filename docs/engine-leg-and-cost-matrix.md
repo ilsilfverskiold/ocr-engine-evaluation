@@ -240,6 +240,9 @@ need a separate quote; compute estimates do not imply a commercial licence.
 
 ## Follow-up audit: flaws versus measurement limits
 
+**Before continuing:** answer the investigation questions in the next section
+before choosing scorer changes or interpreting their impact on the baseline.
+
 The user asked whether the existing benchmark itself has flaws. The following
 were checked against code and saved run `20260810T130609Z`; no scores were
 changed and no judges were called. This is a targeted audit, not proof that
@@ -295,3 +298,74 @@ an explicitly documented design limit, rather than a newly discovered bug.
 It should be read with CER/WER/precision and repetition indicators. The
 no-judge collection/filtering limitations above concern the planned extension;
 they do not establish that the prior judged run omitted those 11 pages.
+
+## Questions to resolve before continuing
+
+User clarification: KV does use the judge; understand why the existing design
+was chosen before changing it. The examples above demonstrate a local-check
+defect, not that the KV leg is entirely deterministic or that the judge itself
+made those mistakes.
+
+### Established rationale and execution path
+
+The [scoring design](scoring-design.md#leg-4--key-value-pairs-llm-judged) and
+[judge module](../evaluation/schema_judge.py) explain why the old exact-label
+scorer was replaced: GT identifiers and printed/returned labels can differ
+despite describing the same field, and native FORMS output has a different
+shape from JSON. The intended judge matches values to the right concept
+without requiring identical key names. This is a deliberate fairness choice.
+
+KV calls the shared schema judge with `scalar_only=True`. On a cache miss:
+
+1. Build a deterministic checklist from the scalar GT fields.
+2. Accept fields that pass `_verify_locally` as `correct`.
+3. Send only the remaining checklist items, plus engine output, to the LLM.
+4. Combine local and LLM verdicts into field accuracy and cache the result.
+
+A verdict-cache hit skips this evaluation and returns stored verdicts. Blank
+expected fields are not accepted by the local shortcut. If every nonblank
+item passes locally and no unresolved items remain, no LLM call is needed.
+Otherwise there is still a judge call: removing items reduces the checklist,
+but does not eliminate the call or its full engine-output input.
+
+The documentation describes local verification as a cost optimisation for
+obvious matches and claims roughly 85–90% are resolved locally. That percentage
+has **not been independently measured in this audit**. Git history available
+here introduces these modules in the initial benchmark commit; it does not
+provide an earlier incremental experiment establishing the shortcut's safety.
+
+### Open questions / required evidence
+
+1. **How often did the shortcut affect our actual KV and schema results?**
+   Audit saved outputs against their GT separately for both legs and by
+   engine. Count local-match candidates, then manually examine suspicious
+   short numbers, decimals, repeated values and wrong-field matches. The
+   synthetic counterexamples do not establish incidence or ranking changes.
+2. **Can we distinguish historical local verdicts from LLM verdicts?**
+   The current saved per-field verdict does not label its origin. Determine
+   what can be reconstructed from saved outputs and the historical scorer
+   revision, and what cannot be established without a controlled rescore.
+3. **Which formatting differences should be tolerated?** Preserve the
+   fairness rationale for `company` versus `Company Name`, currency formatting
+   and equivalent dates. Define numeric boundaries, decimal/thousands locale
+   handling and association with the correct concept; do not reinstate exact
+   key matching as a blanket fix.
+4. **What must the judge verify beyond value presence?** Inspect its exact
+   instructions and actual verdicts for wrong-field assignment, duplicate
+   values, blank fields and unrelated occurrences. Decide whether schema
+   compliance should be a separate metric while keeping value recovery.
+5. **What did the shortcut actually save?** Measure the fraction of entirely
+   avoided calls, checklist tokens and total cost on representative saved
+   cases. Compare that benefit with a stricter local match or sending all
+   fields to the judge. Do not infer cost savings from matched-field counts.
+6. **Could stale caches have affected prior comparisons?** Trace scorer,
+   prompt, GT and output changes against cache reuse. Establish a safe cache
+   identity before rescoring; preserve the original verdicts and provenance.
+7. **Would any correction change the conclusions?** After the offline audit,
+   specify a minimal paired rescore and report score/ranking differences by
+   leg and engine, including uncertainty. Do not invalidate or replace the
+   baseline based only on these synthetic examples.
+
+These are investigation tasks, not permission to run judges now. Keep the
+existing no-judge instruction in force. No scorer fix or historical rescore
+has been performed as part of this clarification.

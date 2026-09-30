@@ -80,3 +80,17 @@ Only this nested repository's documentation is included in the commit.
 - Added the findings to the leg/cost document. No benchmark code, cached
   verdicts or saved scores changed. Validation used read-only inspection,
   local verifier calls, and Git whitespace checks; no paid/model calls ran.
+
+## 2026-09-30 — Judge rationale and questions before continuing
+
+- Clarified that KV uses the shared judge pipeline: local acceptance first,
+  LLM verdicts for unresolved fields, or previously cached verdicts.
+- Checked documentation and available Git history for the design rationale:
+  fair treatment of different field names/output formats, with a local cost
+  shortcut. Historical safety and claimed match-rate estimates remain
+  unverified by this audit.
+- Added explicit questions covering actual incidence, verdict origin,
+  acceptable normalisation, field association, measured savings, cache reuse
+  and ranking impact before choosing fixes or interpreting baseline impact.
+- Documentation only. Git whitespace checked; no engine/scorer edits, cache
+  mutations, inference, or judge calls.
