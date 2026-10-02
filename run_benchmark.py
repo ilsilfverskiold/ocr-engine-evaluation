@@ -860,6 +860,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     from evaluation.ground_truth import GroundTruthLoader
     from evaluation.code_judges import SCORER_VERSION as MD_TBL_VERSION
     from evaluation.kv_schema_code import SCORER_VERSION as KV_VERSION
+    from evaluation.geometry_leg import SCORER_VERSION as GEOMETRY_VERSION
 
     loader = GroundTruthLoader()
     results_jsonl = RUNS_DIR / f"{target}_results.jsonl"
@@ -992,7 +993,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         "rescore_of": sources, "collect_only": False, "scored": True,
         "scored_with_judge": not skip_judge,
         "scorers": {"markdown/tables": MD_TBL_VERSION, "key_value/schema": KV_VERSION,
-                    "geometry": "mutual-centre + line-level + block diagnostic (2026-10-01)",
+                    "geometry": GEOMETRY_VERSION,
                     "text": "gt coverage (unchanged)"},
         "scored_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
     }

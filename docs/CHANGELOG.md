@@ -6,6 +6,10 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Geometry-v2 assigns repeated words globally, preventing an early missing
+  occurrence from consuming a later correct box. All 145 saved rows replayed;
+  27 improve. Future details retain every scored reference/prediction box.
+
 - Table code-v4 rejects amounts under the wrong named row or year, preserves
   HTML spans, and uses unsampled header context. Corrected four receipt
   header coordinates from the source image without changing the saved cache.

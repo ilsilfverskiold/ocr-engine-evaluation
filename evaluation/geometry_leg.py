@@ -36,6 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
+SCORER_VERSION = "geometry-v2 (2026-10-02; global word assignment)"
 
 
 @dataclass
@@ -57,6 +58,7 @@ class GeometryScore:
     block_score: float | None = None         # block engines only (diagnostic)
     words_per_box: int | None = None
     worst_matches: list[dict[str, Any]] = field(default_factory=list)
+    matches: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def score(self) -> float | None:
@@ -64,6 +66,7 @@ class GeometryScore:
 
     def as_metrics(self) -> dict[str, Any]:
         return {
+            "geometry_scorer": SCORER_VERSION,
             "geometry_score": self.geometry_score,
             "geometry_line_score": self.line_score,
             "geometry_reference_lines": self.reference_lines,
@@ -81,7 +84,8 @@ class GeometryScore:
         }
 
     def as_detail(self) -> dict[str, Any]:
-        return {"worst_matches": self.worst_matches[:25]}
+        return {"worst_matches": self.worst_matches[:25], "matches": self.matches,
+                "match_box_coordinates": "normalized xyxy after recorded scale/axis conversion"}
 
 
 def normalize_word(text: str) -> str:
@@ -327,7 +331,8 @@ def score_geometry(
     for ref, best in pairs:
         if best is None:
             matches.append({"text": ref["text"], "iou": 0.0, "hit": False,
-                            "matched": False})
+                            "matched": False, "reference_bbox": ref["bbox"],
+                            "predicted_bbox": None, "predicted_text": None})
             continue
         overlap = iou(ref["bbox"], best["bbox"])
         hit = center_hit(ref["bbox"], best["bbox"])
@@ -335,7 +340,9 @@ def score_geometry(
         matched += 1
         located += hit
         matches.append({"text": ref["text"], "iou": round(overlap, 4),
-                        "hit": hit, "matched": True})
+                        "hit": hit, "matched": True,
+                        "reference_bbox": ref["bbox"], "predicted_bbox": best["bbox"],
+                        "predicted_text": best["text"]})
 
     line_score, line_n = line_level_score(ref_words, pred_words)
     return GeometryScore(
@@ -347,6 +354,7 @@ def score_geometry(
         predicted_words=len(pred_units),
         matched_words=matched,
         located_words=located,
+        matches=matches,
         parse_ok=True,
         rescaled_from_thousand=rescaled,
         axes_swapped=axes_swapped,
@@ -439,22 +447,35 @@ def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) ->
 
 
 def _match_words(refs, preds) -> list[tuple[dict, dict | None]]:
-    """Exact normalised-text buckets, best remaining box per reference word.
-    Matching on text first is what makes the box comparison meaningful: a high
-    overlap with the wrong word is not a hit."""
+    """One-to-one assignment within exact normalized-text buckets.
+
+    Maximize located occurrences first, then overlap. A missing early 'Fax'
+    must not consume a later correctly located 'FAX' and cause a cascade of
+    misses. Assignment is independent of the reference's reading order and
+    never lets one predicted box satisfy two reference occurrences.
+    """
+    from scipy.optimize import linear_sum_assignment
+
     buckets: dict[str, list[dict[str, Any]]] = {}
     for word in preds:
         buckets.setdefault(normalize_word(word["text"]), []).append(word)
-    out = []
-    for ref in refs:
-        candidates = buckets.get(normalize_word(ref["text"])) or []
+    reference_buckets = {}
+    for index, ref in enumerate(refs):
+        reference_buckets.setdefault(normalize_word(ref["text"]), []).append(index)
+    matches = [None] * len(refs)
+    for text, indices in reference_buckets.items():
+        candidates = buckets.get(text) or []
         if not candidates:
-            out.append((ref, None))
             continue
-        best = max(candidates, key=lambda c: iou(ref["bbox"], c["bbox"]))
-        candidates.remove(best)
-        out.append((ref, best))
-    return out
+        # One extra hit outweighs the maximum total IoU tie-breaker.
+        weight = min(len(indices), len(candidates)) + 1
+        rewards = [[weight * center_hit(refs[index]["bbox"], candidate["bbox"])
+                    + iou(refs[index]["bbox"], candidate["bbox"])
+                    for candidate in candidates] for index in indices]
+        row_indices, col_indices = linear_sum_assignment(rewards, maximize=True)
+        for row, col in zip(row_indices, col_indices):
+            matches[indices[row]] = candidates[col]
+    return list(zip(refs, matches))
 
 
 def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:

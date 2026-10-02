@@ -492,3 +492,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 26 targeted table tests and all 216 full-suite tests passed
   (108.17 seconds); git diff --check passed.
   No inference, judge, provider or Modal calls. Report remains provisional.
+
+## 2026-10-02 — remove reference-order bias in word geometry
+
+- The box audit reproduced a greedy assignment error: an early missing FAX
+  could consume a distant box belonging to a later correctly located FAX.
+  Word matching now solves a one-to-one assignment within each normalized
+  text group, maximizing located occurrences and then IoU. SROIE line
+  matching and the independent line/block diagnostics are unchanged.
+- Geometry metrics/manifests identify geometry-v2. New geometry details
+  include every matched/unmatched reference with the actual scored reference
+  and predicted boxes, prediction text, hit and IoU, not just 25 worst words.
+  Coordinates are explicitly labeled after normalization; raw calls remain
+  the source of original returned coordinates.
+- Replayed all 145 scored geometry rows against the previous matcher with
+  identical inputs/parser: 27 scores improve; none decrease. On funsd_000,
+  Textract 177 to 182 located (.7973 to .8198), PP-OCRv5 125 to 150 (.5631
+  to .6757), Tesseract 130 to 151 (.5856 to .6802), Gemini 70 to 74 (.3153
+  to .3333). Claude remains zero: its actual coordinates are displaced.
+- Qwen fintab_001 returns repeated text and coordinates reaching 2036,
+  outside the documented relative frame. The raw-coordinate overlay places
+  these off-page; previously recorded /999, /1000 and pixel-frame probes
+  remain necessary context rather than silently clipping or moving boxes.
+- Validation: 42 geometry/report tests pass, including reference-order
+  permutations, preventing box reuse, and complete coordinate evidence.
+  The preceding table/contract change passed the full 216-test suite.
+  No inference, provider, Modal or judge calls and no report publication.

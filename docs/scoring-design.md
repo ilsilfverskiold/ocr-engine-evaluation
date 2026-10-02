@@ -21,6 +21,9 @@ publish, or it does not compete in that leg. Both are honest results.
 > use code for per-engine verdicts. `code-v3` handles Markdown and tables;
 > `kv-schema-code-v4` handles key-value and schema. Image checklists and
 > printed-label aliases were created earlier by models and are reused.
+> Current audit code additionally includes table code-v4 (125/504 saved table
+> scores change) and geometry-v2 global word assignment (27/145 geometry
+> scores change). These offline diagnostics have not replaced the archived run.
 > `--skip-judge` keeps all six legs and disables new silver-document judge
 > calls. The rescore copies 110 old document-judge rows unchanged.
 >

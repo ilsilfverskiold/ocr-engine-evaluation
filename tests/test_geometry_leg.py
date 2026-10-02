@@ -261,3 +261,34 @@ def test_repeated_values_pair_by_position_not_by_first_exact_match():
                  {"text": "193.00", "bbox": [0.66, 0.78, 0.76, 0.80]}]
     result = score_geometry(predicted, reference=reference, granularity="line")
     assert result.located_words == 3, result.worst_matches
+
+
+def test_missing_early_word_does_not_consume_later_correct_boxes():
+    import itertools
+    reference = [{"text": "FAX", "bbox": [0.1, y, 0.2, y + 0.03]}
+                 for y in (0.1, 0.3, 0.5)]
+    prediction = reference[1:]
+    for order in itertools.permutations(reference):
+        result = score_geometry(prediction, reference=list(order))
+        assert result.located_words == 2
+        assert result.matched_words == 2
+        assert result.geometry_score == 0.6667
+
+
+def test_duplicate_reference_cannot_reuse_one_box():
+    box = {"text": "FAX", "bbox": [0.1, 0.1, 0.2, 0.13]}
+    result = score_geometry([box], reference=[box, box])
+    assert result.located_words == 1
+    assert result.geometry_score == 0.5
+
+
+def test_geometry_details_expose_scored_boxes_for_every_reference():
+    reference = [{"text": str(i), "bbox": [0.1, i / 100, 0.2, i / 100 + 0.005]}
+                 for i in range(30)]
+    detail = score_geometry(reference[:-1], reference=reference).as_detail()
+    assert len(detail["matches"]) == 30
+    assert len(detail["worst_matches"]) <= 25
+    first, last = detail["matches"][0], detail["matches"][-1]
+    assert first["reference_bbox"] == first["predicted_bbox"] == tuple(reference[0]["bbox"])
+    assert first["hit"] and first["predicted_text"] == "0"
+    assert last["predicted_bbox"] is None and not last["matched"]
