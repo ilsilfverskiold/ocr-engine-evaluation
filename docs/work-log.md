@@ -974,3 +974,15 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Record approval/cost preparation for future image-only reference calls;
   none are authorized or run by this documentation task. No new audit,
   engine/scoring/reference-building command, test run or push.
+
+
+## 2026-10-03 — compare Sonnet invoice/bank formatting provenance
+
+- Verify default invoice_000 and bank_001 saved provider responses exactly
+  match stored raw text: respectively 403 and zero literal `&nbsp;` entities.
+  Both have the same recorded model and normal end_turn completion.
+- Compare runner history: no default prompt change; only prompt logging was
+  added. Original calls lack persisted default prompts, so distinguish source
+  evidence from per-call proof. Inspect bank source and saved output; record
+  differing layout formatting and prompt follow-up in the next-session list.
+- Read-only evidence inspection; no inference, scoring, judge calls or push.
