@@ -393,3 +393,13 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 204 full-suite tests passed in 177.18s, including adversarial
   array/path cases, RM normalization and truncated native Qwen boxes. No
   engine/provider/Modal/judge calls. No GT data has been changed.
+
+## 2026-10-02 — remove obsolete schema verdict client
+
+- Removed the unused LLM verdict client, broad substring verifier and verdict
+  cache implementation from schema_judge.py. Its deterministic checklist
+  classes/building/sampling behavior is retained; the legacy module name
+  remains for imports. Existing checklist caches are still used by alias_pass.
+- Validation: deterministic helper AST comparison before removal, current
+  204-test full suite passing, and repository call-site inspection. No cache
+  deletion, new reference generation, model calls or result rewriting.
