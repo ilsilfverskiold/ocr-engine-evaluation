@@ -88,6 +88,21 @@ def test_parse_word_boxes_rejects_malformed_entries():
     assert parse_word_boxes([{"text": "a", "bbox": [1, 2]}]) is None
 
 
+def test_missing_box_array_bracket_retains_only_explicit_four_coordinates():
+    raw = '''[
+      {"text": "EXEMPT", "box_2d": 721, 372, 734, 425]},
+      {"text": "Equal", "box_2d": 915, "box_2d": 407, 443]},
+      {"text": "short", "bbox": 1, 2, 3]},
+      {"text": "long", "bbox": 1, 2, 3, 4, 5]},
+      {"text": "valid", "bbox": [1, 2, 3, 4]}
+    ]'''
+    boxes = parse_word_boxes(raw)
+    assert [b["text"] for b in boxes] == ["EXEMPT", "valid"]
+    assert boxes[0]["bbox"] == (372, 721, 425, 734)
+    assert "syntax_repair" in boxes[0] and "syntax_repair" not in boxes[1]
+    assert parse_word_boxes(boxes) == boxes
+
+
 def test_box_drawing_convention_is_not_penalised():
     # The tesseract-vs-SynFinTabs case: same center, box twice as tall. Raw
     # IoU called this 0.45 for a perfectly placed word; the headline must not.

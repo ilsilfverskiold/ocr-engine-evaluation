@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Geometry parser v4 recovers a missing opening box-array bracket only when
+  all four coordinates are explicitly present, recording each repair. This
+  corrects one new diagnostic score (65/222 → 79/222); none of the 145 archived
+  geometry scores or parsed-box counts change.
+
 - Geometry scoring accepts explicitly converted coordinate frames without
   applying a second scale heuristic; out-of-frame boxes remain evidence.
   Existing legacy-call behavior is unchanged.

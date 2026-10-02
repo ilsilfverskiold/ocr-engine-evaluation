@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v3 (2026-10-02; explicit axis policy and box evidence)"
+SCORER_VERSION = "geometry-v4 (2026-10-02; explicit frames and recoverable box syntax)"
 
 
 @dataclass
@@ -195,10 +195,24 @@ def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
                 # `"bbox": {...]` mid-array and lost all 90 words to it).
                 salvaged = []
                 for match in re.finditer(r"\{[^{}]*\}", text):
+                    source_item = match.group(0)
                     try:
-                        item = json.loads(match.group(0))
+                        item = json.loads(source_item)
                     except json.JSONDecodeError:
-                        continue
+                        # Some replies omit only the opening '[' while
+                        # retaining four explicit numbers and the closing ']'.
+                        # Recover syntax, never infer a missing coordinate.
+                        number = r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?"
+                        member = (r'((?<!\\)"(?:bbox|box|bounding_box|bbox_2d|box_2d)"\s*:\s*)'
+                                  r'(' + number + r'(?:\s*,\s*' + number + r'){3}\s*\])')
+                        repaired, count = re.subn(member, r"\1[\2", source_item)
+                        if count != 1:
+                            continue
+                        try:
+                            item = json.loads(repaired)
+                        except json.JSONDecodeError:
+                            continue
+                        item["_geometry_syntax_repair"] = "inserted missing opening box-array bracket; all four coordinates retained"
                     if isinstance(item, dict):
                         salvaged.append(item)
                 if not salvaged:
@@ -222,7 +236,11 @@ def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
         coords = _extract_box(item)
         if coords is None:
             continue
-        words.append({"text": str(text), "bbox": coords})
+        word = {"text": str(text), "bbox": coords}
+        repair = item.get("_geometry_syntax_repair") or item.get("syntax_repair")
+        if repair:
+            word["syntax_repair"] = repair
+        words.append(word)
     return words or None
 
 

@@ -730,3 +730,18 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   all 244 offline tests pass. The approved probe uses the explicit conversion
   for its pixel/yx1000 variants and records legacy heuristics for controls.
   No historical headline change is attributed to this option.
+
+## 2026-10-02 — recover explicit coordinates from malformed box syntax
+
+- A saved Gemini diagnostic response contains 39 malformed box entries.
+  Thirty-six have all four coordinates and a closing bracket but omit the
+  opening bracket; recover that exact syntax error without inferring values.
+  Three remaining entries lack coordinates and stay unusable. Preserve a
+  syntax-repair marker beside each recovered box and retain the raw reply.
+- Form geometry becomes 79/222 located (0.3559), rather than 65/222 when
+  these recoverable boxes were dropped. This is an adapter correction, not
+  new model inference. Incorrect text/box associations remain measurable.
+- Validation: 34 geometry tests pass, including malformed three/five-value
+  and duplicate-key examples that must not be invented into valid boxes.
+  Replayed all 145 archived geometry scores: zero score or parse-count
+  changes. No additional provider or judge call.
