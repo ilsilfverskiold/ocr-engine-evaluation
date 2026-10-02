@@ -403,3 +403,39 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: deterministic helper AST comparison before removal, current
   204-test full suite passing, and repository call-site inspection. No cache
   deletion, new reference generation, model calls or result rewriting.
+
+## 2026-10-02 — audit evidence and publication status
+
+- Corrected the local report's primary evidence: KV extracted pairs and
+  individual field verdicts; table grids/cell verdicts; actual geometry
+  boxes on source images. Default prompt evidence is recovered from source
+  with its logging limitation stated. Checked 12 source resolutions, SVG
+  box coordinates/counts and actual KV inputs before updating the local file.
+  It was not opened or presented as a cleared replacement report.
+- Audited 3,099 scored rows for exact source/pass and arithmetic; replayed
+  675 field and 145 geometry scores using the archived implementation, with
+  zero discrepancies. Scanned all 1,227 scores below .85 plus eight errors
+  across 57 engine/leg groups. The handoff now distinguishes confirmed defects,
+  observed output failures and unresolved reference/pipeline attribution.
+- Found 207 GT nulls prohibited by the supplied schemas, across 19 pages.
+  Eight saved LlamaExtract effective schemas contain closed empty objects
+  (two at root, five financial-table value maps, one form field), despite
+  SUCCESS jobs. These are task-contract defects. Inspected the upside-down
+  tax page, receipt currency amount, omitted chart content and actual box
+  overlays. Not a claim of complete manual GT re-annotation.
+- Rechecked author recipes: GLM recommends its layout/recognition SDK;
+  Qwen's official OCR notebook specifies x/y bbox_2d with a /999 plotting
+  transform. /999, /1000 and original-pixel probes do not rescue the poor
+  coordinates. Read primary sources; did not deploy or run models.
+- README, scoring design and handoff now withdraw the earlier final-status
+  claim. Original v4 numbers remain archived; the candidate v5 replay and
+  exploratory evidence stay in /private/tmp/ocr-benchmark-prepush-20261002.
+- Cleanup: removed the blanket /docs ignore and ignored the requested local
+  browser export directory only. Retained live shared reference caches and
+  all source outputs. Scanned 4,955 tracked paths: no credential-pattern
+  matches, tracked local caches/.env, or files over 20 MB. This is a pattern
+  scan, not a guarantee that every arbitrary secret format is detectable.
+- Validation: 204 tests passed; git diff --check passed; all result/source
+  files remain unchanged in Git. No paid calls or GitHub push. Full fairness
+  clearance awaits the explicit remaining task/reference and inference checks
+  in the handoff. Commit/log operations use the nested Git only.

@@ -10,10 +10,10 @@ couldn't find numbers we trusted. So we measured it ourselves and published
 everything: documents, ground truth, raw outputs, and the scoring code.
 
 ```bash
-python run_benchmark.py --report 20261002T095730Z    # final offline rescore
+python run_benchmark.py --report 20261002T095730Z    # saved rescore (under audit)
 ```
 
-Historical routing calculator (uses the original scores, not the final rescore): [artifact](https://claude.ai/code/artifact/d92e781d-11e6-4dd1-ae0f-d98eb5e2e4b0
+Historical routing calculator (uses the original scores, not the saved rescore): [artifact](https://claude.ai/code/artifact/d92e781d-11e6-4dd1-ae0f-d98eb5e2e4b0
 )
 
 ---
@@ -134,7 +134,7 @@ attribution are in
 
 Each leg is a different job, asked for differently and scored differently. The
 `--legs` column is the exact token to pass on the command line; "docs" is how
-many distinct pages were scored in the final saved-output rescore. Engine
+many distinct pages were scored in the saved-output rescore. Engine
 counts describe that run, not every integration available in the registry.
 
 | `--legs` value | The question | Docs | Engines |
@@ -144,7 +144,7 @@ counts describe that run, not every integration available in the registry.
 | `tables` | Did it recover the table, not just the cell text? | 42 | 12 |
 | `key_value` | Did it pull out label → value pairs? | 55¹ | 4 |
 | `schema` | Given *your* JSON schema, did it fill it correctly? | 65 | 7 |
-| `geometry` | Does it know *where* on the page each word is? | 17 | 8 |
+| `geometry` | Does it know *where* on the page each word is? | 17 | 9 |
 
 ¹ key_value uses scalar structured GT fields, requires at least three scalar
 fields, and scores only cached aliases marked as printed pairs. The current
@@ -183,7 +183,7 @@ the ask was the best one available to it.
 
 ## How each leg is scored
 
-The final saved-output rescore is `20261002T095730Z`. All six legs now use
+The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). Current field code is v5; the saved run still records v4. All six legs now use
 code for per-engine verdicts. Some reference material was created earlier by
 models; scoring an answer does not call those models again.
 
@@ -196,7 +196,7 @@ models; scoring an answer does not call those models again.
 | `schema` | `(correct + blank_ok) / sampled fields` | GT JSON/schema, up to 80 fields, with array-row alignment |
 | `geometry` | Located / reference words | Matching text and mutually containing box centers; line/block diagnostics are separate |
 
-The final run covers 82 text, 57 Markdown, 42 table, 55 key-value, 65 schema
+The saved run covers 82 text, 57 Markdown, 42 table, 55 key-value, 65 schema
 and 17 geometry pages. Coverage also varies by engine: Marker has only nine
 scored geometry pages and eight error rows. Errors and N/A are excluded from
 means. Headlines are means of document-type means, not pooled page averages.
@@ -206,7 +206,7 @@ separate document judge on the 11 silver-GT pages. It does **not** disable a
 selected Gemini OCR engine. Markdown needs a cached image checklist; key-value
 needs a cached printed-label mapping. Those are not generated automatically.
 
-The document judge is an estimate, not a seventh leg. The final rescore
+The document judge is an estimate, not a seventh leg. The saved rescore
 copies 110 previously saved judge rows unchanged and makes no new judge call.
 `--judge-model` affects that optional judge, not the six code-scored legs.
 Its supported model identifiers and internal cost assumptions are in
@@ -224,7 +224,7 @@ Examples:
 ```bash
 # Deterministic field scoring; the selected OCR engine still costs money.
 python run_benchmark.py --engines gemini_flash --tiers easy --legs schema --skip-judge
-# Inspect the final results without inference or judge calls.
+# Inspect the saved results without inference or judge calls.
 python run_benchmark.py --report 20261002T095730Z
 # Recompute from the three original inference sources, writing a new run.
 python run_benchmark.py --rescore 20260810T130609Z,20261001T102236Z,20261001T102808Z --skip-judge
@@ -232,7 +232,7 @@ python run_benchmark.py --rescore 20260810T130609Z,20261001T102236Z,20261001T102
 
 Current rules, limitations and handoff:
 [scoring design](docs/scoring-design.md),
-[final-run handoff](docs/handoff-2026-10-01.md).
+[audit handoff](docs/handoff-2026-10-01.md).
 
 ## The engines
 

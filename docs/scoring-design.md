@@ -13,7 +13,11 @@ ask every engine for the same thing. Where an engine cannot be asked (a fixed
 pipeline with no prompt), it competes through deterministic conversion code we
 publish, or it does not compete in that leg. Both are honest results.
 
-> **Current scoring: 2026-10-02, run `20261002T095730Z`.** All six legs
+> **Saved scoring: 2026-10-02, run `20261002T095730Z` — under audit.**
+> The v4 scores are provisional. See the handoff for confirmed scorer and
+> schema/reference contract defects; current field code is v5, whose offline replay
+> changes 32 field scores. A replacement final run awaits task/reference
+> repairs and the necessary controlled inference checks. All six legs
 > use code for per-engine verdicts. `code-v3` handles Markdown and tables;
 > `kv-schema-code-v4` handles key-value and schema. Image checklists and
 > printed-label aliases were created earlier by models and are reused.
