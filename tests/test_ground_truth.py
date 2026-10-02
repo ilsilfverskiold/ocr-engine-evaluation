@@ -51,9 +51,11 @@ def test_per_leg_reference_counts():
         return sum(1 for gt in CORPUS if gt.has_gt_for(leg))
 
     assert n("markdown") == 57
-    assert n("tables") == 42
+    assert n("tables") == 42        # a human marked the page as a table page
     assert n("schema") == 65
-    assert n("key_value") == 65
+    # One rule for key_value, shared by runner and scorer: at least 3 scalar
+    # (non-array) fields. 9 chart/table pages have structured GT but fewer.
+    assert n("key_value") == 56
     # 17 sidecars built 2026-08 from the source datasets' own boxes: SROIE 6
     # (pixel coords / image size), FUNSD 6 (LayoutLM 0-1000 -> /1000 — dividing
     # by image size corrupted x-coords once), SynFinTabs 5 (cell word boxes).

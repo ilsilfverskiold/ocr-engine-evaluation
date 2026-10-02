@@ -61,7 +61,7 @@ class LegSpec:
     question: str          # the user question this leg answers
     prompt: str | None     # the ask; None = the engine's default conversion
     scored_on: str         # headline metric, for the report header
-    method: str = "deterministic"  # "deterministic" or "LLM judge (Gemini 2.5 Pro)"
+    method: str = "deterministic"
     needs_schema: bool = False
     # Name of the inference pass this leg's prompt belongs to. Legs sharing a
     # pass name share one call. Legs answered natively never trigger a pass.
@@ -122,8 +122,8 @@ LEGS: dict[str, LegSpec] = {
             "Convert this document to Markdown. Preserve reading order, "
             "headings, lists and tables. Output only the Markdown."
         ),
-        scored_on="element accuracy (LLM judge) + deterministic F1",
-        method="LLM judge (Gemini)",
+        scored_on="element accuracy + supporting block F1",
+        method="code verdicts against cached image checklist",
         pass_name="markdown",
     ),
     TABLES: LegSpec(
@@ -134,8 +134,8 @@ LEGS: dict[str, LegSpec] = {
             "Extract every table as a Markdown table. Preserve rows, columns "
             "and merged cells. Output only the tables."
         ),
-        scored_on="cell accuracy (LLM judge) + TEDS",
-        method="LLM judge (Gemini)",
+        scored_on="nonempty cell accuracy + supporting TEDS",
+        method="code verdicts against cached image checklist",
         pass_name="tables",
     ),
     KEY_VALUE: LegSpec(
@@ -147,8 +147,8 @@ LEGS: dict[str, LegSpec] = {
             "flat JSON object of label -> value. Use the label exactly as "
             "printed. Use null where a printed field is blank. Output only JSON."
         ),
-        scored_on="field accuracy (LLM judge)",
-        method="LLM judge (Gemini)",
+        scored_on="printed-field accuracy",
+        method="code verdicts using cached printed labels and ground-truth values",
         pass_name="key_value",
     ),
     SCHEMA: LegSpec(
@@ -160,8 +160,8 @@ LEGS: dict[str, LegSpec] = {
             "to this schema. Use null for fields not present on the page. "
             "Output only JSON.\n\nSchema:\n{schema}"
         ),
-        scored_on="field accuracy (LLM judge)",
-        method="LLM judge (Gemini)",
+        scored_on="schema field accuracy",
+        method="code verdicts against schema ground truth",
         needs_schema=True,
         pass_name="schema",
     ),

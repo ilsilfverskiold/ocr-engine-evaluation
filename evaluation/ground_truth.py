@@ -79,17 +79,45 @@ class GroundTruth:
         if leg == "markdown":
             return bool(self.markdown)
         if leg == "tables":
+            # A table page is one a HUMAN marked as such (table_html sidecar);
+            # the image checklist is the reference the verdicts are scored
+            # against, not the eligibility rule. Letting the checklist decide
+            # (2026-10-01, briefly) added 17 fax forms, letters and memos where
+            # Gemini had catalogued a grid and every engine scored 0.
             return bool(self.table_html) and self.doc_type != "chart"
-        if leg in ("key_value", "schema"):
+        if leg == "schema":
             return self.true_json is not None
+        if leg == "key_value":
+            # Same page set as the reference run's scorer: at least 3 scalar
+            # (non-array) reference fields. One rule for runner and scorer.
+            return self.true_json is not None and self.scalar_field_count() >= 3
         if leg == "geometry":
             return bool(self.word_boxes)
         raise ValueError(f"Unknown leg: {leg!r}")
+
+    def scalar_field_count(self) -> int:
+        """Reference fields outside arrays — the key-value leg's unit."""
+        if self.true_json is None:
+            return 0
+        from evaluation.structured_metrics import walk_fields
+        return sum(1 for f in walk_fields(self.true_json, self.json_schema)
+                   if f.path and not f.in_array)
+
+    def printed_pair_count(self) -> int | None:
+        """Scalar reference fields the page prints as label:value pairs (stage
+        1), or None when stage 1 has not run for this document."""
+        from evaluation.kv_schema_code import load_aliases
+        aliases = load_aliases(Path(self.document_path).stem)
+        if not aliases:
+            return None
+        return sum(1 for path, a in aliases.items() if "[" not in path and a.get("is_printed_pair"))
 
     def missing_gt_reason(self, leg: str) -> str:
         """Why this document contributes nothing to `leg`. Reportable, not an error."""
         if leg == "text" and self.gt_source == "silver_tesseract":
             return "silver ground truth — text metrics excluded, judge only"
+        if leg == "key_value" and self.true_json is not None:
+            return "too few scalar fields for key-value evaluation (fewer than 3)"
         return {
             "text": "no plain-text sidecar",
             "markdown": "no markdown reference",

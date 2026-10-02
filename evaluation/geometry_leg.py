@@ -52,6 +52,10 @@ class GeometryScore:
     parse_ok: bool = True
     rescaled_from_thousand: bool = False
     axes_swapped: bool = False
+    line_score: float | None = None          # second number: line-level rule
+    reference_lines: int = 0
+    block_score: float | None = None         # block engines only (diagnostic)
+    words_per_box: int | None = None
     worst_matches: list[dict[str, Any]] = field(default_factory=list)
 
     @property
@@ -61,6 +65,10 @@ class GeometryScore:
     def as_metrics(self) -> dict[str, Any]:
         return {
             "geometry_score": self.geometry_score,
+            "geometry_line_score": self.line_score,
+            "geometry_reference_lines": self.reference_lines,
+            "geometry_block_score": self.block_score,
+            "geometry_words_per_box": self.words_per_box,
             "mean_iou_matched": self.mean_iou_matched,
             "geometry_match_rate": self.match_rate,
             "geometry_reference_words": self.reference_words,
@@ -325,6 +333,7 @@ def score_geometry(
         matches.append({"text": ref["text"], "iou": round(overlap, 4),
                         "hit": hit, "matched": True})
 
+    line_score, line_n = line_level_score(ref_words, pred_words)
     return GeometryScore(
         applicable=True,
         geometry_score=round(located / len(ref_words), 4),
@@ -337,7 +346,91 @@ def score_geometry(
         parse_ok=True,
         rescaled_from_thousand=rescaled,
         axes_swapped=axes_swapped,
+        line_score=line_score,
+        reference_lines=line_n,
         worst_matches=sorted(matches, key=lambda m: (m["hit"], m["iou"]))[:25],
+    )
+
+
+def line_level_score(ref_words: list[dict], pred_words: list[dict]) -> tuple[float, int]:
+    """Second number, reported beside the word-level headline: the reference
+    merged into visual lines (the same merge applied to predictions), each
+    reference line paired with the engine's best line by fuzzy text (>= 0.7,
+    each engine line used once), mutual centre containment. This is the only
+    fair comparison for engines that return line boxes (marker, MinerU's
+    pipeline backend); for word engines it tracks the headline closely.
+    """
+    from difflib import SequenceMatcher
+
+    ref_lines = merge_words_into_lines(ref_words)
+    pred_lines = merge_words_into_lines(pred_words)
+    if not ref_lines:
+        return 0.0, 0
+    used: set[int] = set()
+    located = 0
+    for rl in ref_lines:
+        key = normalize_word(rl["text"])
+        best, best_ratio = None, 0.0
+        for i, pl in enumerate(pred_lines):
+            if i in used:
+                continue
+            ratio = SequenceMatcher(None, key, normalize_word(pl["text"])).ratio()
+            if ratio > best_ratio:
+                best, best_ratio = i, ratio
+        if best is None or best_ratio < 0.7:
+            continue
+        used.add(best)
+        located += center_hit(rl["bbox"], pred_lines[best]["bbox"])
+    return round(located / len(ref_lines), 4), len(ref_lines)
+
+
+def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) -> GeometryScore:
+    """Layout parsers (mineru, paddleocr_vl, deepseek_ocr) return one box per
+    paragraph/title/table, never per word. They are NOT APPLICABLE on the
+    word leg; this diagnostic says whether their regions sit on the text: a
+    reference word/line is located when some block's text contains it and
+    the block's box contains its centre. Reported with words-per-box so a
+    paragraph-level 0.95 is never read as word geometry.
+    """
+    from difflib import SequenceMatcher
+
+    ref_words = [w for w in (parse_word_boxes(reference) or []) if normalize_word(w["text"])]
+    if not ref_words:
+        return GeometryScore(applicable=False, reason="word-box reference is empty")
+    blocks = [b for b in (blocks or []) if b.get("bbox") and str(b.get("text") or "").strip()]
+    if not blocks:
+        return GeometryScore(applicable=False, reason="block engine: no blocks returned",
+                             reference_words=len(ref_words), parse_ok=False)
+
+    def text_in(ref_text: str, block_text: str) -> bool:
+        r, b = normalize_word(ref_text), normalize_word(block_text)
+        if not r or not b:
+            return False
+        if r in b:
+            return True
+        if granularity == "line":
+            return any(SequenceMatcher(None, r, normalize_word(l)).ratio() >= 0.8
+                       for l in str(block_text).split("\n") if normalize_word(l))
+        return False
+
+    def inside(box, pt) -> bool:
+        x0, y0, x1, y1 = min(box[0], box[2]), min(box[1], box[3]), max(box[0], box[2]), max(box[1], box[3])
+        return x0 <= pt[0] <= x1 and y0 <= pt[1] <= y1
+
+    located = 0
+    for ref in ref_words:
+        cx, cy = (ref["bbox"][0] + ref["bbox"][2]) / 2, (ref["bbox"][1] + ref["bbox"][3]) / 2
+        if any(text_in(ref["text"], b["text"]) and inside(b["bbox"], (cx, cy)) for b in blocks):
+            located += 1
+    wpb = sorted(len(str(b["text"]).split()) for b in blocks)[len(blocks) // 2]
+    return GeometryScore(
+        applicable=False,
+        reason="block-level boxes (one per paragraph/title/table): not a word-box engine; see geometry_block_score",
+        reference_words=len(ref_words),
+        predicted_words=len(blocks),
+        block_score=round(located / len(ref_words), 4),
+        words_per_box=wpb,
+        parse_ok=True,
     )
 
 
@@ -372,11 +465,18 @@ def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:
     """
     from difflib import SequenceMatcher
 
+    # Candidate selection: among windows whose text is close enough (>= 0.7),
+    # prefer one that OVERLAPS the reference box, and only then the best text
+    # ratio. Ranking by text first let an exact "193.00" anywhere on a receipt
+    # beat the slightly misread "1193.00" sitting in the right place; with six
+    # identical amounts on the page and every word usable once, each later
+    # reference then took the next instance down and the whole column scored
+    # as misplaced (PP-OCRv5 on sroie_000: 36 located instead of 44).
     used: set[int] = set()
     out = []
     for ref in refs:
         ref_key = normalize_word(ref["text"])
-        best_words, best_box, best_rank = None, None, (0.0, 0.0)
+        best_overlap, best_any = None, None       # (rank, window, box)
         for line in lines:
             words = line.get("words") or [line]
             for start in range(len(words)):
@@ -392,13 +492,20 @@ def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:
                     if len(win_key) > 2 * len(ref_key) + 4:
                         break
                     ratio = SequenceMatcher(None, ref_key, win_key).ratio()
+                    if ratio < 0.7:
+                        continue
                     box = _union_box([w["bbox"] for w in window])
-                    rank = (ratio, iou(ref["bbox"], box))
-                    if rank > best_rank:
-                        best_words, best_box, best_rank = window, box, rank
-        if best_words is None or best_rank[0] < 0.7:
+                    overlap = iou(ref["bbox"], box)
+                    rank = (ratio, overlap)
+                    if best_any is None or rank > best_any[0]:
+                        best_any = (rank, window, box)
+                    if overlap > 0 and (best_overlap is None or rank > best_overlap[0]):
+                        best_overlap = (rank, window, box)
+        chosen = best_overlap or best_any
+        if chosen is None:
             out.append((ref, None))
             continue
+        _, best_words, best_box = chosen
         used.update(id(w) for w in best_words)
         out.append((ref, {"text": ref["text"], "bbox": best_box}))
     return out

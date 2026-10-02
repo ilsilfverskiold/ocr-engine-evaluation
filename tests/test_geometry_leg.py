@@ -230,3 +230,19 @@ def test_corpus_documents_are_not_applicable_for_this_leg():
     assert result.applicable is False
     assert result.score is None
     assert "no word-box reference" in result.reason
+
+
+def test_repeated_values_pair_by_position_not_by_first_exact_match():
+    # A receipt prints the same amount several times. An engine that misread
+    # one instance ("1 193.00" glued into "1193.00") used to lose the whole
+    # column: the first reference took the exact "193.00" from another row,
+    # and every later reference shifted one instance down. Among windows
+    # whose text is close enough, the one overlapping the reference wins.
+    reference = [{"text": "193.00", "bbox": [0.47, 0.61, 0.58, 0.63]},
+                 {"text": "193.00", "bbox": [0.65, 0.69, 0.77, 0.71]},
+                 {"text": "193.00", "bbox": [0.65, 0.78, 0.77, 0.80]}]
+    predicted = [{"text": "1193.00", "bbox": [0.44, 0.61, 0.58, 0.63]},
+                 {"text": "193.00", "bbox": [0.66, 0.69, 0.76, 0.71]},
+                 {"text": "193.00", "bbox": [0.66, 0.78, 0.76, 0.80]}]
+    result = score_geometry(predicted, reference=reference, granularity="line")
+    assert result.located_words == 3, result.worst_matches

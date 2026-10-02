@@ -14,10 +14,11 @@ style, table alignment rows, and trailing punctuation. `## Totals` and
 `**Totals**` are the same heading — a bold-only line is a heading, because that
 is how half the engines render one.
 
-Score: `0.8 x element F1 + 0.2 x order`, where element F1 matches blocks by
+Supporting score: `0.8 x element F1 + 0.2 x order`, where element F1 matches blocks by
 type and near-identical content (fuzzy, so an OCR typo inside a paragraph does
 not delete the whole block), and order is a Kendall-tau over the positions of
-matched blocks.
+matched blocks. The headline is code-scored element accuracy against the
+cached image checklist; see code_judges.py.
 """
 
 from __future__ import annotations
@@ -83,15 +84,28 @@ class MarkdownScore:
     judge_checklist_model: str | None = None
     judge_verdict_model: str | None = None
     judge_error: str | None = None
+    # Code verdicts against the image checklist (the headline since 2026-10-01)
+    code_element_accuracy: float | None = None
+    checklist_size: int = 0
+    code_counts: dict[str, int] = field(default_factory=dict)
+    code_verdicts: list[dict] = field(default_factory=list)
+    scorer: str | None = None
 
     @property
     def score(self) -> float | None:
+        if self.code_element_accuracy is not None:
+            return self.code_element_accuracy
         if self.judge_element_accuracy is not None:
             return self.judge_element_accuracy
         return self.markdown_score
 
     def as_metrics(self) -> dict[str, Any]:
         d: dict[str, Any] = {}
+        if self.code_element_accuracy is not None:
+            d["element_accuracy"] = self.code_element_accuracy
+            d["checklist_size"] = self.checklist_size
+            d["scorer"] = self.scorer
+            d.update({f"verdict_{k}": v for k, v in self.code_counts.items()})
         if self.judge_element_accuracy is not None:
             d["judge_element_accuracy"] = self.judge_element_accuracy
             d["judge_checklist_size"] = self.judge_checklist_size
@@ -116,12 +130,17 @@ class MarkdownScore:
         return d
 
     def as_detail(self) -> dict[str, Any]:
-        return {
+        d: dict[str, Any] = {
             "missed_blocks": [
                 {"kind": kind, "text": text[:120]} for kind, text in self.missed[:40]
             ],
             "reference_has_structure": self.reference_has_structure,
         }
+        if self.code_verdicts:
+            # every checklist element with its verdict and the reason, so any
+            # number can be traced to the elements behind it
+            d["verdicts"] = self.code_verdicts
+        return d
 
 
 def normalize_block_text(text: str) -> str:
@@ -201,6 +220,18 @@ def strip_wrapping_fence(text: str) -> str:
     lines = (text or "").strip().splitlines()
     if len(lines) < 2 or not lines[0].lstrip().startswith("```"):
         return text
+    if lines[0].strip().lower() in ("```markdown", "```md"):
+        # An explicit markdown fence on the first line is packaging even
+        # when a note follows the closing fence (qwen3_vl, medical_001:
+        # "```markdown … ```\n\nNote: …") or the fence never closes (a
+        # truncated answer): drop the opening line and the first closing
+        # fence after it, keep everything else.
+        body = lines[1:]
+        for k, l in enumerate(body):
+            if l.strip() == "```":
+                del body[k]
+                break
+        return "\n".join(body)
     if not lines[-1].strip().startswith("```"):
         return text
     inner = lines[1:-1]
@@ -370,15 +401,11 @@ def score_markdown(
     checklist_model: str | None = None,
     verdict_model: str | None = None,
 ) -> MarkdownScore:
-    """(engine markdown, ground truth) -> MarkdownScore.
+    """Score cached image-checklist elements by code; block F1/order support it.
 
-    When ``use_judge`` is True (or None with GOOGLE_API_KEY set) the LLM
-    judge is the headline scorer.  The deterministic block-matching score
-    runs alongside as a supporting metric.
+    Legacy judge arguments are accepted for caller compatibility. This scorer
+    makes no model call and never creates a missing image checklist.
     """
-    import os
-    judge = use_judge if use_judge is not None else bool(os.environ.get("GOOGLE_API_KEY"))
-
     if not gt.has_gt_for("markdown"):
         return MarkdownScore(applicable=False, reason=gt.missing_gt_reason("markdown"))
     if output_markdown is None:
@@ -440,39 +467,33 @@ def score_markdown(
         missed=missed,
     )
 
-    if judge:
-        from evaluation.markdown_judge import (
-            judge_markdown,
-            DEFAULT_CHECKLIST_MODEL,
-            DEFAULT_VERDICT_MODEL,
-        )
-        from pathlib import Path
+    # --- headline: code verdicts against the image checklist ---------------
+    # The checklist (stage 1) is the cached catalogue Gemini 2.5 Pro built
+    # from the page image; stage 2 is evaluation/code_judges.py, not a model.
+    # A page without a cached checklist is not scored on this leg and is never
+    # sent to a model from here.
+    from pathlib import Path
+    from evaluation.code_judges import (
+        SCORER_VERSION, load_markdown_checklist, score_markdown_code,
+    )
 
-        doc_path = Path(gt.document_path)
-        cm = checklist_model or DEFAULT_CHECKLIST_MODEL
-        vm = verdict_model or DEFAULT_VERDICT_MODEL
-        result = judge_markdown(
-            document_path=doc_path,
-            engine_text=output_markdown or "",
-            engine_name=engine,
-            checklist_model=cm,
-            verdict_model=vm,
-        )
+    items = load_markdown_checklist(Path(gt.document_path).stem)
+    if items is None:
         return MarkdownScore(
-            applicable=True,
-            judge_element_accuracy=result.element_accuracy,
-            judge_cost_usd=result.cost_usd,
-            judge_checklist_size=result.checklist_size,
-            judge_full_checklist_size=result.full_checklist_size,
-            judge_sampled=result.sampled,
-            judge_prompt_tokens=result.prompt_tokens,
-            judge_output_tokens=result.output_tokens,
-            judge_thinking_tokens=result.thinking_tokens,
-            judge_checklist_model=cm,
-            judge_verdict_model=vm,
-            judge_error=result.error,
-            reason=result.error,
+            applicable=False,
+            reason="no image checklist for markdown (stage 1 never built for this page)",
             **det_kwargs,
         )
-
-    return MarkdownScore(applicable=True, **det_kwargs)
+    res = score_markdown_code(output_markdown or "", items)
+    return MarkdownScore(
+        applicable=True,
+        code_element_accuracy=res.element_accuracy,
+        checklist_size=res.checklist_size,
+        code_counts={"correct": res.correct, "partial": res.partial,
+                     "wrong_type": res.wrong_type, "absent": res.absent,
+                     "engine_blocks": res.blocks},
+        code_verdicts=[{"n": v.index, "type": v.type, "content": v.content,
+                        "verdict": v.verdict, "how": v.how} for v in res.verdicts],
+        scorer=SCORER_VERSION,
+        **det_kwargs,
+    )

@@ -144,3 +144,49 @@ def test_structured_output_is_preferred_over_text():
     structured = {"tables": [{"html": PLAIN}]}
     result = score_tables("", _gt(PLAIN), "textract_structured", structured, use_judge=False)
     assert result.teds == 1.000
+
+
+# --------------------------------------------------------------------------
+# Rules added after auditing the rescored reference run (2026-10-01)
+# --------------------------------------------------------------------------
+from evaluation.code_judges import _inside_cell, cell_eq, score_tables_code  # noqa: E402
+
+def test_text_cell_tolerates_one_ocr_error_but_numbers_do_not():
+    assert cell_eq("84056 Makenzie Turnpike", "84056 Makenzie Turmpike")
+    assert not cell_eq("7725716318", "7725716118")
+
+
+def test_inside_cell_is_token_based():
+    assert _inside_cell("(263)", "(784) (263)")
+    assert _inside_cell("30.04", "29.37 34.85 30.04")
+    assert not _inside_cell("0.00", "Recipt#. CS0008225B")
+    assert not _inside_cell("$0.00", "$339,410.00")
+
+
+def test_table_value_hidden_in_a_code_is_not_merged():
+    items = [{"label": "Table 1, Row 1, Col 1", "value": "0.00", "row": 1, "col": 1}]
+    res = score_tables_code("| Recipt#. CS0008225B |\n|---|\n| x |\n", "x", None, items)
+    assert "larger cell" not in res.verdicts[0].how
+
+
+
+
+def test_only_checklist_tables_the_human_marked_are_scored():
+    from evaluation.code_judges import human_marked_tables
+    items = [{"label": "Table 1, Row 1, Col 1", "value": "Alana", "row": 1, "col": 1},
+             {"label": "Table 1, Row 1, Col 2", "value": "Harris", "row": 1, "col": 2},
+             {"label": "Table 2, Row 1, Col 1", "value": "1a", "row": 1, "col": 1},
+             {"label": "Table 2, Row 1, Col 2", "value": "Total amount from Form(s) W-2", "row": 1, "col": 2},
+             {"label": "Table 2, Row 1, Col 3", "value": "61291", "row": 1, "col": 3}]
+    ref = "<table><tr><td>Alana Harris</td><td>956 80 8005</td></tr></table>"
+    # the 1040's dependents grid is the human-marked table; its income lines are not
+    assert [i["label"] for i in human_marked_tables(items, ref)] == ["Table 1, Row 1, Col 1", "Table 1, Row 1, Col 2"]
+    # nothing corresponds: every table is kept
+    assert human_marked_tables(items, "<table><tr><td>x</td></tr></table>") == items
+
+
+def test_pipe_table_glued_to_the_line_above_is_still_a_table():
+    from evaluation.table_extractor import extract_all_tables_html
+    md = "**Dependents (see instructions):**\n| (1) First name | Last name |\n| :--- | :--- |\n| Alana | Harris |\n"
+    html = extract_all_tables_html(md, "gemini_flash")
+    assert len(html) == 1 and "Alana" in html[0]

@@ -76,6 +76,18 @@ def _clean_markdown(text: str, engine: str) -> str:
     # so its tables disappear. See markdown_leg.strip_wrapping_fence.
     from evaluation.markdown_leg import strip_wrapping_fence
     text = strip_wrapping_fence(text)
+    # A pipe table glued to the line above it ("**Dependents:**\n| a | b |")
+    # is one paragraph to the markdown parser and its rows vanish; Gemini
+    # writes every 1040 table that way. Open a block before the table.
+    lines = text.split("\n")
+    out: list[str] = []
+    for i, line in enumerate(lines):
+        is_row = line.lstrip().startswith("|")
+        prev = out[-1] if out else ""
+        if is_row and prev.strip() and not prev.lstrip().startswith("|"):
+            out.append("")
+        out.append(line)
+    text = "\n".join(out)
     if engine == "marker":
         # Strip inline HTML tags (<b>, <i>, etc.)
         text = re.sub(r"<[^>]+>", "", text)

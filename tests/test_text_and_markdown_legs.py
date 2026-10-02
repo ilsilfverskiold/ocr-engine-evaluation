@@ -216,3 +216,59 @@ def test_order_still_counts_once_there_is_an_order_to_judge():
     scrambled = score_markdown("# C\n\n# B\n\n# A\n", _gt(markdown=reference))
     assert scrambled.element_f1 == 1.0
     assert scrambled.markdown_score < 1.0
+
+
+# --------------------------------------------------------------------------
+# Rules added after auditing the rescored reference run (2026-10-01)
+# --------------------------------------------------------------------------
+from evaluation.code_judges import markdown_blocks, score_markdown_code  # noqa: E402
+
+def test_checkbox_line_is_a_list_item():
+    blocks = markdown_blocks("☐ Chills\n\nBlurred Vision ☑\n\n- [x] Fever\n")
+    assert [(t, c) for t, c, _ in blocks] == [("list_item", "Chills"), ("list_item", "Blurred Vision"), ("list_item", "Fever")]
+
+
+def test_legend_squares_are_not_a_checklist():
+    # a chart legend written with colour swatches is one line of text, not three list items
+    blocks = markdown_blocks("■ Executive & Senior Management ■ Management ■ Professional\n")
+    assert blocks[0][0] == "paragraph"
+
+
+def test_heading_as_single_cell_table_row_is_correct():
+    res = score_markdown_code("| Turnover |  |  |\n| Wages | 10 | 20 |\n", [{"type": "heading", "content": "Turnover"}])
+    assert res.verdicts[0].verdict == "correct"
+    assert "single-cell" in res.verdicts[0].how
+
+
+def test_heading_inside_a_populated_row_is_wrong_type():
+    res = score_markdown_code("| Turnover | 10 | 20 |\n", [{"type": "heading", "content": "Turnover"}])
+    assert res.verdicts[0].verdict == "wrong_type"
+
+
+def test_list_item_as_a_whole_table_cell_is_correct():
+    res = score_markdown_code("<table><tr><td>Blurred Vision</td><td>Calf Pain</td></tr></table>", [{"type": "list_item", "content": "Calf Pain"}])
+    assert res.verdicts[0].verdict == "correct"
+
+
+
+
+def test_checklist_grid_read_across_is_one_item_per_glyph():
+    # a two-column checkbox grid read across: each glyph ends (or starts) an item
+    blocks = markdown_blocks("Blurred Vision ☑ | Calf Pain ☑\nAllergies ☑ Black Outs ☐\n☑ Antidepressants ☐ Anti Inflammatory\n"
+                             "Is the requested medication ☐NEW or a ☑CONTINUATION of THERAPY?\n")
+    assert [(b[0], b[1]) for b in blocks[:6]] == [("list_item", "Blurred Vision"), ("list_item", "Calf Pain"),
+                                                  ("list_item", "Allergies"), ("list_item", "Black Outs"),
+                                                  ("list_item", "Antidepressants"), ("list_item", "Anti Inflammatory")]
+    assert blocks[6][0] == "paragraph"      # glyphs mid-sentence: not a check-list
+
+
+def test_explicit_markdown_fence_with_a_trailing_note_is_packaging():
+    from evaluation.markdown_leg import strip_wrapping_fence
+    from evaluation.code_judges import unfence
+    raw = "```markdown\n## Family Health History\n\n| Relation | Age |\n|---|---|\n| Father | 55 |\n```\n\nNote: the original has several sections."
+    for fn in (strip_wrapping_fence, unfence):
+        out = fn(raw)
+        assert out.startswith("## Family Health History") and "Note: the original" in out and "```" not in out
+    # an unclosed markdown fence (truncated answer) is unwrapped too; a bare fence with inner content is not
+    assert "```" not in strip_wrapping_fence("```markdown\n# Title\ntext")
+    assert strip_wrapping_fence("```\ncode\n```\nprose") == "```\ncode\n```\nprose"

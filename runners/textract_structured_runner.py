@@ -146,29 +146,8 @@ class TextractStructuredRunner(OCRRunner):
         return " ".join(p for p in parts if p).strip()
 
     def _extract_key_values(self, blocks: list[dict]) -> list[dict[str, str]]:
-        block_map = {b["Id"]: b for b in blocks}
-        kv_pairs = []
-        for block in blocks:
-            if block["BlockType"] != "KEY_VALUE_SET":
-                continue
-            if "KEY" not in block.get("EntityTypes", []):
-                continue
-            key_text = self._get_kv_text(block, block_map)
-            value_text = ""
-            for rel in block.get("Relationships", []):
-                if rel["Type"] == "VALUE":
-                    for val_id in rel["Ids"]:
-                        val_block = block_map.get(val_id, {})
-                        value_text = self._get_kv_text(val_block, block_map)
-            kv_pairs.append({"key": key_text, "value": value_text})
-        return kv_pairs
-
-    def _get_kv_text(self, block: dict, block_map: dict) -> str:
-        words = []
-        for rel in block.get("Relationships", []):
-            if rel["Type"] == "CHILD":
-                for wid in rel["Ids"]:
-                    w = block_map.get(wid, {})
-                    if w.get("BlockType") == "WORD":
-                        words.append(w.get("Text", ""))
-        return " ".join(words)
+        # One implementation, shared with the scorer: a checkbox value is a
+        # SELECTION_ELEMENT (SELECTED / NOT_SELECTED), not a WORD, and used
+        # to be dropped here as "".
+        from evaluation.kv_schema_code import textract_forms
+        return textract_forms(blocks)

@@ -1,19 +1,9 @@
-"""Leg 5 — schema JSON (LLM-judged).
+"""Leg 5 — schema JSON, scored by code.
 
-Every engine is evaluated the same way: an LLM judge checks whether each
-ground-truth field value appears correctly in the engine's output, regardless
-of the output format (JSON, FORMS key-value pairs, raw text) or field naming.
-
-This replaced the deterministic key-matching scorer that required output keys
-to match the schema exactly — which penalised engines with different naming
-conventions and made native-KV engines like Textract unscorable without a
-hand-written label mapping.
-
-The checklist is built deterministically from ``true_json`` + ``json_schema``
-(no LLM needed).  The judge (Gemini 2.5 Pro) checks each field value against
-the engine output.  Exact substring matches are settled locally to save cost.
-
-Score: field accuracy = (correct + blank_ok) / total fields.
+A deterministic checklist is built from true_json + json_schema. The matcher
+compares field names and values, aligning array rows before checking cells.
+See kv_schema_code.py for normalization and matching rules. No LLM verdict
+is requested. Score = (correct + blank_ok) / sampled fields.
 """
 
 from __future__ import annotations
@@ -23,11 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-from evaluation.schema_judge import (
-    SchemaFieldVerdict,
-    SchemaJudgeResult,
-    judge_schema,
-)
+
 
 
 @dataclass
@@ -43,7 +29,12 @@ class SchemaScore:
     blank_total: int = 0
     blank_correct: int = 0
     judge_cost_usd: float = 0.0
-    verdicts: list[SchemaFieldVerdict] = field(default_factory=list)
+    verdicts: list[Any] = field(default_factory=list)
+    # code scoring (2026-10-01)
+    engine_pairs: int = 0
+    parsed_how: str = ""
+    cleanup_log: list[str] = field(default_factory=list)
+    scorer: str | None = None
 
     @property
     def score(self) -> float | None:
@@ -59,17 +50,24 @@ class SchemaScore:
             "schema_fields_invented_value": self.fields_invented_value,
             "schema_blank_total": self.blank_total,
             "schema_blank_correct": self.blank_correct,
+            "schema_engine_pairs": self.engine_pairs,
+            "schema_parsed_how": self.parsed_how,
+            "schema_scorer": self.scorer,
             "schema_judge_cost_usd": self.judge_cost_usd,
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {
+            "cleanup": self.cleanup_log,
             "verdicts": [
                 {
                     "path": v.path,
                     "expected": v.expected,
                     "verdict": v.verdict,
                     "is_blank": v.is_blank,
+                    "key": getattr(v, "key", ""),
+                    "value": getattr(v, "value", ""),
+                    "how": getattr(v, "how", ""),
                 }
                 for v in self.verdicts
             ]
@@ -82,55 +80,35 @@ def score_schema(
     engine: str,
     structured_output: dict | None = None,
 ) -> SchemaScore:
-    """(engine output, ground truth) -> SchemaScore.
-
-    All engines are judged the same way: an LLM checks whether each GT field
-    value appears in the engine's output, regardless of format or field naming.
-    """
+    """Compare parsed field pairs against the reference using code only."""
     if not gt.has_gt_for("schema"):
         return SchemaScore(applicable=False, reason=gt.missing_gt_reason("schema"))
 
     document_stem = Path(gt.document_path).stem
 
-    result: SchemaJudgeResult = judge_schema(
-        true_json=gt.true_json,
-        json_schema=gt.json_schema,
-        engine_text=output_text or "",
-        engine=engine,
-        document_stem=document_stem,
-        structured_output=structured_output,
-    )
+    # Code scoring (evaluation/kv_schema_code.py): the JSON answer parsed
+    # (truncated JSON salvaged as far as it goes), keys matched by path or
+    # its last segment, values matched exactly. No model.
+    from evaluation.kv_schema_code import SCORER_VERSION, engine_pairs, score_fields
+    from evaluation.schema_judge import build_schema_checklist
 
-    if result.error:
-        return SchemaScore(
-            applicable=True,
-            reason=f"judge error: {result.error}",
-            field_accuracy=0.0,
-            fields_total=result.checklist_size,
-            judge_cost_usd=result.cost_usd,
-        )
-
-    correct = sum(
-        1 for i in result.items if i.verdict in ("correct", "blank_ok")
-    )
-    missing = sum(1 for i in result.items if i.verdict == "missing")
-    wrong = sum(1 for i in result.items if i.verdict == "wrong")
-    invented = sum(1 for i in result.items if i.verdict == "invented")
-    blank_total = sum(1 for i in result.items if i.is_blank)
-    blank_correct = sum(
-        1 for i in result.items if i.is_blank and i.verdict == "blank_ok"
-    )
-
+    items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
+                                   use_cache=False, scalar_only=False)
+    pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
+    res = score_fields(items, pairs, "schema", None)
     return SchemaScore(
         applicable=True,
-        field_accuracy=result.field_accuracy,
-        fields_total=len(result.items),
-        fields_correct=correct,
-        fields_missing=missing,
-        fields_wrong_value=wrong,
-        fields_invented_value=invented,
-        blank_total=blank_total,
-        blank_correct=blank_correct,
-        judge_cost_usd=result.cost_usd,
-        verdicts=result.items,
+        field_accuracy=res.field_accuracy,
+        fields_total=res.fields_total,
+        fields_correct=res.correct,
+        fields_missing=res.missing,
+        fields_wrong_value=res.wrong,
+        fields_invented_value=sum(1 for v in res.verdicts if v.verdict == "invented"),
+        blank_total=res.blank_total,
+        blank_correct=res.blank_correct,
+        engine_pairs=res.pairs,
+        parsed_how=parsed_how,
+        cleanup_log=res.cleanup_log,
+        scorer=SCORER_VERSION,
+        verdicts=res.verdicts,
     )

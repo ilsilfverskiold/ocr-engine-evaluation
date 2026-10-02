@@ -81,6 +81,12 @@ class TableScore:
     judge_thinking_tokens: int = 0
     judge_model: str | None = None
     judge_error: str | None = None
+    # Code verdicts against the image cell checklist (the headline since 2026-10-01)
+    checklist_cells: int = 0          # non-empty cells scored
+    checklist_cells_empty: int = 0    # empty cells, excluded
+    code_counts: dict[str, int] = field(default_factory=dict)
+    code_verdicts: list[dict] = field(default_factory=list)
+    scorer: str | None = None
 
     @property
     def score(self) -> float | None:
@@ -92,6 +98,11 @@ class TableScore:
         d: dict[str, Any] = {}
         if self.cell_accuracy is not None:
             d["cell_accuracy"] = self.cell_accuracy
+            if self.scorer:
+                d["checklist_cells"] = self.checklist_cells
+                d["checklist_cells_empty"] = self.checklist_cells_empty
+                d["scorer"] = self.scorer
+                d.update({f"verdict_{k}": v for k, v in self.code_counts.items()})
             d["judge_checklist_size"] = self.judge_checklist_size
             d["judge_full_checklist_size"] = self.judge_full_checklist_size
             d["judge_sampled"] = self.judge_sampled
@@ -110,12 +121,15 @@ class TableScore:
         return d
 
     def as_detail(self) -> dict[str, Any]:
-        return {
+        d: dict[str, Any] = {
             "reference_source": self.reference_source,
             "reference_is_weak": self.reference_is_weak,
             "reference_cells": self.reference_cells,
             "output_cells": self.output_cells,
         }
+        if self.code_verdicts:
+            d["verdicts"] = self.code_verdicts
+        return d
 
 
 # --------------------------------------------------------------------------
@@ -330,22 +344,27 @@ def score_tables(
     use_judge: bool | None = None,
     judge_model: str | None = None,
 ) -> TableScore:
-    """(engine output, ground truth) -> TableScore.
+    """Score cached nonempty table cells by code; TEDS supports/falls back.
 
-    When ``use_judge`` is True (or None with GOOGLE_API_KEY set) the LLM
-    judge is the headline scorer: Gemini builds the cell-level reference from
-    the page image and checks the engine against it.  TEDS runs alongside as
-    a supporting metric when table_html exists.
-
-    Without the judge, TEDS is the headline scorer (backward compatible).
+    Legacy judge arguments are accepted for caller compatibility. This scorer
+    makes no model call and never creates a missing image checklist.
     """
-    import os
-    judge = use_judge if use_judge is not None else bool(os.environ.get("GOOGLE_API_KEY"))
-
+    # Eligibility: the image cell checklist is the reference for this leg.
+    # A page with a checklist but no human table_html (funsd forms) is
+    # scored; a page with neither is not applicable.
+    from evaluation.code_judges import (
+        SCORER_VERSION, checklist_is_table, load_table_checklist, score_tables_code, tnorm,
+    )
     if not gt.has_gt_for("tables"):
         return TableScore(applicable=False, reason=gt.missing_gt_reason("tables"))
+    checklist = load_table_checklist(Path(gt.document_path).stem, gt.table_html) or []
+    # The checklist is the headline reference when it describes a grid (or
+    # when a human table reference says the page is a table page); otherwise
+    # the human table_html alone gives the TEDS diagnostic.
+    checklist_nonempty = ([c for c in checklist if not c.get("empty") and tnorm(c.get("value"))]
+                          if (checklist_is_table(checklist) or gt.table_html) else [])
 
-    # --- TEDS (always computed when table_html exists) ---------------------
+    # --- TEDS (supporting metric, computed when table_html exists) ----------
     candidates: list[str] = []
     tables = (structured_output or {}).get("tables") or []
     for table in tables:
@@ -388,7 +407,7 @@ def score_tables(
             ) / total_weight, 4)
         else:
             teds_score = compute_teds(hypothesis_html, gt.table_html or "")
-    elif not judge:
+    elif not checklist_nonempty:
         return TableScore(
             applicable=True,
             teds=0.0,
@@ -400,21 +419,12 @@ def score_tables(
             reason="engine produced no recoverable table structure",
         )
 
-    # --- LLM judge (when available) ---------------------------------------
-    if judge:
-        from evaluation.table_judge import judge_table, DEFAULT_MODEL as TABLE_JUDGE_DEFAULT
-
-        doc_path = Path(gt.document_path)
-        result = judge_table(
-            document_path=doc_path,
-            engine_text=output_text or "",
-            engine_name=engine,
-            structured_output=structured_output,
-            model=judge_model or TABLE_JUDGE_DEFAULT,
-        )
+    # --- headline: code verdicts against the image cell checklist ---------
+    if checklist_nonempty:
+        res = score_tables_code(output_text or "", engine, structured_output, checklist)
         return TableScore(
             applicable=True,
-            cell_accuracy=result.cell_accuracy,
+            cell_accuracy=res.cell_accuracy,
             teds=teds_score,
             reference_rows=ref_rows,
             reference_cols=ref_cols,
@@ -425,19 +435,18 @@ def score_tables(
             cell_match_rate=cmr,
             reference_source=source,
             reference_is_weak=is_weak,
-            judge_cost_usd=result.cost_usd,
-            judge_checklist_size=result.checklist_size,
-            judge_full_checklist_size=result.full_checklist_size,
-            judge_sampled=result.sampled,
-            judge_prompt_tokens=result.prompt_tokens,
-            judge_output_tokens=result.output_tokens,
-            judge_thinking_tokens=result.thinking_tokens,
-            judge_model=judge_model or TABLE_JUDGE_DEFAULT,
-            judge_error=result.error,
-            reason=result.error,
+            checklist_cells=res.cells_total,
+            checklist_cells_empty=res.cells_empty,
+            code_counts={"correct": res.correct, "misplaced": res.misplaced,
+                         "wrong": res.wrong, "absent": res.absent, "grids": res.grids},
+            code_verdicts=[{"label": v.label, "value": v.value, "row": v.row, "col": v.col,
+                            "verdict": v.verdict, "how": v.how} for v in res.verdicts],
+            scorer=SCORER_VERSION,
+            judge_checklist_size=res.cells_total,
+            judge_full_checklist_size=len(checklist),
         )
 
-    # --- TEDS only (no API key) -------------------------------------------
+    # --- TEDS only (human table_html, no image checklist) -----------------
     return TableScore(
         applicable=True,
         teds=teds_score,

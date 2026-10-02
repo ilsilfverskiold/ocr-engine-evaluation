@@ -57,11 +57,25 @@ def _self_scores(leg: str):
         if leg == "text":
             result = score_text(gt.plain_text, gt)
         elif leg == "markdown":
-            result = score_markdown(gt.markdown, gt)
+            # Deterministic only. Left at use_judge=None this called Gemini
+            # for every markdown reference once a key was in the environment
+            # (2026-09-30: 57 verdict calls from one pytest run). The
+            # headline (`.score`) is now the code verdict against Gemini's
+            # image checklist, which the sidecar need not satisfy; this guard
+            # is about the deterministic block scorer, so read that.
+            result = score_markdown(gt.markdown, gt, use_judge=False)
+            if result.applicable:
+                out.append((path.stem, result.markdown_score))
+            continue
         elif leg == "tables":
             # paddleocr_vl is the HTML-format engine, so the reference HTML
-            # travels the same converter an engine's answer would.
+            # travels the same converter an engine's answer would. As for
+            # markdown, the guard is the deterministic TEDS, not the
+            # checklist headline.
             result = score_tables(gt.table_html, gt, "paddleocr_vl", use_judge=False)
+            if result.applicable:
+                out.append((path.stem, result.teds))
+            continue
         elif leg == "key_value":
             result = score_key_value(json.dumps(gt.true_json), gt, "gemini_flash")
         elif leg == "schema":
@@ -76,7 +90,24 @@ def _self_scores(leg: str):
 
 
 @pytest.mark.parametrize(
-    "leg", ["text", "markdown", "tables", "key_value", "schema", "geometry"]
+    "leg", [
+        "text",
+        # Deterministic block F1 scores every markdown reference 1.0 against
+        # itself, which is what this guard checks. The JUDGED path is a
+        # different metric by design — its reference is Gemini's catalogue of
+        # the page image, not this sidecar — so it need not score the sidecar
+        # 1.0 (run once by accident with a key present, 2026-09-30: 42 of 57
+        # below 1.0). Not a defect; see docs/benchmark-audit-2026-09-30.md §5.14.
+        "markdown",
+        "tables",
+        # key_value and schema are scored by code against the reference's
+        # own fields (no verdict cache since 2026-10-01), so the reference
+        # must score 1.0 against itself; chart_003 is a correct "not
+        # applicable" on key_value.
+        "key_value",
+        "schema",
+        "geometry",
+    ]
 )
 def test_reference_scores_one_against_itself(leg):
     imperfect = [(stem, score) for stem, score in _self_scores(leg)

@@ -1,0 +1,309 @@
+{
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_001.png",
+ "model": "gemini-3.1-pro-preview",
+ "prompt": "You are looking at a document image. Below is a list of reference fields with the values our annotators recorded for this page.\n\nFor EACH numbered field, report:\n- \"printed_labels\": every label printed on the page for that value, exactly as printed (e.g. \"ROC NO:\", \"Round Amt:\", \"Total GST @6%:\"). Empty list if the value is printed with no label (e.g. a company name in a header).\n- \"is_printed_pair\": true if the field appears on the page as a label followed by its value.\n\nDo not invent labels. Transcribe exactly as printed.\n\nFIELDS:\n1. income.line1.b: 8919\n2. income.line1.f: 6249\n3. income.line1.i: 0\n4. income.line2.a: 6946\n5. income.line2.b: 4223\n6. income.line3.a: 650\n7. income.line3.b: 0\n8. income.line4.a: 0\n9. income.line4.b: 4678\n10. income.line5.a: 2221\n11. income.line5.b: 5371\n12. income.line6.a: 0\n13. income.line6.b: 0\n14. income.line6.c: True\n15. income.line7: 1118\n16. income.line8: 7200\n17. income.line9: 112932\n18. income.line10: 0\n19. income.line11: 112932\n20. income.line12: 6394\n21. income.line15: 106538\n22. spouse.spouseLastName: (blank)\n23. spouse.spouseFirstName: (blank)\n24. address.city: Passaic\n25. address.state: UT\n26. address.zipCode: 84645\n27. address.address1: 75971 Rudy Plaza\n28. address.address2: (blank)\n29. taxPeriod.taxDateEnd: 12/31\n30. taxPeriod.taxDateStart: 1/01\n31. dependents[0].ssn: 956-80-8005\n32. dependents[0].lastName: Harris\n33. dependents[0].firstName: Alana\n34. dependents[0].otherCredit: False\n35. dependents[0].relationship: parent\n36. dependents[0].childTaxCredit: False\n37. dependents[1].ssn: 645-83-9823\n38. dependents[1].lastName: Harris\n39. dependents[1].firstName: Filomena\n40. dependents[1].otherCredit: False\n41. dependents[1].relationship: child\n42. dependents[1].childTaxCredit: True\n43. dependents[2].ssn: 956-78-8354\n44. dependents[2].lastName: Harris\n45. dependents[2].firstName: Sheldon\n46. dependents[2].otherCredit: True\n47. dependents[2].relationship: parent\n48. dependents[2].childTaxCredit: True\n49. ageBlindness.blind: False\n50. ageBlindness.spouseBlind: False\n51. ageBlindness.bornBeforeJanuary: True\n52. ageBlindness.spouseBornBeforeJanuary: False\n53. filingStatus.HOH: False\n54. filingStatus.MFJ: False\n55. filingStatus.MFS: False\n56. filingStatus.QSS: False\n57. filingStatus.single: True\n58. filingStatus.nonResident: False\n59. personalInfo.firstName: Ruth\n60. digitalAssets: True\n61. standardDeductions.spouseItemizes: True\n62. standardDeductions.youAreDependent: False\n63. standardDeductions.spouseIsDependent: True\n\nOutput JSON only: {\"fields\": [{\"n\": 1, \"printed_labels\": [\"...\"], \"is_printed_pair\": true}]}",
+ "raw": "{\n  \"fields\": [\n    {\n      \"n\": 1,\n      \"printed_labels\": [\n        \"b Household employee wages not reported on Form(s) W-2\",\n        \"1b\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 2,\n      \"printed_labels\": [\n        \"f Employer-provided adoption benefits from Form 8839, line 29\",\n        \"1f\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 3,\n      \"printed_labels\": [\n        \"i Nontaxable combat pay election (see instructions)\",\n        \"1i\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 4,\n      \"printed_labels\": [\n        \"2a Tax-exempt interest\",\n        \"2a\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 5,\n      \"printed_labels\": [\n        \"b Taxable interest\",\n        \"2b\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 6,\n      \"printed_labels\": [\n        \"3a Qualified dividends\",\n        \"3a\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 7,\n      \"printed_labels\": [\n        \"b Ordinary dividends\",\n        \"3b\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 8,\n      \"printed_labels\": [\n        \"4a IRA distributions\",\n        \"4a\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 9,\n      \"printed_labels\": [\n        \"b Taxable amount\",\n        \"4b\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 10,\n      \"printed_labels\": [\n        \"5a Pensions and annuities\",\n        \"5a\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 11,\n      \"printed_labels\": [\n        \"b Taxable amount\",\n        \"5b\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 12,\n      \"printed_labels\": [\n        \"6a Social security benefits\",\n        \"6a\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 13,\n      \"printed_labels\": [\n        \"b Taxable amount\",\n        \"6b\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 14,\n      \"printed_labels\": [\n        \"c If you elect to use the lump-sum election method, check here (see instructions)\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 15,\n      \"printed_labels\": [\n        \"7 Capital gain or (loss). Attach Schedule D if required. If not required, check here\",\n        \"7\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 16,\n      \"printed_labels\": [\n        \"8 Additional income from Schedule 1, line 10\",\n        \"8\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 17,\n      \"printed_labels\": [\n        \"9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income\",\n        \"9\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 18,\n      \"printed_labels\": [\n        \"10 Adjustments to income from Schedule 1, line 26\",\n        \"10\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 19,\n      \"printed_labels\": [\n        \"11 Subtract line 10 from line 9. This is your adjusted gross income\",\n        \"11\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 20,\n      \"printed_labels\": [\n        \"12 Standard deduction or itemized deductions (from Schedule A)\",\n        \"12\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 21,\n      \"printed_labels\": [\n        \"15 Subtract line 14 from line 11. If zero or less, enter -0-. This is your taxable income\",\n        \"15\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 22,\n      \"printed_labels\": [\n        \"Last name\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 23,\n      \"printed_labels\": [\n        \"If joint return, spouse's first name and middle initial\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 24,\n      \"printed_labels\": [\n        \"City, town, or post office. If you have a foreign address, also complete spaces below.\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 25,\n      \"printed_labels\": [\n        \"State\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 26,\n      \"printed_labels\": [\n        \"ZIP code\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 27,\n      \"printed_labels\": [\n        \"Home address (number and street). If you have a P.O. box, see instructions.\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 28,\n      \"printed_labels\": [\n        \"Apt. no.\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 29,\n      \"printed_labels\": [\n        \", 2024, ending\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 30,\n      \"printed_labels\": [\n        \"For the year Jan. 1-Dec. 31, 2024, or other tax year beginning\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 31,\n      \"printed_labels\": [\n        \"(2) Social security number\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 32,\n      \"printed_labels\": [\n        \"Last name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 33,\n      \"printed_labels\": [\n        \"(1) First name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 34,\n      \"printed_labels\": [\n        \"Credit for other dependents\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 35,\n      \"printed_labels\": [\n        \"(3) Relationship to you\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 36,\n      \"printed_labels\": [\n        \"Child tax credit\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 37,\n      \"printed_labels\": [\n        \"(2) Social security number\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 38,\n      \"printed_labels\": [\n        \"Last name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 39,\n      \"printed_labels\": [\n        \"(1) First name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 40,\n      \"printed_labels\": [\n        \"Credit for other dependents\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 41,\n      \"printed_labels\": [\n        \"(3) Relationship to you\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 42,\n      \"printed_labels\": [\n        \"Child tax credit\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 43,\n      \"printed_labels\": [\n        \"(2) Social security number\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 44,\n      \"printed_labels\": [\n        \"Last name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 45,\n      \"printed_labels\": [\n        \"(1) First name\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 46,\n      \"printed_labels\": [\n        \"Credit for other dependents\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 47,\n      \"printed_labels\": [\n        \"(3) Relationship to you\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 48,\n      \"printed_labels\": [\n        \"Child tax credit\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 49,\n      \"printed_labels\": [\n        \"Are blind\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 50,\n      \"printed_labels\": [\n        \"Is blind\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 51,\n      \"printed_labels\": [\n        \"Were born before January 2, 1960\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 52,\n      \"printed_labels\": [\n        \"Was born before January 2, 1960\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 53,\n      \"printed_labels\": [\n        \"Head of household (HOH)\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 54,\n      \"printed_labels\": [\n        \"Married filing jointly (even if only one had income)\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 55,\n      \"printed_labels\": [\n        \"Married filing separately (MFS)\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 56,\n      \"printed_labels\": [\n        \"Qualifying surviving spouse (QSS)\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 57,\n      \"printed_labels\": [\n        \"Single\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 58,\n      \"printed_labels\": [\n        \"If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year, check the box and enter their name (see instructions and attach statement if required):\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 59,\n      \"printed_labels\": [\n        \"Your first name and middle initial\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 60,\n      \"printed_labels\": [\n        \"At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)\",\n        \"Yes\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 61,\n      \"printed_labels\": [\n        \"Spouse itemizes on a separate return or you were a dual-status alien\"\n      ],\n      \"is_printed_pair\": true\n    },\n    {\n      \"n\": 62,\n      \"printed_labels\": [\n        \"You as a dependent\"\n      ],\n      \"is_printed_pair\": false\n    },\n    {\n      \"n\": 63,\n      \"printed_labels\": [\n        \"Your spouse as a dependent\"\n      ],\n      \"is_printed_pair\": true\n    }\n  ]\n}",
+ "tokens": {
+  "input": 2110,
+  "output": 3240,
+  "thinking": 4141
+ },
+ "cost_usd": 0.092792,
+ "seconds": 48.35,
+ "created": "2026-10-01T11:37:59Z",
+ "prompt_version": "labels-only v1 (2026-10-01)",
+ "by_path": {
+  "income.line1.b": {
+   "printed_labels": [
+    "b Household employee wages not reported on Form(s) W-2",
+    "1b"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line1.f": {
+   "printed_labels": [
+    "f Employer-provided adoption benefits from Form 8839, line 29",
+    "1f"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line1.i": {
+   "printed_labels": [
+    "i Nontaxable combat pay election (see instructions)",
+    "1i"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line2.a": {
+   "printed_labels": [
+    "2a Tax-exempt interest",
+    "2a"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line2.b": {
+   "printed_labels": [
+    "b Taxable interest",
+    "2b"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line3.a": {
+   "printed_labels": [
+    "3a Qualified dividends",
+    "3a"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line3.b": {
+   "printed_labels": [
+    "b Ordinary dividends",
+    "3b"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line4.a": {
+   "printed_labels": [
+    "4a IRA distributions",
+    "4a"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line4.b": {
+   "printed_labels": [
+    "b Taxable amount",
+    "4b"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line5.a": {
+   "printed_labels": [
+    "5a Pensions and annuities",
+    "5a"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line5.b": {
+   "printed_labels": [
+    "b Taxable amount",
+    "5b"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line6.a": {
+   "printed_labels": [
+    "6a Social security benefits",
+    "6a"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line6.b": {
+   "printed_labels": [
+    "b Taxable amount",
+    "6b"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line6.c": {
+   "printed_labels": [
+    "c If you elect to use the lump-sum election method, check here (see instructions)"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line7": {
+   "printed_labels": [
+    "7 Capital gain or (loss). Attach Schedule D if required. If not required, check here",
+    "7"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line8": {
+   "printed_labels": [
+    "8 Additional income from Schedule 1, line 10",
+    "8"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line9": {
+   "printed_labels": [
+    "9 Add lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8. This is your total income",
+    "9"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line10": {
+   "printed_labels": [
+    "10 Adjustments to income from Schedule 1, line 26",
+    "10"
+   ],
+   "is_printed_pair": false
+  },
+  "income.line11": {
+   "printed_labels": [
+    "11 Subtract line 10 from line 9. This is your adjusted gross income",
+    "11"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line12": {
+   "printed_labels": [
+    "12 Standard deduction or itemized deductions (from Schedule A)",
+    "12"
+   ],
+   "is_printed_pair": true
+  },
+  "income.line15": {
+   "printed_labels": [
+    "15 Subtract line 14 from line 11. If zero or less, enter -0-. This is your taxable income",
+    "15"
+   ],
+   "is_printed_pair": true
+  },
+  "spouse.spouseLastName": {
+   "printed_labels": [
+    "Last name"
+   ],
+   "is_printed_pair": false
+  },
+  "spouse.spouseFirstName": {
+   "printed_labels": [
+    "If joint return, spouse's first name and middle initial"
+   ],
+   "is_printed_pair": false
+  },
+  "address.city": {
+   "printed_labels": [
+    "City, town, or post office. If you have a foreign address, also complete spaces below."
+   ],
+   "is_printed_pair": true
+  },
+  "address.state": {
+   "printed_labels": [
+    "State"
+   ],
+   "is_printed_pair": true
+  },
+  "address.zipCode": {
+   "printed_labels": [
+    "ZIP code"
+   ],
+   "is_printed_pair": true
+  },
+  "address.address1": {
+   "printed_labels": [
+    "Home address (number and street). If you have a P.O. box, see instructions."
+   ],
+   "is_printed_pair": true
+  },
+  "address.address2": {
+   "printed_labels": [
+    "Apt. no."
+   ],
+   "is_printed_pair": false
+  },
+  "taxPeriod.taxDateEnd": {
+   "printed_labels": [
+    ", 2024, ending"
+   ],
+   "is_printed_pair": true
+  },
+  "taxPeriod.taxDateStart": {
+   "printed_labels": [
+    "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning"
+   ],
+   "is_printed_pair": true
+  },
+  "ageBlindness.blind": {
+   "printed_labels": [
+    "Are blind"
+   ],
+   "is_printed_pair": false
+  },
+  "ageBlindness.spouseBlind": {
+   "printed_labels": [
+    "Is blind"
+   ],
+   "is_printed_pair": false
+  },
+  "ageBlindness.bornBeforeJanuary": {
+   "printed_labels": [
+    "Were born before January 2, 1960"
+   ],
+   "is_printed_pair": true
+  },
+  "ageBlindness.spouseBornBeforeJanuary": {
+   "printed_labels": [
+    "Was born before January 2, 1960"
+   ],
+   "is_printed_pair": false
+  },
+  "filingStatus.HOH": {
+   "printed_labels": [
+    "Head of household (HOH)"
+   ],
+   "is_printed_pair": false
+  },
+  "filingStatus.MFJ": {
+   "printed_labels": [
+    "Married filing jointly (even if only one had income)"
+   ],
+   "is_printed_pair": false
+  },
+  "filingStatus.MFS": {
+   "printed_labels": [
+    "Married filing separately (MFS)"
+   ],
+   "is_printed_pair": false
+  },
+  "filingStatus.QSS": {
+   "printed_labels": [
+    "Qualifying surviving spouse (QSS)"
+   ],
+   "is_printed_pair": false
+  },
+  "filingStatus.single": {
+   "printed_labels": [
+    "Single"
+   ],
+   "is_printed_pair": true
+  },
+  "filingStatus.nonResident": {
+   "printed_labels": [
+    "If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year, check the box and enter their name (see instructions and attach statement if required):"
+   ],
+   "is_printed_pair": false
+  },
+  "personalInfo.firstName": {
+   "printed_labels": [
+    "Your first name and middle initial"
+   ],
+   "is_printed_pair": true
+  },
+  "digitalAssets": {
+   "printed_labels": [
+    "At any time during 2024, did you: (a) receive (as a reward, award, or payment for property or services); or (b) sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? (See instructions.)",
+    "Yes"
+   ],
+   "is_printed_pair": true
+  },
+  "standardDeductions.spouseItemizes": {
+   "printed_labels": [
+    "Spouse itemizes on a separate return or you were a dual-status alien"
+   ],
+   "is_printed_pair": true
+  },
+  "standardDeductions.youAreDependent": {
+   "printed_labels": [
+    "You as a dependent"
+   ],
+   "is_printed_pair": false
+  },
+  "standardDeductions.spouseIsDependent": {
+   "printed_labels": [
+    "Your spouse as a dependent"
+   ],
+   "is_printed_pair": true
+  }
+ },
+ "note": "by_path trimmed 2026-10-01 to the 45 scalar fields the key_value scorer reads; 18 array-row entries removed (raw reply kept)"
+}

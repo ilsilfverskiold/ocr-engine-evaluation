@@ -46,7 +46,11 @@ PRICING = {
     "gemini-2.5-pro":        {"input": 1.25 / 1_000_000, "output": 10.00 / 1_000_000},
     "gemini-3.5-flash":      {"input": 1.50 / 1_000_000, "output": 9.00 / 1_000_000},
     "gemini-3.5-flash-lite": {"input": 0.30 / 1_000_000, "output": 2.50 / 1_000_000},
-    "gemini-3.6-flash":      {"input": 1.50 / 1_000_000, "output": 7.50 / 1_000_000},
+    # gemini-3.6-flash list price (ai.google.dev/gemini-api/docs/pricing, read
+    # 2026-10-01): $0.75 / $3.75 per M tokens through 2026-12-31, $1.50 / $7.50
+    # from 2027-01-01. The reference run (2026-08) was costed at the latter,
+    # i.e. 2x the price in force; recorded judge costs are upper bounds.
+    "gemini-3.6-flash":      {"input": 0.75 / 1_000_000, "output": 3.75 / 1_000_000},
 }
 
 

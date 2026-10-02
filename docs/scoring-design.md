@@ -13,6 +13,33 @@ ask every engine for the same thing. Where an engine cannot be asked (a fixed
 pipeline with no prompt), it competes through deterministic conversion code we
 publish, or it does not compete in that leg. Both are honest results.
 
+> **Current scoring: 2026-10-02, run `20261002T095730Z`.** All six legs
+> use code for per-engine verdicts. `code-v3` handles Markdown and tables;
+> `kv-schema-code-v4` handles key-value and schema. Image checklists and
+> printed-label aliases were created earlier by models and are reused.
+> `--skip-judge` keeps all six legs and disables new silver-document judge
+> calls. The rescore copies 110 old document-judge rows unchanged.
+>
+> Current coverage is 82 text, 57 Markdown, 42 table, 55 key-value, 65 schema
+> and 17 geometry pages; Marker geometry scores nine pages and records eight
+> errors. Errors/N/A do not enter means. Headlines average document-type
+> means. Detailed rules, policy switches and final numbers are in the
+> [handoff](handoff-2026-10-01.md) and scorer module docstrings.
+>
+> For blank scalar fields, an explicitly named semantic field takes precedence
+> over ambiguous printed labels. This preserves repeated-label lease blanks
+> without excusing an explicitly invented spouse surname. Values are compared
+> using documented field/row matching and normalization, not a global
+> punctuation-stripped substring search.
+>
+> **Historical sections below:** the LLM methods described for legs 2–5
+> record how the original August run was scored, not current execution.
+> Claude/Gemini Markdown/table scores in the final rescore still describe
+> stored default transcription outputs. Their default prompts request
+> structure, Markdown tables and reading order; dedicated leg-prompt
+> sensitivity has not yet been tested. The code does not silently relabel
+> those historical passes as newly prompted runs.
+
 ---
 
 ## Prompting is part of the measurement

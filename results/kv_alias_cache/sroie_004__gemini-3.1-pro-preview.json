@@ -1,0 +1,132 @@
+{
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_004.jpg",
+ "model": "gemini-3.1-pro-preview",
+ "prompt": "You are looking at a document image. Below is a list of reference fields with the values our annotators recorded for this page.\n\nFor EACH numbered field, report:\n- \"printed_labels\": every label printed on the page for that value, exactly as printed (e.g. \"ROC NO:\", \"Round Amt:\", \"Total GST @6%:\"). Empty list if the value is printed with no label (e.g. a company name in a header).\n- \"is_printed_pair\": true if the field appears on the page as a label followed by its value.\n\nDo not invent labels. Transcribe exactly as printed.\n\nFIELDS:\n1. company: SECURE PARKING CORPORATION S/B\n2. address: RIVERWALK VILLAGE BATU 3, JALAN IPOH 51200 KL.\n3. gst_no: 000296652800\n4. tel_no: 1300881698\n5. receipt_code: C13\n6. receipt_number: K0131800235697\n7. entry_date: 23.03.18\n8. entry_time: 14:59\n9. exit_date: 23.03.18\n10. exit_time: 15:27\n11. park_duration_format: D:HH:MM\n12. park_duration: 0:00:28\n13. kind_of_payment: CASH\n14. currency: RM\n15. parking_fee: 0.94\n16. add_gst: 0.06\n17. total: 1.00\n18. rate_note: *Rate incl. 6% GST\n19. date: 23.03.18\n20. footer_note: THANK YOU FOR YOUR VISIT\n\nOutput JSON only: {\"fields\": [{\"n\": 1, \"printed_labels\": [\"...\"], \"is_printed_pair\": true}]}",
+ "raw": "{\"fields\": [{\"n\": 1, \"printed_labels\": [], \"is_printed_pair\": false}, {\"n\": 2, \"printed_labels\": [], \"is_printed_pair\": false}, {\"n\": 3, \"printed_labels\": [\"GSTNo.\"], \"is_printed_pair\": true}, {\"n\": 4, \"printed_labels\": [\"TEL No:\"], \"is_printed_pair\": true}, {\"n\": 5, \"printed_labels\": [\"RECEIPT\"], \"is_printed_pair\": true}, {\"n\": 6, \"printed_labels\": [\"Receipt Number:\"], \"is_printed_pair\": true}, {\"n\": 7, \"printed_labels\": [\"ENTRY TIME:\"], \"is_printed_pair\": true}, {\"n\": 8, \"printed_labels\": [\"ENTRY TIME:\"], \"is_printed_pair\": true}, {\"n\": 9, \"printed_labels\": [\"EXIT TIME:\"], \"is_printed_pair\": true}, {\"n\": 10, \"printed_labels\": [\"EXIT TIME:\"], \"is_printed_pair\": true}, {\"n\": 11, \"printed_labels\": [\"PARK-DUR.:\"], \"is_printed_pair\": true}, {\"n\": 12, \"printed_labels\": [\"PARK-DUR.:\"], \"is_printed_pair\": true}, {\"n\": 13, \"printed_labels\": [\"KIND OF PAYMENT:\"], \"is_printed_pair\": true}, {\"n\": 14, \"printed_labels\": [\"Parking Fee\"], \"is_printed_pair\": true}, {\"n\": 15, \"printed_labels\": [\"Parking Fee\", \"RM\"], \"is_printed_pair\": true}, {\"n\": 16, \"printed_labels\": [\"Add GST\", \"RM\"], \"is_printed_pair\": true}, {\"n\": 17, \"printed_labels\": [\"*AMT\", \"RM\"], \"is_printed_pair\": true}, {\"n\": 18, \"printed_labels\": [], \"is_printed_pair\": false}, {\"n\": 19, \"printed_labels\": [\"EXIT TIME:\"], \"is_printed_pair\": true}, {\"n\": 20, \"printed_labels\": [], \"is_printed_pair\": false}]}",
+ "tokens": {
+  "input": 1580,
+  "output": 509,
+  "thinking": 0
+ },
+ "cost_usd": 0.009268,
+ "seconds": 6.03,
+ "created": "2026-10-01T11:15:49Z",
+ "prompt_version": "labels-only v1 (2026-10-01)",
+ "by_path": {
+  "company": {
+   "printed_labels": [],
+   "is_printed_pair": false
+  },
+  "address": {
+   "printed_labels": [],
+   "is_printed_pair": false
+  },
+  "gst_no": {
+   "printed_labels": [
+    "GSTNo."
+   ],
+   "is_printed_pair": true
+  },
+  "tel_no": {
+   "printed_labels": [
+    "TEL No:"
+   ],
+   "is_printed_pair": true
+  },
+  "receipt_code": {
+   "printed_labels": [
+    "RECEIPT"
+   ],
+   "is_printed_pair": true
+  },
+  "receipt_number": {
+   "printed_labels": [
+    "Receipt Number:"
+   ],
+   "is_printed_pair": true
+  },
+  "entry_date": {
+   "printed_labels": [
+    "ENTRY TIME:"
+   ],
+   "is_printed_pair": true
+  },
+  "entry_time": {
+   "printed_labels": [
+    "ENTRY TIME:"
+   ],
+   "is_printed_pair": true
+  },
+  "exit_date": {
+   "printed_labels": [
+    "EXIT TIME:"
+   ],
+   "is_printed_pair": true
+  },
+  "exit_time": {
+   "printed_labels": [
+    "EXIT TIME:"
+   ],
+   "is_printed_pair": true
+  },
+  "park_duration_format": {
+   "printed_labels": [
+    "PARK-DUR.:"
+   ],
+   "is_printed_pair": true
+  },
+  "park_duration": {
+   "printed_labels": [
+    "PARK-DUR.:"
+   ],
+   "is_printed_pair": true
+  },
+  "kind_of_payment": {
+   "printed_labels": [
+    "KIND OF PAYMENT:"
+   ],
+   "is_printed_pair": true
+  },
+  "currency": {
+   "printed_labels": [
+    "Parking Fee"
+   ],
+   "is_printed_pair": true
+  },
+  "parking_fee": {
+   "printed_labels": [
+    "Parking Fee",
+    "RM"
+   ],
+   "is_printed_pair": true
+  },
+  "add_gst": {
+   "printed_labels": [
+    "Add GST",
+    "RM"
+   ],
+   "is_printed_pair": true
+  },
+  "total": {
+   "printed_labels": [
+    "*AMT",
+    "RM"
+   ],
+   "is_printed_pair": true
+  },
+  "rate_note": {
+   "printed_labels": [],
+   "is_printed_pair": false
+  },
+  "date": {
+   "printed_labels": [
+    "EXIT TIME:"
+   ],
+   "is_printed_pair": true
+  },
+  "footer_note": {
+   "printed_labels": [],
+   "is_printed_pair": false
+  }
+ }
+}

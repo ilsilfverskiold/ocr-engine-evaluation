@@ -78,11 +78,6 @@ from evaluation.legs import (  # noqa: E402
 JUDGE_COST_PER_ENGINE_DOC = 0.0050
 JUDGE_CHECKLIST_COST_PER_DOC = 0.0060
 
-# Table judge: image-based cell checklist (stage 1) and per-engine verdicts
-# (stage 2).  Checklists are capped at table_judge.MAX_CHECKLIST_ITEMS = 60.
-TABLE_JUDGE_CHECKLIST_COST_PER_DOC = 0.0080   # image input is larger than text
-TABLE_JUDGE_COST_PER_ENGINE_DOC = 0.0040
-
 # Below this a leg's result is a failure worth naming in the report.
 FAIL_THRESHOLD = 0.50
 POOR_THRESHOLD = 0.70
@@ -323,22 +318,6 @@ def print_estimate(
             f"{judged_doc_count} silver-GT docs; checklists built once and reused"
         )
 
-    if "tables" in legs and os.environ.get("GOOGLE_API_KEY"):
-        table_doc_count = sum(
-            1 for g in gt_by_doc.values() if g.has_gt_for("tables")
-        )
-        if table_doc_count:
-            eligible = [e for e in engines if plan_passes(e, legs)]
-            t_checklists = TABLE_JUDGE_CHECKLIST_COST_PER_DOC * table_doc_count
-            t_verdicts = TABLE_JUDGE_COST_PER_ENGINE_DOC * table_doc_count * len(eligible)
-            t_total = t_checklists + t_verdicts
-            judge_grand += t_total
-            print(
-                f"{'LLM judge (tables)':<{col_e}} | {'':>6} | {'':>{col_p}} | "
-                f"{table_doc_count * len(eligible):>7} | ~${t_total:>8.2f} | "
-                f"{table_doc_count} table docs; Gemini builds cell reference from image"
-            )
-
     if judge_grand > 0:
         print(f"{'Grand total':<{col_e}} | {'':>6} | {'':>{col_p}} | {'':>7} | "
               f"~${subtotal + judge_grand:>8.2f}")
@@ -538,10 +517,8 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
               use_judge: bool | None = None):
     """Dispatch to the leg's scorer. Every scorer takes (output, ground truth).
 
-    ``use_judge`` controls LLM-judge scoring for legs that support it:
-      None  = auto (use judge when GOOGLE_API_KEY is set)
-      True  = force judge on
-      False = force judge off, use deterministic scoring
+    All six leg scorers use code. ``use_judge`` remains a compatibility
+    argument; the separate silver-document judge is controlled by the caller.
     """
     if leg == "text":
         from evaluation.text_leg import score_text
@@ -568,19 +545,88 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         from evaluation.schema_leg import score_schema
         return score_schema(text, gt, engine, structured_output)
     if leg == "geometry":
-        from evaluation.geometry_leg import score_geometry
-        # Native engines (tesseract, textract) put word boxes in
-        # structured_output["words"]; prompted VLMs return the leg's JSON in
-        # their text output. parse_word_boxes accepts either shape.
-        # "words" is word-level (tesseract, textract). "text_regions" is
-        # line/span-level — paddle's rec_boxes, and any engine whose native
-        # geometry is coarser. Kept as distinct keys so a coarse source is never
-        # silently reported as word boxes; the scorer merges to lines when the
-        # reference says so.
+        from evaluation.geometry_leg import score_geometry, score_blocks
         so = structured_output or {}
-        predicted = so.get("words") or so.get("text_regions") or text
+        spec = ENGINES[engine]
+        # Layout parsers return one box per paragraph/title/table, never per
+        # word: not applicable on the word leg, scored as blocks instead.
+        # Each adapter reads what the engine actually stored (the run's own
+        # adapters lost DeepSeek's text — region labels were stored as the
+        # box text — and passed nothing for Paddle).
+        blocks = _geometry_blocks(engine, so)
+        if blocks is not None:
+            if not gt.has_gt_for("geometry"):
+                return score_geometry(None, gt)
+            return score_blocks(blocks, gt.word_boxes, gt.word_boxes_granularity)
+        if engine == "marker":
+            # marker's regions are lines/spans; the run left HTML tags in
+            # their text (<h2>…</h2>, <table>…), which broke text matching.
+            predicted = _strip_html_regions(so.get("text_regions") or [])
+            if not predicted and not (text or "").strip():
+                # The OCR pass came back with no regions and no text in the
+                # same 0.4 s on three dense fintab pages of the batch whose
+                # other two pages crashed: a failed call, not an answer.
+                raise RuntimeError("marker OCR pass returned no regions and no text "
+                                   "(pipeline failure, not an engine score)")
+        else:
+            predicted = so.get("words") or so.get("text_regions") or text
+        if spec.answers("geometry") == "native" and not predicted:
+            # A native-geometry engine whose adapter delivered no boxes is a
+            # pipeline failure, never a 0.0 (paddle, run 20260810).
+            raise RuntimeError("native geometry engine returned no boxes to score "
+                               "(adapter/pipeline failure, not an engine score)")
         return score_geometry(predicted, gt)
     raise ValueError(f"No scorer for leg {leg!r}")
+
+
+BLOCK_GEOMETRY_ENGINES = ("mineru", "paddleocr_vl", "deepseek_ocr")
+# Engines whose geometry is read from another stored pass than the one the
+# planner assigned the leg to (see rescore_runs). Empty on purpose: marker
+# was briefly read from its conversion pass because it holds more regions,
+# but that pass labels them `layout_block` (a paragraph is one box), so it
+# is not word/line geometry. Marker is scored from its OCR pass (`ocr_line`
+# boxes); the 5 pages where that pass crashed are error rows.
+GEOMETRY_SOURCE_PASS: dict[str, str] = {}
+
+
+def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
+    """Layout blocks (text + bbox 0-1) for the block-level engines, from what
+    the run stored; None for every other engine."""
+    import re as _re
+    if engine not in BLOCK_GEOMETRY_ENGINES:
+        return None
+    if engine == "deepseek_ocr":
+        raw = so.get("raw_model_output") or ""
+        out = []
+        for m in _re.finditer(r"<\|ref\|>(.*?)<\|/ref\|><\|det\|>(\[\[.*?\]\])<\|/det\|>\s*\n?(.*?)(?=<\|ref\|>|\Z)", raw, _re.S):
+            try:
+                boxes = json.loads(m.group(2))
+            except Exception:
+                continue
+            text = m.group(3).strip()
+            for b in boxes:
+                if isinstance(b, (list, tuple)) and len(b) == 4:
+                    # DeepSeek's 0-999 grid, divided as the run's adapter did
+                    out.append({"text": text, "bbox": [float(v) / 999.0 for v in b]})
+        return out
+    # mineru and paddleocr_vl: layout_blocks with bbox (0-1) and content
+    return [{"text": b.get("content") or b.get("text") or "", "bbox": b["bbox"]}
+            for b in (so.get("layout_blocks") or []) if b.get("bbox")]
+
+
+def _strip_html_regions(regions: list[dict]) -> list[dict]:
+    out = []
+    for r in regions:
+        t = str(r.get("text") or "")
+        if "<" in t:
+            try:
+                from bs4 import BeautifulSoup
+                t = BeautifulSoup(t, "lxml").get_text(" ", strip=True)
+            except Exception:
+                pass
+        if r.get("bbox") and t.strip():
+            out.append({"text": t, "bbox": r["bbox"]})
+    return out
 
 
 def _base_record(engine: str, doc_path: Path, gt, timestamp: str) -> dict:
@@ -592,6 +638,369 @@ def _base_record(engine: str, doc_path: Path, gt, timestamp: str) -> dict:
         "gt_source": gt.gt_source,
         "timestamp": timestamp,
     }
+
+
+def _score_pass_legs(
+    engine: str, doc_path: Path, gt, base: dict, pass_name: str,
+    legs: tuple[str, ...] | list[str], text: str, structured_output: dict | None,
+    steady_latency: float, steady_cost: float, model_version: str,
+    use_judge: bool | None, results_jsonl: Path,
+) -> list[str]:
+    """Score one stored pass for every leg it feeds and append the leg rows.
+
+    Shared by the live run (scored as each call returns) and `--score`
+    (scored later from the persisted `.call.json`), so both paths produce
+    byte-compatible result rows. Returns the terminal summary parts.
+    """
+    parts = []
+    for leg in legs:
+        try:
+            score = score_leg(leg, engine, text, gt, structured_output, use_judge=use_judge)
+        except Exception as exc:
+            # A scorer/adapter failure is recorded as an error row and kept
+            # out of every average — never written as a 0.0 score.
+            log_record({
+                **base, "leg": leg, "pass_name": pass_name, "applicable": False,
+                "score": None, "reason": "scoring failed", "metrics": {}, "detail": {},
+                "latency_seconds": round(steady_latency, 3), "cost_per_page": round(steady_cost, 6),
+                "model_version": model_version,
+                "error": f"{type(exc).__name__}: {exc}",
+            }, results_jsonl)
+            parts.append(f"{leg}=ERROR")
+            continue
+        log_record({
+            **base,
+            "leg": leg,
+            "pass_name": pass_name,
+            "applicable": score.applicable,
+            "score": score.score,
+            "reason": score.reason,
+            "metrics": score.as_metrics(),
+            "detail": score.as_detail(),
+            "latency_seconds": round(steady_latency, 3),
+            "cost_per_page": round(steady_cost, 6),
+            "model_version": model_version,
+            "error": None,
+        }, results_jsonl)
+        if score.applicable and score.score is not None:
+            parts.append(f"{leg}={score.score:.3f}")
+        else:
+            parts.append(f"{leg}=n/a")
+    return parts
+
+
+def _judge_silver_document(
+    engine: str, doc_path: Path, text: str, base: dict,
+    results_jsonl: Path, log: logging.Logger,
+) -> float:
+    """The document judge for a silver-GT page: the only text-quality figure
+    those 11 pages get. Returns the judge cost in USD (0.0 on error)."""
+    from evaluation.judge import judge_document
+
+    try:
+        JUDGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        verdict = judge_document(doc_path, text, engine)
+    except Exception as exc:
+        log.warning(f"  [{engine}] judge error on {doc_path.name}: {exc}")
+        return 0.0
+    cost = float(getattr(verdict, "cost_usd", 0.0) or 0.0)
+    items = list(getattr(verdict, "items", []) or [])
+    log_record({
+        **base,
+        "leg": "judge",
+        "pass_name": DEFAULT_PASS,
+        "applicable": getattr(verdict, "item_accuracy", None) is not None,
+        "score": getattr(verdict, "item_accuracy", None),
+        "reason": None,
+        "metrics": {
+            "item_accuracy": getattr(verdict, "item_accuracy", None),
+            "checklist_size": getattr(verdict, "checklist_size", len(items)),
+            "items_checked": len(items),
+        },
+        # Per-item verdicts are kept, not just the total, so any judged
+        # number can be traced back to the items behind it.
+        "detail": {"items": _jsonable(items)},
+        "cost_per_page": round(cost, 6),
+        "error": None,
+    }, results_jsonl)
+
+    # Say so on the terminal. Without this the silver documents print
+    # "text=n/a geometry=n/a" and look skipped, when in fact the judge ran
+    # on them — it is the only score they get, and it is what the pause
+    # after that line was spent on.
+    accuracy = getattr(verdict, "item_accuracy", None)
+    if accuracy is None:
+        log.info(f"  [{engine}/judge] {doc_path.name}  judge=n/a  "
+                 f"({getattr(verdict, 'error', None) or 'no verdict'})")
+    else:
+        log.info(f"  [{engine}/judge] {doc_path.name}  judge={accuracy:.3f}  "
+                 f"({len(items)} checklist items)  ${cost:.5f}")
+    return cost
+
+
+def _read_stored_call(timestamp: str, engine: str, doc_path: Path, gt,
+                      pass_name: str) -> dict | None:
+    """The persisted `.call.json` for one (engine, document, pass), or None."""
+    folder = f"{gt.tier}__{gt.doc_type}__{doc_path.stem}"
+    path = OCR_OUTPUTS_DIR / timestamp / folder / engine / f"{pass_name}.call.json"
+    if not path.exists():
+        return None
+    try:
+        call = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    blocks = ((call.get("raw_response") or {}).get("Blocks")) if isinstance(call.get("raw_response"), dict) else None
+    if engine == "textract_structured" and blocks:
+        # the stored FORMS pairs were built before checkbox values
+        # (SELECTION_ELEMENT) were read; rebuild them from the raw blocks
+        from evaluation.kv_schema_code import textract_forms
+        so = dict(call.get("structured_output") or {})
+        so["forms"] = textract_forms(blocks)
+        call["structured_output"] = so
+    return call
+
+
+def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> None:
+    """Score a run from its persisted outputs — the second half of a
+    collect-only run, or a rescore after a scorer change.
+
+    Reads `{ts}_inference.jsonl` for what was collected and each pass's
+    `.call.json` for what came back, then appends one row per (engine,
+    document, leg) that `{ts}_results.jsonl` does not already hold. Rows
+    already present are never rewritten: to rescore a leg, move the old
+    results file aside first, so the earlier verdicts stay on disk.
+
+    The six legs use code and existing references. Unless --skip-judge,
+    the separate document judge may run on silver-GT text-serving passes.
+    """
+    from evaluation.ground_truth import GroundTruthLoader
+
+    inference = read_jsonl(RUNS_DIR / f"{timestamp}_inference.jsonl")
+    if not inference:
+        log.error(f"No inference records for run {timestamp}")
+        sys.exit(1)
+    results_jsonl = RUNS_DIR / f"{timestamp}_results.jsonl"
+    already = set()
+    for r in read_jsonl(results_jsonl):
+        already.add((r["engine_name"], r["document_path"], r["leg"]))
+
+    loader = GroundTruthLoader()
+    use_judge = False if skip_judge else None
+    scored = skipped = missing = 0
+    judge_spend = 0.0
+    for rec in inference:
+        if rec.get("error"):
+            continue  # its leg rows were written as failures at collection time
+        engine = rec["engine_name"]
+        doc_path = Path(rec["document_path"])
+        pass_name = rec.get("pass_name") or DEFAULT_PASS
+        legs = [l for l in (rec.get("legs") or [])
+                if (engine, str(doc_path), l) not in already]
+        try:
+            gt = loader.load(doc_path)
+        except Exception as exc:
+            log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
+            continue
+        wants_silver_judge = (
+            not skip_judge and "text" in (rec.get("legs") or [])
+            and gt.gt_source == "silver_tesseract"
+            and (engine, str(doc_path), "judge") not in already
+        )
+        if not legs and not wants_silver_judge:
+            skipped += 1
+            continue
+        call = _read_stored_call(timestamp, engine, doc_path, gt, pass_name)
+        if call is None:
+            missing += 1
+            log.warning(f"  [{engine}/{pass_name}] {doc_path.name}: no stored "
+                        f".call.json — cannot score")
+            continue
+        base = _base_record(engine, doc_path, gt, timestamp)
+        text = call.get("raw_text") or ""
+        structured_output = call.get("structured_output") or {}
+        parts = _score_pass_legs(
+            engine, doc_path, gt, base, pass_name, legs, text, structured_output,
+            float(rec.get("steady_latency_seconds") or 0.0),
+            float(rec.get("steady_cost_per_page") or 0.0),
+            rec.get("model_version") or "unknown",
+            use_judge, results_jsonl,
+        )
+        scored += len(legs)
+        if parts:
+            log.info(f"  [{engine}/{pass_name}] {doc_path.name}  " + "  ".join(parts))
+        if wants_silver_judge:
+            judge_spend += _judge_silver_document(
+                engine, doc_path, text, base, results_jsonl, log)
+
+    manifest = read_run_manifest(timestamp)
+    if manifest:
+        manifest["scored"] = True
+        manifest["scored_with_judge"] = not skip_judge
+        manifest["scored_at"] = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        (RUNS_DIR / f"{timestamp}_run.json").write_text(
+            json.dumps(manifest, indent=2), encoding="utf-8")
+    log.info(f"\nScored {scored} leg row(s); {skipped} pass(es) already scored; "
+             f"{missing} pass(es) without stored output")
+    if judge_spend:
+        log.info(f"Document-judge spend: ${judge_spend:.4f}")
+
+
+def rescore_runs(sources: list[str], target: str, log: logging.Logger,
+                 skip_judge: bool) -> None:
+    """Score every stored output of one or more runs into ONE new run.
+
+    Nothing in the source runs is touched: their `.call.json` files are read,
+    every leg each pass serves is scored with the current scorers, and the
+    rows go to `{target}_results.jsonl`. Inference records are copied to
+    `{target}_inference.jsonl` with a `source_timestamp`, so cost/latency
+    reporting works unchanged. Failed calls become error rows (never 0.0).
+    The manifest records `rescore_of` and the scorer versions.
+    """
+    from evaluation.ground_truth import GroundTruthLoader
+    from evaluation.code_judges import SCORER_VERSION as MD_TBL_VERSION
+    from evaluation.kv_schema_code import SCORER_VERSION as KV_VERSION
+
+    loader = GroundTruthLoader()
+    results_jsonl = RUNS_DIR / f"{target}_results.jsonl"
+    inference_jsonl = RUNS_DIR / f"{target}_inference.jsonl"
+    if results_jsonl.exists() or inference_jsonl.exists():
+        log.error(f"run {target} already exists; refusing to overwrite")
+        sys.exit(1)
+    use_judge = False if skip_judge else None
+    engines: list[str] = []
+    legs_seen: list[str] = []
+    scored = failed = missing = 0
+    judge_spend = 0.0
+    copied_judge = 0
+    # A leg that has its own successful pass somewhere in the sources (the
+    # markdown and tables passes collected for an engine whose earlier run
+    # served them from its transcription pass) is scored from that pass only:
+    # the default pass drops it, so the leg has one row per document.
+    dedicated: dict[tuple[str, str], set[str]] = {}
+    for src in sources:
+        for rec in read_jsonl(RUNS_DIR / f"{src}_inference.jsonl"):
+            if rec.get("error") or (rec.get("pass_name") or DEFAULT_PASS) == DEFAULT_PASS:
+                continue
+            dedicated.setdefault((rec["engine_name"], rec["document_path"]), set()).update(rec.get("legs") or [])
+    for src in sources:
+        inference = read_jsonl(RUNS_DIR / f"{src}_inference.jsonl")
+        if not inference:
+            log.error(f"No inference records for run {src}")
+            sys.exit(1)
+        log.info(f"Rescoring {src}: {len(inference)} inference records")
+        # The document judge's per-item verdicts live in the source run's
+        # judge rows (detail.items); they are copied, never re-asked.
+        for r in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
+            if r.get("leg") == "judge" and not r.get("error"):
+                log_record({**r, "timestamp": target, "source_timestamp": src}, results_jsonl)
+                copied_judge += 1
+        # A call that failed and was then retried successfully is not a
+        # failure of the run: only (engine, document, pass) triples with NO
+        # successful record become error rows, and once each, not once per
+        # attempt.
+        succeeded = {(r["engine_name"], r["document_path"], r.get("pass_name") or DEFAULT_PASS)
+                     for r in inference if not r.get("error")}
+        error_rows_written: set[tuple] = set()
+        for rec in inference:
+            engine = rec["engine_name"]
+            if engine not in engines:
+                engines.append(engine)
+            doc_path = Path(rec["document_path"])
+            pass_name = rec.get("pass_name") or DEFAULT_PASS
+            # The legs a pass serves are re-read from the CURRENT registry: an
+            # engine taken out of a leg since the run (textract_structured has
+            # no schema interface) is not rescored on it.
+            spec = ENGINES.get(engine)
+            legs = [l for l in (rec.get("legs") or [])
+                    if spec is None or spec.answers(l) is not None]
+            if pass_name == DEFAULT_PASS:
+                legs = [l for l in legs if l not in dedicated.get((engine, rec["document_path"]), set())]
+            for l in legs:
+                if l not in legs_seen:
+                    legs_seen.append(l)
+            log_record({**rec, "timestamp": target, "source_timestamp": src}, inference_jsonl)
+            try:
+                gt = loader.load(doc_path)
+            except Exception as exc:
+                log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
+                continue
+            base = _base_record(engine, doc_path, gt, target)
+            if rec.get("error"):
+                key = (engine, rec["document_path"], pass_name)
+                if key in succeeded or key in error_rows_written:
+                    continue
+                error_rows_written.add(key)
+                alt_pass = GEOMETRY_SOURCE_PASS.get(engine)
+                if alt_pass and pass_name != alt_pass and legs == ["geometry"]:
+                    # the failed pass is not where this engine's geometry is
+                    # read from: when the other pass has regions for this
+                    # page, geometry is scored from them; otherwise the
+                    # failure stands as an error row
+                    alt = _read_stored_call(src, engine, doc_path, gt, alt_pass)
+                    if alt is not None and (alt.get("structured_output") or {}).get("text_regions"):
+                        parts = _score_pass_legs(
+                            engine, doc_path, gt, base, alt_pass, ["geometry"],
+                            alt.get("raw_text") or "", alt.get("structured_output") or {},
+                            0.0, 0.0, rec.get("model_version") or "unknown", use_judge, results_jsonl)
+                        scored += 1
+                        if parts:
+                            log.info(f"  [{engine}/{alt_pass}] {doc_path.name}  " + "  ".join(parts))
+                        continue
+                for leg in legs:
+                    log_record({**base, "leg": leg, "pass_name": pass_name, "applicable": False,
+                                "score": None, "reason": "inference failed", "metrics": {}, "detail": {},
+                                "error": rec.get("error")}, results_jsonl)
+                failed += 1
+                continue
+            call = _read_stored_call(src, engine, doc_path, gt, pass_name)
+            if call is None:
+                missing += 1
+                log.warning(f"  [{engine}/{pass_name}] {doc_path.name}: no stored .call.json")
+                continue
+            text = call.get("raw_text") or ""
+            structured_output = call.get("structured_output") or {}
+            parts = []
+            # marker's line boxes live in its conversion pass (PdfConverter
+            # JSON text_regions, 50-200 per page); its OCR pass captured 1-30
+            # and crashed on 5 pages. Geometry is scored from the former.
+            alt_pass = GEOMETRY_SOURCE_PASS.get(engine)
+            if alt_pass and "geometry" in legs and alt_pass != pass_name:
+                alt = _read_stored_call(src, engine, doc_path, gt, alt_pass)
+                if alt is not None and (alt.get("structured_output") or {}).get("text_regions"):
+                    parts += _score_pass_legs(
+                        engine, doc_path, gt, base, alt_pass, ["geometry"],
+                        alt.get("raw_text") or "", alt.get("structured_output") or {},
+                        float(rec.get("steady_latency_seconds") or 0.0),
+                        float(rec.get("steady_cost_per_page") or 0.0),
+                        rec.get("model_version") or "unknown", use_judge, results_jsonl)
+                    legs = [l for l in legs if l != "geometry"]
+            parts += _score_pass_legs(
+                engine, doc_path, gt, base, pass_name, legs, text, structured_output,
+                float(rec.get("steady_latency_seconds") or 0.0),
+                float(rec.get("steady_cost_per_page") or 0.0),
+                rec.get("model_version") or "unknown",
+                use_judge, results_jsonl,
+            ) if legs else parts
+            scored += len(legs)
+            if parts:
+                log.info(f"  [{engine}/{pass_name}] {doc_path.name}  " + "  ".join(parts))
+            if (not skip_judge and "text" in legs and gt.gt_source == "silver_tesseract"):
+                judge_spend += _judge_silver_document(engine, doc_path, text, base, results_jsonl, log)
+    manifest = {
+        "timestamp": target, "engines": engines, "legs": legs_seen,
+        "rescore_of": sources, "collect_only": False, "scored": True,
+        "scored_with_judge": not skip_judge,
+        "scorers": {"markdown/tables": MD_TBL_VERSION, "key_value/schema": KV_VERSION,
+                    "geometry": "mutual-centre + line-level + block diagnostic (2026-10-01)",
+                    "text": "gt coverage (unchanged)"},
+        "scored_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+    }
+    (RUNS_DIR / f"{target}_run.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    log.info(f"\nRescored {scored} leg row(s) from {len(sources)} run(s); {failed} failed call(s) "
+             f"kept as error rows; {missing} pass(es) without stored output; "
+             f"{copied_judge} document-judge row(s) copied from the source run(s)")
+    if judge_spend:
+        log.info(f"Document-judge spend: ${judge_spend:.4f}")
 
 
 # ---------------------------------------------------------------------------
@@ -816,6 +1225,36 @@ def _fmt(value, width: int = 6, places: int = 3) -> str:
     return f"{value:>{width}.{places}f}" if value is not None else f"{'-':>{width}}"
 
 
+def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
+    """Describe saved scores, without relabelling historical judge runs as code."""
+    spec = LEGS[leg]
+    methods = set()
+    for record in records:
+        if not record.get("applicable") or record.get("score") is None:
+            continue
+        metrics = record.get("metrics") or {}
+        scorer = next((metrics[k] for k in ("scorer", "kv_scorer", "schema_scorer")
+                       if metrics.get(k)), None)
+        if scorer:
+            methods.add(f"{spec.method} ({scorer})")
+        elif leg in ("key_value", "schema"):
+            methods.add("legacy local field verification + LLM verdicts")
+        elif (metrics.get("judge_element_accuracy") is not None
+              or (leg == "tables" and metrics.get("cell_accuracy") is not None)):
+            models = {str(metrics[k]) for k in ("judge_model", "judge_verdict_model")
+                      if metrics.get(k)}
+            methods.add("LLM verdicts (" + (", ".join(sorted(models))
+                        or "model not recorded in these metrics") + ")")
+        else:
+            methods.add("deterministic supporting metric" if leg in ("markdown", "tables")
+                        else "deterministic")
+    method = "; ".join(sorted(methods)) if methods else "no scored rows"
+    current_only = bool(methods) and all("code verdicts" in m for m in methods)
+    if leg in ("markdown", "tables", "key_value", "schema") and not current_only:
+        return "saved headline score (see per-row metrics)", method
+    return spec.scored_on, method
+
+
 def _reference_counts(records: list[dict], legs: list[str]) -> dict[str, int]:
     """How many of the run's documents have a reference for each leg.
 
@@ -862,21 +1301,8 @@ def _print_leg_results(
         div = "=" * 100
         log.info(div)
         log.info(f"Leg: {spec.title}  —  {spec.question}")
-        log.info(f"  Scored on: {spec.scored_on}")
-        method = spec.method
-        if "LLM judge" in method:
-            judge_model_keys = ("judge_model", "judge_verdict_model",
-                                "judge_checklist_model")
-            judge_models: set[str] = set()
-            for r in leg_records:
-                m = r.get("metrics") or {}
-                for k in judge_model_keys:
-                    v = m.get(k)
-                    if v:
-                        judge_models.add(v)
-            if not judge_models:
-                judge_models.add("gemini-2.5-pro")
-            method = f"LLM judge ({', '.join(sorted(judge_models))})"
+        scored_on, method = _recorded_scoring_method(leg, leg_records)
+        log.info(f"  Scored on: {scored_on}")
         log.info(f"  Method: {method}")
         log.info(div)
 
@@ -987,7 +1413,7 @@ def _print_leg_results(
         # For tables leg: show score with vs without sampled documents
         if leg == "tables":
             from collections import defaultdict as _dd
-            from evaluation.table_judge import MAX_CHECKLIST_ITEMS as _MAX_CL
+            from evaluation.code_judges import TABLE_MAX_ITEMS as _MAX_CL
             eng_all: dict[str, list[float]] = _dd(list)
             eng_uns: dict[str, list[float]] = _dd(list)
             for r in leg_records:
@@ -1328,10 +1754,22 @@ def _pass_to_legs(engines: list[str]) -> dict[str, dict[str, list[str]]]:
 
 
 def _print_per_leg_costs(
-    operational: dict, engines: list[str], log: logging.Logger
+    operational: dict, engines: list[str], log: logging.Logger,
+    inference: list[dict] | None = None,
 ) -> None:
-    """Per-leg cost and latency — what each use case costs per page."""
+    """Per-leg cost and latency — what each use case costs per page.
+
+    The leg -> pass mapping comes from the run's own inference records (their
+    `legs` field) when available, so a leg is costed at the pass that served
+    it in THAT run; the planner is only a fallback. Mapping legs from today's
+    planner showed claude's geometry at the conversion pass's $0.015/page
+    while its geometry call cost $0.055/page.
+    """
     pass_legs = _pass_to_legs(engines)
+    for rec in inference or []:
+        eng, pn = rec.get("engine_name"), rec.get("pass_name")
+        if eng in pass_legs and pn and rec.get("legs"):
+            pass_legs[eng][pn] = list(rec["legs"])
     has_data = {e for e in engines if e in operational
                 and operational[e].get("per_pass")}
     if not has_data:
@@ -1490,6 +1928,18 @@ def _print_judged_documents(records: list[dict], log: logging.Logger) -> None:
 # ---------------------------------------------------------------------------
 
 def _write_per_doc_csv(records: list[dict], path: Path) -> None:
+    """Scored rows only. Rows carrying an error (a failed call, a failed
+    scorer) go to a sibling `<ts>_errors.csv` so they are visible but never
+    sit beside scores as if they were measurements."""
+    errors = [r for r in records if r.get("error")]
+    records = [r for r in records if not r.get("error")]
+    if errors:
+        err_path = path.with_name(path.name.replace("_per_doc.csv", "_errors.csv"))
+        with open(err_path, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=["engine_name", "document_path", "leg", "pass_name", "reason", "error", "timestamp"], extrasaction="ignore")
+            w.writeheader()
+            for r in errors:
+                w.writerow(r)
     metric_keys: list[str] = []
     for r in records:
         for k in (r.get("metrics") or {}):
@@ -1556,21 +2006,37 @@ def _write_engine_csv(
 # ---------------------------------------------------------------------------
 
 def write_run_manifest(
-    timestamp: str, engines: list[str], tiers: list[str], legs: list[str]
+    timestamp: str, engines: list[str], tiers: list[str], legs: list[str],
+    collect_only: bool = False, extends: str | None = None,
 ) -> None:
     """What the run was asked to do.
 
     Without it, re-reporting could only see the legs that produced records —
     and a leg with no ground truth produces none, so the one result worth
     printing (that it could not be measured) would silently vanish.
+
+    A resumed run keeps the manifest it already has: rewriting it with the
+    current --engines/--legs selection used to shrink a published run's
+    manifest to whatever subset the resume happened to name. `extends` records
+    the baseline run this one adds engines to, so a combined report can say
+    which run each row came from.
     """
-    (RUNS_DIR / f"{timestamp}_run.json").write_text(
-        json.dumps(
-            {"timestamp": timestamp, "engines": engines, "tiers": tiers, "legs": legs},
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
+    path = RUNS_DIR / f"{timestamp}_run.json"
+    existing = read_run_manifest(timestamp)
+    if existing:
+        merged = dict(existing)
+        merged["engines"] = list(dict.fromkeys(existing.get("engines", []) + engines))
+        merged["legs"] = list(dict.fromkeys(existing.get("legs", []) + legs))
+        merged["tiers"] = list(dict.fromkeys(existing.get("tiers", []) + tiers))
+        if extends and not merged.get("extends"):
+            merged["extends"] = extends
+        manifest = merged
+    else:
+        manifest = {"timestamp": timestamp, "engines": engines, "tiers": tiers,
+                    "legs": legs, "collect_only": collect_only}
+        if extends:
+            manifest["extends"] = extends
+    path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
 def read_run_manifest(timestamp: str) -> dict:
@@ -1583,13 +2049,52 @@ def read_run_manifest(timestamp: str) -> dict:
         return {}
 
 
-def report(timestamp: str, log: logging.Logger, legs: list[str] | None = None) -> None:
-    leg_records = read_jsonl(RUNS_DIR / f"{timestamp}_results.jsonl")
-    inference = read_jsonl(RUNS_DIR / f"{timestamp}_inference.jsonl")
+def report(timestamp: str | list[str], log: logging.Logger,
+           legs: list[str] | None = None) -> None:
+    """Print and write the report for one run, or for several runs combined.
+
+    Several timestamps (`--report A,B`) concatenate the stored rows of an
+    extension run with the baseline it adds engines to. Nothing is rescored
+    or re-averaged across runs: each row keeps the run it came from in its
+    `timestamp` field, and the summaries are written under the joined name.
+    Comparability across runs is the reader's job — the engine columns say
+    which judge/scorer version a row was produced by only through the run
+    manifests, which the report prints first.
+    """
+    timestamps = [timestamp] if isinstance(timestamp, str) else list(timestamp)
+    leg_records: list[dict] = []
+    inference: list[dict] = []
+    for ts in timestamps:
+        leg_records.extend(read_jsonl(RUNS_DIR / f"{ts}_results.jsonl"))
+        inference.extend(read_jsonl(RUNS_DIR / f"{ts}_inference.jsonl"))
+    for r in leg_records + inference:
+        r.setdefault("timestamp", timestamps[0])
 
     if not leg_records:
         log.info("No results to report.")
         return
+    if len(timestamps) > 1:
+        log.info(f"Combined report over runs: {', '.join(timestamps)}")
+        for ts in timestamps:
+            m = read_run_manifest(ts)
+            log.info(f"  {ts}: engines={m.get('engines')} legs={m.get('legs')} "
+                     f"collect_only={m.get('collect_only', False)} "
+                     f"scored_with_judge={m.get('scored_with_judge', 'n/a')} "
+                     f"extends={m.get('extends')}")
+        # Rows from different runs must never be averaged as the same metric
+        # without the reader knowing: two runs scoring the same (engine, leg)
+        # would double-count in aggregate_legs.
+        seen: dict[tuple[str, str], set[str]] = defaultdict(set)
+        for r in leg_records:
+            seen[(r["engine_name"], r.get("leg", ""))].add(r["timestamp"])
+        clashes = sorted(k for k, v in seen.items() if len(v) > 1)
+        if clashes:
+            raise ValueError(
+                "The same (engine, leg) appears in more than one of the combined "
+                "runs; combined reporting would average them together: "
+                + ", ".join(f"{e}/{l}" for e, l in clashes[:10])
+            )
+    timestamp = "+".join(timestamps)
 
     # Modal cost audit gate — the report is not printed if a GPU figure cannot
     # be re-derived from the stored batch fields.
@@ -1613,7 +2118,13 @@ def report(timestamp: str, log: logging.Logger, legs: list[str] | None = None) -
                 f"{row['documents_per_second']:>8.6f} ${row['cost_per_document']:.7f}"
             )
 
-    manifest = read_run_manifest(timestamp)
+    manifest: dict = {}
+    for ts in timestamps:
+        m = read_run_manifest(ts)
+        manifest["engines"] = list(dict.fromkeys(
+            manifest.get("engines", []) + list(m.get("engines") or [])))
+        manifest["legs"] = list(dict.fromkeys(
+            manifest.get("legs", []) + list(m.get("legs") or [])))
     active_legs = legs or manifest.get("legs") or [
         leg for leg in ALL_LEGS if any(r["leg"] == leg for r in leg_records)
     ]
@@ -1626,8 +2137,14 @@ def report(timestamp: str, log: logging.Logger, legs: list[str] | None = None) -
     from evaluation.ground_truth import GroundTruthLoader
     _gt_loader = GroundTruthLoader()
     _applicable_records = []
+    # The document judge is not a leg: its rows stay out of the per-leg
+    # aggregation and are printed in their own section. Dropping them here
+    # (as before 2026-09-30) meant _print_judged_documents received no rows
+    # and the section never printed, for any run.
+    judge_rows = []
     for r in leg_records:
         if r["leg"] == "judge":
+            judge_rows.append(r)
             continue
         if r.get("applicable") and r.get("score") is not None:
             try:
@@ -1653,10 +2170,10 @@ def report(timestamp: str, log: logging.Logger, legs: list[str] | None = None) -
     _print_gt_provenance(_applicable_records, log)
     _print_gt_limitations(log)
     _print_leg_results(agg, _applicable_records, active_legs, engines, operational, log)
-    _print_judged_documents(_applicable_records, log)
+    _print_judged_documents(judge_rows, log)
     _print_engine_summary(agg, active_legs, operational, log)
     _print_scale_projection(operational, log)
-    _print_per_leg_costs(operational, engines, log)
+    _print_per_leg_costs(operational, engines, log, inference)
     _print_spread_warnings(agg, active_legs, log)
     _print_failures(_applicable_records, log)
     _print_inference_errors(inference, log)
@@ -1699,13 +2216,35 @@ def parse_args():
                    help="Parallel engine threads (default: number of engines)")
     p.add_argument("--max-docs", type=int, default=0,
                    help="Limit to the first N discovered documents")
+    p.add_argument("--docs", default=None, metavar="STEM[,STEM]",
+                   help="Only these document stems (e.g. sroie_000,fintab_000). "
+                        "For validating a new engine on a chosen cross-section "
+                        "of the corpus before a full collection")
     p.add_argument("--resume", nargs="?", const="latest", metavar="TIMESTAMP",
                    help="Resume an interrupted run; completed (engine, doc, pass) "
                         "calls are skipped and results appended")
-    p.add_argument("--report", nargs="?", const="latest", metavar="TIMESTAMP",
-                   help="Regenerate the report from stored results — no OCR re-run")
+    p.add_argument("--report", nargs="?", const="latest", metavar="TIMESTAMP[,TIMESTAMP]",
+                   help="Regenerate the report from stored results — no OCR re-run. "
+                        "Several comma-separated runs are reported together "
+                        "(an extension run beside the baseline it extends)")
     p.add_argument("--rerun-errors", nargs="?", const="latest", metavar="TIMESTAMP",
                    help="Re-run only the calls that errored in a previous run")
+    p.add_argument("--collect-only", action="store_true",
+                   help="Run inference and persist every output, but score nothing "
+                        "and call no judge. Keeps key_value/schema passes and all "
+                        "documents (no GT filtering). Score later with --score")
+    p.add_argument("--rescore", metavar="TIMESTAMP[,TIMESTAMP]",
+                   help="Score every stored output of the given run(s) with the "
+                        "current scorers into ONE new run (new timestamp, manifest "
+                        "rescore_of=...). Source runs are never modified. Combine "
+                        "with --skip-judge to leave the document judge out.")
+    p.add_argument("--score", metavar="TIMESTAMP",
+                   help="Score a stored run from its persisted outputs (the second "
+                        "half of --collect-only), then print the report. Rows already "
+                        "in the results file are kept, never rescored")
+    p.add_argument("--extends", metavar="TIMESTAMP",
+                   help="Record which baseline run this run adds engines to "
+                        "(written to the run manifest; report both with --report A,B)")
     return p.parse_args()
 
 
@@ -1810,26 +2349,40 @@ def main() -> None:
         # The judges read this at call time — one flag reaches all of them.
         os.environ["OCR_JUDGE_MODEL"] = args.judge_model
 
-    # key_value and schema have no deterministic scorer — they are judged or
-    # they are nothing. Asking for them together with --skip-judge is a
-    # contradiction: refuse an explicit ask, silently drop them from the
-    # default all-legs selection.
-    judge_only = [l for l in legs if l in ("key_value", "schema")]
-    if args.skip_judge and judge_only:
-        if args.legs.strip().lower() != "all":
-            print(f"--skip-judge cannot run judge-only leg(s): "
-                  f"{', '.join(judge_only)}. These legs have no deterministic "
-                  f"scorer — drop them from --legs, or drop --skip-judge.")
-            sys.exit(1)
-        legs = [l for l in legs if l not in ("key_value", "schema")]
-
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     log = setup_logging(ts)
 
     if args.report:
-        run_ts = _resolve_timestamp(args.report)
+        run_ts_list = [_resolve_timestamp(v.strip())
+                       for v in args.report.split(",") if v.strip()]
+        log = setup_logging("+".join(run_ts_list))
+        log.info(f"Regenerating report from run(s) {', '.join(run_ts_list)}")
+        report(run_ts_list, log)
+        return
+
+    if args.rescore:
+        sources = [_resolve_timestamp(s.strip()) for s in args.rescore.split(",") if s.strip()]
+        run_ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         log = setup_logging(run_ts)
-        log.info(f"Regenerating report from run {run_ts}")
+        if not args.skip_judge and not os.environ.get("GOOGLE_API_KEY"):
+            log.error("GOOGLE_API_KEY is needed for the document judge — set it, or use --skip-judge")
+            sys.exit(1)
+        log.info(f"Rescoring {', '.join(sources)} into new run {run_ts} "
+                 f"({'no document judge' if args.skip_judge else 'document judge enabled'})")
+        rescore_runs(sources, run_ts, log, skip_judge=args.skip_judge)
+        report(run_ts, log)
+        return
+
+    if args.score:
+        run_ts = _resolve_timestamp(args.score)
+        log = setup_logging(run_ts)
+        if not args.skip_judge and not os.environ.get("GOOGLE_API_KEY"):
+            log.error("GOOGLE_API_KEY is needed to score judged legs — set it, or "
+                      "use --score with --skip-judge for deterministic scoring only")
+            sys.exit(1)
+        log.info(f"Scoring stored run {run_ts} from its persisted outputs "
+                 f"({'no judge' if args.skip_judge else 'judge enabled'})")
+        score_stored_run(run_ts, log, skip_judge=args.skip_judge)
         report(run_ts, log)
         return
 
@@ -1848,12 +2401,23 @@ def main() -> None:
         args.resume = run_ts
 
     documents = discover_documents(tiers)
-    if legs != list(ALL_LEGS):
+    if args.docs:
+        wanted = {s.strip() for s in args.docs.split(",") if s.strip()}
+        documents = [d for d in documents if d.stem in wanted]
+        unknown = wanted - {d.stem for d in documents}
+        if unknown:
+            log.error(f"--docs: no such document stem(s) in the selected tiers: "
+                      f"{', '.join(sorted(unknown))}")
+            sys.exit(1)
+    if legs != list(ALL_LEGS) and not args.collect_only:
         # An explicit --legs selection means the user wants THOSE legs
         # exercised: keep only documents with ground truth for at least one of
         # them, so `--legs geometry --max-docs 2` validates on 2 geometry
         # documents instead of truncating to 2 ineligible ones and doing
-        # nothing.
+        # nothing. A collect-only run keeps every page: the 11 silver-text
+        # pages have no scoreable text reference but their outputs are still
+        # wanted, and GT filtering was silently dropping them from a
+        # supposedly full-corpus collection.
         from evaluation.ground_truth import GroundTruthLoader
         _loader = GroundTruthLoader()
         eligible = [d for d in documents
@@ -1892,7 +2456,9 @@ def main() -> None:
         _print_dry_run(engines, legs, documents, log)
         return
 
-    missing = validate_keys(engines, args.skip_judge)
+    collect_only = bool(args.collect_only)
+    # A collect-only run makes no judge call, so it needs no judge key.
+    missing = validate_keys(engines, args.skip_judge or collect_only)
     if missing:
         log.error("Missing environment variables:")
         for m in missing:
@@ -1903,12 +2469,11 @@ def main() -> None:
     from evaluation.ground_truth import GroundTruthLoader
     gt_loader = GroundTruthLoader()
 
-    judge_client = None
-    judge_document = None
-    if not args.skip_judge:
+    silver_judge = False
+    if not args.skip_judge and not collect_only:
         try:
-            from evaluation.judge import judge_document  # noqa: F811
-            judge_client = None
+            import evaluation.judge  # noqa: F401
+            silver_judge = True
         except ImportError as exc:
             log.warning(f"LLM judge unavailable ({exc}); silver-GT documents will "
                         f"carry no judged score. Use --skip-judge to silence this.")
@@ -1919,9 +2484,19 @@ def main() -> None:
     if args.resume:
         ts = _resolve_timestamp(args.resume)
         log = setup_logging(ts)
+        resumed = read_run_manifest(ts)
+        if resumed and bool(resumed.get("collect_only")) != collect_only:
+            log.error(f"Run {ts} was {'collect-only' if resumed.get('collect_only') else 'scored inline'}; "
+                      f"resume it with the same mode or its results file would mix "
+                      f"scored and unscored passes")
+            sys.exit(1)
     inference_jsonl = RUNS_DIR / f"{ts}_inference.jsonl"
     results_jsonl = RUNS_DIR / f"{ts}_results.jsonl"
-    write_run_manifest(ts, engines, tiers, legs)
+    write_run_manifest(ts, engines, tiers, legs, collect_only=collect_only,
+                       extends=args.extends)
+    if collect_only:
+        log.info("Collect-only run: outputs are persisted, nothing is scored, no "
+                 f"judge is called. Score later with: --score {ts}")
 
     done: set[tuple[str, str, str]] = set()
     if args.resume:
@@ -1945,6 +2520,21 @@ def main() -> None:
     log.info(f"Local CPU engines (sequential): {local_engines or 'none'}")
     log.info(f"Cloud/Modal engines (parallel): {len(cloud_engines)}")
     log.info("")
+
+    def _pass_lacks_gt(plan, gt) -> bool:
+        """Skip a prompted pass on a document with no reference for any leg it
+        feeds — except, in a collect-only run, the pass that serves the text
+        leg: the 11 silver-text pages have no text reference, and gating on
+        it left deepseek/glm/qwen/marker with no output there in the baseline
+        (so the document judge covered 10 of 14 engines, not all 14). A
+        schema pass still needs the document's schema, so that gate holds."""
+        if not plan.leg_for_task:
+            return False
+        if any(gt.has_gt_for(l) for l in plan.legs):
+            return False
+        if collect_only and "text" in plan.legs and not LEGS[plan.leg_for_task].needs_schema:
+            return False
+        return True
 
     def record_pass(
         engine: str, doc_path: Path, gt, plan, result, error: str | None,
@@ -1989,8 +2579,12 @@ def main() -> None:
             steady_latency, steady_cost = latency, cost
         else:
             steady_latency = max(latency - startup, 0.0)
+            # A missing gpu_type falls back to the registry's declared GPU,
+            # never to T4 — that default under-billed an A100 run by 4x.
             steady_cost = (
-                calculate_modal_cost(steady_latency, metadata.get("gpu_type", "T4"))
+                calculate_modal_cost(
+                    steady_latency,
+                    metadata.get("gpu_type") or ENGINES[engine].gpu_type)
                 if startup and engine in MODAL_ENGINES else cost
             )
 
@@ -2037,82 +2631,32 @@ def main() -> None:
             "error": None,
         }, inference_jsonl)
 
-        parts = []
-        for leg in plan.legs:
-            score = score_leg(leg, engine, result.raw_text, gt, result.structured_output,
-                              use_judge=False if args.skip_judge else None)
-            log_record({
-                **base,
-                "leg": leg,
-                "pass_name": plan.name,
-                "applicable": score.applicable,
-                "score": score.score,
-                "reason": score.reason,
-                "metrics": score.as_metrics(),
-                "detail": score.as_detail(),
-                "latency_seconds": round(steady_latency, 3),
-                "cost_per_page": round(steady_cost, 6),
-                "model_version": result.model_version,
-                "error": None,
-            }, results_jsonl)
-            if score.applicable and score.score is not None:
-                parts.append(f"{leg}={score.score:.3f}")
-            else:
-                parts.append(f"{leg}=n/a")
+        if collect_only:
+            log.info(f"  [{engine}/{plan.name}] {doc_path.name}  collected "
+                     f"({'+'.join(plan.legs)})  {steady_latency:.1f}s  ${cost:.5f}")
+            return
 
+        parts = _score_pass_legs(
+            engine, doc_path, gt, base, plan.name, plan.legs, result.raw_text,
+            result.structured_output, steady_latency, steady_cost,
+            result.model_version, False if args.skip_judge else None, results_jsonl,
+        )
         log.info(f"  [{engine}/{plan.name}] {doc_path.name}  " + "  ".join(parts)
                  + f"  {steady_latency:.1f}s  ${cost:.5f}")
 
         # The judge covers the documents whose ground truth cannot be trusted.
+        # It follows the pass that SERVES THE TEXT LEG, whatever that pass is
+        # called: gating on the name "default" meant qwen ("text") and marker
+        # ("text+markdown") were never judged in the baseline.
         if (
-            judge_document is not None
-            and plan.name == DEFAULT_PASS
+            silver_judge
+            and "text" in plan.legs
             and gt.gt_source == "silver_tesseract"
         ):
-            _run_judge(engine, doc_path, gt, result.raw_text, base)
-
-    def _run_judge(engine: str, doc_path: Path, gt, text: str, base: dict) -> None:
-        nonlocal total_spend
-        try:
-            JUDGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-            verdict = judge_document(doc_path, text, engine, client=judge_client)
-        except Exception as exc:
-            log.warning(f"  [{engine}] judge error on {doc_path.name}: {exc}")
-            return
-        cost = float(getattr(verdict, "cost_usd", 0.0) or 0.0)
-        with spend_lock:
-            total_spend += cost
-        items = list(getattr(verdict, "items", []) or [])
-        log_record({
-            **base,
-            "leg": "judge",
-            "pass_name": DEFAULT_PASS,
-            "applicable": getattr(verdict, "item_accuracy", None) is not None,
-            "score": getattr(verdict, "item_accuracy", None),
-            "reason": None,
-            "metrics": {
-                "item_accuracy": getattr(verdict, "item_accuracy", None),
-                "checklist_size": getattr(verdict, "checklist_size", len(items)),
-                "items_checked": len(items),
-            },
-            # Per-item verdicts are kept, not just the total, so any judged
-            # number can be traced back to the items behind it.
-            "detail": {"items": _jsonable(items)},
-            "cost_per_page": round(cost, 6),
-            "error": None,
-        }, results_jsonl)
-
-        # Say so on the terminal. Without this the silver documents print
-        # "text=n/a geometry=n/a" and look skipped, when in fact the judge ran
-        # on them — it is the only score they get, and it is what the pause
-        # after that line was spent on.
-        accuracy = getattr(verdict, "item_accuracy", None)
-        if accuracy is None:
-            log.info(f"  [{engine}/judge] {doc_path.name}  judge=n/a  "
-                     f"({getattr(verdict, 'error', None) or 'no verdict'})")
-        else:
-            log.info(f"  [{engine}/judge] {doc_path.name}  judge={accuracy:.3f}  "
-                     f"({len(items)} checklist items)  ${cost:.5f}")
+            judge_cost = _judge_silver_document(
+                engine, doc_path, result.raw_text, base, results_jsonl, log)
+            with spend_lock:
+                total_spend += judge_cost
 
     def run_engine(engine: str) -> None:
         nonlocal completed
@@ -2143,7 +2687,7 @@ def main() -> None:
                 except Exception as exc:
                     log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
                     continue
-                if plan.leg_for_task and not any(gt.has_gt_for(l) for l in plan.legs):
+                if _pass_lacks_gt(plan, gt):
                     with completed_lock:
                         completed += 1
                     continue
@@ -2199,7 +2743,7 @@ def main() -> None:
                 except Exception as exc:
                     log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
                     continue
-                if plan.leg_for_task and not any(gt.has_gt_for(l) for l in plan.legs):
+                if _pass_lacks_gt(plan, gt):
                     with completed_lock:
                         completed += 1
                     continue
@@ -2266,6 +2810,11 @@ def main() -> None:
                     log.error(f"[{futures[future]}] thread failed: {future.exception()}")
 
     log.info(f"\nTotal spend this run: ${total_spend:.4f}")
+    if collect_only:
+        log.info(f"Collection complete. Outputs: {OCR_OUTPUTS_DIR / ts}")
+        log.info(f"Score them with:  python run_benchmark.py --score {ts}"
+                 f"{' --skip-judge' if args.skip_judge else ''}")
+        return
     log.info("Aggregating results...\n")
     report(ts, log, legs)
 

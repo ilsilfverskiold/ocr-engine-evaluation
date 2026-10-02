@@ -1,22 +1,10 @@
-"""Leg 4 — key-value pairs (LLM-judged).
+"""Leg 4 — printed key-value pairs, scored by code.
 
-Ask: *"Extract every printed label and its value from this document as a flat
-JSON object of label -> value. Use the label exactly as printed. Use null where
-a printed field is blank. Output only JSON."*
-
-Every engine is evaluated the same way: an LLM judge checks whether each
-ground-truth field value appears correctly in the engine's output, regardless
-of the output format (JSON, FORMS key-value pairs, raw text) or field naming.
-
-This replaced the deterministic label-matching scorer that penalised engines
-whose label naming didn't match the GT's schema identifiers.
-
-The checklist is the scalar (non-array) fields from ``true_json`` — arrays
-are excluded because they belong to the schema leg. The judge (Gemini 2.5 Pro)
-checks each field value against the engine output. Exact substring matches
-are settled locally to save cost.
-
-Score: field accuracy = (correct + blank_ok) / total fields.
+Cached, engine-blind stage-1 aliases identify the printed label(s) for each
+scalar GT field. The matcher parses the engine's pairs and compares keys and
+values using the rules in kv_schema_code.py. Arrays belong to the schema leg.
+No stage-1 cache or no printed pairs means not applicable; this scorer never
+creates an alias cache or calls a judge. Score = (correct + blank_ok) / fields.
 """
 
 from __future__ import annotations
@@ -26,18 +14,8 @@ from pathlib import Path
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-from evaluation.schema_judge import (
-    SchemaChecklistItem,
-    SchemaFieldVerdict,
-    SchemaJudgeResult,
-    _prepare_engine_output,
-    _verify_locally,
-    judge_schema,
-)
-from evaluation.structured_metrics import (
-    is_blank,
-    walk_fields,
-)
+
+from evaluation.structured_metrics import walk_fields
 
 
 @dataclass
@@ -53,7 +31,14 @@ class KeyValueScore:
     blank_total: int = 0
     blank_correct: int = 0
     judge_cost_usd: float = 0.0
-    verdicts: list[SchemaFieldVerdict] = field(default_factory=list)
+    verdicts: list[Any] = field(default_factory=list)
+    # code scoring (2026-10-01)
+    fields_all: int = 0            # every scalar field; pairs_total is the denominator used
+    engine_pairs: int = 0
+    parsed_how: str = ""
+    alias_missing: bool = False
+    cleanup_log: list[str] = field(default_factory=list)
+    scorer: str | None = None
 
     @property
     def score(self) -> float | None:
@@ -63,26 +48,36 @@ class KeyValueScore:
         return {
             "kv_field_accuracy": self.field_accuracy,
             "kv_pairs_total": self.pairs_total,
+            "kv_fields_all": self.fields_all,
             "kv_pairs_correct": self.pairs_correct,
             "kv_pairs_missing": self.pairs_missing,
             "kv_pairs_wrong_value": self.pairs_wrong_value,
             "kv_pairs_invented_value": self.pairs_invented_value,
             "kv_blank_total": self.blank_total,
             "kv_blank_correct": self.blank_correct,
+            "kv_engine_pairs": self.engine_pairs,
+            "kv_parsed_how": self.parsed_how,
+            "kv_alias_missing": self.alias_missing,
+            "kv_scorer": self.scorer,
             "kv_judge_cost_usd": self.judge_cost_usd,
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {
+            "cleanup": self.cleanup_log,
             "verdicts": [
                 {
                     "path": v.path,
                     "expected": v.expected,
                     "verdict": v.verdict,
                     "is_blank": v.is_blank,
+                    "key": getattr(v, "key", ""),
+                    "value": getattr(v, "value", ""),
+                    "how": getattr(v, "how", ""),
+                    "printed_pair": getattr(v, "printed_pair", None),
                 }
                 for v in self.verdicts
-            ]
+            ],
         }
 
 
@@ -109,12 +104,7 @@ def score_key_value(
     engine: str,
     structured_output: dict | None = None,
 ) -> KeyValueScore:
-    """(engine output, ground truth) -> KeyValueScore.
-
-    All engines are judged the same way: an LLM checks whether each GT
-    scalar field value appears in the engine's output, regardless of format
-    or field naming.
-    """
+    """Compare parsed field pairs against the reference using code only."""
     if not gt.has_gt_for("key_value"):
         return KeyValueScore(applicable=False, reason=gt.missing_gt_reason("key_value"))
 
@@ -128,46 +118,46 @@ def score_key_value(
 
     document_stem = Path(gt.document_path).stem
 
-    result: SchemaJudgeResult = judge_schema(
-        true_json=gt.true_json,
-        json_schema=gt.json_schema,
-        engine_text=output_text or "",
-        engine=f"{engine}__kv",
-        document_stem=document_stem,
-        structured_output=structured_output,
-        scalar_only=True,
+    # Code scoring (evaluation/kv_schema_code.py): pairs parsed from what the
+    # engine returned, keys matched by field name or the page's printed labels
+    # (stage 1, evaluation/alias_pass.py), values matched exactly. No model.
+    from evaluation.kv_schema_code import (
+        SCORER_VERSION, engine_pairs, load_aliases, score_fields,
     )
+    from evaluation.schema_judge import build_schema_checklist
 
-    if result.error:
-        return KeyValueScore(
-            applicable=True,
-            reason=f"judge error: {result.error}",
-            field_accuracy=0.0,
-            pairs_total=result.checklist_size,
-            judge_cost_usd=result.cost_usd,
-        )
-
-    correct = sum(
-        1 for i in result.items if i.verdict in ("correct", "blank_ok")
-    )
-    missing = sum(1 for i in result.items if i.verdict == "missing")
-    wrong = sum(1 for i in result.items if i.verdict == "wrong")
-    invented = sum(1 for i in result.items if i.verdict == "invented")
-    blank_total = sum(1 for i in result.items if i.is_blank)
-    blank_correct = sum(
-        1 for i in result.items if i.is_blank and i.verdict == "blank_ok"
-    )
-
+    items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
+                                   use_cache=False, scalar_only=True)
+    pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
+    aliases = load_aliases(document_stem)
+    res = score_fields(items, pairs, "key_value", aliases)
+    # The denominator is the set of fields the page prints as label+value
+    # pairs, which only stage 1 can say. Without it, or when no scalar field
+    # is a printed pair (chart_003: a page number, a footer, a value read off
+    # a chart), the leg does not apply to the page — it is never "0 for
+    # every engine".
+    if res.alias_missing:
+        return KeyValueScore(applicable=False, scorer=SCORER_VERSION, fields_all=res.fields_all,
+                             reason="stage 1 (printed labels) not run for this page: key_value denominator undefined")
+    if res.fields_total == 0:
+        return KeyValueScore(applicable=False, scorer=SCORER_VERSION, fields_all=res.fields_all,
+                             reason="no scalar field is printed as a label+value pair (stage 1)")
     return KeyValueScore(
         applicable=True,
-        field_accuracy=result.field_accuracy,
-        pairs_total=len(result.items),
-        pairs_correct=correct,
-        pairs_missing=missing,
-        pairs_wrong_value=wrong,
-        pairs_invented_value=invented,
-        blank_total=blank_total,
-        blank_correct=blank_correct,
-        judge_cost_usd=result.cost_usd,
-        verdicts=result.items,
+        reason=None,
+        field_accuracy=res.field_accuracy,
+        pairs_total=res.fields_total,
+        pairs_correct=res.correct,
+        pairs_missing=res.missing,
+        pairs_wrong_value=res.wrong,
+        pairs_invented_value=sum(1 for v in res.verdicts if v.verdict == "invented"),
+        blank_total=res.blank_total,
+        blank_correct=res.blank_correct,
+        fields_all=res.fields_all,
+        engine_pairs=res.pairs,
+        parsed_how=parsed_how,
+        alias_missing=res.alias_missing,
+        cleanup_log=res.cleanup_log,
+        scorer=SCORER_VERSION,
+        verdicts=res.verdicts,
     )

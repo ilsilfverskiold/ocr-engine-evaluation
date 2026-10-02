@@ -32,6 +32,49 @@ def test_aggregation_keeps_document_types_apart():
     assert len(agg) == 2
 
 
+@pytest.mark.parametrize("selection,expected", [
+    ("key_value,schema", ["key_value", "schema"]),
+    ("all", list(run_benchmark.ALL_LEGS)),
+])
+def test_skip_judge_keeps_code_scored_legs_in_cli(monkeypatch, tmp_path, selection, expected):
+    import sys
+    from types import SimpleNamespace
+    from evaluation.ground_truth import GroundTruthLoader
+
+    monkeypatch.setattr(sys, "argv", ["run_benchmark.py", "--engines", "claude_sonnet_4_6",
+                                    "--legs", selection, "--skip-judge", "--dry-run"])
+    monkeypatch.setattr(run_benchmark, "setup_logging", lambda *args: logging.getLogger("test"))
+    monkeypatch.setattr(run_benchmark, "discover_documents", lambda *args: [tmp_path / "a.png"])
+    monkeypatch.setattr(GroundTruthLoader, "load", lambda *args: SimpleNamespace(has_gt_for=lambda leg: True))
+    captured = []
+    monkeypatch.setattr(run_benchmark, "_print_dry_run", lambda engines, legs, *args: captured.extend(legs))
+    run_benchmark.main()
+    assert captured == expected
+
+
+def test_report_method_uses_saved_scorer_not_todays_registry():
+    old = _leg("e", "easy", "invoice", "a.png", "tables", 0.9)
+    old["metrics"] = {"cell_accuracy": 0.9, "judge_model": "saved-model"}
+    current = dict(old, metrics={"cell_accuracy": 0.8, "scorer": "code-v3"})
+    assert "LLM verdicts (saved-model)" in run_benchmark._recorded_scoring_method("tables", [old])[1]
+    assert "code verdicts" in run_benchmark._recorded_scoring_method("tables", [current])[1]
+    mixed = run_benchmark._recorded_scoring_method("tables", [old, current])[1]
+    assert "LLM verdicts" in mixed and "code verdicts" in mixed
+
+
+def test_estimate_does_not_charge_for_removed_table_judge(monkeypatch, tmp_path, capsys):
+    from types import SimpleNamespace
+    from evaluation.ground_truth import GroundTruthLoader
+
+    monkeypatch.setenv("GOOGLE_API_KEY", "fake-for-estimate-only")
+    monkeypatch.setattr(GroundTruthLoader, "load", lambda *args: SimpleNamespace(has_gt_for=lambda leg: True))
+    monkeypatch.setattr(run_benchmark, "_measured_modal_costs", lambda: {})
+    run_benchmark.print_estimate(["claude_sonnet_4_6"], ["tables"], [tmp_path / "a.png"], True, 0)
+    output = capsys.readouterr().out
+    assert "LLM judge (tables)" not in output
+    assert "Grand total (no judge)" in output
+
+
 def test_engine_mean_is_a_mean_of_doc_type_means_not_a_pooled_mean():
     # Two invoices at 1.0 and one tax form at 0.0. Pooled would be 0.667;
     # the mean of doc-type means is 0.5, and that is the published figure.
@@ -64,8 +107,13 @@ def test_cost_per_page_sums_every_pass_for_a_document():
          "steady_cost_per_page": 0.002, "steady_latency_seconds": 2.0},
     ]
     stats = engine_operational(inference)["e"]
-    assert stats["cost_per_page"] == pytest.approx(0.003)
-    assert stats["latency_s"] == pytest.approx(3.0)
+    # cost_per_page is the ONE-CALL figure (the pass serving the text leg),
+    # so engines are compared on the same basis however many legs the
+    # benchmark asked each one; the full spend is cost_all_passes.
+    assert stats["cost_per_page"] == pytest.approx(0.001)
+    assert stats["latency_s"] == pytest.approx(1.0)
+    assert stats["cost_all_passes"] == pytest.approx(0.003)
+    assert stats["latency_all_passes"] == pytest.approx(3.0)
     assert stats["passes"] == 2
 
 
@@ -148,7 +196,7 @@ def test_diagnose_names_the_failure_from_measured_metrics():
     assert "repetition" in run_benchmark._diagnose({
         "leg": "text", "metrics": {"repetition_suspected": True, "length_ratio": 12.0},
     })
-    # The LLM judge replaced the deterministic parse/shape checks; schema
+    # Field verdicts replaced the old parse/shape checks; schema
     # failures now report invented values or fall through to "fields missing
     # or wrong".
     assert "invented" in run_benchmark._diagnose({
