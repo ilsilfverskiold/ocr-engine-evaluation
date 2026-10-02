@@ -755,8 +755,11 @@ def _read_stored_call(timestamp: str, engine: str, doc_path: Path, gt,
         # the stored FORMS pairs were built before checkbox values
         # (SELECTION_ELEMENT) were read; rebuild them from the raw blocks
         from evaluation.kv_schema_code import textract_forms
+        from runners.textract_structured_runner import TextractStructuredRunner, TABLE_ADAPTER_VERSION
         so = dict(call.get("structured_output") or {})
         so["forms"] = textract_forms(blocks)
+        so["tables"] = TextractStructuredRunner._extract_tables(blocks)
+        so["table_adapter_version"] = TABLE_ADAPTER_VERSION
         call["structured_output"] = so
     return call
 
@@ -861,6 +864,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     from evaluation.code_judges import SCORER_VERSION as MD_TBL_VERSION
     from evaluation.kv_schema_code import SCORER_VERSION as KV_VERSION
     from evaluation.geometry_leg import SCORER_VERSION as GEOMETRY_VERSION
+    from runners.textract_structured_runner import TABLE_ADAPTER_VERSION
 
     loader = GroundTruthLoader()
     results_jsonl = RUNS_DIR / f"{target}_results.jsonl"
@@ -992,6 +996,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         "timestamp": target, "engines": engines, "legs": legs_seen,
         "rescore_of": sources, "collect_only": False, "scored": True,
         "scored_with_judge": not skip_judge,
+        "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
         "scorers": {"markdown/tables": MD_TBL_VERSION, "key_value/schema": KV_VERSION,
                     "geometry": GEOMETRY_VERSION,
                     "text": "gt coverage (unchanged)"},

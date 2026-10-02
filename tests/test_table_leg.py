@@ -259,3 +259,49 @@ def test_pipe_table_glued_to_the_line_above_is_still_a_table():
     md = "**Dependents (see instructions):**\n| (1) First name | Last name |\n| :--- | :--- |\n| Alana | Harris |\n"
     html = extract_all_tables_html(md, "gemini_flash")
     assert len(html) == 1 and "Alana" in html[0]
+
+
+def _merged_textract_blocks():
+    return [
+        {"Id": "table", "BlockType": "TABLE", "Relationships": [
+            {"Type": "CHILD", "Ids": ["a", "b"]}, {"Type": "MERGED_CELL", "Ids": ["merged"]}]},
+        {"Id": "a", "BlockType": "CELL", "RowIndex": 1, "ColumnIndex": 1,
+         "Relationships": [{"Type": "CHILD", "Ids": ["w1"]}]},
+        {"Id": "b", "BlockType": "CELL", "RowIndex": 1, "ColumnIndex": 2,
+         "Relationships": [{"Type": "CHILD", "Ids": ["w2"]}]},
+        {"Id": "w1", "BlockType": "WORD", "Text": "Social &"},
+        {"Id": "w2", "BlockType": "WORD", "Text": "security <number>"},
+        {"Id": "merged", "BlockType": "MERGED_CELL", "RowIndex": 1, "ColumnIndex": 1,
+         "RowSpan": 2, "ColumnSpan": 2, "Relationships": [{"Type": "CHILD", "Ids": ["b", "a"]}]},
+    ]
+
+
+def test_textract_reads_merged_cell_relationships_and_preserves_covered_rows():
+    from bs4 import BeautifulSoup
+    from runners.textract_structured_runner import TextractStructuredRunner
+    table = TextractStructuredRunner._extract_tables(_merged_textract_blocks())[0]["html"]
+    soup = BeautifulSoup(table, "lxml")
+    assert len(soup.find_all("tr")) == 2
+    assert len(soup.find_all("td")) == 1
+    assert soup.td["colspan"] == "2" and soup.td["rowspan"] == "2"
+    assert soup.td.get_text() == "Social & security <number>"
+    result = TextractStructuredRunner._extract_tables(_merged_textract_blocks())[0]
+    source = BeautifulSoup(result["cell_html"], "lxml")
+    assert [c.get_text() for c in source.find_all("td")] == ["Social &", "security <number>"]
+
+
+def test_saved_textract_tables_are_readapted_without_rewriting_the_call(tmp_path, monkeypatch):
+    import json
+    from types import SimpleNamespace
+    import run_benchmark as rb
+    monkeypatch.setattr(rb, "OCR_OUTPUTS_DIR", tmp_path)
+    path = tmp_path / "run" / "easy__invoice__sample" / "textract_structured" / "default.call.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"raw_response": {"Blocks": _merged_textract_blocks()},
+                                "structured_output": {"tables": [{"html": "obsolete"}]}}))
+    before = path.read_bytes()
+    result = rb._read_stored_call("run", "textract_structured", path.with_name("sample.png"),
+                                  SimpleNamespace(tier="easy", doc_type="invoice"), "default")
+    assert "colspan" in result["structured_output"]["tables"][0]["html"]
+    assert result["structured_output"]["table_adapter_version"].startswith("textract-merged-cells-v1")
+    assert path.read_bytes() == before

@@ -531,9 +531,33 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   from borrowing a numeric substring. Ambiguous day/month dates still need
   a documented reference convention; no locale was inferred from answers.
 - Replayed all 675 field rows against v5 on identical repaired references:
-  six scores and eight verdicts change, all false negatives. Gemini and
-  Textract photo_001 gain their correctly returned quantity; the remaining
-  changes recognize dates in saved Mistral/GLM schema answers.
+  six scores and eight verdicts change, all false negatives. All four KV
+  engines on photo_001 gain their correctly returned quantity; the remaining
+  changes recognize dates in two saved Mistral schema answers.
 - Validation: 222 full-suite tests passed (103.74 seconds), plus 27 table
   tests after the currency-escape adjustment. No raw result, reference cache
   or call file was rewritten. No inference/provider/Modal/judge calls.
+
+## 2026-10-02 — reconstruct Textract's native merged table cells
+
+- Audited saved Textract block graphs against AWS's documented TABLE to
+  MERGED_CELL to CELL relationships. Our adapter previously ignored merged
+  blocks despite claiming to support merged cells. tax_002 contains 32,
+  including the split Social security number header.
+- Reconstruct merged groups from their child cells in row/column order,
+  retain span-covered rows, and escape cell text as HTML. Preserve elementary
+  cell HTML as well: replacing it with merged groups alone would discard
+  valid multiline address/subject evidence. Both representations come from
+  the provider response, not a model or inferred cell splitting.
+- Stored-call loading rebuilds both representations without rewriting the
+  original file. Table and KV readers consume them deterministically;
+  textract-merged-cells-v1 is recorded in structured output and rescore
+  manifests. Added no service calls and never constructed a cloud client.
+- Replayed all 97 applicable Textract table/KV rows on identical scoring
+  code/references. Nine scores improve, none decrease: eight table pages
+  and lease_003 KV. tax_002 and tax_003 recover .4286 to 1.0; tax_004 .4545
+  to .9091. Inspected both positive and negative changes in the first
+  replacement-only prototype before preserving the primitive-cell evidence.
+- Validation: 224 full-suite tests passed before the representation-preserving
+  adjustment; 90 table/field regressions and all 97 replay cases passed after
+  it. Original source calls remain unchanged. No report release or push.

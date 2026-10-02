@@ -222,14 +222,19 @@ def engine_pairs(engine: str, text: str, structured_output: dict | None) -> tupl
     if engine == "textract_structured":
         so = structured_output or {}
         pairs = [[str(p.get("key", "")), str(p.get("value", ""))] for p in so.get("forms", [])]
+        from evaluation.code_judges import _html_grid
         for t in so.get("tables", []):
-            html = t.get("html", "") if isinstance(t, dict) else ""
-            grid = [re.findall(r"<td[^>]*>(.*?)</td>", r, re.S) for r in re.findall(r"<tr>(.*?)</tr>", html, re.S)]
-            if grid and all(len(r) == 2 for r in grid):
-                pairs += [[r[0], r[1]] for r in grid]
-            elif len(grid) > 1:
-                hdr = grid[0]
-                pairs += [[hdr[j] if j < len(hdr) else f"col{j+1}", cell] for r in grid[1:] for j, cell in enumerate(r)]
+            if not isinstance(t, dict):
+                continue
+            for html in dict.fromkeys(t.get(key) for key in ("cell_html", "html")):
+                if not html:
+                    continue
+                grid = _html_grid(html)
+                if grid and all(len(r) == 2 for r in grid):
+                    pairs += [[r[0], r[1]] for r in grid]
+                elif len(grid) > 1:
+                    hdr = grid[0]
+                    pairs += [[hdr[j] if j < len(hdr) else f"col{j+1}", cell] for r in grid[1:] for j, cell in enumerate(r)]
         return pairs, "Textract FORMS pairs + table cells (no JSON interface)"
     obj, how = parse_json_answer(text or "")
     return (flatten(obj) if obj is not None else []), how

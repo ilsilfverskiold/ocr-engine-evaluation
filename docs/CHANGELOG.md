@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Textract's adapter now reads native MERGED_CELL relationships and retains
+  elementary cells alongside merged groups. Stored calls are readapted from
+  provider blocks. Nine of 97 table/KV scores improve in an isolated replay;
+  source response files remain untouched.
+
 - Table code-v5 distinguishes malformed OCR amounts from valid currency
   formatting. Field v6 adds quantity-scoped Units and unambiguous US date
   formatting, while disallowing numeric shared-label substring credit.

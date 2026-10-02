@@ -609,10 +609,12 @@ def engine_grids(text: str, engine: str, structured_output: dict | None) -> list
     from evaluation.table_extractor import extract_all_tables_html
     out = []
     for t in (structured_output or {}).get("tables") or []:
-        if isinstance(t, dict) and t.get("html"):
-            g = _html_grid(t["html"])
-            if g:
-                out.append(g)
+        if isinstance(t, dict):
+            for html in dict.fromkeys(t.get(key) for key in ("html", "cell_html")):
+                if html:
+                    g = _html_grid(html)
+                    if g:
+                        out.append(g)
     try:
         for h in extract_all_tables_html(text or "", engine):
             g = _html_grid(h)

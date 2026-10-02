@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+from html import escape
 
 from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 
 COST_PER_PAGE = 0.065  # AnalyzeDocument TABLES + FORMS in US West/Oregon: $0.015 + $0.050/page
+TABLE_ADAPTER_VERSION = "textract-merged-cells-v1 (2026-10-02)"
 
 
 class TextractStructuredRunner(OCRRunner):
@@ -21,8 +23,8 @@ class TextractStructuredRunner(OCRRunner):
 
     def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
         """AnalyzeDocument takes no prompt: `task` is accepted for the
-        uniform runner contract and ignored. The schema and key_value legs
-        are judged by the LLM judge against the FORMS output."""
+        uniform runner contract and ignored. Key-value code checks the native
+        FORMS pairs and table cells; this engine has no schema interface."""
         t0 = self._timer()
         from runners.textract_text_runner import _prepare_bytes
         raw_bytes = _prepare_bytes(document_path)
@@ -42,6 +44,7 @@ class TextractStructuredRunner(OCRRunner):
         from runners.textract_text_runner import _word_boxes
         structured_output = {
             "tables": self._extract_tables(blocks),
+            "table_adapter_version": TABLE_ADAPTER_VERSION,
             "forms": self._extract_key_values(blocks),
             "words": _word_boxes(blocks),
         }
@@ -61,11 +64,14 @@ class TextractStructuredRunner(OCRRunner):
             raw_response=provider_payload(response),
         )
 
-    def _extract_tables(self, blocks: list[dict]) -> list[dict[str, Any]]:
+    @classmethod
+    def _extract_tables(cls, blocks: list[dict], *, _include_merged: bool = True) -> list[dict[str, Any]]:
         """Walk the block graph into HTML tables.
 
         Textract returns cells, not records: each CELL carries RowIndex,
-        ColumnIndex and optional RowSpan/ColumnSpan, and its text lives in
+        ColumnIndex; merged spans are separate MERGED_CELL relationships.
+        https://docs.aws.amazon.com/textract/latest/dg/how-it-works-tables.html
+        Cell text lives in
         child WORD/SELECTION_ELEMENT blocks. Three things a naive walk gets
         wrong and this one handles:
           * merged cells — spans are emitted as rowspan/colspan and the covered
@@ -90,16 +96,36 @@ class TextractStructuredRunner(OCRRunner):
                     if cell.get("BlockType") != "CELL":
                         continue
                     cells[(cell["RowIndex"], cell["ColumnIndex"])] = {
-                        "text": self._cell_text(cell, block_map),
+                        "text": cls._cell_text(cell, block_map),
                         "rowspan": int(cell.get("RowSpan", 1) or 1),
                         "colspan": int(cell.get("ColumnSpan", 1) or 1),
+                    }
+
+            # MERGED_CELL points to child CELL blocks, which in turn point to
+            # WORDs. Looking only at TABLE.CHILD loses the provider's joins.
+            for rel in block.get("Relationships", []):
+                if not _include_merged or rel["Type"] != "MERGED_CELL":
+                    continue
+                for merged_id in rel["Ids"]:
+                    merged = block_map.get(merged_id, {})
+                    if merged.get("BlockType") != "MERGED_CELL":
+                        continue
+                    children = [block_map[cid] for child_rel in merged.get("Relationships", [])
+                                if child_rel["Type"] == "CHILD" for cid in child_rel["Ids"]
+                                if cid in block_map and block_map[cid].get("BlockType") == "CELL"]
+                    children.sort(key=lambda c: (c["RowIndex"], c["ColumnIndex"]))
+                    text = " ".join(filter(None, (cls._cell_text(c, block_map) for c in children)))
+                    cells[merged["RowIndex"], merged["ColumnIndex"]] = {
+                        "text": text,
+                        "rowspan": int(merged.get("RowSpan", 1) or 1),
+                        "colspan": int(merged.get("ColumnSpan", 1) or 1),
                     }
 
             if not cells:
                 continue
 
-            max_row = max(r for r, _ in cells)
-            max_col = max(c for _, c in cells)
+            max_row = max(r + cell["rowspan"] - 1 for (r, c), cell in cells.items())
+            max_col = max(c + cell["colspan"] - 1 for (r, c), cell in cells.items())
 
             # Positions covered by a merged cell must not be emitted again.
             covered: set[tuple[int, int]] = set()
@@ -124,13 +150,21 @@ class TextractStructuredRunner(OCRRunner):
                         attrs += f' rowspan="{cell["rowspan"]}"'
                     if cell["colspan"] > 1:
                         attrs += f' colspan="{cell["colspan"]}"'
-                    cells_html.append(f"<td{attrs}>{cell['text']}</td>")
-                if cells_html:
-                    html_rows.append(f"<tr>{''.join(cells_html)}</tr>")
+                    cells_html.append(f"<td{attrs}>{escape(cell['text'])}</td>")
+                # Even an entirely covered row occupies a rowspan position.
+                html_rows.append(f"<tr>{''.join(cells_html)}</tr>")
             tables.append({"html": f"<table>{''.join(html_rows)}</table>"})
+        if _include_merged:
+            # The provider supplies both primitive cells and merged groups.
+            # Preserve both; joining a multiline address must not discard its
+            # original constituent cells or existing key/value evidence.
+            elementary = cls._extract_tables(blocks, _include_merged=False)
+            for table, source in zip(tables, elementary):
+                table["cell_html"] = source["html"]
         return tables
 
-    def _cell_text(self, cell: dict, block_map: dict) -> str:
+    @staticmethod
+    def _cell_text(cell: dict, block_map: dict) -> str:
         """Join a cell's child WORDs; include checkbox state for SELECTION_ELEMENTs."""
         parts: list[str] = []
         for rel in cell.get("Relationships", []):
