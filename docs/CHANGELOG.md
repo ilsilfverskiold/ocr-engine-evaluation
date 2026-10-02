@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Geometry-v3 keeps every parsed and scored box, including unmatched and
+  out-of-frame predictions, and preserves actual returned text for fuzzy
+  line matches. Known native xyxy coordinates no longer undergo the legacy
+  Gemini axis heuristic. Checked all 145 scores and overlays on all 17 pages.
+
 - Field v7 accepts source-verified trailing lease unit labels, preserves
   explicit field attribution, and avoids assigning an initial-term value
   to an ambiguous blank renewal field. Isolated replay changes 11 of 675

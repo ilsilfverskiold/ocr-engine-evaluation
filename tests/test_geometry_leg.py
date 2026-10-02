@@ -217,7 +217,7 @@ def test_swapped_axes_are_detected_and_undone():
                 "bounding_box": [w["bbox"][1], w["bbox"][0],
                                  w["bbox"][3], w["bbox"][2]]}
                for w in REFERENCE]
-    result = score_geometry(swapped, reference=REFERENCE)
+    result = score_geometry(swapped, reference=REFERENCE, infer_axis_order=True)
     assert result.axes_swapped is True
     assert result.geometry_score == 1.0
     assert score_geometry(REFERENCE, reference=REFERENCE).axes_swapped is False
@@ -292,3 +292,26 @@ def test_geometry_details_expose_scored_boxes_for_every_reference():
     assert first["reference_bbox"] == first["predicted_bbox"] == tuple(reference[0]["bbox"])
     assert first["hit"] and first["predicted_text"] == "0"
     assert last["predicted_bbox"] is None and not last["matched"]
+
+
+def test_native_xyxy_is_not_swapped_just_because_a_box_is_tall():
+    prediction = [{"text": "Invoice", "bbox": [0.1, 0.1, 0.15, 0.7]}]
+    result = score_geometry(prediction, reference=REFERENCE)
+    assert not result.axes_swapped
+    assert result.as_detail()["scored_boxes"][0]["bbox"] == tuple(prediction[0]["bbox"])
+
+
+def test_geometry_evidence_keeps_unmatched_and_out_of_frame_boxes():
+    prediction = [*REFERENCE, {"text": "extra", "bbox": [2, 3, 2001, 2036]}]
+    detail = score_geometry(prediction, reference=REFERENCE).as_detail()
+    assert len(detail["parsed_boxes"]) == len(detail["scored_boxes"]) == 4
+    assert detail["scored_boxes"][-1]["bbox"] == (2, 3, 2001, 2036)
+
+
+def test_fuzzy_line_evidence_keeps_the_engines_actual_spelling():
+    reference = [{"text": "193.00", "bbox": [0.1, 0.1, 0.4, 0.15]}]
+    prediction = [{"text": "1193.00", "bbox": [0.1, 0.1, 0.4, 0.15]}]
+    result = score_geometry(prediction, reference=reference, granularity="line")
+    assert result.located_words == 1
+    assert result.matches[0]["text"] == "193.00"
+    assert result.matches[0]["predicted_text"] == "1193.00"

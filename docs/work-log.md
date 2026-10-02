@@ -579,3 +579,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   the output provides no positional or semantic distinction.
 - Validation: all 226 offline tests passed (103.86 seconds). No provider,
   inference, Modal, alias or judge calls. No new final report or push.
+
+## 2026-10-02 — geometry evidence audit across the complete leg
+
+- Replayed all 145 scored geometry results. Independently checked each
+  coordinate transformation, each recorded mutual-center hit, reference
+  counts and score arithmetic. Visually inspected comparison overlays on
+  all 17 pages, covering the nine participating engines where calls succeeded.
+  Separately reconstructed 4,124 WORD boxes from 34 raw Textract responses;
+  text and coordinates agree with the persisted native word data.
+- Found an evidence bug: fuzzy SROIE matches labeled the prediction with
+  reference spelling. Preserve the actual returned word/window text instead.
+  Persist all parsed and scored boxes, including unmatched and out-of-frame
+  predictions, so the report can show the complete answer rather than only
+  boxes that happened to match a reference.
+- Found the general axis heuristic swapped MinerU pipeline's native xyxy
+  table box on fintab_003. Only the legacy Gemini dialect now opts into
+  the heuristic. This fixes the displayed coordinates; no headline score
+  changes in the 145-row replay relative to geometry-v2.
+- Inspection distinguishes sparse Marker OCR outputs, displaced Claude/Qwen
+  boxes, tokenization differences, and coarse MinerU line/table boxes.
+  MinerU fintab_000/003/004 each supplies one table box, not individual word
+  positions. These zeros cannot be described as proof of misplaced words.
+  Finer saved spans/model detections and Marker pipeline checks remain open.
+- Validation: 45 targeted geometry/report tests and all 229 offline tests
+  passed (129.22 seconds). Audit images/data remain in session scratch.
+  No inference, provider, Modal or judge calls; no final report release/push.

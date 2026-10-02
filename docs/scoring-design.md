@@ -21,8 +21,8 @@ publish, or it does not compete in that leg. Both are honest results.
 > use code for per-engine verdicts. `code-v3` handles Markdown and tables;
 > `kv-schema-code-v4` handles key-value and schema. Image checklists and
 > printed-label aliases were created earlier by models and are reused.
-> Current audit code includes table code-v5, field v7, geometry-v2 global
-> word assignment, and native Textract merged-cell reconstruction. The handoff
+> Current audit code includes table code-v5, field v7, geometry-v3 (global
+> word assignment and explicit axis policy), and native Textract merged-cell reconstruction. The handoff
 > records isolated replay impacts; these diagnostics have not replaced the
 > archived run. Do not add their change counts: some affect the same rows.
 > `--skip-judge` keeps all six legs and disables new silver-document judge

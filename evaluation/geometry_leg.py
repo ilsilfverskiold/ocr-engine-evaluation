@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v2 (2026-10-02; global word assignment)"
+SCORER_VERSION = "geometry-v3 (2026-10-02; explicit axis policy and box evidence)"
 
 
 @dataclass
@@ -59,6 +59,8 @@ class GeometryScore:
     words_per_box: int | None = None
     worst_matches: list[dict[str, Any]] = field(default_factory=list)
     matches: list[dict[str, Any]] = field(default_factory=list)
+    parsed_boxes: list[dict[str, Any]] = field(default_factory=list)
+    scored_boxes: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def score(self) -> float | None:
@@ -85,6 +87,9 @@ class GeometryScore:
 
     def as_detail(self) -> dict[str, Any]:
         return {"worst_matches": self.worst_matches[:25], "matches": self.matches,
+                "parsed_boxes": self.parsed_boxes, "scored_boxes": self.scored_boxes,
+                "parsed_box_coordinates": "xyxy after box-key decoding, before scale/axis correction; original keys remain in source call",
+                "scored_box_coordinates": "normalized xyxy after recorded scale/axis correction, before line merging; includes unmatched predictions",
                 "match_box_coordinates": "normalized xyxy after recorded scale/axis conversion"}
 
 
@@ -246,14 +251,17 @@ def _extract_box(item: dict) -> BBox | None:
 
 def score_geometry(
     predicted: Any, gt: GroundTruth | None = None, reference: Any = None,
-    granularity: str | None = None,
+    granularity: str | None = None, *, infer_axis_order: bool = False,
 ) -> GeometryScore:
     """(engine output, ground truth) -> GeometryScore.
 
     `reference` may be passed directly so the scorer is testable without a
-    corpus document; otherwise it comes from `gt.word_boxes`, which is None for
-    every document in this corpus. `granularity` is the reference's unit as the
+    corpus document; otherwise it comes from `gt.word_boxes`.
+    `granularity` is the reference's unit as the
     sidecar records it — "line" lifts predicted words to lines before matching.
+    Known native xyxy outputs are never axis-swapped by their shape. The
+    legacy Gemini generic-box dialect may explicitly opt into the recorded
+    axis heuristic; key-specific box_2d decoding happens during parsing.
     """
     if reference is None:
         if gt is None or not gt.has_gt_for("geometry"):
@@ -288,6 +296,7 @@ def score_geometry(
             matched_words=0,
             parse_ok=False,
         )
+    parsed_boxes = pred_words
 
     # The ask says 0-1, but grounding-trained VLMs (qwen, gemini) often emit
     # their native 0-1000 convention regardless. A valid 0-1 box cannot exceed
@@ -311,7 +320,7 @@ def score_geometry(
         tall = sum(1 for w in words
                    if abs(w["bbox"][3] - w["bbox"][1]) > abs(w["bbox"][2] - w["bbox"][0]))
         return tall / len(words)
-    if _portrait_share(pred_words) > 0.7 and _portrait_share(ref_words) < 0.3:
+    if infer_axis_order and _portrait_share(pred_words) > 0.7 and _portrait_share(ref_words) < 0.3:
         pred_words = [{**w, "bbox": (w["bbox"][1], w["bbox"][0],
                                      w["bbox"][3], w["bbox"][2])}
                       for w in pred_words]
@@ -355,6 +364,8 @@ def score_geometry(
         matched_words=matched,
         located_words=located,
         matches=matches,
+        parsed_boxes=parsed_boxes,
+        scored_boxes=pred_words,
         parse_ok=True,
         rescaled_from_thousand=rescaled,
         axes_swapped=axes_swapped,
@@ -532,5 +543,8 @@ def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:
             continue
         _, best_words, best_box = chosen
         used.update(id(w) for w in best_words)
-        out.append((ref, {"text": ref["text"], "bbox": best_box}))
+        # Preserve the returned words: a fuzzy line match must not replace
+        # the engine's spelling with the reference in the evidence record.
+        out.append((ref, {"text": " ".join(str(w["text"]) for w in best_words),
+                          "bbox": best_box}))
     return out

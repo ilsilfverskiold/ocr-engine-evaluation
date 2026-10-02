@@ -576,7 +576,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             # pipeline failure, never a 0.0 (paddle, run 20260810).
             raise RuntimeError("native geometry engine returned no boxes to score "
                                "(adapter/pipeline failure, not an engine score)")
-        return score_geometry(predicted, gt)
+        return score_geometry(predicted, gt, infer_axis_order=(engine == "gemini_flash"))
     raise ValueError(f"No scorer for leg {leg!r}")
 
 
