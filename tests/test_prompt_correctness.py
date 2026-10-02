@@ -62,15 +62,10 @@ def test_schema_prompts_carry_the_schema_placeholder():
 def test_no_orphan_prompt_overrides():
     # A leg_prompts entry for a leg the engine does not answer is a prompt
     # that never gets sent — almost always a sign of a mis-declared leg.
-    # glm_ocr keeps a key_value prompt override even though key_value was
-    # dropped from its legs: the documented KIE task requires the caller to
-    # state the target structure, so generic "find every label" is not a GLM
-    # task and supplying the keys duplicates the schema leg. The orphan is
-    # intentional — the prompt stays in the registry to document the model
-    # card's extraction prompt, not as a live leg declaration.
-    KNOWN_ORPHANS = {
-        "glm_ocr": {"key_value"},
-    }
+    # glm_ocr's key_value override was removed on 2026-09-30 when key_value
+    # was re-enabled for it with the generic ask (the card's KIE prompt needs
+    # a supplied structure, which this leg does not give).
+    KNOWN_ORPHANS: dict[str, set[str]] = {}
     for name, spec in ENGINES.items():
         answered = set(spec.native_legs) | set(spec.prompted_legs)
         orphans = set(spec.leg_prompts) - answered
@@ -168,12 +163,13 @@ def test_known_model_card_asks_are_what_runs():
 
 
 def test_pass_counts_are_minimal():
-    # gemini and claude are general VLMs: text+markdown+tables from ONE default
-    # call — an extra pass here means someone re-broke the declarations and its
-    # cost figures would be inflated.
+    # gemini and claude are general VLMs: text from the runner's transcription
+    # prompt, markdown and tables each from the leg's own ask (the 2026-08 run
+    # scored both from the transcription pass, which never asks for headings,
+    # lists or tables-only output), so the conversion legs are three passes.
     for engine in ("gemini_flash", "claude_sonnet_4_6"):
         plans = plan_passes(engine, ["text", "markdown", "tables"])
-        assert len(plans) == 1, f"{engine}: {len(plans)} passes for the conversion legs"
+        assert {p.name for p in plans} == {"default", "markdown", "tables"}, f"{engine}: {[p.name for p in plans]}"
     # qwen3_vl splits text into its own pass (the card documents a dedicated OCR
     # task distinct from the markdown conversion), so text+markdown+tables is 2.
     plans = plan_passes("qwen3_vl", ["text", "markdown", "tables"])

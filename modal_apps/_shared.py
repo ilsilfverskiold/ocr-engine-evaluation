@@ -19,13 +19,31 @@ GPU_SECOND_RATES_USD = {
     "H100": 0.001097,
     "H200": 0.001261,
     "B200": 0.001736,
+    # A CPU-only container (no GPU), billed per occupied second at the
+    # allocation the app declares: 4 physical cores x $0.0000131/core-s plus
+    # 8 GiB x $0.00000222/GiB-s (modal.com/pricing, checked 2026-09-30, see
+    # docs/engine-leg-and-cost-matrix.md). An app that declares "CPU" as its
+    # GPU_TYPE must request exactly cpu=4.0, memory=8192, or this rate is
+    # wrong for it. GPU rows above exclude CPU/RAM, so this row is not
+    # directly comparable to them; it is the whole container's rate.
+    "CPU": 4 * 0.0000131 + 8 * 0.00000222,
 }
 
 
 def calculate_modal_cost(gpu_seconds: float, gpu_type: str = "T4") -> float:
-    """Convert GPU wall-clock seconds to USD cost."""
-    rate = GPU_SECOND_RATES_USD.get(gpu_type.upper(), GPU_SECOND_RATES_USD["T4"])
-    return rate * gpu_seconds
+    """Convert occupied container seconds to USD cost.
+
+    Unknown GPU types raise rather than silently billing at the T4 rate: a
+    typo in an app's GPU_TYPE used to understate an A100 run by 4x with no
+    warning anywhere.
+    """
+    key = (gpu_type or "").upper()
+    if key not in GPU_SECOND_RATES_USD:
+        raise ValueError(
+            f"No Modal rate for GPU type {gpu_type!r}; known: "
+            f"{', '.join(GPU_SECOND_RATES_USD)}"
+        )
+    return GPU_SECOND_RATES_USD[key] * gpu_seconds
 
 
 def write_normalized_image(image_bytes: bytes, output_path: str | Path, max_side: int | None = None) -> None:

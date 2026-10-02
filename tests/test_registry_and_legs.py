@@ -91,8 +91,8 @@ def test_native_legs_share_one_pass():
 
 def test_each_prompted_leg_adds_exactly_one_pass():
     plans = plan_passes("gemini_flash", ["text", "markdown", "tables", "key_value", "schema"])
-    assert len(plans) == 3
-    assert {p.name for p in plans} == {DEFAULT_PASS, "key_value", "schema"}
+    assert len(plans) == 5
+    assert {p.name for p in plans} == {DEFAULT_PASS, "markdown", "tables", "key_value", "schema"}
 
 
 def test_an_engine_that_answers_nothing_plans_no_calls():
@@ -129,10 +129,18 @@ def test_parse_legs_round_trip_and_rejection():
         parse_legs("text,nonsense")
 
 
+def _baseline(leg: str) -> set[str]:
+    """Leg membership restricted to the 14 reference-run engines."""
+    from engines import DEFAULT_ENGINES
+    return set(engines_for_leg(leg, DEFAULT_ENGINES))
+
+
 def test_registry_leg_membership_matches_the_scoring_design():
-    # docs/scoring-design.md fixes these lists; drift here is drift from the spec.
+    # docs/scoring-design.md fixes these lists for the 14 engines of the
+    # reference run; drift here is drift from the spec. The 2026-09-30
+    # expansion engines (default=False) are asserted separately below.
     assert set(engines_for_leg("text")) == set(ENGINES)
-    assert set(engines_for_leg("markdown")) == {
+    assert _baseline("markdown") == {
         "mistral_ocr_4", "llamaparse", "marker", "docling", "mineru",
         # glm_ocr answers markdown through its own call with the generic leg
         # ask, not by reusing Text Recognition output — see engines.py.
@@ -141,7 +149,7 @@ def test_registry_leg_membership_matches_the_scoring_design():
         # with tables embedded as HTML (normalised by the scorer).
         "paddleocr_vl",
     }
-    assert set(engines_for_leg("tables")) == {
+    assert _baseline("tables") == {
         "mistral_ocr_4", "llamaparse", "marker", "docling", "mineru", "deepseek_ocr",
         "glm_ocr", "paddleocr_vl", "gemini_flash", "claude_sonnet_4_6",
         # qwen3_vl: general VLM, treated like gemini/claude — tables come from
@@ -149,11 +157,12 @@ def test_registry_leg_membership_matches_the_scoring_design():
         "qwen3_vl",
         "textract_structured",
     }
-    assert set(engines_for_leg("schema")) == {
+    assert _baseline("schema") == {
         # Every engine here can be prompted, so every one competes; a zero is
         # the model failing, not us declining to ask (see engines.py).
         "gemini_flash", "claude_sonnet_4_6", "qwen3_vl", "glm_ocr", "deepseek_ocr",
-        "textract_structured",
+        # textract_structured removed 2026-09-30: no schema interface in this
+        # integration (Textract Queries would be a separate configuration).
         # via the vendors' own extraction features (Mistral Annotations,
         # LlamaExtract) — the documented structured path, not an invented prompt.
         "mistral_ocr_4", "llamaparse",

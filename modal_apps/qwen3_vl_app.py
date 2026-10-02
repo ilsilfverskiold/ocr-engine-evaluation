@@ -344,8 +344,13 @@ class Qwen3VLInference:
 
         # Qwen's documented spotting format is
         #   [{"bbox_2d": [x1, y1, x2, y2], "text_content": "..."}]
-        # with coordinates RELATIVE 0-1000, not pixels. Converted here so the
-        # scorer never has to guess which convention an engine used.
+        # Qwen3-VL's README says only "relative position coordinates"; the
+        # 0-1000 convention assumed below is NOT confirmed by its docs, and the
+        # saved run's numbers fit no single frame (y up to 2036 on one page,
+        # 704 for the last line of another). Dividing by 1000 is kept because
+        # no other conversion scores better (checked 2026-09-30: /1000, /image
+        # size, /resized frame all <= 0.006 mean on the 17 geometry pages); the
+        # low score is the model's boxes, not this constant.
         if "bbox_2d" in effective_prompt:
             try:
                 import re as _re
