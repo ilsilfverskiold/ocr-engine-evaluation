@@ -207,7 +207,7 @@ def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
     for item in data:
         if not isinstance(item, dict):
             continue
-        text = item.get("text") or item.get("word")
+        text = item.get("text") or item.get("word") or item.get("text_content")
         if text is None:
             continue
         coords = _extract_box(item)
@@ -221,7 +221,11 @@ def _extract_box(item: dict) -> BBox | None:
     """[x0,y0,x1,y1] from any box shape engines actually emit: our asked
     `bbox`/`box` list, gemini's `box_2d` (documented [ymin,xmin,ymax,xmax]),
     or a named-corner dict."""
-    box = item.get("bbox") or item.get("box") or item.get("bounding_box")
+    # Qwen's bbox_2d is x/y order, unlike Gemini's box_2d below.
+    # Read it directly when the capture adapter could not parse the entire
+    # answer: valid objects in a truncated response are still usable boxes.
+    box = (item.get("bbox") or item.get("box") or item.get("bounding_box")
+           or item.get("bbox_2d"))
     if isinstance(box, dict) and all(k in box for k in ("xmin", "ymin", "xmax", "ymax")):
         box = [box["xmin"], box["ymin"], box["xmax"], box["ymax"]]
     if not (isinstance(box, (list, tuple)) and len(box) == 4):

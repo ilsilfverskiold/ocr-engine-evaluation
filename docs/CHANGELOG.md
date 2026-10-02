@@ -4,6 +4,19 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-02 — audit corrections, publication still pending
+
+- Field scorer v5 preserves primitive-array positions, prioritizes an exact
+  schema path over sibling leaf-name matches, and accepts RM currency
+  formatting. Offline candidate replay changes 32 field scores; archived
+  v4 results are unchanged and no corrected final ranking is claimed.
+- Geometry fallback reads Qwen text_content/bbox_2d from valid objects in
+  malformed/truncated replies. Three pages recover boxes; word scores remain
+  zero. Regression coverage and the full 204-test suite pass.
+- Causal audit found 19 GT/schema conflicts and an effective empty
+  LlamaExtract schema. The prior report is provisional pending those repairs
+  and targeted pipeline/prompt checks; see the handoff.
+
 ## 2026-10-02 — default prompt provenance
 
 - Gemini and Claude now persist their actual default prompt through runner

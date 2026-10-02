@@ -193,6 +193,21 @@ def test_one_mangled_item_does_not_zero_the_page():
     assert result.geometry_score == 1.0  # the three well-formed words survive
 
 
+def test_qwen_native_boxes_survive_a_malformed_and_truncated_answer():
+    raw = '''```json
+    [{"bbox_2d": [100, 200, 300, 220], "text_content": "Total"},
+     {"bbox_2d": [400, 200, 500, 220], "broken"},
+     {"bbox_2d": [600, 200, 700, 220], "text_content": "100"},
+     {"bbox_2d": [800,'''
+    reference = [{"text": "Total", "bbox": [.1, .2, .3, .22]},
+                 {"text": "100", "bbox": [.6, .2, .7, .22]}]
+    result = score_geometry(raw, reference=reference)
+    assert result.parse_ok and result.rescaled_from_thousand
+    assert result.predicted_words == 2
+    assert result.located_words == 2
+    assert not result.axes_swapped
+
+
 def test_swapped_axes_are_detected_and_undone():
     # gemini's `bounding_box` key carries [ymin, xmin, ymax, xmax] with no
     # documentation to swap on — the page-level portrait/landscape guard

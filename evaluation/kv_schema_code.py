@@ -80,7 +80,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-SCORER_VERSION = "kv-schema-code-v4 (2026-10-02)"
+SCORER_VERSION = "kv-schema-code-v5 (2026-10-02)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -284,6 +284,17 @@ def _tok_eq(x: str, y: str) -> bool:
 _STOP = {"of", "the", "and", "a", "an", "to", "in", "on", "at", "for", "by", "with", "from", "or", "as", "is", "be"}
 
 
+def _same_terminal_index(engine_key: Any, ref: Any) -> bool:
+    """Primitive-array positions are columns/categories, not reorderable rows.
+
+    Record rows (items[0].price) are aligned separately. Their row indices
+    must not constrain label matching, but values[0] must not borrow values[1].
+    """
+    a = re.search(r"\[(\d+)\]$", str(engine_key))
+    b = re.search(r"\[(\d+)\]$", str(ref))
+    return not b or bool(a and a.group(1) == b.group(1))
+
+
 def label_eq(engine_key: Any, ref: Any) -> bool:
     """Engine key ~ reference name/label: same tokens (one-typo tolerant), or
     the reference (at least 2 tokens) appears contiguously inside a longer
@@ -293,6 +304,8 @@ def label_eq(engine_key: Any, ref: Any) -> bool:
     reference path that contains it. A one-token reference that is a line
     number ("5b", "7") matches a key that starts with it ("5b Taxable
     amount") or a short key holding it ("Line 7")."""
+    if not _same_terminal_index(engine_key, ref):
+        return False
     ta, tb = norm_label(engine_key).split(), norm_label(ref).split()
     if not ta or not tb:
         return False
@@ -318,6 +331,8 @@ def name_eq(engine_key: Any, ref: Any) -> bool:
     date" ~ "Date of issue". Not for a key that ends in a stop word
     ("[name of lessee], of" is the fragment printed before the NEXT blank),
     not for one-word names, not for keys longer than 8 tokens."""
+    if not _same_terminal_index(engine_key, ref):
+        return False
     ta, tb = norm_label(engine_key).split(), norm_label(ref).split()
     if not ta or not tb or len(ta) > 8 or ta[-1] in _STOP:
         return False
@@ -363,6 +378,10 @@ _NUM = re.compile(r"^[\s$€£]*[-+]?\d[\d,\s]*(\.\d+)?\s*%?\s*$")
 
 def as_number(s: Any):
     t = str(s).strip()
+    # Printed Malaysian ringgit amounts occur in the receipt corpus. Treat
+    # the currency prefix like the currency symbols already supported;
+    # never strip arbitrary letters or extract a number from a sentence.
+    t = re.sub(r"^RM\s*(?=[-+]?\d)", "", t, flags=re.I)
     if not _NUM.match(t):
         return None
     digits = re.sub(r"[^\d.,\-+]", "", t)
@@ -646,6 +665,13 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
         # reference row
         cands = [(k, v) for k, v in pairs if key_matches(k, names)
                  and not (rk and _row_split(k)[0] in claimed)]
+        if leg == "schema":
+            # If the requested path exists, score its value. Falling back
+            # to a sibling's identical leaf name can credit the wrong line
+            # (income.line3.b borrowing income.line1.b, for example).
+            exact = [(k, v) for k, v in cands if k == it.path]
+            if exact:
+                cands = exact
         if it.is_blank:
             # A semantic field name beats an ambiguous printed label. The
             # spouse's explicitly filled "Last name (spouse)" cannot borrow

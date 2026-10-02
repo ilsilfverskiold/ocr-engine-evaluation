@@ -427,6 +427,34 @@ def test_norm_label_splits_camel_case():
     assert norm_label("standardDeductions.spouseIsDependent") == "standard deductions spouse is dependent"
 
 
+def test_schema_primitive_array_positions_cannot_borrow_other_columns():
+    for prefix in ("columns", "rows[0].values"):
+        result = score_fields(
+            _items((prefix + "[0]", "100"), (prefix + "[1]", "900")),
+            [[prefix + "[0]", "900"], [prefix + "[1]", "100"]],
+            "schema", None,
+        )
+        assert result.field_accuracy == 0
+        assert [v.verdict for v in result.verdicts] == ["wrong", "wrong"]
+
+
+def test_schema_explicit_wrong_path_cannot_borrow_same_leaf():
+    result = score_fields(
+        _items(("income.line1.b", "100"), ("income.line3.b", "900")),
+        [["income.line1.b", "900"], ["income.line3.b", "100"]],
+        "schema", None,
+    )
+    assert result.field_accuracy == 0
+
+
+def test_ringgit_prefix_is_formatting_but_wrong_amount_is_not():
+    assert value_equal("408.45", "RM408.45")
+    assert value_equal("408.45", "RM 408.45")
+    assert not value_equal("408.45", "RM40845")
+    assert not value_equal("408.45", "RM 408.45 total 900")
+    assert not value_equal("408.45", "ABC408.45")
+
+
 def test_line_number_alias_matches_key_prefix():
     # (engine key, reference name/label)
     assert label_eq("5b Taxable amount", "5b")

@@ -372,3 +372,24 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   checks for default and task passes. No provider calls. Historical outputs
   remain unchanged. The report's missing-prompt wording was misleading and
   has been corrected in the local, provisional export.
+
+## 2026-10-02 — causal audit fixes: field attribution and Qwen box recovery
+
+- Reproduced two false-positive field matches: swapped primitive-array
+  columns earned full credit; an explicitly wrong schema field could borrow
+  a sibling's matching value. v5 retains terminal array positions and gives
+  exact schema paths precedence. Reorderable object-array rows remain aligned.
+- Corrected a false negative: RM408.45 versus 408.45. The receipt image
+  confirms the currency prefix; wrong digits and amounts in prose still fail.
+- Recovered complete Qwen text_content/bbox_2d objects from malformed or
+  truncated answers. Three geometry pages recover 102/113/116 boxes; all
+  three word headlines remain zero. This proves an adapter defect existed
+  without claiming it explains the remaining localization failures.
+- Offline replay of all 675 scored field rows and 145 geometry rows changes
+  32 scores (28 schema, four KV); 125 rows change detail. Results are an audit
+  candidate in scratch, not a replacement final run. Archived calls/results
+  remain unchanged. Schema mean changes are mostly downward as false credit
+  is removed. All four KV engines gain one field on photo_001.
+- Validation: 204 full-suite tests passed in 177.18s, including adversarial
+  array/path cases, RM normalization and truncated native Qwen boxes. No
+  engine/provider/Modal/judge calls. No GT data has been changed.
