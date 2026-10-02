@@ -963,3 +963,14 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Scores/eligibility/references are unchanged. Extending Markdown coverage
   needs shared references/checklists before offline scoring saved outputs.
   No new engine, judge, Modal calls, reference generation or push.
+
+
+## 2026-10-03 — save the next-session checklist and stop
+
+- At the user’s request, create `docs/follow-up-2026-10-03.md` and link it
+  from the handoff. Record heading overcredit, reused paragraph/table matches,
+  missing Markdown references, text-only CER/WER, completed display fixes and
+  a bounded rescore/delivery plan. Distinguish confirmed issues from decisions.
+- Record approval/cost preparation for future image-only reference calls;
+  none are authorized or run by this documentation task. No new audit,
+  engine/scoring/reference-building command, test run or push.
