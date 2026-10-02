@@ -77,10 +77,12 @@ import json
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
+import unicodedata
 
-SCORER_VERSION = "kv-schema-code-v7 (2026-10-02)"
+SCORER_VERSION = "kv-schema-code-v8 (2026-10-02; exact numeric values)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -389,34 +391,52 @@ def is_bool_expected(expected: Any) -> bool:
     return isinstance(expected, bool) or str(expected).strip() in ("True", "False", "true", "false")
 
 
-_NUM = re.compile(r"^[\s$€£]*[-+]?\d[\d,\s]*(\.\d+)?\s*%?\s*$")
-
-
 def as_number(s: Any):
-    t = str(s).strip()
-    # Printed Malaysian ringgit amounts occur in the receipt corpus. Treat
-    # the currency prefix like the currency symbols already supported;
-    # never strip arbitrary letters or extract a number from a sentence.
-    t = re.sub(r"^RM\s*(?=[-+]?\d)", "", t, flags=re.I)
-    if not _NUM.match(t):
+    """Parse a complete numeric value, keeping signs and every digit.
+
+    Punctuation group separators must form groups of three; whitespace is
+    formatting, as in the existing field policy. A single comma with one or
+    two trailing digits is decimal; a single dot is decimal. Accounting
+    parentheses mean negative here; decorative printed lease amounts are
+    handled explicitly by field name in value_equal, not guessed globally.
+    """
+    t = unicodedata.normalize("NFKC", str(s)).strip().replace("−", "-")
+    negative = t.startswith("(") and t.endswith(")")
+    if negative:
+        t = t[1:-1].strip()
+    match = re.fullmatch(r"([+-])?\s*(?:RM|[$€£¥₹])?\s*([+-])?\s*(\d[\d.,\s]*)\s*%?", t, re.I)
+    if not match or (match[1] and match[2]) or (negative and (match[1] or match[2])):
         return None
-    digits = re.sub(r"[^\d.,\-+]", "", t)
-    # Decimal comma ("978,12", "1.234,50") vs thousands comma ("1,234.50"):
-    # whichever separator comes last is the decimal point; a lone comma
-    # followed by exactly 1-2 digits is a decimal comma.
-    if "," in digits and "." in digits:
-        if digits.rfind(",") > digits.rfind("."):
-            digits = digits.replace(".", "").replace(",", ".")
-        else:
-            digits = digits.replace(",", "")
-    elif "," in digits:
-        if re.search(r",\d{1,2}$", digits) and digits.count(",") == 1:
-            digits = digits.replace(",", ".")
-        else:
-            digits = digits.replace(",", "")
+    digits = re.sub(r"\s+", "", match[3])
+    decimal = None
+    if "." in digits and "," in digits:
+        decimal = "." if digits.rfind(".") > digits.rfind(",") else ","
+    elif digits.count(".") == 1:
+        decimal = "."
+    elif digits.count(",") == 1 and re.search(r",\d{1,2}$", digits):
+        decimal = ","
+    integer, fraction = digits, ""
+    if decimal:
+        if digits.count(decimal) != 1:
+            return None
+        integer, fraction = digits.rsplit(decimal, 1)
+        if not fraction.isdigit():
+            return None
+    # Permit exactly one punctuation grouping convention.
+    separators = {c for c in integer if not c.isdigit()}
+    if separators:
+        if len(separators) != 1:
+            return None
+        sep = next(iter(separators))
+        if sep not in (",", ".", " ") or not re.fullmatch(r"\d{1,3}(?:" + re.escape(sep) + r"\d{3})+", integer):
+            return None
+        integer = integer.replace(sep, "")
+    if not integer.isdigit():
+        return None
     try:
-        return float(digits)
-    except Exception:
+        number = Decimal(integer + ("." + fraction if fraction else ""))
+        return number.copy_negate() if negative or (match[1] or match[2]) == "-" else number
+    except InvalidOperation:
         return None
 
 
@@ -466,6 +486,28 @@ def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_
         if have is None and want and names and any(label_eq(got, n) for n in names):
             have = True          # "Insulin": "Insulin" — the checked item named as its own value
         return have is not None and have == want
+    # Identifiers are strings, not quantities. Keep their leading zeros and
+    # all digits while accepting printed separators (SSNs, phone numbers).
+    name_tokens = {token for n in names or [] for token in norm_label(n).split()}
+    identifier = bool(name_tokens & {"id", "identifier", "ssn", "tel", "phone", "telephone",
+                                     "iban", "postcode", "postal", "zip", "number", "no"})
+    count_field = bool(name_tokens & {"quantity", "qty", "count"}) or any(
+        re.search(r"\bnumber of\b", norm_label(n)) for n in names or [])
+    if identifier and not count_field:
+        e, g = norm_str(expected), norm_str(got)
+        if shared_label and as_number(expected) is None:
+            te, tg = e.split(), g.split()
+            if te and len(tg) > len(te) and any(tg[i:i + len(te)] == te for i in range(len(tg) - len(te) + 1)):
+                return True
+        return bool(e) and e.replace(" ", "") == g.replace(" ", "")
+    # These source-reviewed lease fields transcribe a second positive amount
+    # printed in parentheses in prose, not an accounting negative.
+    printed_amount = any(str(n).split(".")[-1] in ("monthlyAmountPrinted", "securityDepositPrinted") for n in names or [])
+    if printed_amount and re.fullmatch(r"\(\s*[$€£]\s*\d[\d., ]*\)", str(got).strip()):
+        got = str(got).strip()[1:-1]
+    # A tax-summary rate may be printed @6; @ is a rate prefix, not a digit.
+    if "rate" in name_tokens:
+        expected, got = re.sub(r"^@\s*", "", str(expected)), re.sub(r"^@\s*", "", str(got))
     a, b = as_number(expected), as_number(got)
     if shared_label and a is None:
         te, tg = norm_str(expected).split(), norm_str(got).split()
@@ -480,7 +522,10 @@ def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_
         if match:
             b = as_number(match.group(1))
     if a is not None and b is not None:
-        return abs(a - b) < 1e-9
+        return a == b
+    if a is not None or b is not None:
+        # A malformed amount cannot recover by stripping punctuation below.
+        return False
     da, db = as_date(expected), as_date(got)
     if da and db:
         return da == db
@@ -570,7 +615,7 @@ def align_rows(items, pairs: list[list[str]]) -> dict[str, str | None]:
                 if it.is_blank:
                     continue
                 fld = _row_split(it.path)[1]
-                if any(label_eq(_row_split(pairs[p][0])[1], fld) and value_equal(it.value, pairs[p][1]) for p in eng_rows[erk]):
+                if any(label_eq(_row_split(pairs[p][0])[1], fld) and value_equal(it.value, pairs[p][1], [it.path, fld]) for p in eng_rows[erk]):
                     n += 1 if (as_number(it.value) is not None or is_bool_expected(it.value) or len(norm_str(it.value)) < 3) else 2
             if n > 0:
                 scored.append((n, 1 if _row_index(erk) == _row_index(rk) else 0, rk, erk))

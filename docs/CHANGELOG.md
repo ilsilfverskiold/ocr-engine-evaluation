@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Field scorer v8 preserves numeric signs and exact precision; malformed
+  decimal punctuation cannot fall through to punctuation-stripped equality.
+  Preserve legitimate identifier/count/printed-amount formatting. Isolated
+  replay changes none of the 675 saved KV/schema scores or verdicts.
+
 - Source-image review corrects chart_003's text reference (inferred bar values
   are not printed text) and excludes its unverified exact numeric series from
   schema targets. Six scanned references no longer require unprinted source

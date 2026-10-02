@@ -441,6 +441,36 @@ def test_unambiguous_month_first_hyphenated_date_is_recognized():
     assert not value_equal("03-18-1981", "1981-03-19")
 
 
+def test_code_numeric_values_keep_sign_precision_and_valid_grouping():
+    assert not value_equal("100", "−100")
+    assert not value_equal("100", "(100)")
+    assert value_equal("-100", "(100)")
+    assert value_equal("-100", "−100")
+    assert not value_equal("12.34", "12.3.4")
+    assert not value_equal("1234", "1,2,34")
+    assert not value_equal("9007199254740992", "9007199254740993")
+    assert not value_equal("0.0000000001", "0.0000000002")
+    assert value_equal("1234.50", "1.234,50")
+    assert value_equal("1234.50", "1 234,50")
+    assert value_equal("3400", "34 00")
+    assert value_equal("-1234.50", "($1,234.50)")
+    assert value_equal("1234567", "1.234.567")
+    assert not value_equal("1234567", "1.234.56.7")
+
+
+def test_code_numeric_rules_preserve_identifier_and_printed_amount_semantics():
+    assert value_equal("297-75-4691", "297 75 4691", names=["spouse.spouseSsn"])
+    assert value_equal("001610833920", "001610833920)", names=["gst_reg_no"])
+    assert not value_equal("001610833920", "1610833920", names=["gst_reg_no"])
+    assert value_equal("$2572", "($2572)", names=["rent.monthlyAmountPrinted"])
+    assert not value_equal("2572", "(2572)", names=["rent.monthlyAmount"])
+    assert value_equal("@6", "6", names=["gst_summary[0].rate"])
+    assert not value_equal("@6", "6", names=["amount"])
+    assert value_equal("8", "8.0", names=["shipments[0].numberOfShipments"])
+    assert value_equal("76630-3695", "BEIER LLC FORT DELLAPURT, 76630-3695",
+                       names=["recipient.zipCode"], shared_label=True)
+
+
 def test_lease_units_label_filled_term_without_inventing_renewal_values():
     from evaluation.kv_schema_code import load_aliases
     aliases = load_aliases("lease_004")

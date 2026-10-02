@@ -702,3 +702,20 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   error guards. No API clients constructed or provider requests made.
 - Corrected stale registry comments that still blamed Marker's tree parser,
   contradicting the pinned-source audit. No routing or prompt change.
+
+## 2026-10-02 — preserve numeric meaning in field comparisons
+
+- Reproduced synthetic false credits for a lost Unicode minus, accounting
+  negatives, malformed decimal punctuation and integers beyond float precision.
+  Use exact Decimal values, retain signs and validate punctuation grouping.
+- Preserve existing whitespace formatting, identifier separators/leading zeros,
+  shared address fields, numeric counts, printed lease duplicate amounts and
+  tax-rate prefixes. The first replay caught an overbroad identifier rule for
+  numberOfShipments; corrected it before committing.
+- Isolated replay of all 675 saved KV/schema results against v7: zero changed
+  scores and zero changed verdicts. These reproduced edge cases establish a
+  scorer defect, not evidence that it affected the saved run.
+- Validation: 244 offline tests pass, including the two numeric regression
+  cases and declared-frame geometry tests in the working tree. No judge or
+  field inference calls. The separately approved geometry probe was running
+  during this work; its calls/costs are logged separately.
