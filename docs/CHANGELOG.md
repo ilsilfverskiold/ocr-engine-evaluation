@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Marker converters receive isolated configuration copies: OCRConverter's
+  mutation can no longer leak into a later document/table call in a persistent
+  worker. Preserve the full OCR renderer tree and exception traceback. An
+  explicit, unselected all-blocks probe disables the OCR builder's skipped
+  block classes; its quality has not been measured.
+
 - Reproduced GLM SDK's hosted-mode failure using glmocr 0.1.5's actual
   config loader. Pin the SDK and use its accepted self-hosted arguments,
   reject unexpected endpoint overrides, retain raw SDK regions and mark

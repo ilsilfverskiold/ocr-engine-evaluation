@@ -645,3 +645,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   prompt tests pass, including fail-before-client endpoint validation and
   retaining raw coarse geometry. No local models, deployment, inference or
   judge calls. No measured score/performance improvement is claimed.
+
+## 2026-10-02 — inspect Marker's actual pipeline and isolate converter settings
+
+- Inspected the published marker-pdf 1.8.2 wheel, SHA256
+  ecc938743eea61f47eaee8f7f8e55c70b38760e96166cd7850cbd32c3386592f.
+  OCRJSONRenderer's Page/Line/Char tree is traversable by our adapter. The
+  recorded sparse/empty children are upstream output, not demonstrated loss
+  of a complete native line array in our renderer adapter.
+- Found OCRConverter mutates the config shared by persistent worker calls.
+  Deep-copy per request, retain converter settings and pass sentinels, and
+  save the full renderer tree plus exception tracebacks for future probes.
+- Prepared a separately selected all-blocks probe: skip_ocr_blocks=[] and
+  keep_chars=True. The pinned OCR builder skips tables assuming another
+  processor handles them, but OCRConverter does not run TableProcessor.
+  No quality gain or explanation for the five historical crashes is claimed.
+- Validation: four mocked worker regressions cover control/probe, success/
+  exception, nested config isolation and line/character separation. All 20
+  prompt tests pass. No model import, inference, deployment, judge or push.

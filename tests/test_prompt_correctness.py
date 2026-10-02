@@ -24,6 +24,61 @@ from evaluation.legs import ALL_LEGS, GEOMETRY, KEY_VALUE, LEGS, plan_passes
 DUMMY_SCHEMA = {"type": "object", "properties": {"total": {"type": "string"}}}
 
 
+@pytest.mark.parametrize("probe", [False, True])
+@pytest.mark.parametrize("fails", [False, True])
+def test_marker_worker_isolates_config_and_preserves_native_geometry(monkeypatch, probe, fails):
+    import ast
+    from types import SimpleNamespace
+
+    path = Path(__file__).parent.parent / "modal_apps/marker_app.py"
+    tree = ast.parse(path.read_text())
+    names = {"_marker_pass_config", "_block_geometry", "_marker_worker_convert"}
+    nodes = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names]
+    original = {"nested": {"untouched": True}}
+    ns = {"OCR_PASS": "original", "OCR_AUDIT_PASS": "probe", "TABLE_PASS": "table",
+          "DOC_PASS": "document", "GPU_TYPE": "A100-80GB", "MARKER_WORKERS": 11,
+          "_marker_config": original, "_marker_model_dict": {},
+          "_marker_page_size": lambda _: (200, 100)}
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), "exec"), ns)
+    raw = {"block_type": "Document", "children": [{"block_type": "Page", "children": [
+        {"block_type": "Line", "html": "Hi", "bbox": [20, 10, 60, 30], "children": [
+            {"block_type": "Char", "text": "H", "bbox": [20, 10, 40, 30]},
+            {"block_type": "Char", "text": "i", "bbox": [40, 10, 60, 30]},
+        ]},
+    ]}]}
+
+    class FakeConverter:
+        def __init__(self, artifact_dict, config):
+            # The pinned OCRConverter mutates the caller's dict in this way.
+            config["format_lines"] = True
+            config["nested"]["untouched"] = False
+            assert config.get("keep_chars", False) == probe
+            assert ("skip_ocr_blocks" in config) == probe
+            if probe:
+                assert config["skip_ocr_blocks"] == []
+        def __call__(self, filename):
+            if fails:
+                raise TypeError("fixture pipeline failure")
+            return SimpleNamespace(model_dump=lambda: raw)
+
+    monkeypatch.setitem(sys.modules, "marker.converters.ocr", SimpleNamespace(OCRConverter=FakeConverter))
+    result = ns["_marker_worker_convert"](("fixture.png", "fixture.png", "probe" if probe else "original"))
+    assert original == {"nested": {"untouched": True}}
+    assert result["prompt_used"] == ("probe" if probe else "original")
+    so = result["structured_output"]
+    assert so["converter_config"]["format_lines"] is True
+    if fails:
+        assert result["error"] == "TypeError: fixture pipeline failure"
+        assert "__call__" in so["error_traceback"]
+        assert so["pass_requested"] == result["prompt_used"]
+    else:
+        assert result["raw_text"] == "Hi"  # Characters are not duplicated as lines.
+        assert so["text_regions"] == [{"text": "Hi", "bbox": [0.1, 0.1, 0.3, 0.3]}]
+        assert so["geometry_granularity"] == "ocr_line"
+        assert so["ocr_renderer_output"] == raw
+        assert len(so["ocr_lines"]) == 3  # Native character evidence is retained.
+
+
 @pytest.mark.parametrize("wrong_endpoint", [False, True])
 def test_glm_sdk_probe_requires_local_endpoint_and_retains_coarse_output(monkeypatch, wrong_endpoint):
     import ast

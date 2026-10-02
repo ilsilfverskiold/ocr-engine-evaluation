@@ -14,6 +14,7 @@ MARKER_WORKERS = 11
 # Pass sentinels, not prompts. Marker 1.8.2 has a converter per task; the
 # registry selects one by sending these strings. DOC_PASS is the default.
 OCR_PASS = "__marker_ocr_converter__"
+OCR_AUDIT_PASS = "__marker_ocr_all_blocks_probe__"
 TABLE_PASS = "__marker_table_converter__"
 DOC_PASS = "__marker_pdf_converter__"
 MARKER_BATCH_CONFIG = {
@@ -27,6 +28,21 @@ MARKER_BATCH_CONFIG = {
     "disable_multiprocessing": True,
     "disable_tqdm": True,
 }
+
+
+def _marker_pass_config(base: dict, pass_name: str | None) -> dict:
+    # OCRConverter mutates config["format_lines"]. A persistent worker must
+    # not let an OCR request change a later PdfConverter/TableConverter call.
+    import copy
+    config = copy.deepcopy(base)
+    if pass_name == OCR_AUDIT_PASS:
+        # marker-pdf 1.8.2 OcrBuilder skips Table/Picture/Figure/Equation by
+        # default, assuming other processors handle them. OCRConverter only
+        # runs EquationProcessor. This explicit probe asks its own OCR model
+        # to recognize detected lines in every block; no second model is added.
+        config["skip_ocr_blocks"] = []
+        config["keep_chars"] = True
+    return config
 
 
 def _blank_pdf() -> bytes:
@@ -137,24 +153,27 @@ def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
     which would make this a hybrid engine rather than standalone Marker.
     """
     file_path, document_path, pass_name = task
+    config = _marker_pass_config(_marker_config, pass_name)
     base = {
         "document_path": document_path,
         "gpu_type": GPU_TYPE,
+        "prompt_used": pass_name or DOC_PASS,
         "model_version": (
             f"marker-pdf==1.8.2 ({MARKER_WORKERS} persistent batch workers)"
         ),
     }
     try:
-        if pass_name == OCR_PASS:
+        if pass_name in (OCR_PASS, OCR_AUDIT_PASS):
             from marker.converters.ocr import OCRConverter
 
             rendered = OCRConverter(artifact_dict=_marker_model_dict,
-                                    config=_marker_config)(file_path)
+                                    config=config)(file_path)
             data = rendered.model_dump() if hasattr(rendered, "model_dump") else {}
             lines = []
             _block_geometry(data, lines, _marker_page_size(file_path))
             text = "\n".join(
-                str(line["text"]) for line in lines if line.get("text"))
+                str(line["text"]) for line in lines
+                if line.get("text") and str(line.get("label")) in ("Line", "Equation"))
             # OCRConverter's own line boxes are the right geometry source for
             # this engine — layout blocks from PdfConverter are whole regions
             # (one box for an entire table), which cannot match a word or line
@@ -162,14 +181,17 @@ def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
             regions = [
                 {"text": str(l["text"]), "bbox": l["bbox"]}
                 for l in lines if l.get("bbox") and l.get("text")
+                and str(l.get("label")) in ("Line", "Equation")
             ]
-            structured = {"ocr_lines": lines}
+            structured = {"ocr_lines": lines, "ocr_renderer_output": data,
+                          "converter_config": config,
+                          "pipeline_variant": "all_blocks_probe" if pass_name == OCR_AUDIT_PASS else "original_ocr"}
             if regions:
                 structured["text_regions"] = regions
                 structured["geometry_granularity"] = "ocr_line"
-            # DIAGNOSTIC: OCRConverter's renderer is OCRJSONRenderer, whose
-            # schema differs from PdfConverter's block tree — the generic walk
-            # found only a Page node with text=None. Dump the real shape once.
+            # Keep the historical shape diagnostic for comparison. The full
+            # renderer tree above now distinguishes empty pipeline output
+            # from an adapter that failed to traverse returned children.
             try:
                 def _shape(node, depth=0):
                     if depth > 3:
@@ -191,9 +213,10 @@ def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
             from marker.output import text_from_rendered
 
             rendered = TableConverter(artifact_dict=_marker_model_dict,
-                                      config=_marker_config)(file_path)
+                                      config=config)(file_path)
             text, _, _ = text_from_rendered(rendered)
-            return {**base, "raw_text": text, "structured_output": {}}
+            return {**base, "raw_text": text,
+                    "structured_output": {"converter_config": config}}
 
         # Default: the document pipeline. build_document() runs construction and
         # every processor once; markdown and JSON are two renderings of that one
@@ -203,12 +226,12 @@ def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
         from marker.renderers.json import JSONRenderer
 
         converter = PdfConverter(artifact_dict=_marker_model_dict,
-                                 config=_marker_config)
+                                 config=config)
         document = converter.build_document(file_path)
         rendered = converter.renderer(converter.config)(document)
         text, _, images = text_from_rendered(rendered)
 
-        structured: dict = {}
+        structured: dict = {"converter_config": config}
         try:
             blocks: list = []
             _block_geometry(
@@ -234,11 +257,13 @@ def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
             structured["images"] = sorted(images) if isinstance(images, dict) else True
         return {**base, "raw_text": text, "structured_output": structured}
     except Exception as exc:
+        import traceback
         message = str(exc) or repr(exc)
         return {
-            "document_path": document_path,
+            **base,
             "raw_text": "",
-            "structured_output": {},
+            "structured_output": {"error_traceback": traceback.format_exc(),
+                                  "converter_config": config, "pass_requested": pass_name},
             "gpu_type": GPU_TYPE,
             "model_version": "marker-pdf==1.8.2",
             "error": f"{exc.__class__.__name__}: {message}",
