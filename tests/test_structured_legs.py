@@ -549,6 +549,46 @@ def test_shared_label_allows_whole_token_part():
     assert not value_equal("Ke", "Kex B", shared_label=True)
 
 
+def test_missing_schema_field_cannot_borrow_an_explicit_other_field():
+    items = _items(("income.line1.h", "0"), ("income.line7", "0"),
+                   ("income.line10", "0"))
+    result = score_fields(items, [["income.line1.h", "0.0"]], "schema", None)
+    assert [v.verdict for v in result.verdicts] == ["correct", "missing", "missing"]
+    # The missing owner must not borrow a different person's address either.
+    items = _items(("lessor.streetAddress", "Same Road"),
+                   ("lessee.streetAddress", "Same Road"))
+    result = score_fields(items, [["lessor.streetAddress", "Same Road"]], "schema", None)
+    assert [v.verdict for v in result.verdicts] == ["correct", "missing"]
+
+
+def test_label_typo_tolerance_preserves_numeric_field_identifiers():
+    from evaluation.kv_schema_code import label_eq
+    assert not label_eq("line6", "line2")
+    assert not label_eq("line11", "line1")
+    assert label_eq("linc6", "line6")
+    assert label_eq("Total amuunt", "Total amount")
+
+
+def test_qualified_printed_label_does_not_fill_another_persons_field():
+    items = _items(("lessor.state", "California"), ("lessee.state", "California"))
+    aliases = {p: {"printed_labels": ["State of"], "is_printed_pair": True}
+               for p in ("lessor.state", "lessee.state")}
+    result = score_fields(items, [["State of (lessor)", "California"]], "key_value", aliases)
+    assert [v.verdict for v in result.verdicts] == ["correct", "missing"]
+    result = score_fields(items, [["State of (lessor)", "California"],
+                                  ["State of (lessee)", "Nevada"]], "key_value", aliases)
+    assert [v.verdict for v in result.verdicts] == ["correct", "wrong"]
+
+
+def test_unaligned_array_cell_cannot_borrow_a_scalar_summary():
+    # A missing array row cannot be inferred from a coincidentally equal
+    # summary amount, even when the summary is outside the sampled checklist.
+    items = _items(("portfolio.changes[0].currentPeriod", "900"),
+                   ("portfolio.changes[1].currentPeriod", "900"))
+    result = score_fields(items, [["portfolio.currentPeriodEndingBalance", "900"]], "schema", None)
+    assert [v.verdict for v in result.verdicts] == ["missing", "missing"]
+
+
 def _items(*specs):
     return [SimpleNamespace(path=p, value=v, is_blank=(v in (None, ""))) for p, v in specs]
 

@@ -778,3 +778,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   authorization headers are persisted. Only the diagnostic evidence and
   three existing audit/log documents remain to commit; scratch artifacts
   are outside the repo. No push and no continuation calls.
+
+## 2026-10-02 — prevent credit from crossing explicit field owners
+
+- Confirmed GLM tax_003 receives two credits for fields absent from its
+  truncated response, borrowing zero from line1.h. Prevent typo tolerance
+  from changing numbered labels, respect explicit/qualified field ownership,
+  and keep absent array cells from borrowing scalar summaries.
+- Isolated replay of all 675 field results changes four schema scores and
+  no KV score. Eight false credits become missing; 366 wrong verdicts become
+  missing because the cited values belonged to unrelated fields. Preserve
+  legitimate combined fields, bare labels, label typos and row alignment.
+- Added four focused regression cases; 69 structured-leg tests pass. Updated
+  scoring-design's current version labels and the existing handoff with exact
+  saved examples, score deltas and remaining repeated-label/checkbox caveats.
+  No new inference, judge, Modal, alias/checklist call or historical rewrite.
+- Full validation: all 249 offline tests pass (78.58 seconds). Only the
+  matcher, its existing test module and four existing audit/design/log docs
+  changed. Scratch replay files remain outside the repo. No push.

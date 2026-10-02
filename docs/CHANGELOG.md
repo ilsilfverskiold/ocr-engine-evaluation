@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Field scorer v9 preserves numeric label identifiers and explicit field
+  ownership. Missing array cells cannot borrow scalar summaries. Isolated
+  replay changes four schema scores; all 220 KV scores stay unchanged. It
+  also corrects 366 missing fields previously diagnosed with unrelated values.
+
 - Geometry parser v4 recovers a missing opening box-array bracket only when
   all four coordinates are explicitly present, recording each repair. This
   corrects one new diagnostic score (65/222 → 79/222); none of the 145 archived

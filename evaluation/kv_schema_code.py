@@ -82,7 +82,7 @@ from pathlib import Path
 from typing import Any
 import unicodedata
 
-SCORER_VERSION = "kv-schema-code-v8 (2026-10-02; exact numeric values)"
+SCORER_VERSION = "kv-schema-code-v9 (2026-10-02; explicit field ownership)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -296,7 +296,10 @@ def norm_label(s: Any) -> str:
 
 
 def _tok_eq(x: str, y: str) -> bool:
-    return x == y or (len(x) > 3 and difflib.SequenceMatcher(None, x, y).ratio() >= 0.8)
+    # Label typo tolerance must not merge numbered fields (line2/line6).
+    # A letter typo with the same digits may still be ordinary OCR noise.
+    return x == y or (len(x) > 3 and re.findall(r"\d+", x) == re.findall(r"\d+", y)
+                     and difflib.SequenceMatcher(None, x, y).ratio() >= 0.8)
 
 
 _STOP = {"of", "the", "and", "a", "an", "to", "in", "on", "at", "for", "by", "with", "from", "or", "as", "is", "be"}
@@ -314,7 +317,7 @@ def _same_terminal_index(engine_key: Any, ref: Any) -> bool:
 
 
 def label_eq(engine_key: Any, ref: Any) -> bool:
-    """Engine key ~ reference name/label: same tokens (one-typo tolerant), or
+    """Engine key ~ reference name/label: same tokens (one-typo tolerant, with unchanged numeric identifiers), or
     the reference (at least 2 tokens) appears contiguously inside a longer
     engine key — "Tax Id (Seller)" for the printed label "Tax Id:", or the
     whole printed line of a tax form for its label. Never the other way
@@ -648,6 +651,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
     # An answer with no pairs at all (not JSON, empty) earns nothing — not
     # even the blank fields, or a non-answer would score the blanks for free.
     answered = len(pairs) > 0
+    reference_paths = {it.path for it in items}
     # printed labels shared by several reference fields (one printed value)
     label_count: dict[str, int] = {}
     for v in (aliases or {}).values():
@@ -661,6 +665,14 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
         return ns
 
     def key_matches(k: Any, ns: list[str]) -> bool:
+        # A supplied structured path already identifies its field. It must
+        # not satisfy a different missing field through a shared leaf name
+        # or fuzzy alias. Bare printed labels remain ambiguous in the KV leg.
+        if k in reference_paths and (leg == "schema" or "." in k or "[" in k):
+            return k == ns[0]
+        explicit = semantic_owners.get(k, set())
+        if len(explicit) == 1 and ns[0] not in explicit:
+            return False
         return any(label_eq(k, n) or name_eq(k, n) for n in ns)
 
     def key_names(k: Any, ns: list[str]) -> bool:
@@ -672,6 +684,13 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
         return any((len(tk) == len(norm_label(n).split()) and label_eq(k, n)) or name_eq(k, n) for n in ns)
 
     all_names = [names_of(it) for it in items]
+    # A qualified printed key such as 'State of (lessor)' identifies the
+    # lessor, even though other fields share the bare 'State of' alias.
+    # Bare labels and combined first-name/initial labels keep their shared
+    # interpretation; only an unambiguous full semantic name takes priority.
+    semantic_owners = {k: {it.path for it in items if "." in it.path
+                           and key_names(k, [it.path])}
+                       for k, _ in pairs}
     # which reference fields each engine key belongs to (by name/label)
     owners = [{j for j, ns in enumerate(all_names) if key_matches(k, ns)} for k, _ in pairs]
     aligned = align_rows(items, pairs)
@@ -733,6 +752,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
         # from any row of the column, except rows that belong to another
         # reference row
         cands = [(k, v) for k, v in pairs if key_matches(k, names)
+                 and (not rk or _row_split(k)[0] is not None)
                  and not (rk and _row_split(k)[0] in claimed)]
         # An explicitly named path outranks generic printed-label matches
         # in either field leg. A wrong total cannot borrow another amount.
