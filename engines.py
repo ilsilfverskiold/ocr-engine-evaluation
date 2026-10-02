@@ -271,9 +271,10 @@ ENGINES: dict[str, EngineSpec] = {
         # constructor; the self-hosted switch is not the kwargs its docs imply.
         # Routing four legs through it took glm from its baseline
         # (text 0.894, markdown 0.524, tables 0.596, schema 0.820 over 93 docs)
-        # to errors on everything but text. Back to direct vLLM calls with the
-        # card's task prefixes until the correct self-hosted switch is read off
-        # the installed package.
+        # to errors on everything but text. The 2026-10-02 source audit now
+        # reproduces the cause: ignored constructor kwargs. The pinned SDK
+        # probe uses mode="selfhosted" plus ocr_api_host/ocr_api_port. Keep
+        # direct vLLM routing until the controlled pipeline comparison passes.
         # key_value was dropped because the documented KIE task requires the
         # caller to state the target structure. RE-ENABLED 2026-09-30 by
         # decision (interface rule: it takes a prompt, so it competes). The
@@ -299,8 +300,8 @@ ENGINES: dict[str, EngineSpec] = {
             # The card documents no markdown task, so this generic ask is
             # undocumented and flagged as such — but it is the engine's best
             # available shot and it produced real results (0.524 over 57 docs).
-            # The SDK path that would replace it is blocked on glmocr's
-            # self-hosted switch; see the note above.
+            # The SDK path is repaired locally but its controlled quality
+            # comparison has not run; see the note above.
             "tables": "Table Recognition:",
             # The card's own information-extraction prompt, given in Chinese, and
             # it states the output must strictly follow the supplied JSON schema.

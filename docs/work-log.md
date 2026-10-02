@@ -623,3 +623,25 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   regressions and all 17 report tests pass. The immediately preceding change
   passed the full 229-test suite. No scoring/output files were rewritten.
 - No inference, provider, Modal, alias or judge calls, no report release/push.
+
+## 2026-10-02 — reproduce and repair GLM SDK mode selection
+
+- Downloaded the published glmocr 0.1.5 wheel into session scratch, verified
+  SHA256 9649aec2e70eeb5a8ebed9979092c58ec5c4e075a085fb82c8fa3b04e4e40977,
+  and inspected its config/API implementations. Executed only the standalone
+  config loader, without importing model code or running inference. The old
+  pipeline_maas_enabled/ocr_base_url kwargs are silently ignored and leave
+  MaaS enabled; mode=selfhosted, ocr_api_host and ocr_api_port work.
+- Pin the SDK, validate the resolved local endpoint before constructing it,
+  close resources after each probe, preserve SDK JSON/generation config and
+  record layout boxes as coarse regions rather than words. CPU layout avoids
+  silently competing with vLLM's existing 90% A10 memory reservation.
+- Default engine routing remains direct vLLM. The explicit SDK sentinel is
+  a quality probe with per-call CPU layout initialization included in timing;
+  it must not be represented as measured persistent-pipeline throughput.
+  Remote acceptance, layout artifact pinning and persistent initialization
+  remain prerequisites before adopting the pipeline as a benchmark default.
+- Validation: actual pinned configuration-loader reproduction and all 16
+  prompt tests pass, including fail-before-client endpoint validation and
+  retaining raw coarse geometry. No local models, deployment, inference or
+  judge calls. No measured score/performance improvement is claimed.

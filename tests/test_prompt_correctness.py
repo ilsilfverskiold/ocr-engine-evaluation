@@ -24,6 +24,62 @@ from evaluation.legs import ALL_LEGS, GEOMETRY, KEY_VALUE, LEGS, plan_passes
 DUMMY_SCHEMA = {"type": "object", "properties": {"total": {"type": "string"}}}
 
 
+@pytest.mark.parametrize("wrong_endpoint", [False, True])
+def test_glm_sdk_probe_requires_local_endpoint_and_retains_coarse_output(monkeypatch, wrong_endpoint):
+    import ast
+    import importlib.metadata
+    from types import SimpleNamespace
+
+    # Load only pure helpers/method body, without importing Modal or models.
+    path = Path(__file__).parent.parent / "modal_apps/glm_ocr_app.py"
+    tree = ast.parse(path.read_text())
+    cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == "GLMOCRInference")
+    method = next(n for n in cls.body if isinstance(n, ast.FunctionDef) and n.name == "_document_parse")
+    helper = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_sdk_kwargs")
+    ns = {"GLMOCR_VERSION": "0.1.5", "SERVER_HOST": "127.0.0.1", "SERVER_PORT": 8001,
+          "SERVED_MODEL_NAME": "glm-ocr"}
+    exec(compile(ast.Module(body=[helper, method], type_ignores=[]), str(path), "exec"), ns)
+    calls = []
+    raw = [[{"label": "text", "content": "two words", "bbox_2d": [100, 200, 400, 300]}]]
+    config = SimpleNamespace(pipeline=SimpleNamespace(
+        maas=SimpleNamespace(enabled=False),
+        ocr_api=SimpleNamespace(api_host="127.0.0.1", api_port=8001,
+                               api_url="https://unexpected.example" if wrong_endpoint else None,
+                               api_path="/v1/chat/completions", model="glm-ocr"),
+        page_loader=SimpleNamespace(model_dump=lambda: {"max_tokens": 8192}),
+    ))
+
+    def load_config(**kwargs):
+        assert kwargs == {"mode": "selfhosted", "ocr_api_host": "127.0.0.1",
+                          "ocr_api_port": 8001, "model": "glm-ocr", "layout_device": "cpu"}
+        return config
+
+    class FakeOcr:
+        def __init__(self, **kwargs):
+            calls.append(kwargs)
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            calls.append("closed")
+        def parse(self, path, **kwargs):
+            return SimpleNamespace(markdown_result="two words", json_result=raw)
+
+    monkeypatch.setitem(sys.modules, "glmocr", SimpleNamespace(GlmOcr=FakeOcr))
+    monkeypatch.setitem(sys.modules, "glmocr.config", SimpleNamespace(load_config=load_config))
+    monkeypatch.setattr(importlib.metadata, "version", lambda name: "0.1.5")
+    if wrong_endpoint:
+        with pytest.raises(RuntimeError, match="endpoint/model differs"):
+            ns["_document_parse"](None, "mock.png")
+        assert calls == []  # fail before constructing any SDK/network client
+    else:
+        result = ns["_document_parse"](None, "mock.png")
+        so = result["structured_output"]
+        assert calls[-1] == "closed"
+        assert so["sdk_json_result"] == raw
+        assert so["geometry_granularity"] == "layout_block" and "words" not in so
+        assert so["layout_blocks"][0]["bbox"] == [0.1, 0.2, 0.4, 0.3]
+
+
 @pytest.mark.parametrize("engine", ["gemini", "claude"])
 @pytest.mark.parametrize("prompted", [False, True])
 def test_api_prompt_sent_is_persisted_for_default_and_task_calls(monkeypatch, tmp_path, engine, prompted):

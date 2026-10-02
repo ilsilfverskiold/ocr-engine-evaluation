@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Reproduced GLM SDK's hosted-mode failure using glmocr 0.1.5's actual
+  config loader. Pin the SDK and use its accepted self-hosted arguments,
+  reject unexpected endpoint overrides, retain raw SDK regions and mark
+  their boxes as layout blocks. Default registry routing is unchanged;
+  the explicit pipeline probe still needs deployment and quality validation.
+
 - Report explanations now use primary per-leg verdicts. The previous helper
   could claim most Markdown blocks were absent despite zero absent checklist
   items (145 archived results). Geometry distinguishes unmatched text units

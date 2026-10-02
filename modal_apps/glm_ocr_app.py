@@ -13,6 +13,7 @@ import modal
 
 GPU_TYPE = "A10"
 VLLM_VERSION = "0.21.0"
+GLMOCR_VERSION = "0.1.5"
 # No local downscale. GLM-OCR's own processor caps input at longest_edge=9633792 px
 # (9.6MP == 12288 vision tokens), so it handles oversized pages itself.
 #
@@ -32,6 +33,18 @@ SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 8001
 SERVER_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/v1"
 BATCH_CONCURRENCY = 4
+
+
+def _sdk_kwargs() -> dict:
+    """glmocr 0.1.5's actual constructor/config contract, checked from its wheel.
+
+    pipeline_maas_enabled and ocr_base_url are silently ignored by this SDK.
+    CPU layout leaves the A10's existing vLLM memory reservation unchanged.
+    This is the document-pipeline probe, not the default model-only pass.
+    """
+    return {"mode": "selfhosted", "ocr_api_host": SERVER_HOST,
+            "ocr_api_port": SERVER_PORT, "model": SERVED_MODEL_NAME,
+            "layout_device": "cpu"}
 
 
 def _write_normalized_image(image_bytes: bytes, output_path: str, max_side: int | None = None) -> None:
@@ -72,7 +85,7 @@ image = (
         # geometry was marked ineligible because the base model emits no boxes
         # — true of the model, false of the SDK, which returns bbox_2d per
         # region.
-        "glmocr[selfhosted]",
+        f"glmocr[selfhosted]=={GLMOCR_VERSION}",
     )
     .run_commands(
         f"python -m venv {VENV}",
@@ -128,13 +141,6 @@ class GLMOCRInference:
         import subprocess
         import threading
         import time
-
-        # Set BEFORE glmocr is imported anywhere: the SDK reads its config at
-        # import time, so setting these later left it in hosted MaaS mode and
-        # every parse died with MissingApiKeyError.
-        os.environ["GLMOCR_MAAS_ENABLED"] = "false"
-        os.environ["GLMOCR_OCR_BASE_URL"] = SERVER_URL
-        os.environ["GLMOCR_PIPELINE_MAAS_ENABLED"] = "false"
 
         t0 = time.perf_counter()
         server_env = {
@@ -322,43 +328,35 @@ class GLMOCRInference:
         formula -> "Formula Recognition:", chart/image retained but skipped),
         and a formatter assembles Markdown plus structured JSON.
 
-        Feeds markdown, tables and geometry from this single parse.
+        Returns Markdown, tables and coarse layout boxes from this single parse.
+        The registry still uses the historical model-only path until this
+        explicit pipeline variant has passed controlled quality probes.
         """
         from glmocr import GlmOcr
+        from glmocr.config import load_config
+        from importlib.metadata import version
 
-        # Env vars are set at container start, before glmocr is imported — see
-        # load_model. Setting them here was too late: the SDK reads its config
-        # at import, so it stayed in hosted MaaS mode and every call died with
-        # MissingApiKeyError instead of using our own vLLM server.
-        import inspect
-        import os
-
-        try:
-            ocr = GlmOcr(pipeline_maas_enabled=False, ocr_base_url=SERVER_URL)
-        except TypeError:
-            ocr = GlmOcr()
-        try:
-            result = ocr.parse(img_path)
-        except Exception as exc:
-            # DIAGNOSTIC: the SDK keeps choosing hosted MaaS mode. Report the
-            # constructor signature and the config it actually resolved, so the
-            # right switch is read off the installed package rather than guessed
-            # from docs a third time.
-            raise RuntimeError(
-                f"glmocr stayed in MaaS mode: {type(exc).__name__}: {exc} | "
-                f"GlmOcr signature: {inspect.signature(GlmOcr.__init__)} | "
-                f"config attrs: "
-                f"{[a for a in dir(ocr) if 'maas' in a.lower() or 'url' in a.lower() or 'config' in a.lower()][:15]} | "
-                f"env: {{k: v for k, v in os.environ.items() if 'GLMOCR' in k}} -> "
-                f"{ {k: v for k, v in os.environ.items() if 'GLMOCR' in k} }"
-            ) from exc
+        if version("glmocr") != GLMOCR_VERSION:
+            raise RuntimeError(f"SDK version differs from pinned glmocr=={GLMOCR_VERSION}")
+        kwargs = _sdk_kwargs()
+        config = load_config(**kwargs)
+        # Validate before GlmOcr can construct a hosted client or start models.
+        api = config.pipeline.ocr_api
+        if config.pipeline.maas.enabled or api.api_host != SERVER_HOST or api.api_port != SERVER_PORT:
+            raise RuntimeError("GLM SDK did not resolve the required self-hosted endpoint")
+        if api.api_url or api.api_path != "/v1/chat/completions" or api.model != SERVED_MODEL_NAME:
+            raise RuntimeError("GLM SDK endpoint/model differs from the local vLLM contract")
+        with GlmOcr(**kwargs) as ocr:
+            result = ocr.parse(img_path, save_layout_visualization=False)
+        if getattr(result, "_error", None):
+            raise RuntimeError(f"GLM SDK pipeline failed: {result._error}")
 
         markdown = getattr(result, "markdown_result", "") or ""
         raw_json = getattr(result, "json_result", None) or []
         # json_result is List[List[Dict]] — one list per page.
         pages = raw_json if raw_json and isinstance(raw_json[0], list) else [raw_json]
 
-        regions, tables, words = [], [], []
+        regions, tables = [], []
         for page in pages:
             for block in page or []:
                 if not isinstance(block, dict):
@@ -376,17 +374,20 @@ class GLMOCRInference:
                 regions.append({"label": label, "content": content, "bbox": norm})
                 if label == "table" and content:
                     tables.append({"html": str(content)})
-                if norm and content and label != "table":
-                    words.append({"text": str(content), "bbox": norm})
 
-        structured: dict = {"regions": regions}
+        structured: dict = {
+            "regions": regions, "layout_blocks": regions,
+            "geometry_granularity": "layout_block",
+            "sdk_json_result": raw_json,
+            "sdk_version": GLMOCR_VERSION,
+            "sdk_config": kwargs,
+            "sdk_generation_config": config.pipeline.page_loader.model_dump(),
+            # This first probe initializes layout per call. Do not present its
+            # latency as a warmed persistent pipeline measurement.
+            "measurement_note": "quality probe; includes per-call CPU layout initialization",
+        }
         if tables:
             structured["tables"] = tables
-        if words:
-            # Region-level boxes, NOT word boxes — the geometry scorer's
-            # line-merging path is the right comparison, and a low score here
-            # may mean the granularity differs rather than the boxes are wrong.
-            structured["words"] = words
         return {"raw_text": markdown, "structured_output": structured}
 
     def _run_ocr_impl(
@@ -417,7 +418,7 @@ class GLMOCRInference:
                     **parsed,
                     "gpu_seconds": time.perf_counter() - t0,
                     "gpu_type": GPU_TYPE,
-                    "model_version": f"{MODEL_ID} via official SDK pipeline",
+                    "model_version": f"{MODEL_ID}@{MODEL_REVISION} via glmocr=={GLMOCR_VERSION} selfhosted pipeline",
                 }
 
             encoded = base64.b64encode(Path(img_path).read_bytes()).decode("ascii")
