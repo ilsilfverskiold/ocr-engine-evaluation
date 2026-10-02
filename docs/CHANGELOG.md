@@ -11,6 +11,11 @@ is given here.
   corrects one new diagnostic score (65/222 → 79/222); none of the 145 archived
   geometry scores or parsed-box counts change.
 
+- Approved geometry diagnostic run has 13 audited responses, one timeout and
+  seven unattempted calls. Preserve actual boxes, request frames and verdicts.
+  Pixel/dialect prompts do not establish a general fix on the completed pages;
+  the comparison is partial and does not replace historical benchmark scores.
+
 - Geometry scoring accepts explicitly converted coordinate frames without
   applying a second scale heuristic; out-of-frame boxes remain evidence.
   Existing legacy-call behavior is unchanged.

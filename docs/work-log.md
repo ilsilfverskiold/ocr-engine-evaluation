@@ -731,6 +731,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   for its pixel/yx1000 variants and records legacy heuristics for controls.
   No historical headline change is attributed to this option.
 
+## 2026-10-02 — execute and audit the approved geometry comparison
+
+- User approved the exact 21-call / $3 plan. Saved 13 provider responses, then
+  stopped on Gemini's financial-page yx1000 read timeout. Seven receipt calls
+  remain unattempted. No automatic retry, judge or Modal call. Successful
+  response usage totals $0.51622775; timeout billing is unknown.
+- Inspected overlays for every completed response and independently checked
+  each geometry verdict. Every completed response ended normally. Raising
+  token limits did not fix either completed Claude page. Pixel prompting
+  yields 0/222 located on the form and 7/101 on the financial page. Gemini's
+  legacy conversion yields 74/222 and 101/101; explicit dialect yields 79/222
+  on the form after the syntax repair logged below, with missing words and
+  incorrect word-to-box associations.
+- Preserve raw replies, exact requests, analysis and four deduplicated sent
+  images in the diagnostic run. Scratch overlays/HTML/scripts remain outside
+  the repo. Moved the zero-request DNS preflight failure to scratch. Original
+  benchmark scores and provisional report remain untouched.
+- Prepared and mocked an eight-call continuation with identical request
+  settings and a longer client timeout. $0.695248 additional reserve within
+  original $3 allowance; requested approval because the original plan said
+  stop on error and no retry. No continuation calls yet. Full findings and
+  limitations are in the existing handoff; final benchmark remains uncleared.
+
 ## 2026-10-02 — recover explicit coordinates from malformed box syntax
 
 - A saved Gemini diagnostic response contains 39 malformed box entries.
@@ -745,3 +768,13 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   and duplicate-key examples that must not be invented into valid boxes.
   Replayed all 145 archived geometry scores: zero score or parse-count
   changes. No additional provider or judge call.
+
+- Final validation of this partial diagnostic: all 245 offline tests pass
+  (93.71 seconds). HTML validation accounts for 13 overlays and all 3,958
+  displayed reference/prediction boxes, checks every internal link, and
+  reconciles costs/input hashes with saved responses. Punctuation-only
+  references are excluded consistently from scores and overlays. All 21
+  planned requests have a success/error/unattempted disposition. No provider
+  authorization headers are persisted. Only the diagnostic evidence and
+  three existing audit/log documents remain to commit; scratch artifacts
+  are outside the repo. No push and no continuation calls.
