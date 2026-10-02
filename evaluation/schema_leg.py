@@ -35,6 +35,7 @@ class SchemaScore:
     parsed_how: str = ""
     cleanup_log: list[str] = field(default_factory=list)
     scorer: str | None = None
+    reference_repairs: dict[str, Any] = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -53,6 +54,7 @@ class SchemaScore:
             "schema_engine_pairs": self.engine_pairs,
             "schema_parsed_how": self.parsed_how,
             "schema_scorer": self.scorer,
+            "schema_reference_repairs": self.reference_repairs,
             "schema_judge_cost_usd": self.judge_cost_usd,
         }
 
@@ -110,5 +112,6 @@ def score_schema(
         parsed_how=parsed_how,
         cleanup_log=res.cleanup_log,
         scorer=SCORER_VERSION,
+        reference_repairs=gt.metadata.get("structured_reference_repairs", {}),
         verdicts=res.verdicts,
     )

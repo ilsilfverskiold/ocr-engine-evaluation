@@ -489,6 +489,7 @@ def _write_ocr_output(
             ),
             "response_format": getattr(task, "response_format", None),
             "json_schema_sent": getattr(task, "json_schema", None) is not None,
+            "json_schema": getattr(task, "json_schema", None),
             "model_version": getattr(result, "model_version", None),
             "latency_seconds": getattr(result, "latency_seconds", None),
             "cost_per_page": getattr(result, "cost_per_page", None),
@@ -2699,7 +2700,7 @@ def main() -> None:
             task = None
             if plan.leg_for_task:
                 task = LEGS[plan.leg_for_task].task_for(
-                    pending[0][1].json_schema if LEGS[plan.leg_for_task].needs_schema else None,
+                    pending[0][1].inference_schema if LEGS[plan.leg_for_task].needs_schema else None,
                     engine=plan.engine,
                 )
             else:
@@ -2717,7 +2718,7 @@ def main() -> None:
             for doc_path, gt in pending:
                 call_task = task
                 if plan.leg_for_task and LEGS[plan.leg_for_task].needs_schema:
-                    call_task = LEGS[plan.leg_for_task].task_for(gt.json_schema, engine=plan.engine)
+                    call_task = LEGS[plan.leg_for_task].task_for(gt.inference_schema, engine=plan.engine)
                 result = runner.run_safe(doc_path, call_task)
                 record_pass(engine, doc_path, gt, plan, result, result.error, task=call_task)
 
@@ -2752,7 +2753,7 @@ def main() -> None:
                 if plan.leg_for_task:
                     spec = LEGS[plan.leg_for_task]
                     task = spec.task_for(
-                        gt.json_schema if spec.needs_schema else None,
+                        gt.inference_schema if spec.needs_schema else None,
                         engine=plan.engine,
                     )
                 else:

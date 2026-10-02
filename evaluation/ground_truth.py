@@ -71,6 +71,14 @@ class GroundTruth:
     dataset: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    @property
+    def inference_schema(self) -> dict[str, Any] | None:
+        """The answer-free request contract, separate from scoring coverage."""
+        if self.json_schema is None:
+            return None
+        from evaluation.schema_contract import extraction_schema
+        return extraction_schema(self.json_schema, Path(self.document_path).stem)
+
     # Legs whose reference exists for this document. The scorers ask this
     # rather than probing file paths — see the loader docstring.
     def has_gt_for(self, leg: str) -> bool:
@@ -321,6 +329,17 @@ class GroundTruthLoader:
         gt.true_json = data.get("true_json")
         gt.field_provenance = data.get("field_provenance")
         gt.structured_note = data.get("note")
+        if gt.doc_type == "financial_table" and isinstance(gt.true_json, dict):
+            from evaluation.schema_contract import repair_spanned_financial_rows
+            had_csv = "csv" in gt.true_json
+            gt.true_json, repaired = repair_spanned_financial_rows(gt.true_json, gt.table_html or "")
+            # The supplied schema never asked engines to return this derived CSV.
+            gt.true_json.pop("csv", None)
+            gt.metadata["structured_reference_repairs"] = {
+                "version": "financial-reference-v1 (2026-10-02)",
+                "spanning_headers_corrected": repaired,
+                "unrequested_csv_removed": had_csv,
+            }
 
 
 def load_corpus(

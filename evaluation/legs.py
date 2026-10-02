@@ -32,6 +32,8 @@ def instance_template(schema: dict[str, Any]) -> Any:
     the model was trained to expect differs.
     """
     kind = schema.get("type")
+    if isinstance(kind, list):
+        kind = next((value for value in kind if value != "null"), None)
     if kind == "object":
         return {key: instance_template(value)
                 for key, value in (schema.get("properties") or {}).items()}

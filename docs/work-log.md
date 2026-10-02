@@ -439,3 +439,28 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   files remain unchanged in Git. No paid calls or GitHub push. Full fairness
   clearance awaits the explicit remaining task/reference and inference checks
   in the handoff. Commit/log operations use the nested Git only.
+
+## 2026-10-02 — repair extraction contracts and financial reference mapping
+
+- Added a separate inference schema: all field types permit null as the
+  prompt requires, and eight previously open dictionaries have explicit
+  target names. Target names are versioned without scalar answers. The
+  original schema remains the scoring coverage contract. GLM instance
+  templates now preserve nullable object/array structure. Future calls save
+  the full request schema as well as the prompt.
+- All 65 reference answers validate against their prepared request schemas;
+  this resolves the 207 forbidden-null entries on 19 pages. Explicit fields
+  survive the local LlamaExtract sanitizer. Vendor acceptance still requires
+  a controlled call; no claim that local validation proves remote behavior.
+- Repaired fintab_001's column assignment using its annotated colspan
+  headers. Inspection's 70 belongs to 31.7.17 and 336 to 31.7.16. All row
+  labels and amount multisets are preserved. Removed the derived csv field
+  from all five financial references: it was not requested by their schemas.
+  Raw corpus sidecars remain unchanged; loader/scoring metadata versions the
+  correction. Historical call schemas are not retroactively replaced.
+- Isolated offline comparison with the same v5 scorer changes 28 of the
+  35 financial schema scores. This is a reference-fix diagnostic, not a
+  replacement run or evidence that new extraction requests were executed.
+- Validation: 33 contract/loader/prompt tests and all 210 full-suite tests
+  pass (102.80 seconds); git diff --check passes.
+  No engine, provider, Modal, alias or judge calls; no GitHub push.

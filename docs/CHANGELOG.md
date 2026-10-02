@@ -6,6 +6,14 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Separate nullable inference schemas with explicit targets repair conflicting
+  null instructions and open dictionaries. Nullable nested GLM templates keep
+  their structure; exact request schemas are persisted for future calls.
+- Versioned loader correction repairs fintab_001's merged-header column
+  mapping and removes unrequested CSV targets from five financial references.
+  An isolated replay changes 28/35 financial schema scores. Original raw
+  sidecars, calls and archived scores remain preserved.
+
 - Field scorer v5 preserves primitive-array positions, prioritizes an exact
   schema path over sibling leaf-name matches, and accepts RM currency
   formatting. Offline candidate replay changes 32 field scores; archived
