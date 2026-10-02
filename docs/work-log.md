@@ -840,3 +840,28 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   normalize identically for primary MD/table scoring. All scratch images and
   replay evidence remain outside the repo; no provider/judge/Modal call or
   historical run rewrite. Geometry continuation is still awaiting approval.
+
+## 2026-10-02 — repair receipt line references before attributing geometry failures
+
+- Reviewed all six receipt images and targeted native-resolution crops. Five
+  references omit visible address suffixes from text and full-width box labels.
+  Correct the verified labels/typos without moving retained coordinates; hash
+  guards reject changed annotations. Preserve raw sidecars and engine outputs.
+- Count sroie_003's exact duplicate TOTAL QTY box once. Exclude sroie_002's
+  faded first address box with an unreadable suffix; keep only its readable
+  prefix in text. Emit reference changes/exclusions in geometry metrics.
+- Fix sroie_000 structured shoe description 805 → B05 from the page. This
+  removes three false credits and restores three correct answers; it does
+  not unconditionally raise engine scores.
+- Isolated 215-result replay: 70 text, 33 geometry and six schema scores
+  change; 48 table and 20 KV scores stay unchanged. Inspect corrected-line
+  overlays for all 42 geometry results and independently verify every old/new
+  mutual-center verdict and score. Scratch holds crops, sheets and full replay.
+- Update existing handoff, scoring-design, README, provenance and limitations.
+  Five partial model-reviewed repairs are disclosed; remaining receipt
+  tokenization/handwriting/registration/item-segmentation questions stay open.
+- All 255 offline tests pass (81.38 seconds). No paid API/judge/Modal call,
+  checklist regeneration or historical score rewrite. Geometry continuation
+  still awaits the previously requested approval. Only the named source/test
+  files and existing documentation/metadata are modified; no new repo artifact
+  or push.

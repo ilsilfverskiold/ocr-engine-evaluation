@@ -411,10 +411,11 @@ Known dataset limitations include:
   them was attempted and declined — multi-column newspapers, a rotated numeric
   table, a handwritten ledger — because a model transcription would have added
   more error than it removed.
-- **14 documents have model-transcribed or reviewed replacement text ground
-  truth.** Eight have historical engine-consensus checks; six invoice
-  references were rechecked against the source images after annotation
-  errors were found. These are disclosed separately from human annotations.
+- **19 documents have model-transcribed, reviewed or partially repaired text
+  ground truth.** Eight have historical engine-consensus checks; six invoice
+  references and targeted corrections to five receipts were reviewed against
+  the source images. Receipt repairs do not certify the remaining transcription.
+  These are disclosed separately from independent human annotations.
 - **17 documents had their schemas extended by hand**, because the source
   datasets scope their annotations to the task *they* were built for. SROIE
   ships four fields where its receipts carry about twenty-five extractable

@@ -6,6 +6,13 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Receipt reference repairs restore omitted address text in five pages and
+  their existing full-line box labels, remove one duplicate box and exclude
+  one unreadable line. Retained coordinates stay unchanged. Fix one B05/805
+  structured reference from the image. Isolated replay changes 70 text,
+  33 geometry and six schema scores; table/KV headlines stay unchanged.
+  Partial model-review provenance and per-result exclusions are disclosed.
+
 - Invoice references now use six source-image-reviewed transcriptions,
   replacing phantom punctuation/numbers and incorrect spacing/reading order.
   Exclude two unreadable description fields from schema exact matching,

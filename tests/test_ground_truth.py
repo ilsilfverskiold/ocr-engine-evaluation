@@ -32,10 +32,10 @@ def test_provenance_classification_totals():
     counts: dict[str, int] = {}
     for gt in CORPUS:
         counts[gt.gt_source] = counts.get(gt.gt_source, 0) + 1
-    # Matches documents/gt_limitations.json: 11 silver, 14 model-transcribed/reviewed.
+    # Matches documents/gt_limitations.json: 11 silver, 19 model-transcribed/reviewed or partially repaired.
     assert counts["silver_tesseract"] == 11
-    assert counts["model_verified"] == 14
-    assert counts["human"] == 68
+    assert counts["model_verified"] == 19
+    assert counts["human"] == 63
 
 
 def test_model_verified_documents_are_the_ones_provenance_names():
@@ -187,3 +187,43 @@ def test_invoice_text_references_match_reviewed_printed_content():
         raw = json.loads(Path(gt.document_path).with_name(stem + "_structured_gt.json").read_text())
         assert raw["true_json"] != gt.true_json
     assert 'White " / TESTED' in invoices["invoice_005"].true_json["items"][4]["item_desc"]
+
+
+def test_receipt_repairs_preserve_boxes_and_disclose_exclusions():
+    import json
+    from evaluation.geometry_leg import score_geometry
+
+    receipts = {Path(g.document_path).stem: g for g in CORPUS if g.doc_type == "receipt"}
+    expected = {
+        "sroie_000": "NO 2 & 4, JALAN BAYU 4,",
+        "sroie_002": "KG BATU 30, ULU YAM LAMA",
+        "sroie_003": "SEKYSEN 4, BANDAR UTAMA, 44300",
+        "sroie_004": "BATU 3, JALAN IPOH",
+        "sroie_005": "22A-1, JALAN 17/54,",
+    }
+    for stem, address in expected.items():
+        gt = receipts[stem]
+        assert address in gt.plain_text
+        assert address in [w["text"] for w in gt.word_boxes]
+        original = json.loads(Path(gt.document_path).with_name(stem + "_geometry_gt.json").read_text())["words"]
+        repair = gt.metadata["geometry_reference_repairs"]
+        excluded = {w["source_index"] for w in repair["excluded_boxes"]}
+        assert [w["bbox"] for w in gt.word_boxes] == [w["bbox"] for i, w in enumerate(original) if i not in excluded]
+        assert score_geometry(None, gt).as_metrics()["geometry_reference_repairs"] == repair
+        assert address not in [w["text"] for w in original]
+    assert len(receipts["sroie_002"].word_boxes) == 53
+    assert len(receipts["sroie_003"].word_boxes) == 35
+    assert [w["text"] for w in receipts["sroie_003"].word_boxes].count("TOTAL QTY :") == 1
+    assert "INCLUSLVE" not in receipts["sroie_002"].plain_text
+    assert receipts["sroie_000"].true_json["items"][0]["description"] == "KINGS SAFETY SHOES KWD B05"
+    # The receipt with uncertain registration digits is not silently edited.
+    assert "text_reference_repairs" not in receipts["sroie_001"].metadata
+
+
+def test_receipt_repair_rejects_changed_annotation():
+    import copy
+
+    gt = copy.deepcopy(next(g for g in CORPUS if Path(g.document_path).stem == "sroie_004"))
+    gt.plain_text = "a replacement reference that needs a fresh review"
+    with pytest.raises(ValueError, match="reference changed"):
+        GroundTruthLoader._repair_receipt_references(Path(gt.document_path), gt)

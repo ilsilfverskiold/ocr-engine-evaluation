@@ -558,7 +558,9 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         if blocks is not None:
             if not gt.has_gt_for("geometry"):
                 return score_geometry(None, gt)
-            return score_blocks(blocks, gt.word_boxes, gt.word_boxes_granularity)
+            result = score_blocks(blocks, gt.word_boxes, gt.word_boxes_granularity)
+            result.reference_repairs = gt.metadata.get("geometry_reference_repairs", {})
+            return result
         if engine == "marker":
             # marker's regions are lines/spans; the run left HTML tags in
             # their text (<h2>…</h2>, <table>…), which broke text matching.

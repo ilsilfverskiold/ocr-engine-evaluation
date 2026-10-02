@@ -61,6 +61,7 @@ class GeometryScore:
     matches: list[dict[str, Any]] = field(default_factory=list)
     parsed_boxes: list[dict[str, Any]] = field(default_factory=list)
     scored_boxes: list[dict[str, Any]] = field(default_factory=list)
+    reference_repairs: dict[str, Any] = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -83,6 +84,7 @@ class GeometryScore:
             "geometry_parse_ok": self.parse_ok,
             "geometry_rescaled_from_thousand": self.rescaled_from_thousand,
             "geometry_axes_swapped": self.axes_swapped,
+            "geometry_reference_repairs": self.reference_repairs,
         }
 
     def as_detail(self) -> dict[str, Any]:
@@ -316,6 +318,7 @@ def score_geometry(
             predicted_words=0,
             matched_words=0,
             parse_ok=False,
+            reference_repairs=gt.metadata.get("geometry_reference_repairs", {}) if gt else {},
         )
     parsed_boxes = pred_words
 
@@ -393,6 +396,7 @@ def score_geometry(
         line_score=line_score,
         reference_lines=line_n,
         worst_matches=sorted(matches, key=lambda m: (m["hit"], m["iou"]))[:25],
+        reference_repairs=gt.metadata.get("geometry_reference_repairs", {}) if gt else {},
     )
 
 

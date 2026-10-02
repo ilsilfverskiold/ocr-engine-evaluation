@@ -33,6 +33,11 @@ publish, or it does not compete in that leg. Both are honest results.
 > unreadable description fields from schema exact matching before sampling,
 > while keeping readable prefixes in the text/table targets. The replacement
 > references are labeled model-reviewed, not independently human-annotated.
+> Receipt-reference-v1 restores verified address omissions in five text and
+> line-box references, preserving retained coordinates. It removes one exact
+> duplicate box, excludes one faded line with an unreadable suffix and corrects
+> one structured B05/805 transcription. Per-result metadata records scope and
+> exclusions; these partial model-reviewed repairs do not certify other text.
 > `--skip-judge` keeps all six legs and disables new silver-document judge
 > calls. The rescore copies 110 old document-judge rows unchanged.
 >

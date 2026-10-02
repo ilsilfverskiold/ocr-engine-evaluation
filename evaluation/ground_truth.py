@@ -251,6 +251,8 @@ class GroundTruthLoader:
         """
         if doc_path.stem in {f"invoice_{i:03d}" for i in range(6)}:
             GroundTruthLoader._repair_invoice_text(doc_path, gt)
+        if doc_path.stem in {"sroie_000", "sroie_002", "sroie_003", "sroie_004", "sroie_005"}:
+            GroundTruthLoader._repair_receipt_references(doc_path, gt)
 
         source_urls = {
             "scanned_000": "http://industrydocuments.library.ucsf.edu/tobacco/docs/klpb0135",
@@ -375,6 +377,93 @@ class GroundTruthLoader:
                 "excluded_fields": excluded,
                 "corrected_fields": corrected,
                 "reason": "description has unreadable replacement glyphs; full-string equality is unscorable, readable prefix remains in text/table targets",
+            }
+
+    @staticmethod
+    def _repair_receipt_references(doc_path: Path, gt: GroundTruth) -> None:
+        """Repair source-reviewed line text; preserve every retained box.
+
+        Five receipts omit readable address suffixes from both text and box
+        labels, even though the boxes cover the full printed lines. Changes
+        are annotation-specific, not matching tolerances or engine-derived GT.
+        """
+        import hashlib
+
+        hashes = {
+            "sroie_000": ("5fa0991b6cf06029849f4425da20f0d2f43b88ee79ca9e9ea9898347dfa0dd3f", "b435c6b9d591a788f046b5638ba33d66d6201eb27efc9b0b7c405a70ca48687f"),
+            "sroie_002": ("3d46dfb1b59254d84be37dc9544d77f3b5343ec168315918e2da1cd441e84aa1", "6a0ec53db8da28b7be2fda908968285a26386f47228836ada723d65eee30842b"),
+            "sroie_003": ("bef038d75449e0281dfadd97bb9ca49fd4e341d3e0b494f70fee0c86d9e90dd8", "a22cec356e56d282f81e5379ece36ea21f9415dfedb83a8fbd5ffc62fe21be64"),
+            "sroie_004": ("3f33ed47a137f2a0f66ea44ec5b81e922f63f512734c84a40243470a4a6742ae", "074b9aa77adce47dcaf79cc000b7102037a9ada6fe1a408f8014dee15d009dc8"),
+            "sroie_005": ("e9cb29c80f7c421298453c8a686d6fe5af0ebb9b5ed4663ce4ded47ba315d118", "eb5acad17a78ded46906835fe8e728f98643d7de2487a592e77f5a7cc921190b"),
+        }
+        text_hash, box_hash = hashes[doc_path.stem]
+        if (hashlib.sha256(gt.plain_text.encode()).hexdigest() != text_hash or
+                hashlib.sha256(json.dumps(gt.word_boxes, sort_keys=True).encode()).hexdigest() != box_hash):
+            raise ValueError(f"{doc_path.stem} reference changed; review its receipt repair")
+        replacements = {
+            "sroie_000": [
+                ("NO 2 & 4 BANDAR SERI ALAM 81750 MASAI", "NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR"),
+            ],
+            "sroie_002": [
+                ("LOT 13 SIN LIANHAP SDN BHD LOT 13 KG BATU 30 44300 BTG KALI",
+                 "LOT 13, JALAN SIN LIANHAP SDN BHD LOT 13, JALAN IPOH, KG BATU 30, ULU YAM LAMA 44300 BTG KALI, SELANGOR."),
+                ("INVOLCE", "INVOICE"), ("INCLUSLVE", "INCLUSIVE"), ("AMONUT", "AMOUNT"),
+            ],
+            "sroie_003": [
+                ("NO. 5-7 SEKYSEN 4 BATANG KALI", "NO. 5-7, JALAN MAHAGONI 7/1, SEKYSEN 4, BANDAR UTAMA, 44300 BATANG KALI, SELANGOR."),
+                ("8.00 TOTAL QTY : TOTAL AMOUNT", "8.00 TOTAL AMOUNT"),
+            ],
+            "sroie_004": [("BATU 3 51200", "BATU 3, JALAN IPOH 51200")],
+            "sroie_005": [("22A-1 SECTION 17 46400 PETALING JAYA", "22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA,")],
+        }[doc_path.stem]
+        for old, new in replacements:
+            if gt.plain_text.count(old) != 1:
+                raise ValueError(f"Reviewed receipt text missing or ambiguous: {old}")
+            gt.plain_text = gt.plain_text.replace(old, new, 1)
+        # Indexes refer to the preserved original sidecar, before exclusions.
+        labels = {
+            "sroie_000": {4: "NO 2 & 4, JALAN BAYU 4,", 5: "BANDAR SERI ALAM,", 6: "81750 MASAI, JOHOR"},
+            "sroie_002": {3: "LOT 13, JALAN IPOH,", 4: "KG BATU 30, ULU YAM LAMA", 5: "44300 BTG KALI, SELANGOR.",
+                          11: "INVOICE NO.:", 33: "TOTAL SALES INCLUSIVE OF GST:", 44: "AMOUNT"},
+            "sroie_003": {2: "NO. 5-7, JALAN MAHAGONI 7/1,", 3: "SEKYSEN 4, BANDAR UTAMA, 44300", 4: "BATANG KALI, SELANGOR."},
+            "sroie_004": {4: "BATU 3, JALAN IPOH"},
+            "sroie_005": {1: "22A-1, JALAN 17/54,", 2: "SECTION 17,", 3: "46400 PETALING JAYA,"},
+        }[doc_path.stem]
+        changes = []
+        for index, new in labels.items():
+            word = gt.word_boxes[index]
+            changes.append({"source_index": index, "old": word["text"], "new": new})
+            word["text"] = new
+        excluded = {}
+        if doc_path.stem == "sroie_002":
+            excluded[1] = "faded first address line has an unreadable suffix; readable prefix retained in text only"
+        elif doc_path.stem == "sroie_003":
+            if gt.word_boxes[20] != gt.word_boxes[15]:
+                raise ValueError("Reviewed duplicate TOTAL QTY box changed")
+            excluded[20] = "duplicate TOTAL QTY annotation: same text and box as source index 15, one printed occurrence"
+        excluded_boxes = [{"source_index": i, **gt.word_boxes[i], "reason": reason}
+                          for i, reason in excluded.items()]
+        gt.word_boxes = [word for i, word in enumerate(gt.word_boxes) if i not in excluded]
+        gt.metadata["text_reference_repairs"] = {
+            "version": "receipt-reference-v1 (2026-10-02)", "original_sha256": text_hash,
+            "method": "source-image review of specified address omissions, label typos and duplicate annotation; remaining transcription not certified",
+            "replacements": [{"old": old, "new": new} for old, new in replacements],
+            "excluded_unreadable_spans": (["sroie_002 first faded address suffix"] if doc_path.stem == "sroie_002" else []),
+        }
+        gt.metadata["geometry_reference_repairs"] = {
+            "version": "receipt-reference-v1 (2026-10-02)", "original_boxes_sha256": box_hash,
+            "text_changes": changes, "excluded_boxes": excluded_boxes,
+            "retained_coordinates_unchanged": True,
+        }
+        if doc_path.stem == "sroie_000":
+            old = "KINGS SAFETY SHOES KWD 805"
+            if gt.true_json["items"][0]["description"] != old:
+                raise ValueError("Reviewed receipt shoe description changed")
+            gt.true_json["items"][0]["description"] = "KINGS SAFETY SHOES KWD B05"
+            gt.metadata["structured_reference_repairs"] = {
+                "version": "receipt-reference-v1 (2026-10-02)",
+                "corrected_fields": ["items[0].description"],
+                "reason": "source prints B05; structured reference used 805; text and table references already use B05",
             }
 
     def _attach_geometry(self, doc_path: Path, gt: GroundTruth) -> None:

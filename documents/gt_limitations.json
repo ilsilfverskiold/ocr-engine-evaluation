@@ -44,14 +44,19 @@
         "invoice_002",
         "invoice_003",
         "invoice_004",
-        "invoice_005"
+        "invoice_005",
+        "sroie_000",
+        "sroie_002",
+        "sroie_003",
+        "sroie_004",
+        "sroie_005"
       ],
       "legs": [
         "text"
       ],
       "severity": "noted",
-      "summary": "Fourteen pages use model-transcribed or model-reviewed replacement text references. Eight have historical engine-consensus checks. Six invoice references were rechecked against their source images on 2026-10-02 after the old annotations were found to contain phantom punctuation/numbers and transcription errors.",
-      "effect": "These are not independent human annotations. Invoice corrections are based on source-image inspection, not a new engine-consensus check. They are labeled model_verified for disclosure; the label is not proof that every character is correct. See documents/gt_provenance.json and per-result reference repair metadata."
+      "summary": "Nineteen pages have model-transcribed, model-reviewed or partially repaired text references. Eight have historical engine-consensus checks. Six invoice references were rechecked against their images, and five receipts have targeted source-image-reviewed corrections to address omissions, label typos and a duplicated annotation.",
+      "effect": "These are not independent human annotations. Invoice and receipt corrections are based on source-image inspection, not new engine-consensus checks. The model_verified category discloses this provenance and does not certify every character. Receipt repairs are partial: remaining tokenization, handwriting and ambiguous characters need separate review. See documents/gt_provenance.json and per-result repair metadata."
     },
     {
       "id": "model-annotated-schema-fields",
@@ -190,6 +195,24 @@
       "severity": "weakens",
       "summary": "Invoice_004 item 3 and invoice_005 item 1 end in replacement glyphs whose underlying characters cannot be recovered from the shipped image. Earlier references guessed zeros/O characters or arrows.",
       "effect": "Score the readable prefixes in text, Markdown and tables. Exclude the two complete description fields from schema exact-value scoring, before sampling; other fields remain scored. Invoice_005 item 5 has a separate verified slash correction. All engines receive the same reference treatment, with exclusions recorded in structured_reference_repairs."
+    },
+    {
+      "id": "receipt-partial-reference-review",
+      "documents": [
+        "sroie_000",
+        "sroie_002",
+        "sroie_003",
+        "sroie_004",
+        "sroie_005"
+      ],
+      "legs": [
+        "text",
+        "geometry",
+        "schema"
+      ],
+      "severity": "weakens",
+      "summary": "Five SROIE references required readable address suffixes missing from both text and line-box labels. Targeted repairs preserve original sidecars and every retained coordinate. Other receipt content has not been independently reannotated.",
+      "effect": "sroie_002 first faded address line has an unreadable suffix: readable prefix remains in text; its full-line box is excluded from geometry. sroie_003 duplicated TOTAL QTY box is counted once. sroie_000 structured shoe code is B05, as printed, not 805. The repairs do not settle punctuation/spacing sensitivity, handwriting omissions, ambiguous registration digits or the sroie_003 multi-line item schema."
     }
   ]
 }
