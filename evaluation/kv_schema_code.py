@@ -80,7 +80,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-SCORER_VERSION = "kv-schema-code-v5 (2026-10-02)"
+SCORER_VERSION = "kv-schema-code-v6 (2026-10-02)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -406,7 +406,7 @@ def as_number(s: Any):
 
 def as_date(s: Any):
     t = " ".join(str(s).strip().split())
-    for f in ("%d/%m/%Y", "%m/%d/%Y", "%Y-%m-%d", "%d-%m-%Y", "%d %b %Y", "%d %B %Y", "%b %d, %Y", "%B %d, %Y", "%d/%m/%y"):
+    for f in ("%d/%m/%Y", "%m/%d/%Y", "%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%d %b %Y", "%d %B %Y", "%b %d, %Y", "%B %d, %Y", "%d/%m/%y"):
         try:
             return datetime.strptime(t, f).date()
         except Exception:
@@ -450,11 +450,19 @@ def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_
         if have is None and want and names and any(label_eq(got, n) for n in names):
             have = True          # "Insulin": "Insulin" — the checked item named as its own value
         return have is not None and have == want
-    if shared_label:
+    a, b = as_number(expected), as_number(got)
+    if shared_label and a is None:
         te, tg = norm_str(expected).split(), norm_str(got).split()
         if te and len(tg) > len(te) and any(tg[i:i + len(te)] == te for i in range(len(tg) - len(te) + 1)):
             return True
-    a, b = as_number(expected), as_number(got)
+    # A printed count may include its unit. Restrict this to count fields;
+    # neither amounts nor arbitrary prose can borrow a matching number.
+    count_names = {"quantity", "qty", "total items", "item count", "number of items",
+                   "total quantity", "item qty", "item quantity", "count"}
+    if a is not None and b is None and any(norm_label(n) in count_names for n in names or []):
+        match = re.fullmatch(r"\s*([-+]?\d[\d., ]*)\s+units?\s*", str(got), re.I)
+        if match:
+            b = as_number(match.group(1))
     if a is not None and b is not None:
         return abs(a - b) < 1e-9
     da, db = as_date(expected), as_date(got)

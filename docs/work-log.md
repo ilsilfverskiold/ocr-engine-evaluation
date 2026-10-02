@@ -518,3 +518,22 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   permutations, preventing box reuse, and complete coordinate evidence.
   The preceding table/contract change passed the full 216-test suite.
   No inference, provider, Modal or judge calls and no report publication.
+
+## 2026-10-02 — strict amounts and field-scoped units
+
+- Table code-v5 no longer strips arbitrary OCR letters from amounts: 17.5C
+  cannot receive full credit for 17.50. It retains numeric formatting
+  normalization, accounting negatives, RM prefixes, escaped Markdown
+  currency and math-wrapped minus signs. Checking the initial replay caught
+  and repaired a currency-escape regression before committing it.
+- Field scorer v6 accepts `35 Units` only for count/quantity fields, handles
+  unambiguous month-first hyphenated dates, and prevents shared-label rules
+  from borrowing a numeric substring. Ambiguous day/month dates still need
+  a documented reference convention; no locale was inferred from answers.
+- Replayed all 675 field rows against v5 on identical repaired references:
+  six scores and eight verdicts change, all false negatives. Gemini and
+  Textract photo_001 gain their correctly returned quantity; the remaining
+  changes recognize dates in saved Mistral/GLM schema answers.
+- Validation: 222 full-suite tests passed (103.74 seconds), plus 27 table
+  tests after the currency-escape adjustment. No raw result, reference cache
+  or call file was rewritten. No inference/provider/Modal/judge calls.

@@ -69,7 +69,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
-SCORER_VERSION = "code-v4 (2026-10-02)"
+SCORER_VERSION = "code-v5 (2026-10-02)"
 # The three markdown policy choices of the 2026-10-01 audit. Each is one
 # switch; the owner can turn any of them off and rescore (free).
 MARKDOWN_POLICY = {
@@ -528,23 +528,25 @@ def tnorm(s: Any) -> str:
 
 
 def _num(s: Any):
+    from evaluation.structured_metrics import as_number
     t = unicodedata.normalize("NFKC", str(s or "")).strip()
-    neg = t.startswith("(") and t.endswith(")")
-    t = re.sub(r"[^0-9.\-]", "", t.replace(",", ""))
-    if not t or t in ("-", ".", "-."):
+    # Markdown currency escapes and a math-wrapped minus are presentation.
+    t = re.sub(r"\\+(?=[$€£])", "", t)
+    t = re.sub(r"^\$\s*-\s*\$\s*", "-", t)
+    t = re.sub(r"^RM\s*(?=[-+]?\d)", "", t, flags=re.I)
+    # A date such as 31.7.17 is not a thousands-separated number.
+    if t.count(".") > 1 and not re.fullmatch(r"[-+]?\d{1,3}(?:\.\d{3})+(?:,\d+)?", t):
         return None
-    try:
-        v = float(t)
-    except ValueError:
-        return None
-    return -v if neg else v
+    return as_number(t)
 
 
 def cell_eq(value: Any, cell: Any) -> bool:
     a, b = _num(value), _num(cell)
     nv, nc = tnorm(value), tnorm(cell)
-    if a is not None and b is not None and nv and nc:
-        return abs(a - b) < 1e-9 and (nv == nc or len(nc) <= len(nv) + 2)
+    if a is not None or b is not None:
+        # Never erase an OCR letter in an amount, then fall through to the
+        # string-containment rule: 17.5C is not the numeric value 17.50.
+        return a is not None and b is not None and abs(a - b) < 1e-9
     if not nv:
         return False
     if nv == nc:

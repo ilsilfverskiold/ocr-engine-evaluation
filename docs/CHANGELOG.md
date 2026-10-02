@@ -6,6 +6,10 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Table code-v5 distinguishes malformed OCR amounts from valid currency
+  formatting. Field v6 adds quantity-scoped Units and unambiguous US date
+  formatting, while disallowing numeric shared-label substring credit.
+
 - Geometry-v2 assigns repeated words globally, preventing an early missing
   occurrence from consuming a later correct box. All 145 saved rows replayed;
   27 improve. Future details retain every scored reference/prediction box.

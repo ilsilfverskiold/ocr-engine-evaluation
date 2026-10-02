@@ -427,6 +427,20 @@ def test_norm_label_splits_camel_case():
     assert norm_label("standardDeductions.spouseIsDependent") == "standard deductions spouse is dependent"
 
 
+def test_count_units_are_field_scoped_and_do_not_enable_numeric_substrings():
+    assert value_equal("35", "35 Units", names=["total_items", "QUANTITY"])
+    assert not value_equal("35", "350 Units", names=["QUANTITY"])
+    assert not value_equal("35", "35 Units", names=["amount"])
+    assert not value_equal("100", "100 900", shared_label=True)
+    assert not value_equal("100", "subtotal 100 total 900", shared_label=True)
+    assert not value_equal("12.34", "1234", shared_label=True)
+
+
+def test_unambiguous_month_first_hyphenated_date_is_recognized():
+    assert value_equal("03-18-1981", "1981-03-18")
+    assert not value_equal("03-18-1981", "1981-03-19")
+
+
 def test_schema_primitive_array_positions_cannot_borrow_other_columns():
     for prefix in ("columns", "rows[0].values"):
         result = score_fields(

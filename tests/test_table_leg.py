@@ -213,6 +213,18 @@ def test_text_cell_tolerates_one_ocr_error_but_numbers_do_not():
     assert not cell_eq("7725716318", "7725716118")
 
 
+def test_amounts_do_not_discard_ocr_letters_or_other_cell_content():
+    assert not cell_eq("17.50", "17.5C")
+    assert not cell_eq("193.00", "193.00 SR")
+    assert not cell_eq("12.34", "1234")
+    assert cell_eq("$1,234.50", "1.234,50")
+    assert cell_eq("(263)", "-263")
+    assert cell_eq("408.45", "RM408.45")
+    assert cell_eq("$417,390.00", r"\$417,390.00")
+    assert cell_eq("-$212,041.40", r"$-$ \\$212,041.40")
+    assert not cell_eq("31.7.17", "31717")
+
+
 def test_inside_cell_is_token_based():
     assert _inside_cell("(263)", "(784) (263)")
     assert _inside_cell("30.04", "29.37 34.85 30.04")
