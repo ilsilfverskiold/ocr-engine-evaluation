@@ -380,28 +380,22 @@ ENGINES: dict[str, EngineSpec] = {
         # ineligible although every JSON block carries a polygon.
         native_legs=(),
         prompted_legs=("text", "markdown", "tables", "geometry"),
-        # markdown and geometry share one pass: build_document() runs the
-        # pipeline once and markdown/JSON are two renderings of that result.
+        # Text and markdown share the document converter; geometry uses the
+        # separate OCR converter. These are converter selectors, not prompts.
         non_json_legs=("text", "markdown", "tables", "geometry"),
         leg_notes="structured extraction excluded: Marker's ExtractionConverter "
                   "requires an external LLM, which would make this a hybrid engine",
         table_format="markdown",
         leg_prompts={
             # Sentinels selecting a converter — see modal_apps/marker_app.py.
-            # text shares the document pass with markdown: OCRConverter was the
-            # right idea (dedicated OCR mode) but its OCRJSONRenderer tree has a
-            # different schema from PdfConverter's block tree, and
-            # _block_geometry() finds only a "Page" node with text=None —
-            # yielding near-empty output. The baseline scored text=0.851 from
-            # PdfConverter markdown; the text scorer strips formatting during
-            # normalisation, so the result is the same.
+            # Preserve the measured text/document route. The 2026-10-02
+            # pinned-source audit found the walker handles OCRJSONRenderer's
+            # children correctly; sparse output needs a pipeline probe, not
+            # an assumed tree-parser fix. See the handoff.
             "text": "__marker_pdf_converter__",
             "markdown": "__marker_pdf_converter__",
-            # geometry rides the OCR pass: OCRConverter DOES return per-line
-            # polygons, but its tree parser is broken (see above), so geometry
-            # also gets near-empty output. Left in place so the leg is tested
-            # rather than silently dropped — a fix to the tree walker would
-            # unblock both.
+            # Native OCR line polygons are the geometry evidence. The
+            # explicit all-blocks probe is not silently selected here.
             "geometry": "__marker_ocr_converter__",
             "tables": "__marker_table_converter__",
         },

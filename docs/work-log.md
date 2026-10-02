@@ -685,3 +685,20 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   read-only corpus loading and the full reference self-consistency suite.
   No inference, provider, judge, Modal or GitHub calls. Evidence stays in
   session scratch; archived results remain untouched.
+
+## 2026-10-02 — prepare the geometry cause comparison before paid approval
+
+- Current Anthropic guidance explicitly recommends pixel coordinates rather
+  than the normalized coordinates we requested. Documented that prompt
+  mismatch without claiming it alone explains every historical zero.
+  Checked provider image-frame limits and Google's y/x/1000 convention.
+- Prepared 21 precisely specified Claude/Gemini geometry calls on the same
+  three pages, varying output cap, image frame and prompt separately. Exact
+  expanded requests, prepared images and hashed executor are in session
+  scratch; the full plan/prompts/cost are in the existing handoff.
+- Planning reserve $2.0414; proposed allowance $3. No retries, judges,
+  Modal deployments, model upgrades or per-page best-variant selection.
+  Mocked all 21 payloads, persistence, both token-usage formats and budget/
+  error guards. No API clients constructed or provider requests made.
+- Corrected stale registry comments that still blamed Marker's tree parser,
+  contradicting the pinned-source audit. No routing or prompt change.
