@@ -252,6 +252,7 @@ def _extract_box(item: dict) -> BBox | None:
 def score_geometry(
     predicted: Any, gt: GroundTruth | None = None, reference: Any = None,
     granularity: str | None = None, *, infer_axis_order: bool = False,
+    infer_scale: bool = True,
 ) -> GeometryScore:
     """(engine output, ground truth) -> GeometryScore.
 
@@ -262,6 +263,8 @@ def score_geometry(
     Known native xyxy outputs are never axis-swapped by their shape. The
     legacy Gemini generic-box dialect may explicitly opt into the recorded
     axis heuristic; key-specific box_2d decoding happens during parsing.
+    Set infer_scale=False after an explicitly declared coordinate transform;
+    out-of-frame predictions must not trigger a second guessed rescaling.
     """
     if reference is None:
         if gt is None or not gt.has_gt_for("geometry"):
@@ -298,13 +301,13 @@ def score_geometry(
         )
     parsed_boxes = pred_words
 
-    # The ask says 0-1, but grounding-trained VLMs (qwen, gemini) often emit
-    # their native 0-1000 convention regardless. A valid 0-1 box cannot exceed
-    # 1, so the conventions are unambiguous — rescale rather than score every
-    # box as misplaced, and flag it so the report can say so.
+    # Legacy prompt outputs can ignore the requested 0-1 convention. Retain
+    # their recorded scale heuristic by default. This is not unambiguous:
+    # malformed normalized boxes can also exceed one. Declared-coordinate
+    # callers disable this heuristic and retain out-of-frame predictions.
     rescaled = False
     max_coord = max((abs(c) for w in pred_words for c in w["bbox"]), default=0.0)
-    if 1.5 < max_coord <= 1000.0:
+    if infer_scale and 1.5 < max_coord <= 1000.0:
         pred_words = [{**w, "bbox": tuple(c / 1000.0 for c in w["bbox"])}
                       for w in pred_words]
         rescaled = True

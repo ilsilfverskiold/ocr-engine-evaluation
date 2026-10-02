@@ -719,3 +719,14 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   cases and declared-frame geometry tests in the working tree. No judge or
   field inference calls. The separately approved geometry probe was running
   during this work; its calls/costs are logged separately.
+
+## 2026-10-02 — keep explicit geometry frames explicit
+
+- Add infer_scale=False for callers that already converted an explicitly
+  declared pixel or 0–1000 frame. A single off-page prediction must not cause
+  all returned boxes to be divided by 1000 again. Keep legacy default scoring
+  unchanged and retain outliers in the evidence.
+- Regression covers three valid boxes plus an outlier; 33 geometry tests and
+  all 244 offline tests pass. The approved probe uses the explicit conversion
+  for its pixel/yx1000 variants and records legacy heuristics for controls.
+  No historical headline change is attributed to this option.

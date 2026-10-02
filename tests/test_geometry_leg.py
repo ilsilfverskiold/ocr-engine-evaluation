@@ -234,6 +234,16 @@ def test_thousand_scale_output_is_rescaled_not_zeroed():
     assert score_geometry(REFERENCE, reference=REFERENCE).rescaled_from_thousand is False
 
 
+def test_declared_normalized_frame_keeps_outliers_without_guessing_a_new_scale():
+    # A declared pixel response has already been divided by its sent image
+    # dimensions. An off-page box must not shrink every valid box a second time.
+    outlier = {"text": "outside", "bbox": [2, 2, 3, 3]}
+    result = score_geometry(REFERENCE + [outlier], reference=REFERENCE, infer_scale=False)
+    assert result.score == 1.0
+    assert not result.rescaled_from_thousand
+    assert list(result.scored_boxes[-1]["bbox"]) == outlier["bbox"]
+
+
 def test_corpus_documents_are_not_applicable_for_this_leg():
     gt = GroundTruth(
         document_path="documents/easy/receipt/sroie_000.jpg",

@@ -6,6 +6,10 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Geometry scoring accepts explicitly converted coordinate frames without
+  applying a second scale heuristic; out-of-frame boxes remain evidence.
+  Existing legacy-call behavior is unchanged.
+
 - Field scorer v8 preserves numeric signs and exact precision; malformed
   decimal punctuation cannot fall through to punctuation-stripped equality.
   Preserve legitimate identifier/count/printed-amount formatting. Isolated
