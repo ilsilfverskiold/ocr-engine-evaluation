@@ -80,7 +80,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-SCORER_VERSION = "kv-schema-code-v6 (2026-10-02)"
+SCORER_VERSION = "kv-schema-code-v7 (2026-10-02)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -93,7 +93,18 @@ def load_aliases(document_stem: str, model: str = ALIAS_MODEL) -> dict | None:
         return None
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        return data.get("by_path") or None
+        aliases = data.get("by_path") or None
+        # Source-image review of the five California leases: a blank is
+        # labeled both by its preceding clause and by its trailing unit.
+        # Keep the original cache and both conventions used by native APIs.
+        if aliases and document_stem in {f"lease_{i:03d}" for i in range(5)}:
+            for path, unit in (("lease.years", "year(s)"), ("lease.months", "month(s)")):
+                if path in aliases:
+                    labels = aliases[path].setdefault("printed_labels", [])
+                    if unit not in labels:
+                        labels.append(unit)
+                    aliases[path]["review"] = "lease-unit-labels-v1 (2026-10-02)"
+        return aliases
     except Exception:
         return None
 
@@ -678,13 +689,11 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
         # reference row
         cands = [(k, v) for k, v in pairs if key_matches(k, names)
                  and not (rk and _row_split(k)[0] in claimed)]
-        if leg == "schema":
-            # If the requested path exists, score its value. Falling back
-            # to a sibling's identical leaf name can credit the wrong line
-            # (income.line3.b borrowing income.line1.b, for example).
-            exact = [(k, v) for k, v in cands if k == it.path]
-            if exact:
-                cands = exact
+        # An explicitly named path outranks generic printed-label matches
+        # in either field leg. A wrong total cannot borrow another amount.
+        exact = [(k, v) for k, v in cands if k == it.path]
+        if exact:
+            cands = exact
         if it.is_blank:
             # A semantic field name beats an ambiguous printed label. The
             # spouse's explicitly filled "Last name (spouse)" cannot borrow
@@ -695,6 +704,24 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
             specific = [(k, v) for k, v in cands if key_names(k, field_names)]
             if specific:
                 cands = specific
+            elif leg == "key_value":
+                # A generic repeated unit label may describe the filled
+                # initial term, not the separate blank renewal term. Only
+                # discard it when another field explains the exact value;
+                # an explicit renewal field remains attributable and fails.
+                kept = []
+                for k, v in cands:
+                    explained = [other.path for j, other in enumerate(items)
+                                 if j != i and not other.is_blank and
+                                 any(label_eq(k, label) for label in
+                                     (aliases or {}).get(other.path, {}).get("printed_labels", [])) and
+                                 value_equal(other.value, v, all_names[j])]
+                    if not is_blank_value(v) and explained:
+                        clog.append(f"{it.path}: ambiguous label {k!r} with value {v!r} "
+                                    f"is explained by filled field(s) {explained}; not attributed to this blank")
+                    else:
+                        kept.append((k, v))
+                cands = kept
         if it.is_blank and cands and not any(is_blank_value(v) for _, v in cands):
             # every matching pair holds a value: an invention only when one of
             # them NAMES the field. A key that merely contains the label

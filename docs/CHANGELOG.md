@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Field v7 accepts source-verified trailing lease unit labels, preserves
+  explicit field attribution, and avoids assigning an initial-term value
+  to an ambiguous blank renewal field. Isolated replay changes 11 of 675
+  field scores across four engines; historical scores remain untouched.
+
 - Textract's adapter now reads native MERGED_CELL relationships and retains
   elementary cells alongside merged groups. Stored calls are readapted from
   provider blocks. Nine of 97 table/KV scores improve in an isolated replay;

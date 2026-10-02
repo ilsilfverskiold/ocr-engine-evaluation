@@ -561,3 +561,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 224 full-suite tests passed before the representation-preserving
   adjustment; 90 table/field regressions and all 97 replay cases passed after
   it. Original source calls remain unchanged. No report release or push.
+
+## 2026-10-02 — lease label audit
+
+- Inspected all five source-page term sections. The cached labels described
+  the preceding clause but omitted trailing year(s)/month(s) labels used by
+  the returned native and prompted field pairs. Add these at read time,
+  recording lease-unit-labels-v1, without overwriting model caches.
+- Exact returned field paths now take precedence in KV as well as schema.
+  A repeated unit label explained by a filled reference field is not also
+  attributed to an ambiguous blank field. Explicit renewal values remain
+  inventions; unrelated semantic fields cannot excuse them.
+- Replayed all 675 field results against the previous implementation with
+  identical references and adapters. Eleven scores and 14 verdicts change:
+  Textract (three scores), Gemini (five), Claude (two), Qwen (one). Inspected
+  the changed keys/values. Repeated-label attribution remains ambiguous when
+  the output provides no positional or semantic distinction.
+- Validation: all 226 offline tests passed (103.86 seconds). No provider,
+  inference, Modal, alias or judge calls. No new final report or push.

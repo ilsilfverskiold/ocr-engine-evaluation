@@ -441,6 +441,28 @@ def test_unambiguous_month_first_hyphenated_date_is_recognized():
     assert not value_equal("03-18-1981", "1981-03-19")
 
 
+def test_lease_units_label_filled_term_without_inventing_renewal_values():
+    from evaluation.kv_schema_code import load_aliases
+    aliases = load_aliases("lease_004")
+    assert "year(s)" in aliases["lease.years"]["printed_labels"]
+    assert "month(s)" in aliases["lease.months"]["printed_labels"]
+    items = _items(("lease.years", "3"), ("lease.months", "10"),
+                   ("optionsToRenew.renewalMonths", ""))
+    result = score_fields(items, [["year(s)", "3"], ["month(s)", "10"]], "key_value", aliases)
+    assert [v.verdict for v in result.verdicts] == ["correct", "correct", "blank_ok"]
+    assert any("ambiguous label" in line for line in result.cleanup_log)
+    explicit = score_fields(items, [["year(s)", "3"], ["month(s)", "10"],
+                                    ["optionsToRenew.renewalMonths", "3"]], "key_value", aliases)
+    assert explicit.verdicts[-1].verdict == "invented"
+
+
+def test_key_value_exact_path_cannot_borrow_correct_generic_label():
+    items = _items(("totals.total", "100"))
+    aliases = {"totals.total": {"printed_labels": ["Total"], "is_printed_pair": True}}
+    result = score_fields(items, [["totals.total", "900"], ["Total", "100"]], "key_value", aliases)
+    assert result.verdicts[0].verdict == "wrong"
+
+
 def test_schema_primitive_array_positions_cannot_borrow_other_columns():
     for prefix in ("columns", "rows[0].values"):
         result = score_fields(
