@@ -54,6 +54,7 @@ class TextScore:
     gt_words: int = 0
     output_words: int = 0
     missed_words: list[str] = field(default_factory=list)
+    reference_repairs: dict[str, Any] = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -72,6 +73,7 @@ class TextScore:
             "repetition_suspected": self.repetition_suspected,
             "gt_words": self.gt_words,
             "output_words": self.output_words,
+            "text_reference_repairs": self.reference_repairs,
         }
 
     def as_detail(self) -> dict[str, Any]:
@@ -111,4 +113,5 @@ def score_text(output_text: str, gt: GroundTruth) -> TextScore:
         gt_words=len(ref_words),
         output_words=len(hyp_words),
         missed_words=missed,
+        reference_repairs=gt.metadata.get("text_reference_repairs", {}),
     )

@@ -74,7 +74,7 @@
       ],
       "severity": "noted",
       "summary": "Source datasets ship schemas scoped to the task they were built for, not to extraction — SROIE provides four fields where its receipts carry roughly twenty-five extractable values. These 17 documents were re-annotated from the images so the leg can actually distinguish engines.",
-      "effect": "Most fields here are model-annotated rather than dataset-annotated; each file's field_provenance records which is which. Every value was corroborated against 14 engine outputs, and two were corrected on human review. Some values are deliberately hard: sroie_002 carries a red rubber PAID stamp that no engine reads and a human confirmed on the image."
+      "effect": "Most fields here are model-annotated rather than dataset-annotated; each file records field provenance. Historical corroboration is not a complete source-image validation: the 2026-10-02 audit found chart_003 quantitative series were copied from approximate and visibly incorrect source annotations. Those branches are now excluded at load time for every engine; printed axes, legends and titles remain. Other reference-review candidates are tracked in docs/handoff-2026-10-01.md. The sroie_002 PAID stamp was separately confirmed by a human."
     },
     {
       "id": "schema-shape-differs-by-document-type",
@@ -155,6 +155,19 @@
       "severity": "noted",
       "summary": "Table references for these 5 documents had been generated from schema field names rather than the columns printed on the page, and have been removed rather than left in place — a wrong reference scores worse than none.",
       "effect": "chart_002 and chart_004 print charts, not tables, so no table reference is applicable and they are correctly out of the table leg. photo_001, photo_002 and photo_004 do have printed line-item tables; a reference transcribed from the page would restore them. The table leg now covers 40 documents."
+    },
+    {
+      "id": "reviewed-chart-numeric-series-excluded",
+      "documents": [
+        "chart_003"
+      ],
+      "legs": [
+        "text",
+        "schema"
+      ],
+      "severity": "noted",
+      "summary": "The chart has no printed bar-segment counts. Approximate data tables in the source transcription are not OCR text, and some counts disagree visibly with the bars.",
+      "effect": "The versioned loader uses source-verified printed chart text and excludes employmentLevelBreakdown, ageAndGenderBreakdown and workforceByGender from schema references and future request contracts. Figures, printed axes/legends, page/footer and the largest sector remain. Quantitative chart interpretation needs a separately verified reference and estimation tolerance. Archived sidecars and historical scores remain unchanged."
     }
   ]
 }

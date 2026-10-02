@@ -239,7 +239,81 @@ class GroundTruthLoader:
         self._attach_markdown(document_path, gt)
         self._attach_structured(document_path, gt)
         self._attach_geometry(document_path, gt)
+        self._apply_reviewed_reference_repairs(document_path, gt)
         return gt
+
+    @staticmethod
+    def _apply_reviewed_reference_repairs(doc_path: Path, gt: GroundTruth) -> None:
+        """Source-image-reviewed corrections; never rewrite historical sidecars.
+
+        These are page-specific annotation repairs, not permissive scoring
+        normalization. A website printed on another page must still be read.
+        """
+        source_urls = {
+            "scanned_000": "http://industrydocuments.library.ucsf.edu/tobacco/docs/klpb0135",
+            "scanned_001": "https://www.industrydocuments.ucsf.edu/docs/hqcx0242",
+            "scanned_002": "https://www.industrydocuments.ucsf.edu/docs/hlhj0239",
+            "scanned_003": "https://www.industrydocuments.ucsf.edu/docs/kykb0006",
+            "scanned_004": "https://www.industrydocuments.ucsf.edu/docs/fnpd0075",
+            "scanned_005": "https://www.industrydocuments.ucsf.edu/docs/ksdd0025",
+        }
+        if doc_path.stem in source_urls:
+            citation = "Source: " + source_urls[doc_path.stem]
+            if gt.plain_text.count(citation) == 1:
+                gt.plain_text = gt.plain_text.replace(citation, "").strip()
+                gt.metadata["text_reference_repairs"] = {
+                    "version": "printed-text-reference-v1 (2026-10-02)",
+                    "removed_unprinted_source_citation": citation,
+                }
+
+        if doc_path.stem != "chart_003":
+            return
+        import hashlib
+        expected_hash = "b5b334a63ed44de99dfc40b9c9354ef475d024a9bba7686e8446c4698a7e1e3e"
+        if hashlib.sha256(gt.plain_text.encode()).hexdigest() != expected_hash:
+            raise ValueError("chart_003 text reference changed; review its printed-text repair")
+        original = gt.plain_text
+        # Transcribed from the two charts' printed titles, ticks, categories
+        # and legends. There are no printed segment counts or table grids.
+        printed_charts = (
+            "Figure 20: Global Workforce by Employment Level\n\n"
+            "12,000 10,000 8,000 6,000 4,000 2,000 0\n"
+            "2020 2019 2018 2017\n"
+            "Executive & Senior Management\n"
+            "Management Professional Professional Support\n"
+            "Administration Operations\n\n"
+            "Figure 21: Global Workforce by Age and Gender\n\n"
+            "10,000 8,000 6,000 4,000 2,000 0\n"
+            "F M 2020 F M 2019 F M 2018 F M 2017\n"
+            "0–24 25–34 35–44 45–54 55–64 65+\n"
+            "F=Female M=Male\n\n"
+        )
+        gt.plain_text = printed_charts + original[original.index("Our COVID-19 Response"):]
+        if gt.markdown == original:
+            gt.markdown = gt.plain_text
+        gt.metadata["text_reference_repairs"] = {
+            "version": "printed-text-reference-v1 (2026-10-02)",
+            "original_sha256": expected_hash,
+            "replaced": "inferred chart data tables with source-verified printed chart text",
+        }
+        # The old annotation includes approximate/incorrect bar heights as
+        # exact answers (e.g. Operations=5,500, visibly near 6,500 in 2020).
+        # Even the rounded gender series has doubtful boundary values. Keep
+        # titles/axes/legends and the plainly largest category; exclude the
+        # quantitative series until separately annotated with a suitable
+        # chart-estimation tolerance. No guessed replacement counts or nulls.
+        excluded = ["employmentLevelBreakdown", "ageAndGenderBreakdown", "workforceByGender"]
+        if isinstance(gt.true_json, dict) and isinstance(gt.json_schema, dict):
+            for key in excluded:
+                gt.true_json.pop(key, None)
+                gt.json_schema.get("properties", {}).pop(key, None)
+            gt.json_schema["required"] = [
+                key for key in gt.json_schema.get("required", []) if key not in excluded]
+            gt.metadata["structured_reference_repairs"] = {
+                "version": "chart-reference-v1 (2026-10-02)",
+                "excluded_unverified_chart_series": excluded,
+                "reason": "bar estimates are not verified exact OCR values",
+            }
 
     def _attach_geometry(self, doc_path: Path, gt: GroundTruth) -> None:
         """Word boxes for the geometry leg, where a sidecar exists (17 docs).

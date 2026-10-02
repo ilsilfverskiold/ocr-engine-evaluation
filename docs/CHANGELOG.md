@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Source-image review corrects chart_003's text reference (inferred bar values
+  are not printed text) and excludes its unverified exact numeric series from
+  schema targets. Six scanned references no longer require unprinted source
+  citations. Isolated replay changes 98 text and seven schema scores; all 11
+  chart Markdown headlines stay unchanged. Historical sidecars stay intact.
+
 - Marker converters receive isolated configuration copies: OCRConverter's
   mutation can no longer leak into a later document/table call in a persistent
   worker. Preserve the full OCR renderer tree and exception traceback. An

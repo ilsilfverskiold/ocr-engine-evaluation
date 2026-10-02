@@ -15,8 +15,7 @@ publish, or it does not compete in that leg. Both are honest results.
 
 > **Saved scoring: 2026-10-02, run `20261002T095730Z` — under audit.**
 > The v4 scores are provisional. See the handoff for confirmed scorer and
-> schema/reference contract defects; current field code is v5, whose offline replay
-> changes 32 field scores. A replacement final run awaits task/reference
+> schema/reference contract defects. A replacement final run awaits task/reference
 > repairs and the necessary controlled inference checks. All six legs
 > use code for per-engine verdicts. `code-v3` handles Markdown and tables;
 > `kv-schema-code-v4` handles key-value and schema. Image checklists and
@@ -25,6 +24,10 @@ publish, or it does not compete in that leg. Both are honest results.
 > word assignment and explicit axis policy), and native Textract merged-cell reconstruction. The handoff
 > records isolated replay impacts; these diagnostics have not replaced the
 > archived run. Do not add their change counts: some affect the same rows.
+> Printed-text-reference-v1 removes six unprinted source citations and replaces
+> chart_003's inferred data tables with printed chart text. Chart-reference-v1
+> excludes unverified quantitative series from that page's schema targets.
+> The same corrections apply to every engine; raw annotations are preserved.
 > `--skip-judge` keeps all six legs and disables new silver-document judge
 > calls. The rescore copies 110 old document-judge rows unchanged.
 >

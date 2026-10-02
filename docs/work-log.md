@@ -663,3 +663,25 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: four mocked worker regressions cover control/probe, success/
   exception, nested config isolation and line/character separation. All 20
   prompt tests pass. No model import, inference, deployment, judge or push.
+
+## 2026-10-02 — source-page audit repairs printed text and chart references
+
+- Visually reviewed chart_003 and all six scanned_legacy source images.
+  Chart text GT contained estimated data tables absent from the image, and
+  the structured extension reused visibly questionable estimates as exact
+  headcounts. Replace the chart portion with printed titles/ticks/legends;
+  exclude the three unverified numeric-series branches from schema targets
+  and future requests. Preserve the original sidecars and request history.
+- Remove only the six reviewed Source: citations absent from scanned pages.
+  Printed FDA URLs and adjacent document IDs remain. Record the versioned
+  repairs in loader metadata and text/schema metrics; update corpus caveats
+  to stop claiming historical engine corroboration validated every value.
+- Same-code isolated replay: 98/98 affected text scores and 7/7 chart schema
+  scores change; 11/11 chart Markdown headlines are unchanged. Six schema
+  scores rise and LlamaExtract falls, confirming this shared GT defect can
+  alter engine comparisons. No combined final score release yet.
+- Validation: all 241 offline tests pass (157.09 seconds), including source
+  repair scope, retained genuine URLs/identifiers, request-schema targets,
+  read-only corpus loading and the full reference self-consistency suite.
+  No inference, provider, judge, Modal or GitHub calls. Evidence stays in
+  session scratch; archived results remain untouched.

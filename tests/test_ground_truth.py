@@ -120,3 +120,41 @@ def test_corpus_documents_are_never_mutated_by_loading():
     load_corpus()
     after = {p: p.stat().st_mtime_ns for p in DOCUMENTS_ROOT.rglob("*") if p.is_file()}
     assert before == after
+
+
+def test_reviewed_text_references_only_require_printed_content():
+    import json
+    from evaluation.text_leg import score_text
+
+    chart = next(g for g in CORPUS if Path(g.document_path).stem == "chart_003")
+    assert "5,500" not in chart.plain_text and "12,000" in chart.plain_text
+    assert "F=Female M=Male" in chart.plain_text and "0–24" in chart.plain_text
+    assert "Our COVID-19 Response" in chart.plain_text
+    assert "|" not in chart.plain_text.split("Our COVID-19 Response")[0]
+    assert chart.markdown == chart.plain_text
+    for key in ("employmentLevelBreakdown", "ageAndGenderBreakdown", "workforceByGender"):
+        assert key not in chart.true_json
+        assert key not in chart.inference_schema["properties"]
+        assert key not in chart.inference_schema["required"]
+    assert chart.true_json["topWorkforceSector"] == "Operations"
+    # The archived annotation and its estimated series are still available.
+    raw = json.loads(Path(chart.document_path).with_name("chart_003_structured_gt.json").read_text())
+    assert "employmentLevelBreakdown" in raw["true_json"]
+    for gt in CORPUS:
+        if Path(gt.document_path).stem.startswith("scanned_"):
+            assert "Source: " not in gt.plain_text
+            assert "removed_unprinted_source_citation" in score_text(gt.plain_text, gt).as_metrics()["text_reference_repairs"]
+    # Genuine page URLs and identifiers beside removed citations survive.
+    scanned = {Path(g.document_path).stem: g for g in CORPUS if g.doc_type == "scanned_legacy"}
+    assert "MNKOI 0003439151" in scanned["scanned_001"].plain_text
+    assert "http://www.fda.gov/" in scanned["scanned_002"].plain_text
+
+
+def test_citation_repair_does_not_remove_other_pages_printed_source(tmp_path):
+    doc = tmp_path / "documents" / "easy" / "invoice" / "other.png"
+    doc.parent.mkdir(parents=True)
+    doc.write_bytes(b"fixture")
+    text = "Source: https://www.industrydocuments.ucsf.edu/docs/hqcx0242"
+    doc.with_name("other_gt.txt").write_text(text)
+    gt = GroundTruthLoader().load(doc)
+    assert gt.plain_text == text and not gt.metadata
