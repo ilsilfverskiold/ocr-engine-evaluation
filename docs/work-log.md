@@ -912,3 +912,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   evidence, with unrun controls/reference limits disclosed. No further research,
   paid reruns, tuning or judge calls. Generated final HTML stays local/ignored;
   source/results/docs are committed only in ocr-benchmark. No GitHub push.
+
+
+## 2026-10-03 — explain invoice text coverage and correct its evidence display
+
+- Inspect invoice_000's source image and reproduce Claude's 1.0000 text
+  coverage: all 68 distinct normalized reference tokens occur in the answer.
+  The 403 literal `&nbsp;` entities become whitespace in text normalization.
+  Saved CER is 0.2636 and WER 0.2874; seller/client column order differs.
+  The answer retains printed item number `1.`, omitted by reference
+  normalization. A perfect coverage score is not perfect transcription.
+- Show normalized output/reference and supporting text metrics directly in
+  the browser report; keep exact raw markup expandable. Reproduce every
+  displayed text coverage score before exporting, failing on disagreement.
+- Move engine-wide notes under an explicitly scoped expandable section so
+  unrelated geometry/schema findings are not presented as a text-page diagnosis.
+  Add a specific, source-checked explanation for this Claude invoice result.
+- Rebuild the local report without modifying saved scores or scoring policy.
+  No engine, judge, Modal calls or paid rerun. No push.

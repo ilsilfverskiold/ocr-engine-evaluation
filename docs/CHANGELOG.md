@@ -4,6 +4,15 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-03 — make text evidence and metric scope visible
+
+- Text results show the normalized comparison and CER/WER/word metrics, with
+  raw formatting expandable. Label the headline as text coverage. Verify
+  reproduced coverage against saved scores while building the viewer.
+- Separate engine-wide audit context from page-specific observations. Explain
+  Claude invoice_000's complete token coverage and column-order differences.
+  Saved benchmark scores are unchanged.
+
 ## 2026-10-02 — corrected saved report delivered locally
 
 - Deliver run `20261002T162630Z` and a reproducible browser evidence viewer.
