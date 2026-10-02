@@ -38,14 +38,20 @@
         "legal_004",
         "legal_005",
         "report_000",
-        "funsd_005"
+        "funsd_005",
+        "invoice_000",
+        "invoice_001",
+        "invoice_002",
+        "invoice_003",
+        "invoice_004",
+        "invoice_005"
       ],
       "legs": [
         "text"
       ],
       "severity": "noted",
-      "summary": "Ground truth for these 8 documents was transcribed from the image by a vision model (claude-opus-5) and cross-checked against the consensus of 14 OCR engines, replacing unusable machine-generated text.",
-      "effect": "The scores are real, and every document agreed with engine consensus with no disagreements in either direction. But the reference is artificial rather than human-annotated, and an engine sharing a systematic bias with the transcribing model could be flattered. Reported separately from human ground truth for that reason. Per-document agreement counts are in documents/gt_provenance.json."
+      "summary": "Fourteen pages use model-transcribed or model-reviewed replacement text references. Eight have historical engine-consensus checks. Six invoice references were rechecked against their source images on 2026-10-02 after the old annotations were found to contain phantom punctuation/numbers and transcription errors.",
+      "effect": "These are not independent human annotations. Invoice corrections are based on source-image inspection, not a new engine-consensus check. They are labeled model_verified for disclosure; the label is not proof that every character is correct. See documents/gt_provenance.json and per-result reference repair metadata."
     },
     {
       "id": "model-annotated-schema-fields",
@@ -121,7 +127,7 @@
       ],
       "severity": "noted",
       "summary": "These 6 markdown references were originally derived from the dataset's parsed_data and used its schema field names ('invoice_date', 'seller_tax_id', 'item_net_price') as labels where the page prints 'Date of issue', 'Tax Id', 'Net price'. They have been re-transcribed from the page images: printed labels, the page's own 8-column ITEMS header, the SUMMARY rendered as the table it is, and no invented headings.",
-      "effect": "The paraphrased references measured vocabulary rather than conversion — mistral_ocr converted invoice_000 correctly and scored 0.257. Against the re-transcribed reference the same stored output scores 0.769, and the leg now separates engines on real behaviour (docling 0.879 with every heading but weaker reading order; mistral 0.769 because it emits no headings at all). Line-item values are the dataset's; the two descriptions ending in CJK characters keep the dataset's approximation of them, noted in those files."
+      "effect": "The page-transcribed references replaced schema vocabulary that was never printed. The 2026-10-02 source audit also excludes unreadable replacement-glyph spans in invoice_004 item 3 and invoice_005 item 1 rather than preserving guessed zero/O characters. These readable transcriptions now supply the text reference as well; original sidecars remain unchanged."
     },
     {
       "id": "invoice-table-references-rebuilt",
@@ -168,6 +174,22 @@
       "severity": "noted",
       "summary": "The chart has no printed bar-segment counts. Approximate data tables in the source transcription are not OCR text, and some counts disagree visibly with the bars.",
       "effect": "The versioned loader uses source-verified printed chart text and excludes employmentLevelBreakdown, ageAndGenderBreakdown and workforceByGender from schema references and future request contracts. Figures, printed axes/legends, page/footer and the largest sector remain. Quantitative chart interpretation needs a separately verified reference and estimation tolerance. Archived sidecars and historical scores remain unchanged."
+    },
+    {
+      "id": "invoice-unreadable-replacement-glyphs",
+      "documents": [
+        "invoice_004",
+        "invoice_005"
+      ],
+      "legs": [
+        "text",
+        "markdown",
+        "tables",
+        "schema"
+      ],
+      "severity": "weakens",
+      "summary": "Invoice_004 item 3 and invoice_005 item 1 end in replacement glyphs whose underlying characters cannot be recovered from the shipped image. Earlier references guessed zeros/O characters or arrows.",
+      "effect": "Score the readable prefixes in text, Markdown and tables. Exclude the two complete description fields from schema exact-value scoring, before sampling; other fields remain scored. Invoice_005 item 5 has a separate verified slash correction. All engines receive the same reference treatment, with exclusions recorded in structured_reference_repairs."
     }
   ]
 }

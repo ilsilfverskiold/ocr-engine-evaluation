@@ -123,6 +123,11 @@ def load_markdown_checklist(document_stem: str) -> list[dict] | None:
     except Exception:
         return None
     items = [i for i in items if isinstance(i, dict)]
+    if document_stem == "invoice_004":
+        for item in items:
+            if "Picturebook ☐☐☐☐☐☐☐☐" in item.get("content", ""):
+                item["content"] = item["content"].replace("Picturebook ☐☐☐☐☐☐☐☐", "Picturebook")
+                item["reference_review"] = "invoice-reference-v1: unreadable replacement-glyph span excluded"
     items = _sample(items, MARKDOWN_MAX_ITEMS)          # sample first, as the judge did
     return [i for i in items if i.get("content") and i.get("type")] or None
 
@@ -179,6 +184,9 @@ def load_table_checklist(document_stem: str, reference_html: str | None = None,
         return None
     items = [i for i in items if isinstance(i, dict)]
     for item in items:
+        if document_stem == "invoice_004" and "Picturebook 🡪🡪🡪🡪🡪🡪🡪🡪" in item.get("value", ""):
+            item["value"] = item["value"].replace("Picturebook 🡪🡪🡪🡪🡪🡪🡪🡪", "Picturebook")
+            item["reference_review"] = "invoice-reference-v1: unreadable replacement-glyph span excluded"
         correction = _TABLE_HEADER_CORRECTIONS.get(document_stem, {}).get(item.get("label"))
         if correction:
             value, col = correction

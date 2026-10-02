@@ -628,6 +628,19 @@ def test_unknown_checkbox_group_value_cannot_clear_every_option():
     assert [v.verdict for v in result.verdicts] == ["missing", "missing", "missing"]
 
 
+def test_unscorable_field_exclusion_precedes_sampling_and_preserves_cache(tmp_path, monkeypatch):
+    import json
+    import evaluation.schema_judge as checklist
+    monkeypatch.setattr(checklist, "CACHE_DIR", tmp_path)
+    reference = {f"f{i:03d}": str(i) for i in range(81)}
+    fresh = checklist.build_schema_checklist(reference, None, "fixture", excluded_paths={"f000"})
+    assert len(fresh) == 80 and "f000" not in {v.path for v in fresh}
+    cache = json.loads((tmp_path / "fixture.json").read_text())
+    assert len(cache["items"]) == 81
+    assert fresh == checklist.build_schema_checklist(reference, None, "fixture", excluded_paths={"f000"})
+    assert "f000" in {v.path for v in checklist.build_schema_checklist(reference, None, "fixture")}
+
+
 def test_group_rule_ignores_numeric_sibling_values():
     items = _items(("income.line6.a", "650"), ("income.line6.c", "True"))
     res = score_fields(items, [["income.line6.a", "650"]], "schema", None)

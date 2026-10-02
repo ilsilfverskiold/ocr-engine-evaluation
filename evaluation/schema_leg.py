@@ -95,7 +95,8 @@ def score_schema(
     from evaluation.schema_judge import build_schema_checklist
 
     items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
-                                   use_cache=False, scalar_only=False)
+                                   use_cache=False, scalar_only=False,
+                                   excluded_paths=set(gt.metadata.get("structured_reference_repairs", {}).get("excluded_fields", [])))
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
     res = score_fields(items, pairs, "schema", None)
     return SchemaScore(

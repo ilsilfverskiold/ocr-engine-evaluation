@@ -32,13 +32,17 @@ def build_schema_checklist(
     document_stem: str,
     use_cache: bool = True,
     scalar_only: bool = False,
+    excluded_paths: set[str] | None = None,
 ) -> list[SchemaChecklistItem]:
+    # Exclusions describe source-verified unscorable fields, never missing
+    # engine answers. Filter before sampling and preserve the complete cache.
+    excluded = excluded_paths or set()
     suffix = "_kv" if scalar_only else ""
     cache_path = CACHE_DIR / f"{document_stem}{suffix}.json"
     if use_cache and cache_path.exists():
         cached = json.loads(cache_path.read_text(encoding="utf-8"))
         items = [SchemaChecklistItem(**i) for i in cached["items"]]
-        return _sample_checklist(items)
+        return _sample_checklist([i for i in items if i.path not in excluded])
 
     fields = walk_fields(true_json, json_schema)
     fields = [f for f in fields if f.path]
@@ -67,7 +71,7 @@ def build_schema_checklist(
             }, indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
-    return _sample_checklist(items)
+    return _sample_checklist([i for i in items if i.path not in excluded])
 
 
 def _display_value(value: Any) -> str:

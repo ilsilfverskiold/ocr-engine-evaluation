@@ -814,3 +814,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   rewrite. The previously prepared geometry continuation remains unexecuted
   pending the user's answer. Only the matcher, existing tests and four
   existing docs changed; review crops/replays are in session scratch. No push.
+
+## 2026-10-02 — repair the six invoice text references from their images
+
+- Reviewed all six source images and existing page-transcribed Markdown.
+  Replace faulty plain-text references at load time; preserve originals and
+  guard the reviewed source strings with hashes. Fix phantom punctuation/
+  numbers, missing row numbers, split amounts and interleaved reading order.
+- Exclude unreadable replacement-glyph suffixes from readable text/table
+  targets and two complete description fields from schema exact matching.
+  Do not guess their characters. Correct a separate printed slash in a
+  retained invoice_005 schema field. Record all exclusions and repairs.
+- Apply unscorable-field exclusions before sampling while retaining complete
+  deterministic caches. Update reference displays from cached checklists
+  without rewriting their source files or changing primary MD/table scores.
+- Isolated 288-result replay: 84 text and 14 schema scores change; 66 MD,
+  72 table and 24 KV headlines stay unchanged. Claude's six invoice text
+  coverages are now 1.0; its prior deductions came from bad annotations.
+  This is unique-word coverage, not a claim of perfect character accuracy.
+- Mark the six replacement references as model-reviewed, not independently
+  human-annotated. Update existing provenance, limitations, README, scoring
+  design and handoff; no new documentation file.
+- 253 offline tests pass (80.21 seconds); 88 ground-truth/field tests pass
+  again after provenance changes. Verified cached glyph display corrections
+  normalize identically for primary MD/table scoring. All scratch images and
+  replay evidence remain outside the repo; no provider/judge/Modal call or
+  historical run rewrite. Geometry continuation is still awaiting approval.

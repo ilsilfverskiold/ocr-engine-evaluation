@@ -28,6 +28,11 @@ publish, or it does not compete in that leg. Both are honest results.
 > chart_003's inferred data tables with printed chart text. Chart-reference-v1
 > excludes unverified quantitative series from that page's schema targets.
 > The same corrections apply to every engine; raw annotations are preserved.
+> Invoice-printed-text-v1 replaces six faulty invoice text references with
+> source-image-reviewed transcriptions. Invoice-reference-v1 excludes two
+> unreadable description fields from schema exact matching before sampling,
+> while keeping readable prefixes in the text/table targets. The replacement
+> references are labeled model-reviewed, not independently human-annotated.
 > `--skip-judge` keeps all six legs and disables new silver-document judge
 > calls. The rescore copies 110 old document-judge rows unchanged.
 >

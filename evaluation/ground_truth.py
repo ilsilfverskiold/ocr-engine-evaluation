@@ -249,6 +249,9 @@ class GroundTruthLoader:
         These are page-specific annotation repairs, not permissive scoring
         normalization. A website printed on another page must still be read.
         """
+        if doc_path.stem in {f"invoice_{i:03d}" for i in range(6)}:
+            GroundTruthLoader._repair_invoice_text(doc_path, gt)
+
         source_urls = {
             "scanned_000": "http://industrydocuments.library.ucsf.edu/tobacco/docs/klpb0135",
             "scanned_001": "https://www.industrydocuments.ucsf.edu/docs/hqcx0242",
@@ -313,6 +316,65 @@ class GroundTruthLoader:
                 "version": "chart-reference-v1 (2026-10-02)",
                 "excluded_unverified_chart_series": excluded,
                 "reason": "bar estimates are not verified exact OCR values",
+            }
+
+    @staticmethod
+    def _repair_invoice_text(doc_path: Path, gt: GroundTruth) -> None:
+        """Use the six page-reviewed transcriptions, preserving raw sidecars.
+
+        The older plain-text annotations contain phantom punctuation/numbers,
+        joined amounts, wrong row numbers and interleaved reading order.
+        Existing Markdown transcriptions were rechecked against all six
+        images; only two unreadable replacement-glyph spans need exclusion.
+        """
+        import hashlib
+        import re
+        from evaluation.metrics import _markdown_to_plain
+
+        hashes = {
+            "invoice_000": ("068eb101a1b35f1ebd072794573f91375bd3b679478c1aea6729c2f9be47f51e", "f69ea7a916b3bf3bff17b656a0e215a09e32ac87325b0b69f51551f3c5ea0d14"),
+            "invoice_001": ("1ca9e74d5363b06e26eb3183b4f4500d8d7e164d7b5c4031b89c6e3fe8ff125a", "a4aaa62cdb29b089f9d016f0f683cf05ef3cd9a26d797de9bbda23e16500ee86"),
+            "invoice_002": ("cbdb151334be49adbf6c05150e7c79b29c6e353f7d9f5e1dc832d49a17723737", "cc9ff97b8de63969eda734cb318780235c36b6b29ac3ccf1c6aee7e6d908864b"),
+            "invoice_003": ("52ff243f5b12520e759044310746fea6b60a06d258ebff3f4e0bd35ffec6cd49", "41bbeb9f005cbe5a6d85beb76ee42a84ac8d8117051b42636ccad3636f6ce15d"),
+            "invoice_004": ("153bf1c84039f38e3e5bd91a26d901b41323521b30889d6b7ba319eb234bb7d8", "e6b6d01c616c6a07c4be7d41913f3f26b1346148f64b23c3e33872084b1112e6"),
+            "invoice_005": ("04630b8d1efd624d3c8f67cb3a26972a492efd2189fa7c3d04c8c1cbe93c5082", "7a6bdb4bfc24fe44ff2f8c4c8805155ee8e8204d34b7a7439e00e7ab65b8ebe5"),
+        }
+        original_hash, markdown_hash = hashes[doc_path.stem]
+        if (hashlib.sha256(gt.plain_text.encode()).hexdigest() != original_hash or
+                hashlib.sha256((gt.markdown or "").encode()).hexdigest() != markdown_hash):
+            raise ValueError(f"{doc_path.stem} reference changed; review its printed-text repair")
+        excluded = []
+        corrected = []
+        if doc_path.stem == "invoice_004":
+            gt.markdown = gt.markdown.replace("Picturebook 00000000", "Picturebook")
+            gt.table_html = gt.table_html.replace("Picturebook 00000000", "Picturebook")
+            gt.true_json["items"][2]["item_desc"] = gt.true_json["items"][2]["item_desc"].removesuffix(" 00000000")
+            excluded = ["items[2].item_desc"]
+        elif doc_path.stem == "invoice_005":
+            gt.markdown = gt.markdown.replace('PREORDER"00OO', "**PREORDER**")
+            gt.table_html = gt.table_html.replace("PREORDER&quot;00OO", "**PREORDER**")
+            gt.true_json["items"][0]["item_desc"] = gt.true_json["items"][0]["item_desc"].replace('PREORDER"00OO', "**PREORDER**")
+            # The image prints a slash here, not the annotation's capital I.
+            gt.true_json["items"][4]["item_desc"] = gt.true_json["items"][4]["item_desc"].replace('White "I TESTED', 'White " / TESTED')
+            excluded = ["items[0].item_desc"]
+            corrected = ["items[4].item_desc"]
+        # Remove old annotation comments, including claims that guessed glyph
+        # transcriptions are retained. The review is recorded as metadata.
+        gt.markdown = re.sub(r"<!--.*?-->", "", gt.markdown, flags=re.S).strip()
+        gt.plain_text = _markdown_to_plain(gt.markdown).strip()
+        gt.metadata["text_reference_repairs"] = {
+            "version": "invoice-printed-text-v1 (2026-10-02)",
+            "original_sha256": original_hash,
+            "reviewed_markdown_sha256": markdown_hash,
+            "method": "source-image review of all six pages; render their verified transcription to plain text",
+            "excluded_unreadable_spans": excluded,
+        }
+        if excluded or corrected:
+            gt.metadata["structured_reference_repairs"] = {
+                "version": "invoice-reference-v1 (2026-10-02)",
+                "excluded_fields": excluded,
+                "corrected_fields": corrected,
+                "reason": "description has unreadable replacement glyphs; full-string equality is unscorable, readable prefix remains in text/table targets",
             }
 
     def _attach_geometry(self, doc_path: Path, gt: GroundTruth) -> None:

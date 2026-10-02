@@ -32,10 +32,10 @@ def test_provenance_classification_totals():
     counts: dict[str, int] = {}
     for gt in CORPUS:
         counts[gt.gt_source] = counts.get(gt.gt_source, 0) + 1
-    # Matches documents/gt_limitations.json: 11 silver, 8 model-transcribed.
+    # Matches documents/gt_limitations.json: 11 silver, 14 model-transcribed/reviewed.
     assert counts["silver_tesseract"] == 11
-    assert counts["model_verified"] == 8
-    assert counts["human"] == 74
+    assert counts["model_verified"] == 14
+    assert counts["human"] == 68
 
 
 def test_model_verified_documents_are_the_ones_provenance_names():
@@ -158,3 +158,32 @@ def test_citation_repair_does_not_remove_other_pages_printed_source(tmp_path):
     doc.with_name("other_gt.txt").write_text(text)
     gt = GroundTruthLoader().load(doc)
     assert gt.plain_text == text and not gt.metadata
+
+
+def test_invoice_text_references_match_reviewed_printed_content():
+    import json
+    from evaluation.metrics import normalize_text
+    from evaluation.schema_leg import score_schema
+    invoices = {Path(g.document_path).stem: g for g in CORPUS if g.doc_type == "invoice"}
+    assert len(invoices) == 6
+    for gt in invoices.values():
+        assert gt.metadata["text_reference_repairs"]["version"].startswith("invoice-printed-text-v1")
+        assert "1." in gt.plain_text.split()
+    text = normalize_text(invoices["invoice_003"].plain_text)
+    assert "26343874." not in text and "26343874" in text
+    assert "sunshine." not in text and "sunshine" in text
+    assert "108" not in text.split() and "1 108,80" in text
+    assert "3 172,99" in text and "1 369,50" in text
+    assert '15"' in invoices["invoice_000"].plain_text
+    assert "50 GB" in invoices["invoice_004"].plain_text
+    for stem, excluded in (("invoice_004", "items[2].item_desc"),
+                           ("invoice_005", "items[0].item_desc")):
+        gt = invoices[stem]
+        assert "00000000" not in gt.plain_text and "00OO" not in gt.plain_text
+        assert gt.metadata["structured_reference_repairs"]["excluded_fields"] == [excluded]
+        score = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
+        assert excluded not in {v.path for v in score.verdicts}
+        assert score.score == 1
+        raw = json.loads(Path(gt.document_path).with_name(stem + "_structured_gt.json").read_text())
+        assert raw["true_json"] != gt.true_json
+    assert 'White " / TESTED' in invoices["invoice_005"].true_json["items"][4]["item_desc"]

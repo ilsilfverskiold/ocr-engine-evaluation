@@ -6,6 +6,13 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Invoice references now use six source-image-reviewed transcriptions,
+  replacing phantom punctuation/numbers and incorrect spacing/reading order.
+  Exclude two unreadable description fields from schema exact matching,
+  retain their readable text prefixes, and correct one verified slash.
+  Replay changes 84 text and 14 schema scores; MD/table/KV headlines stay
+  unchanged. Replacement text provenance is explicitly model-reviewed.
+
 - Field scorer v10 treats the independent nonresident-spouse election
   separately from the five filing statuses, and rejects unknown group values
   as evidence of unchecked options. Replay changes three KV scores; explicit
