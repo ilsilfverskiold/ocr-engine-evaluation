@@ -465,6 +465,33 @@ class GroundTruthLoader:
                 "corrected_fields": ["items[0].description"],
                 "reason": "source prints B05; structured reference used 805; text and table references already use B05",
             }
+        elif doc_path.stem == "sroie_003":
+            GroundTruthLoader._repair_receipt_item_rows(gt)
+
+    @staticmethod
+    def _repair_receipt_item_rows(gt: GroundTruth) -> None:
+        """One purchased item spans two description lines on sroie_003.
+
+        The image has one quantity/price/amount and Total Qty: 1. Its table
+        reference already joins the description; the structured annotation
+        incorrectly created a second item with three phantom blank fields.
+        The request schema permits any array length and is not changed.
+        """
+        expected = [
+            {"description": "20X30 BEG 1KG91X30)", "qty": None, "price": None, "amount": None},
+            {"description": "20X30 1KG", "qty": "1", "price": "8.00", "amount": "8.00"},
+        ]
+        if gt.true_json["items"] != expected or gt.true_json["total_qty"] != "1":
+            raise ValueError("Reviewed sroie_003 item annotation changed")
+        gt.true_json["items"] = [{
+            "description": "20X30 BEG 1KG91X30) 20X30 1KG",
+            "qty": "1", "price": "8.00", "amount": "8.00",
+        }]
+        gt.metadata["structured_reference_repairs"] = {
+            "version": "receipt-item-reference-v1 (2026-10-02)",
+            "corrected_fields": ["items"], "original_items": expected,
+            "reason": "one purchased item with a two-line description; remove duplicate item and three nonexistent blank fields",
+        }
 
     def _attach_geometry(self, doc_path: Path, gt: GroundTruth) -> None:
         """Word boxes for the geometry leg, where a sidecar exists (17 docs).

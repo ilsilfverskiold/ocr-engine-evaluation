@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- The sroie_003 schema reference now represents one purchased item with its
+  two-line description, instead of two items and three nonexistent blanks.
+  The supplied request schema stays unchanged. All seven saved schema scores
+  change, including Gemini 0.9167 → 1 and DeepSeek's empty answer 0.125 → 0;
+  the other 39 scored results on the page remain unchanged.
+
 - Receipt reference repairs restore omitted address text in five pages and
   their existing full-line box labels, remove one duplicate box and exclude
   one unreadable line. Retained coordinates stay unchanged. Fix one B05/805

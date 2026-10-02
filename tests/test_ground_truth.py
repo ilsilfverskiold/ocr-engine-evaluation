@@ -227,3 +227,23 @@ def test_receipt_repair_rejects_changed_annotation():
     gt.plain_text = "a replacement reference that needs a fresh review"
     with pytest.raises(ValueError, match="reference changed"):
         GroundTruthLoader._repair_receipt_references(Path(gt.document_path), gt)
+
+
+def test_receipt_multiline_description_is_one_item_without_phantom_blanks():
+    import json
+    from evaluation.schema_leg import score_schema
+
+    gt = next(g for g in CORPUS if Path(g.document_path).stem == "sroie_003")
+    item, = gt.true_json["items"]
+    assert item == {"description": "20X30 BEG 1KG91X30) 20X30 1KG",
+                    "qty": "1", "price": "8.00", "amount": "8.00"}
+    assert item["description"] in gt.table_html
+    perfect = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
+    assert perfect.fields_total == 20 and perfect.score == 1
+    assert perfect.blank_total == 0
+    empty = score_schema('{}', gt, "deepseek_ocr")
+    assert empty.score == 0 and empty.blank_correct == 0
+    raw = json.loads(Path(gt.document_path).with_name("sroie_003_structured_gt.json").read_text())
+    assert len(raw["true_json"]["items"]) == 2
+    assert raw["json_schema"] == gt.json_schema  # no retrospective prompt change
+    assert perfect.as_metrics()["schema_reference_repairs"]["original_items"] == raw["true_json"]["items"]

@@ -38,6 +38,9 @@ publish, or it does not compete in that leg. Both are honest results.
 > duplicate box, excludes one faded line with an unreadable suffix and corrects
 > one structured B05/805 transcription. Per-result metadata records scope and
 > exclusions; these partial model-reviewed repairs do not certify other text.
+> Receipt-item-reference-v1 joins sroie_003's two description lines into one
+> purchased item, removing three nonexistent blank fields from its schema
+> target. The request schema and stored engine answers remain unchanged.
 > `--skip-judge` keeps all six legs and disables new silver-document judge
 > calls. The rescore copies 110 old document-judge rows unchanged.
 >

@@ -865,3 +865,24 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   still awaits the previously requested approval. Only the named source/test
   files and existing documentation/metadata are modified; no new repo artifact
   or push.
+
+## 2026-10-02 — repair a receipt item split that created false blank credit
+
+- Source-image review confirms sroie_003 has one purchased item with a
+  two-line description, matching its existing table reference. Repair the
+  structured reference's two entries to one; preserve original values and
+  guard them against unexpected changes. Request schema is unchanged.
+- Inspect every saved schema prompt and answer. Gemini's complete item was
+  falsely penalized; DeepSeek's empty extraction received three nonexistent
+  blank-field credits. The corrected target has 20 fields rather than 24.
+- Replay all 46 scored results on the page: all seven schema scores change;
+  14 text, nine geometry, 12 table and four KV results remain unchanged.
+  Record actual per-engine causes, including split descriptions and GLM's
+  duplicated populated row (not independently penalized by field coverage).
+- Add loader/scoring regression coverage for the real reference, a complete
+  answer and an empty answer; 91 affected tests pass and the full suite has
+  256 passing tests. Update existing provenance, limitations and audit/design
+  docs. Scratch holds the source crop and full replay; no new repo artifact.
+- No paid engine/judge/Modal call, prompt rewrite, checklist regeneration,
+  historical result rewrite or push. The geometry continuation still awaits
+  the user's response to the previously presented approval request.
