@@ -111,7 +111,7 @@ def _markdown_to_html(text: str) -> str | None:
             return None
         # Normalise: strip alignment classes/styles added by the markdown lib
         for tag in table.find_all(True):
-            tag.attrs = {}
+            tag.attrs = {k: v for k, v in tag.attrs.items() if k in ("colspan", "rowspan")}
         return str(table)
     except Exception:
         return None
@@ -125,8 +125,8 @@ def _html_to_html(text: str) -> str | None:
     """Take the model's own <table> markup, stripped of presentation attributes.
 
     PaddleOCR-VL emits styled HTML (border=1, inline text-align styles); the
-    attributes carry no structural meaning and would otherwise differ from the
-    reference on every cell.
+    presentation attributes carry no structural meaning. Keep rowspan/colspan:
+    removing them shifts numeric cells relative to their headers.
     """
     try:
         from bs4 import BeautifulSoup
@@ -136,7 +136,7 @@ def _html_to_html(text: str) -> str | None:
         if table is None:
             return None
         for tag in table.find_all(True):
-            tag.attrs = {}
+            tag.attrs = {k: v for k, v in tag.attrs.items() if k in ("colspan", "rowspan")}
         return str(table)
     except Exception:
         return None
@@ -237,7 +237,7 @@ def extract_all_tables_html(text: str, engine: str) -> list[str]:
         out = []
         for table in soup.find_all("table"):
             for tag in table.find_all(True):
-                tag.attrs = {}
+                tag.attrs = {k: v for k, v in tag.attrs.items() if k in ("colspan", "rowspan")}
             out.append(str(table))
         return out
     except Exception:

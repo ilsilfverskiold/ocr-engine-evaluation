@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Table code-v4 rejects amounts under the wrong named row or year, preserves
+  HTML spans, and uses unsampled header context. Corrected four receipt
+  header coordinates from the source image without changing the saved cache.
+  Offline replay changes 125 of 504 table scores; archived results unchanged.
+
 - Separate nullable inference schemas with explicit targets repair conflicting
   null instructions and open dictionaries. Nullable nested GLM templates keep
   their structure; exact request schemas are persisted for future calls.

@@ -151,6 +151,63 @@ def test_structured_output_is_preferred_over_text():
 # --------------------------------------------------------------------------
 from evaluation.code_judges import _inside_cell, cell_eq, score_tables_code  # noqa: E402
 
+
+def _named_table_items():
+    return [{"label": "Table 1", "row": i + 1, "col": j + 1, "value": value}
+            for i, row in enumerate([["Item", "2025", "2024"],
+                                     ["Apples", "100", "900"], ["Pears", "200", "800"]])
+            for j, value in enumerate(row)]
+
+
+def _grid_html(grid):
+    return "<table>" + "".join("<tr>" + "".join(f"<td>{v}</td>" for v in row) + "</tr>" for row in grid) + "</table>"
+
+
+def test_swapping_amounts_across_named_rows_or_years_is_not_correct():
+    for grid in ([["Item", "2025", "2024"], ["Apples", "900", "100"], ["Pears", "800", "200"]],
+                 [["Item", "2025", "2024"], ["Apples", "200", "800"], ["Pears", "100", "900"]]):
+        result = score_tables_code(_grid_html(grid), "x", None, _named_table_items())
+        assert all(v.verdict == "misplaced" for v in result.verdicts if v.value in ("100", "200", "800", "900"))
+        assert result.cell_accuracy == round(5 / 9, 4)
+
+
+def test_reordered_complete_rows_and_columns_keep_their_associations():
+    grid = [["Item", "2024", "2025"], ["Pears", "800", "200"], ["Apples", "900", "100"]]
+    assert score_tables_code(_grid_html(grid), "x", None, _named_table_items()).cell_accuracy == 1
+    transpose = list(map(list, zip(*grid)))
+    assert score_tables_code(_grid_html(transpose), "x", None, _named_table_items()).cell_accuracy == 1
+
+
+def test_unsampled_headers_still_constrain_sampled_values():
+    items = _named_table_items()
+    grid = [["Item", "2025", "2024"], ["Apples", "900", "100"], ["Pears", "800", "200"]]
+    sampled = [i for i in items if i["value"] == "100"]
+    result = score_tables_code(_grid_html(grid), "x", None, sampled, context_items=items)
+    assert result.verdicts[0].verdict == "misplaced"
+
+
+def test_spanning_year_header_and_split_row_preserve_cell_locations():
+    items = _named_table_items()
+    html = '<table><tr><td>Item</td><th colspan="2">2025</th><th>2024</th></tr>' \
+           '<tr><td>Apples</td><td></td><td>100</td><td>900</td></tr>' \
+           '<tr><td rowspan="2">Pears</td><td></td><td>200</td><td></td></tr>' \
+           '<tr><td></td><td></td><td>800</td></tr></table>'
+    assert score_tables_code(html, "x", None, items).cell_accuracy == 1
+
+
+def test_receipt_blank_first_header_slot_is_preserved():
+    from evaluation.code_judges import load_table_checklist
+    items = load_table_checklist("sroie_002", sampled=False)
+    headers = {i["label"]: i["col"] for i in items if i["row"] == 1}
+    assert headers == {"Table 1, Header: RM": 2, "Table 1, Header: Code": 3,
+                       "Table 2, Header: Amount": 2, "Table 2, Header: Tax": 3}
+
+
+def test_repeated_header_in_preamble_does_not_override_table_header():
+    grid = [["2024", "unused", "2025"], ["Item", "2025", "2024"],
+            ["Apples", "100", "900"], ["Pears", "200", "800"]]
+    assert score_tables_code(_grid_html(grid), "x", None, _named_table_items()).cell_accuracy == 1
+
 def test_text_cell_tolerates_one_ocr_error_but_numbers_do_not():
     assert cell_eq("84056 Makenzie Turnpike", "84056 Makenzie Turmpike")
     assert not cell_eq("7725716318", "7725716118")

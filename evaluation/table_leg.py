@@ -21,7 +21,9 @@ What replaced it:
 * **The tree is built as objects**, not parsed back out of a bracket string, so
   cell text can contain any character.
 
-Attributes, including `colspan`/`rowspan`, are dropped on both sides. That is a
+For the supporting TEDS diagnostic only, attributes including spans are
+dropped on both sides. The current code-verdict headline preserves spans and
+anchors values to named rows/headers. The TEDS simplification is a
 deliberate limit of this corpus rather than a claim that spans do not matter:
 40 of the 45 references were converted from markdown, which cannot express a
 span at all, so scoring spans would measure the reference's dialect and not the
@@ -349,9 +351,8 @@ def score_tables(
     Legacy judge arguments are accepted for caller compatibility. This scorer
     makes no model call and never creates a missing image checklist.
     """
-    # Eligibility: the image cell checklist is the reference for this leg.
-    # A page with a checklist but no human table_html (funsd forms) is
-    # scored; a page with neither is not applicable.
+    # Human table HTML establishes eligibility. The shared image checklist
+    # supplies cells for code verdicts; it cannot add extra eligible pages.
     from evaluation.code_judges import (
         SCORER_VERSION, checklist_is_table, load_table_checklist, score_tables_code, tnorm,
     )
@@ -421,7 +422,8 @@ def score_tables(
 
     # --- headline: code verdicts against the image cell checklist ---------
     if checklist_nonempty:
-        res = score_tables_code(output_text or "", engine, structured_output, checklist)
+        context = load_table_checklist(Path(gt.document_path).stem, gt.table_html, sampled=False)
+        res = score_tables_code(output_text or "", engine, structured_output, checklist, context)
         return TableScore(
             applicable=True,
             cell_accuracy=res.cell_accuracy,

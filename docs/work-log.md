@@ -464,3 +464,31 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 33 contract/loader/prompt tests and all 210 full-suite tests
   pass (102.80 seconds); git diff --check passes.
   No engine, provider, Modal, alias or judge calls; no GitHub push.
+
+## 2026-10-02 — table association audit
+
+- Reproduced full credit for four amounts swapped between named rows or
+  year columns. code-v4 now constrains values by unique row labels and
+  headers, using the full checklist for context while keeping the scored
+  sample. Exact placement replaces the former one-row/column proximity
+  fallback. Complete row/column reorderings and transposition remain valid.
+- Retained rowspan/colspan through extraction and grid parsing. Split-row
+  continuations are permitted across blank or reference continuation labels,
+  not across another named data row. Verdicts report conflicting anchors.
+- Inspected sroie_002's original image: the cached checklist omitted its
+  blank first header column. A read-time correction places RM/Code and
+  Amount/Tax in columns 2/3. Original model cache and cell values preserved.
+- Replayed all 504 saved table results: 125 scores and 464 cell verdicts
+  change. These remain scratch diagnostics. Inspected the largest changes:
+  DeepSeek fintab_000 drops 1.0 to .5714 because many amounts occupy Notes
+  or the wrong year; rows containing a Notes value remain aligned. The
+  original full-credit verdict was false. DeepSeek sroie_001 splits an
+  extra item field without extending its headers, shifting numeric columns.
+- Visual box review now includes all nine geometry engines on funsd_000,
+  sroie_000 and fintab_001, using actual saved boxes over the original page.
+  Recovered Qwen boxes use current normalization, not old failed-parse flags;
+  errors remain errors. The review confirms that coarse line boxes and
+  misplaced word boxes must be explained separately.
+- Validation: 26 targeted table tests and all 216 full-suite tests passed
+  (108.17 seconds); git diff --check passed.
+  No inference, judge, provider or Modal calls. Report remains provisional.
