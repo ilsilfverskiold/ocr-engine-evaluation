@@ -1570,6 +1570,8 @@ def _diagnose(record: dict) -> str:
     reason = record.get("reason")
     if record.get("error"):
         return f"call/scoring error: {record['error']}"
+    if record.get("applicable") is False:
+        return f"Not scored: {reason or 'not applicable (no reason recorded)'}"
 
     def metric(key: str, default: float) -> float:
         # `m.get(key) or default` would turn a measured 0.0 — the worst

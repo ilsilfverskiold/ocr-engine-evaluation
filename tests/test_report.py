@@ -283,3 +283,18 @@ def test_low_token_coverage_is_not_presented_as_proven_missing_page_content():
     diagnosis = run_benchmark._diagnose({"leg": "text", "metrics": {"gt_coverage": 0.2}})
     assert "80.0%" in diagnosis and "tokenization" in diagnosis
     assert "page is missing" not in diagnosis
+
+
+def test_unscored_results_show_the_recorded_exclusion_not_a_failure_diagnosis():
+    for leg, reason in [("markdown", "no markdown reference"),
+                        ("geometry", "no geometry reference"),
+                        ("text", "no trustworthy text reference")]:
+        diagnosis = run_benchmark._diagnose({
+            "leg": leg, "applicable": False, "score": None,
+            "reason": reason, "metrics": {"element_recall": None},
+        })
+        assert diagnosis == f"Not scored: {reason}"
+    assert run_benchmark._diagnose({
+        "leg": "markdown", "applicable": False, "reason": "no reference",
+        "error": "timeout", "metrics": {},
+    }) == "call/scoring error: timeout"

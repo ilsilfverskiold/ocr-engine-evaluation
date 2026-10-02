@@ -4,6 +4,12 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-03 — report the actual reason for N/A
+
+- Missing-reference rows now show their saved exclusion reason instead of a
+  failure diagnosis inferred from absent metrics. Unscored outputs are labeled
+  accordingly; no empty structural verdict table is shown. Scores unchanged.
+
 ## 2026-10-03 — disclose Markdown heading overcredit
 
 - Flag bold-as-heading and reused-block credit in saved Markdown results;

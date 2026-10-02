@@ -946,3 +946,20 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   consistent structural scorer correction/rescore remains outstanding.
 - Rebuild the local viewer and check Python/JavaScript syntax and whitespace.
   No engine, judge, Modal calls, paid rerun or push.
+
+
+## 2026-10-03 — explain unscored Markdown pages without inventing failures
+
+- Trace Claude sroie_000 N/A to its saved reason `no markdown reference`.
+  There is no Markdown sidecar or cached Markdown checklist for this page.
+  The corpus excludes 36 pages for missing Markdown references: six each of
+  receipts, scanned legacy, newspapers, legal, handwritten and reports.
+- Fix `_diagnose`: explicit N/A returns the recorded exclusion before looking
+  at absent metrics. Previously null element recall defaulted to zero and
+  falsely said fewer than half the blocks matched even though none were scored.
+- Viewer presents N/A reason and unscored saved output, with no empty verdict
+  table suggesting completed evaluation. Add regression coverage for missing
+  references across legs and error precedence; run the report tests and rebuild.
+- Scores/eligibility/references are unchanged. Extending Markdown coverage
+  needs shared references/checklists before offline scoring saved outputs.
+  No new engine, judge, Modal calls, reference generation or push.
