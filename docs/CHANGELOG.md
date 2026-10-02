@@ -6,6 +6,11 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Field scorer v10 treats the independent nonresident-spouse election
+  separately from the five filing statuses, and rejects unknown group values
+  as evidence of unchecked options. Replay changes three KV scores; explicit
+  states and recognized selections remain supported.
+
 - Field scorer v9 preserves numeric label identifiers and explicit field
   ownership. Missing array cells cannot borrow scalar summaries. Isolated
   replay changes four schema scores; all 220 KV scores stay unchanged. It

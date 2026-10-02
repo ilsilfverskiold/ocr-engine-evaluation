@@ -611,6 +611,23 @@ def test_sibling_option_key_is_not_the_group():
     assert [v.verdict for v in res.verdicts] == ["correct", "missing"]
 
 
+def test_filing_status_choice_does_not_clear_independent_residency_flag():
+    items = _items(("filingStatus.MFS", "True"), ("filingStatus.single", "False"),
+                   ("filingStatus.nonResident", "False"))
+    result = score_fields(items, [["Filing Status", "MFS"]], "key_value", None)
+    assert [v.verdict for v in result.verdicts] == ["correct", "correct", "missing"]
+    result = score_fields(items, [["Filing Status", "MFS"],
+                                  ["filingStatus.nonResident", "False"]], "key_value", None)
+    assert [v.verdict for v in result.verdicts] == ["correct", "correct", "correct"]
+
+
+def test_unknown_checkbox_group_value_cannot_clear_every_option():
+    items = _items(("filingStatus.MFS", "True"), ("filingStatus.single", "False"),
+                   ("filingStatus.HOH", "False"))
+    result = score_fields(items, [["Filing Status", "unrecognized choice"]], "key_value", None)
+    assert [v.verdict for v in result.verdicts] == ["missing", "missing", "missing"]
+
+
 def test_group_rule_ignores_numeric_sibling_values():
     items = _items(("income.line6.a", "650"), ("income.line6.c", "True"))
     res = score_fields(items, [["income.line6.a", "650"]], "schema", None)

@@ -796,3 +796,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Full validation: all 249 offline tests pass (78.58 seconds). Only the
   matcher, its existing test module and four existing audit/design/log docs
   changed. Scratch replay files remain outside the repo. No push.
+
+## 2026-10-02 — distinguish filing status from an independent checkbox
+
+- Reviewed tax_002 and tax_004 source images. The nonresident-spouse election
+  is independent of the five filing-status options; tax_002 visibly checks
+  both MFJ and that election. Do not infer its state from the status choice.
+- Field v10 also requires a recognized group selection before inferring an
+  unselected checkbox. Unknown group text cannot clear every false option.
+  Preserve explicit checkbox states and legitimate named group selections.
+- Full 675-result replay changes three KV scores, each by one field. Four
+  other verdicts change without score changes, including two medical flags
+  previously diagnosed from unrelated medication names. Exact deltas and
+  attribution are in the existing handoff.
+- All 251 offline tests pass (82.40 seconds), including two new regressions.
+  No paid call, judge, Modal deployment, checklist regeneration or historical
+  rewrite. The previously prepared geometry continuation remains unexecuted
+  pending the user's answer. Only the matcher, existing tests and four
+  existing docs changed; review crops/replays are in session scratch. No push.

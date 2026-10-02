@@ -82,7 +82,7 @@ from pathlib import Path
 from typing import Any
 import unicodedata
 
-SCORER_VERSION = "kv-schema-code-v9 (2026-10-02; explicit field ownership)"
+SCORER_VERSION = "kv-schema-code-v10 (2026-10-02; checkbox group membership)"
 ALIAS_MODEL = "gemini-3.1-pro-preview"
 ALIAS_CACHE_DIR = Path(__file__).parent.parent / "results" / "kv_alias_cache"
 
@@ -376,6 +376,11 @@ def _contains(ta: list[str], tb: list[str]) -> bool:
 
 _TRUE = {"true", "yes", "y", "✓", "✔", "☑", "☒", "x", "[x]", "[✓]", "[✔]", "checked", "selected", "on", "ticked", "t", "☑️"}
 _FALSE = {"false", "no", "n", "☐", "□", "[ ]", "[]", "unchecked", "not selected", "not_selected", "notselected", "off", "none", "null", "", "-", "unticked", "f"}
+
+
+# Source-reviewed 1040 group: the independent nonresident-spouse election
+# is stored under filingStatus too, but is not one of its five status options.
+_GROUP_OPTIONS = {"filingStatus": {"single", "HOH", "MFJ", "MFS", "QSS"}}
 
 
 def as_bool(s: Any):
@@ -816,6 +821,21 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
 
             gp = [(k, v) for k, v in pairs if is_group_key(k) and str(v).strip()
                   and as_number(v) is None and as_date(v) is None and as_bool(v) is None]
+            if gp:
+                named = [(k, v) for k, v in gp if any(label_eq(v, n) for n in names)]
+                # A random/unknown group answer must not clear every false
+                # checkbox. Require a recognized selection, and do not infer
+                # independent flags merely from their shared JSON parent.
+                allowed = _GROUP_OPTIONS.get(group)
+                options = [x for x in [it, *siblings] if is_bool_expected(x.value)
+                           and (allowed is None or x.path.split(".")[-1] in allowed)]
+                recognized = [(k, v) for k, v in gp if any(
+                    label_eq(v, n) for option in options for n in names_of(option))]
+                if not named and (not recognized or
+                                  (allowed is not None and parts[-1] not in allowed)):
+                    gp = []
+                else:
+                    gp = named or recognized
             if gp:
                 named = [(k, v) for k, v in gp if any(label_eq(v, n) for n in names)]
                 want = str(it.value).strip().lower() == "true"
