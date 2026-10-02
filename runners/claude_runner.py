@@ -105,6 +105,7 @@ class ClaudeRunner(OCRRunner):
             page_count=1,
             model_version=self._model,
             metadata={
+                "prompt_used": prompt,
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
                 "leg": task.leg if task else "default",

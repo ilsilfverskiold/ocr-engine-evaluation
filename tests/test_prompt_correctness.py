@@ -14,12 +14,60 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from engines import ENGINES
 from evaluation.legs import ALL_LEGS, GEOMETRY, KEY_VALUE, LEGS, plan_passes
 
 DUMMY_SCHEMA = {"type": "object", "properties": {"total": {"type": "string"}}}
+
+
+@pytest.mark.parametrize("engine", ["gemini", "claude"])
+@pytest.mark.parametrize("prompted", [False, True])
+def test_api_prompt_sent_is_persisted_for_default_and_task_calls(monkeypatch, tmp_path, engine, prompted):
+    from types import SimpleNamespace
+    import run_benchmark as rb
+    from runners.base import OCRTask
+    from runners import claude_runner, gemini_runner
+
+    captured = {}
+    task = OCRTask(leg="markdown", prompt="Preserve headings as Markdown.") if prompted else None
+    document = tmp_path / "sample.png"
+    document.write_bytes(b"mock image")
+    usage = SimpleNamespace(input_tokens=1, output_tokens=1, prompt_token_count=1, candidates_token_count=1)
+    response = SimpleNamespace(text="answer", content=[SimpleNamespace(text="answer")],
+                               usage=usage, usage_metadata=usage, stop_reason="end_turn")
+
+    def generate(**kwargs):
+        captured.update(kwargs)
+        return response
+
+    if engine == "gemini":
+        module, cls = gemini_runner, gemini_runner.GeminiRunner
+        fake_types = SimpleNamespace(Part=SimpleNamespace(from_bytes=lambda **kwargs: kwargs))
+        monkeypatch.setitem(sys.modules, "google.genai", SimpleNamespace(types=fake_types))
+        runner = cls.__new__(cls)
+        runner._client = SimpleNamespace(models=SimpleNamespace(generate_content=generate))
+        runner._model_name = "mock-model"
+    else:
+        module, cls = claude_runner, claude_runner.ClaudeRunner
+        monkeypatch.setattr(module, "_prepare_image", lambda path: (b"mock image", "image/png"))
+        runner = cls.__new__(cls)
+        runner._client = SimpleNamespace(messages=SimpleNamespace(create=generate))
+        runner._model = "mock-model"
+    monkeypatch.setattr(module, "provider_payload", lambda response: {})
+    result = runner.run(document, task)
+    sent = captured["contents"][1] if engine == "gemini" else captured["messages"][0]["content"][1]["text"]
+    assert sent == (task.prompt if task else cls._PROMPT)
+    monkeypatch.setattr(rb, "OCR_OUTPUTS_DIR", tmp_path / "outputs")
+    gt = SimpleNamespace(tier="easy", doc_type="invoice")
+    rb._write_ocr_output(runner.name, document, gt, result.raw_text, "test", "default",
+                         result=result, task=task, legs=("markdown",))
+    import json
+    saved = json.loads(next((tmp_path / "outputs").rglob("*.call.json")).read_text())
+    assert saved["prompt_sent"] == sent
 
 
 def test_native_and_prompted_never_overlap():

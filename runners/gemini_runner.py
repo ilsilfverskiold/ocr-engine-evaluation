@@ -74,6 +74,7 @@ class GeminiRunner(OCRRunner):
             page_count=1,
             model_version=self._model_name,
             metadata={
+                "prompt_used": prompt,
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
                 "leg": task.leg if task else "default",

@@ -4,6 +4,12 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-02 — default prompt provenance
+
+- Gemini and Claude now persist their actual default prompt through runner
+  metadata. This repairs logging only; prompts and generation settings are
+  unchanged. Four mocked request/persistence regressions pass.
+
 ## 2026-10-02 — final offline rescore `20261002T095730Z`
 
 - `kv-schema-code-v4`: explicit semantic keys take precedence for blank

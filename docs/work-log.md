@@ -356,3 +356,19 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Not run: any paid API/engine/Modal/judge/alias call, new deployment, new
   engine inference or dedicated-prompt comparison. New spend: $0. The rescore
   process disabled credentials/dotenv loading and blocked socket connections.
+
+## 2026-10-02 — recover and persist default API prompts
+
+- Traced Gemini lease_000 Markdown 0.6154 to eight correct elements and
+  five headings returned without heading markup. The call ended with STOP;
+  this was not a missing prompt or truncation. Adding only heading markers
+  to the saved answer makes the diagnostic 1.0; this is a counterfactual,
+  not a new engine result.
+- The historical call logger omitted default Gemini/Claude prompts because
+  the runners did not return `prompt_used`. Their default prompt source is
+  unchanged since initial commit e649e5a. Added metadata so future calls
+  persist the exact prompt actually sent; no prompts or settings changed.
+- Validation: 14 prompt tests passed, including four mocked provider/call-file
+  checks for default and task passes. No provider calls. Historical outputs
+  remain unchanged. The report's missing-prompt wording was misleading and
+  has been corrected in the local, provisional export.
