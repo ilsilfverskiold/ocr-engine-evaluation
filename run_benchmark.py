@@ -1562,13 +1562,17 @@ def _print_failures(records: list[dict], log: logging.Logger) -> None:
 
 
 def _diagnose(record: dict) -> str:
-    """Name the failure from the metrics the scorer already recorded.
+    """Describe the measured discrepancy, without inventing its cause.
 
-    Only facts the scorer measured — no invented correlate.
+    Primary checklist verdicts take precedence over supporting structural
+    metrics. Engine, prompt, adapter and reference causes require inspection
+    of the saved call/page; a metric alone cannot establish them.
     """
     leg = record["leg"]
     m = record.get("metrics") or {}
     reason = record.get("reason")
+    if record.get("error"):
+        return f"call/scoring error: {record['error']}"
 
     def metric(key: str, default: float) -> float:
         # `m.get(key) or default` would turn a measured 0.0 — the worst
@@ -1578,39 +1582,62 @@ def _diagnose(record: dict) -> str:
 
     if leg == "text":
         if m.get("repetition_suspected"):
-            return f"output {m.get('length_ratio')}x reference length — repetition loop"
-        if metric("word_precision", 1) < 0.65 and metric("word_recall", 0) >= 0.80:
-            return "reads the page but adds labels/structure not in the reference"
-        if metric("gt_coverage", 0) < 0.4:
-            return "most of the page is missing from the output"
-        return "missing content"
+            return (f"output {m.get('length_ratio')}x reference length; "
+                    "repetition flagged, cause requires output inspection")
+        if m.get("gt_coverage") is not None:
+            return (f"{100 * (1 - m['gt_coverage']):.1f}% of unique normalized reference tokens unmatched; "
+                    "recognition, tokenization and reference differences need inspection")
+        return "text discrepancy; detailed metrics unavailable"
     if leg == "markdown":
+        if m.get("checklist_size") is not None and "verdict_absent" in m:
+            return (f"checklist: {m.get('verdict_correct', 0)} correct, "
+                    f"{m.get('verdict_partial', 0)} partial, "
+                    f"{m.get('verdict_wrong_type', 0)} wrong structure type, "
+                    f"{m['verdict_absent']} absent")
         if metric("element_recall", 0) < 0.5:
-            return "most structural blocks absent"
+            return "fewer than half the reference blocks matched by the structural fallback"
         if metric("order_score", 1) < 0.6:
             return "blocks present but out of reading order"
         return "partial structure"
     if leg == "tables":
         if reason:
             return reason
+        if "verdict_grids" in m:
+            return (f"{m['verdict_grids']} parsed table grid(s); checklist: "
+                    f"{m.get('verdict_correct', 0)} correct, "
+                    f"{m.get('verdict_misplaced', 0)} misplaced, "
+                    f"{m.get('verdict_wrong', 0)} wrong, "
+                    f"{m.get('verdict_absent', 0)} absent")
         if m.get("output_rows", 0) == 0:
             return "no table recovered"
         if m.get("output_rows") != m.get("reference_rows"):
             return (f"grid mismatch: {m.get('output_rows')}x{m.get('output_cols')} vs "
                     f"reference {m.get('reference_rows')}x{m.get('reference_cols')}")
         return "cell values wrong"
-    if leg == "key_value":
-        invented = m.get("kv_pairs_invented_value") or 0
+    if leg in ("key_value", "schema"):
+        prefix = "kv_pairs" if leg == "key_value" else "schema_fields"
+        if f"{prefix}_total" in m:
+            return (f"field checker: {m.get(prefix + '_correct', 0)}/{m[prefix + '_total']} credited, "
+                    f"{m.get(prefix + '_missing', 0)} missing, "
+                    f"{m.get(prefix + '_wrong_value', 0)} wrong "
+                    f"(including {m.get(prefix + '_invented_value', 0)} filled blanks)")
+        invented = m.get(prefix + "_invented_value") or 0
         if invented:
-            return f"{invented} blank field(s) filled with invented values"
-        return "fields missing or wrong"
-    if leg == "schema":
-        invented = m.get("schema_fields_invented_value") or 0
-        if invented:
-            return f"{invented} blank field(s) filled with invented values"
+            return f"checker marked {invented} blank field(s) as filled with invented values"
         return "fields missing or wrong"
     if leg == "geometry":
-        return reason or "boxes missing or misplaced"
+        if reason:
+            return reason
+        keys = ("geometry_reference_words", "geometry_matched_words", "geometry_located_words")
+        if all(m.get(k) is not None for k in keys):
+            total, matched, located = (m[k] for k in keys)
+            diagnosis = (f"{located}/{total} reference units located; "
+                         f"{matched - located} text-matched units fail center containment; "
+                         f"{total - matched} have no text-matched prediction")
+            if m.get("geometry_line_score") is not None:
+                diagnosis += f"; line diagnostic {m['geometry_line_score']:.4f}"
+            return diagnosis
+        return "geometry discrepancy; box-match details unavailable"
     return reason or "below threshold"
 
 

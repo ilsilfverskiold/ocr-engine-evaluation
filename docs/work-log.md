@@ -605,3 +605,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 45 targeted geometry/report tests and all 229 offline tests
   passed (129.22 seconds). Audit images/data remain in session scratch.
   No inference, provider, Modal or judge calls; no final report release/push.
+
+## 2026-10-02 — audit the report's explanations, not only its arithmetic
+
+- Found `_diagnose` used supporting structural recall to describe the primary
+  Markdown checklist result. For 145 archived rows it would say most blocks
+  were absent while the checklist recorded zero absent elements. The quoted
+  Gemini lease_000 is one: eight correct, five wrong_type, zero absent.
+- Report primary verdict counts for Markdown/tables/fields and separate
+  text-matched-but-misplaced geometry from units without a text match.
+  Low token coverage and length flags are observations, not proof of missing
+  page content, invented text, or a repetition loop. Actual cause remains
+  tied to the page/call inspection recorded in the handoff.
+- Exercised the helper across all 3,099 archived scored six-leg rows. No
+  archived table row has zero fallback rows with a positive primary grid
+  count, but that mismatch is now covered by a regression. Four new report
+  regressions and all 17 report tests pass. The immediately preceding change
+  passed the full 229-test suite. No scoring/output files were rewritten.
+- No inference, provider, Modal, alias or judge calls, no report release/push.

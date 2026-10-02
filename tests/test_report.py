@@ -208,3 +208,43 @@ def test_diagnose_names_the_failure_from_measured_metrics():
     assert "reading order" in run_benchmark._diagnose({
         "leg": "markdown", "metrics": {"element_recall": 0.9, "order_score": 0.2},
     })
+
+
+def test_markdown_diagnosis_uses_primary_verdicts_not_conflicting_fallback():
+    diagnosis = run_benchmark._diagnose({
+        "leg": "markdown", "metrics": {
+            "checklist_size": 13, "verdict_correct": 8, "verdict_partial": 0,
+            "verdict_wrong_type": 5, "verdict_absent": 0,
+            "element_recall": 0.02, "order_score": 0.1,
+        },
+    })
+    assert "5 wrong structure type" in diagnosis and "0 absent" in diagnosis
+    assert "most" not in diagnosis and "reading order" not in diagnosis
+
+
+def test_table_diagnosis_does_not_treat_missing_supporting_grid_as_no_table():
+    diagnosis = run_benchmark._diagnose({
+        "leg": "tables", "metrics": {
+            "verdict_grids": 2, "verdict_correct": 9, "verdict_wrong": 1,
+            "verdict_absent": 0, "verdict_misplaced": 2, "output_rows": 0,
+        },
+    })
+    assert "2 parsed table grid(s)" in diagnosis
+    assert "no table recovered" not in diagnosis
+
+
+def test_geometry_diagnosis_distinguishes_text_matching_from_position():
+    diagnosis = run_benchmark._diagnose({
+        "leg": "geometry", "metrics": {
+            "geometry_reference_words": 222, "geometry_matched_words": 107,
+            "geometry_located_words": 0, "geometry_line_score": 0.0,
+        },
+    })
+    assert "0/222" in diagnosis and "107 text-matched" in diagnosis
+    assert "115 have no text-matched prediction" in diagnosis
+
+
+def test_low_token_coverage_is_not_presented_as_proven_missing_page_content():
+    diagnosis = run_benchmark._diagnose({"leg": "text", "metrics": {"gt_coverage": 0.2}})
+    assert "80.0%" in diagnosis and "tokenization" in diagnosis
+    assert "page is missing" not in diagnosis

@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-02 — audit corrections, publication still pending
 
+- Report explanations now use primary per-leg verdicts. The previous helper
+  could claim most Markdown blocks were absent despite zero absent checklist
+  items (145 archived results). Geometry distinguishes unmatched text units
+  from matched boxes failing containment; text metrics no longer assert an
+  unverified recognition failure or repetition loop as the cause.
+
 - Geometry-v3 keeps every parsed and scored box, including unmatched and
   out-of-frame predictions, and preserves actual returned text for fuzzy
   line matches. Known native xyxy coordinates no longer undergo the legacy
