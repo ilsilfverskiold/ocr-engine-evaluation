@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-03 — disclose Markdown heading overcredit
+
+- Flag bold-as-heading and reused-block credit in saved Markdown results;
+  invoice_000's 16/16 does not establish correct document structure.
+- CER/WER remains in text results only. Saved scores are unchanged;
+  structural scorer correction remains outstanding.
+
 ## 2026-10-03 — make text evidence and metric scope visible
 
 - Text results show the normalized comparison and CER/WER/word metrics, with

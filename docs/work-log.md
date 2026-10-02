@@ -930,3 +930,19 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   Add a specific, source-checked explanation for this Claude invoice result.
 - Rebuild the local report without modifying saved scores or scoring policy.
   No engine, judge, Modal calls or paid rerun. No push.
+
+
+## 2026-10-03 — disclose Markdown heading overcredit; keep CER/WER in text
+
+- Reproduce invoice_000's heading flaw: the scorer promotes bold-only labels
+  to headings, including Seller and Client on the same line. `**ITEMS**`
+  renders as a strong span inside a paragraph, not a Markdown heading.
+  Four heading targets incorrectly receive full structural credit here.
+- Both reference addresses also match one interleaved output paragraph.
+  The saved 16/16 does not establish correct structure. Flag this explicitly
+  in the viewer and handoff; show existing supporting structural metrics.
+- Follow the user's correction: CER/WER stays in the text view. Remove the
+  uncommitted addition to Markdown. Saved scorer policy/scores are unchanged;
+  consistent structural scorer correction/rescore remains outstanding.
+- Rebuild the local viewer and check Python/JavaScript syntax and whitespace.
+  No engine, judge, Modal calls, paid rerun or push.
