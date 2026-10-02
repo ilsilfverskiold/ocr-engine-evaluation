@@ -886,3 +886,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - No paid engine/judge/Modal call, prompt rewrite, checklist regeneration,
   historical result rewrite or push. The geometry continuation still awaits
   the user's response to the previously presented approval request.
+
+
+## 2026-10-02 — close the bounded audit and deliver corrected evidence
+
+- Preserve saved applicability/scores consistently in terminal reports and CSVs;
+  remove unsupported blanket reference-consensus claims. Reproduced the prior
+  discrepancy on 26 historical chart-table rows; current rescore had none.
+  Nineteen report tests pass; the preceding full suite had 256 passing tests.
+- Rescore the three preserved sources to `20261002T162630Z` with `--skip-judge`:
+  zero new engine, Modal, alias-building or judge calls. Retain 110 historical
+  document-judge estimates unchanged. Verify arithmetic and saved-call provenance
+  for all 3,099 scored six-leg rows, plus 219 shared reference checklists.
+- Final differences against the provisional run are 252 text, 60 geometry,
+  141 tables, 19 KV and 82 schema rows (554 total); Markdown is unchanged.
+- Add `scripts/build_evidence_report.py`, a reproducible local browser export
+  with all 4,615 result rows, 2,282 call entries and 93 embedded page previews.
+  Geometry presents actual scored boxes; KV presents native pairs; other legs
+  present their scored structures and verdicts. Prompts recovered from source
+  are labeled separately from persisted prompts. Build and browser render pass.
+- Update existing handoff, README and scoring design to the delivered run.
+  Remove superseded generated run `20261002T095730Z`, its four CSVs and old
+  ignored HTML. Retain original inference and partial geometry diagnostics.
+- Honor the user's stopping scope: confirmed material repairs and checked
+  evidence, with unrun controls/reference limits disclosed. No further research,
+  paid reruns, tuning or judge calls. Generated final HTML stays local/ignored;
+  source/results/docs are committed only in ocr-benchmark. No GitHub push.

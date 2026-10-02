@@ -192,6 +192,41 @@ def test_report_runs_when_modal_records_are_consistent(tmp_path, monkeypatch):
     assert (tmp_path / "summaries" / f"{ts}_engines.csv").exists()
 
 
+def test_report_preserves_saved_eligibility_in_summary_and_page_csv(tmp_path, monkeypatch):
+    import csv
+    from evaluation.ground_truth import GroundTruthLoader
+
+    records = [
+        _leg("gemini_flash", "hard", "chart", "chart_000.png", "tables", 0.0),
+        _leg("gemini_flash", "easy", "invoice", "invoice_000.png", "tables", 1.0),
+    ]
+    ts = _write_run(tmp_path, monkeypatch, [], records)
+
+    def no_current_reference(*args):
+        raise AssertionError("Reporting must not reinterpret saved scores using today's GT")
+
+    monkeypatch.setattr(GroundTruthLoader, "load", no_current_reference)
+    run_benchmark.report(ts, logging.getLogger("test"), legs=["tables"])
+    with open(tmp_path / "summaries" / f"{ts}_per_doc.csv") as f:
+        pages = list(csv.DictReader(f))
+    with open(tmp_path / "summaries" / f"{ts}_summary.csv") as f:
+        summary = list(csv.DictReader(f))
+    assert len(pages) == len(summary) == 2
+    assert sorted(float(r["score"]) for r in pages) == [0.0, 1.0]
+    assert sorted(float(r["score"]) for r in summary) == [0.0, 1.0]
+
+
+def test_provenance_does_not_claim_consensus_for_partial_model_reviews(caplog):
+    row = _leg("e", "easy", "receipt", "sroie_003.jpg", "schema", 1.0)
+    row["gt_source"] = "model_verified"
+    with caplog.at_level(logging.INFO):
+        run_benchmark._print_gt_provenance([row], logging.getLogger("test"))
+    assert "Some repairs are partial" in caplog.text
+    assert "recorded with these scores" in caplog.text
+    assert "engine-consensus verified" not in caplog.text
+    assert "cross-checked against OCR engine consensus" not in caplog.text
+
+
 def test_diagnose_names_the_failure_from_measured_metrics():
     assert "repetition" in run_benchmark._diagnose({
         "leg": "text", "metrics": {"repetition_suspected": True, "length_ratio": 12.0},

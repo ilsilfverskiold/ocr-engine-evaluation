@@ -13,17 +13,16 @@ ask every engine for the same thing. Where an engine cannot be asked (a fixed
 pipeline with no prompt), it competes through deterministic conversion code we
 publish, or it does not compete in that leg. Both are honest results.
 
-> **Saved scoring: 2026-10-02, run `20261002T095730Z` — under audit.**
-> The v4 scores are provisional. See the handoff for confirmed scorer and
-> schema/reference contract defects. A replacement final run awaits task/reference
-> repairs and the necessary controlled inference checks. All six legs
-> use code for per-engine verdicts. `code-v3` handles Markdown and tables;
-> `kv-schema-code-v4` handles key-value and schema. Image checklists and
-> printed-label aliases were created earlier by models and are reused.
-> Current audit code includes table code-v5, field v10, geometry-v4 (global
-> word assignment and explicit axis policy), and native Textract merged-cell reconstruction. The handoff
-> records isolated replay impacts; these diagnostics have not replaced the
-> archived run. Do not add their change counts: some affect the same rows.
+> **Delivered scoring: 2026-10-02, run `20261002T162630Z`.**
+> Confirmed scoring/reference repairs are applied to the saved outputs. All six
+> legs use code for per-engine verdicts: code-v5 for Markdown/tables,
+> kv-schema-code-v10 for fields, geometry-v4 for word assignment and explicit
+> coordinate policy, plus native Textract merged-cell reconstruction. Existing
+> model-authored image checklists and printed-label aliases are reused.
+> This compares saved configurations; incomplete tuning and unrun controls are
+> disclosed in the report. They are not represented as completed validation.
+> The superseded provisional run is preserved through git history. Historical
+> isolated replay counts overlap; final run changes are counted in the handoff.
 > Printed-text-reference-v1 removes six unprinted source citations and replaces
 > chart_003's inferred data tables with printed chart text. Chart-reference-v1
 > excludes unverified quantitative series from that page's schema targets.

@@ -10,8 +10,22 @@ couldn't find numbers we trusted. So we measured it ourselves and published
 everything: documents, ground truth, raw outputs, and the scoring code.
 
 ```bash
-python run_benchmark.py --report 20261002T095730Z    # saved rescore (under audit)
+python run_benchmark.py --report 20261002T162630Z    # corrected saved results
 ```
+
+The corrected run compares the saved engine configurations across six legs. Confirmed
+scoring/reference defects are repaired; unrun configuration controls and remaining
+reference limitations are disclosed in [the handoff](docs/handoff-2026-10-01.md).
+
+With the document corpus installed, build the browser report (no API calls):
+
+```bash
+python scripts/build_evidence_report.py 20261002T162630Z
+```
+
+Open `results/reports/ocr-benchmark-final.html`. It includes source pages, actual
+returned boxes, extracted field pairs, cell grids, prompts and saved verdicts.
+The generated HTML is local and gitignored; the builder and saved results are versioned.
 
 Historical routing calculator (uses the original scores, not the saved rescore): [artifact](https://claude.ai/code/artifact/d92e781d-11e6-4dd1-ae0f-d98eb5e2e4b0
 )
@@ -39,7 +53,7 @@ That re-renders the complete report in your terminal — free, instant, and any
 number in it can be traced to the raw engine output under
 `results/ocr_outputs/`.
 
-### 2. Get the documents (only needed to rerun engines)
+### 2. Get the documents (for inference or the browser evidence report)
 
 The 93 document images and their ground truth live on HuggingFace at
 [`ilsilfverskiold/ocr-benchmark`](https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark)

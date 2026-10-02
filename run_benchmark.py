@@ -1168,12 +1168,12 @@ def _print_gt_provenance(records: list[dict], log: logging.Logger) -> None:
 
     labels = {
         "human": "human (source dataset annotation)",
-        "model_verified": "model-transcribed, engine-consensus verified",
+        "model_verified": "model-transcribed/reviewed (verification scope varies; see provenance)",
         "silver_tesseract": "machine-generated (Tesseract) — judge only",
     }
     log.info("")
     log.info("=" * 100)
-    log.info("Ground truth provenance")
+    log.info("Ground truth provenance recorded with these scores")
     log.info("=" * 100)
     for source in ("human", "model_verified", "silver_tesseract"):
         n = len(docs_by_source.get(source, ()))
@@ -1182,17 +1182,12 @@ def _print_gt_provenance(records: list[dict], log: logging.Logger) -> None:
 
     n_model = len(docs_by_source.get("model_verified", ()))
     if n_model:
-        try:
-            from evaluation.ground_truth import MODEL_VERIFIED_GT
-            annotators = sorted({v.get("annotator", "?") for v in MODEL_VERIFIED_GT.values()})
-        except Exception:
-            annotators = []
         log.info("")
-        log.info(f"  NOTE: {n_model} document(s) carry ARTIFICIAL ground truth produced by "
-                 f"{', '.join(annotators) or 'a model'} and")
-        log.info("        cross-checked against OCR engine consensus, not human annotation.")
-        log.info("        Their scores are real but rest on a model's reading of the page —")
-        log.info("        see documents/gt_provenance.json for the per-document audit trail.")
+        log.info(f"  NOTE: {n_model} document(s) are recorded as model-transcribed/reviewed.")
+        log.info("        This category does not establish independent human validation")
+        log.info("        or a uniform verification method. Some repairs are partial.")
+        log.info("        See per-result repair metadata and documents/gt_provenance.json;")
+        log.info("        current corpus notes may include reviews made after these scores.")
     log.info("")
 
 
@@ -1217,7 +1212,7 @@ def _print_gt_limitations(log: logging.Logger) -> None:
     entries.sort(key=lambda e: order.get(e.get("severity"), 9))
 
     log.info("=" * 100)
-    log.info("Known ground-truth limitations")
+    log.info("Current corpus limitations (context; saved scores are not rescored)")
     log.info("=" * 100)
     for e in entries:
         docs = e.get("documents", [])
@@ -2168,11 +2163,11 @@ def report(timestamp: str | list[str], log: logging.Logger,
     engines = [e for e in engines if e in ENGINES] or sorted(
         {r["engine_name"] for r in leg_records}
     )
-    # Re-check GT applicability so report reflects current GT state
-    # (e.g. charts excluded from tables) without requiring a rescore.
-    from evaluation.ground_truth import GroundTruthLoader
-    _gt_loader = GroundTruthLoader()
-    _applicable_records = []
+    # Reporting reproduces saved scoring decisions. Applying today's GT
+    # eligibility here silently dropped historical scores from summaries
+    # while leaving them in the per-document CSV. Reference/policy changes
+    # belong in an explicit rescore, with a new run and recorded provenance.
+    leg_rows = []
     # The document judge is not a leg: its rows stay out of the per-leg
     # aggregation and are printed in their own section. Dropping them here
     # (as before 2026-09-30) meant _print_judged_documents received no rows
@@ -2182,15 +2177,8 @@ def report(timestamp: str | list[str], log: logging.Logger,
         if r["leg"] == "judge":
             judge_rows.append(r)
             continue
-        if r.get("applicable") and r.get("score") is not None:
-            try:
-                gt = _gt_loader.load(Path(r["document_path"]))
-                if not gt.has_gt_for(r["leg"]):
-                    r = dict(r, applicable=False, score=None)
-            except (FileNotFoundError, ValueError):
-                pass
-        _applicable_records.append(r)
-    agg = aggregate_legs(_applicable_records)
+        leg_rows.append(r)
+    agg = aggregate_legs(leg_rows)
     operational = engine_operational(inference)
 
     SUMMARIES_DIR.mkdir(parents=True, exist_ok=True)
@@ -2203,15 +2191,15 @@ def report(timestamp: str | list[str], log: logging.Logger,
 
     # Order fixed by docs/architecture.md: provenance and limitations frame the
     # scores, then the scores, then cost, then what failed.
-    _print_gt_provenance(_applicable_records, log)
+    _print_gt_provenance(leg_rows, log)
     _print_gt_limitations(log)
-    _print_leg_results(agg, _applicable_records, active_legs, engines, operational, log)
+    _print_leg_results(agg, leg_rows, active_legs, engines, operational, log)
     _print_judged_documents(judge_rows, log)
     _print_engine_summary(agg, active_legs, operational, log)
     _print_scale_projection(operational, log)
     _print_per_leg_costs(operational, engines, log, inference)
     _print_spread_warnings(agg, active_legs, log)
-    _print_failures(_applicable_records, log)
+    _print_failures(leg_rows, log)
     _print_inference_errors(inference, log)
 
     log.info("Results written to:")

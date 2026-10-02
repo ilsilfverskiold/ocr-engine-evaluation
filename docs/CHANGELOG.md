@@ -4,7 +4,18 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
-## 2026-10-02 — audit corrections, publication still pending
+## 2026-10-02 — corrected saved report delivered locally
+
+- Deliver run `20261002T162630Z` and a reproducible browser evidence viewer.
+  All 3,099 scored results have arithmetic/provenance checks; 554 scores change
+  after confirmed repairs. Unrun configuration controls remain disclosed.
+  Remove the superseded provisional run/export; retain original raw calls.
+- Historical terminal reports now preserve saved applicability and scores in
+  both display and CSVs. They no longer silently apply today's ground truth.
+  Reference labels no longer imply universal engine-consensus verification.
+  Nineteen report tests pass. No new inference/judge calls or push.
+
+## 2026-10-02 — earlier audit corrections
 
 - The sroie_003 schema reference now represents one purchased item with its
   two-line description, instead of two items and three nonexistent blanks.
