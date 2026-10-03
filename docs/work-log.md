@@ -986,3 +986,14 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   evidence from per-call proof. Inspect bank source and saved output; record
   differing layout formatting and prompt follow-up in the next-session list.
 - Read-only evidence inspection; no inference, scoring, judge calls or push.
+
+
+## 2026-10-03 — record CER/WER as required text comparison measures
+
+- Expand the follow-up document with plain-language CER/WER definitions,
+  direction, normalization, order/reference limitations and the two verified
+  Sonnet examples. Record the requested prominence in text engine comparisons;
+  distinguish that pending work from existing per-page metrics.
+- Recommend separate coverage/CER/WER columns, not an arbitrary average of
+  overlapping error rates. No combined score or new default sort approved.
+- Documentation only; no scorer/report changes, inference, judge calls or push.
