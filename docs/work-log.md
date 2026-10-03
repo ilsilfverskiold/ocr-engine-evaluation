@@ -997,3 +997,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Recommend separate coverage/CER/WER columns, not an arbitrary average of
   overlapping error rates. No combined score or new default sort approved.
 - Documentation only; no scorer/report changes, inference, judge calls or push.
+
+
+## 2026-10-03 — run the requested Sonnet Markdown structure/text pilot
+
+- User explicitly revises the earlier text-only CER/WER direction: investigate
+  structure plus text fidelity within Markdown, using a few saved Sonnet docs.
+- Read primary CommonMark/GFM and OmniDocBench evaluation documentation. Test
+  invoice_000, invoice_001, bank_001 and lease_000 offline, same default answers
+  for structure and text. Actual heading matches against sampled targets are
+  0/4, 0/4, 5/7, 5/5 although all saved Markdown scores are 1.0.
+- Reproduce all four old checklist scores and stored CER/WER. Check actual
+  table grids and list nodes, isolate heading-only counterfactuals without
+  presenting them as corrected overall scores. Record methodology, limitations,
+  results and standards links in the existing follow-up document.
+- Scratch contains a reproducible script, JSON evidence and small HTML viewer;
+  no generated pilot artifacts inside the repo. Parser fixtures pass for bold,
+  ATX/Setext/HTML headings and list items. No official result/scorer change,
+  engine call, reference-building/judge call or push. No new spend.
