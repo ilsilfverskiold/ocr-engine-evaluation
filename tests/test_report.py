@@ -11,6 +11,49 @@ import run_benchmark
 from run_benchmark import aggregate_legs, engine_leg_means, engine_operational
 
 
+def test_saved_document_paths_relocate_to_this_checkout(tmp_path, monkeypatch):
+    monkeypatch.setattr(run_benchmark, 'ROOT', tmp_path / 'checkout')
+    p = tmp_path / 'records.jsonl'
+    old = '/another/users/repo/documents/easy/invoice/invoice_000.png'
+    p.write_text(json.dumps({'document_path': old, 'source_timestamp': 'original'}) + '\n')
+    record, = run_benchmark.read_jsonl(p)
+    assert record['document_path'] == str(tmp_path / 'checkout/documents/easy/invoice/invoice_000.png')
+    assert record['source_document_path'] == old
+    assert record['source_timestamp'] == 'original'
+
+
+def test_gold_table_diagnosis_uses_cells_including_blanks_and_extras():
+    record = {'leg': 'tables', 'applicable': True, 'metrics': {
+        'scorer': 'gold-table-cells-v1', 'correct': 2, 'reference_cells': 2,
+        'output_cells': 3, 'correct_blank_cells': 1, 'reference_blank_cells': 1},
+        'detail': {'verdicts': [{'verdict': 'correct'}, {'verdict': 'correct'}, {'verdict': 'extra'}]}}
+    diagnosis = run_benchmark._diagnose(record)
+    assert '2/2 reference cells correct' in diagnosis
+    assert '0 wrong, 0 missing, 1 extra' in diagnosis
+    assert '1/1 blanks correct' in diagnosis
+
+
+def test_rescore_uses_original_calls_when_source_is_itself_a_rescore(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from evaluation.ground_truth import GroundTruthLoader
+    monkeypatch.setattr(run_benchmark, 'RUNS_DIR', tmp_path)
+    record = {'engine_name': 'test', 'document_path': '/x.png', 'pass_name': 'default',
+              'legs': ['text'], 'source_timestamp': 'original'}
+    (tmp_path / 'previous_inference.jsonl').write_text(json.dumps(record) + '\n')
+    gt = SimpleNamespace(tier='easy', doc_type='sample', gt_source='human')
+    monkeypatch.setattr(GroundTruthLoader, 'load', lambda *args: gt)
+    seen = []
+    def read(source, *args):
+        seen.append(source)
+        return {'raw_text': 'answer'}
+    monkeypatch.setattr(run_benchmark, '_read_stored_call', read)
+    monkeypatch.setattr(run_benchmark, '_score_pass_legs', lambda *args, **kwargs: [])
+    run_benchmark.rescore_runs(['previous'], 'new', logging.getLogger('test'), True)
+    assert seen == ['original']
+    saved, = run_benchmark.read_jsonl(tmp_path / 'new_inference.jsonl')
+    assert saved['source_timestamp'] == 'original'
+
+
 def _leg(engine, tier, doc_type, doc, leg, score, applicable=True):
     return {
         "engine_name": engine, "tier": tier, "doc_type": doc_type,

@@ -33,7 +33,7 @@ import logging
 import os
 import sys
 import threading
-from collections import defaultdict
+from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -443,7 +443,17 @@ def read_jsonl(path: Path) -> list[dict]:
             if not line:
                 continue
             try:
-                records.append(json.loads(line))
+                record = json.loads(line)
+                document = record.get("document_path")
+                if isinstance(document, str):
+                    parts = Path(document).parts
+                    if "documents" in parts:
+                        relative = Path(*parts[parts.index("documents"):])
+                        local = str(ROOT.resolve() / relative)
+                        if local != document:
+                            record.setdefault("source_document_path", document)
+                            record["document_path"] = local
+                records.append(record)
             except json.JSONDecodeError:
                 continue
     return records
@@ -929,6 +939,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         error_rows_written: set[tuple] = set()
         for rec in inference:
             engine = rec["engine_name"]
+            call_source = rec.get("source_timestamp") or src
             if engine not in engines:
                 engines.append(engine)
             doc_path = Path(rec["document_path"])
@@ -944,7 +955,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
             for l in legs:
                 if l not in legs_seen:
                     legs_seen.append(l)
-            log_record({**rec, "timestamp": target, "source_timestamp": src}, inference_jsonl)
+            log_record({**rec, "timestamp": target, "source_timestamp": call_source}, inference_jsonl)
             try:
                 gt = loader.load(doc_path)
             except Exception as exc:
@@ -962,7 +973,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                     # read from: when the other pass has regions for this
                     # page, geometry is scored from them; otherwise the
                     # failure stands as an error row
-                    alt = _read_stored_call(src, engine, doc_path, gt, alt_pass)
+                    alt = _read_stored_call(call_source, engine, doc_path, gt, alt_pass)
                     if alt is not None and (alt.get("structured_output") or {}).get("text_regions"):
                         parts = _score_pass_legs(
                             engine, doc_path, gt, base, alt_pass, ["geometry"],
@@ -978,7 +989,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                                 "error": rec.get("error")}, results_jsonl)
                 failed += 1
                 continue
-            call = _read_stored_call(src, engine, doc_path, gt, pass_name)
+            call = _read_stored_call(call_source, engine, doc_path, gt, pass_name)
             if call is None:
                 missing += 1
                 log.warning(f"  [{engine}/{pass_name}] {doc_path.name}: no stored .call.json")
@@ -991,7 +1002,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
             # and crashed on 5 pages. Geometry is scored from the former.
             alt_pass = GEOMETRY_SOURCE_PASS.get(engine)
             if alt_pass and "geometry" in legs and alt_pass != pass_name:
-                alt = _read_stored_call(src, engine, doc_path, gt, alt_pass)
+                alt = _read_stored_call(call_source, engine, doc_path, gt, alt_pass)
                 if alt is not None and (alt.get("structured_output") or {}).get("text_regions"):
                     parts += _score_pass_legs(
                         engine, doc_path, gt, base, alt_pass, ["geometry"],
@@ -1632,6 +1643,12 @@ def _diagnose(record: dict) -> str:
     if leg == "tables":
         if reason:
             return reason
+        if m.get("scorer", "").startswith("gold-table-cells-"):
+            counts = Counter(v["verdict"] for v in (record.get("detail") or {}).get("verdicts", []))
+            return (f"{m.get('correct', 0)}/{m.get('reference_cells', 0)} reference cells correct; "
+                    f"{m.get('output_cells', 0)} returned cells; "
+                    f"{counts['wrong']} wrong, {counts['missing']} missing, {counts['extra']} extra; "
+                    f"{m.get('correct_blank_cells', 0)}/{m.get('reference_blank_cells', 0)} blanks correct")
         if "verdict_grids" in m:
             return (f"{m['verdict_grids']} parsed table grid(s); checklist: "
                     f"{m.get('verdict_correct', 0)} correct, "

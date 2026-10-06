@@ -1616,3 +1616,26 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   pending. Exact excluded keys now bypass synonym review in both legs, while
   selected fields and expected values remain unchanged. The existing shared
   array/exclusion regression passes; all 369 tests pass. No paid calls.
+
+## 2026-10-06 — replay historical calls and show current scoring evidence
+
+- Rescoring a rescore now uses each record's original call timestamp. Historical
+  document paths relocate to the current checkout; original paths are retained.
+- Evidence viewer filters engine/type/leg/page and recalculates equally weighted
+  document-type means. Show actual table cells/spans, gold/original comparisons,
+  pending KV pairs, strict Markdown verdicts, text CER/WER and geometry scope,
+  precision/F1 and actual returned boxes. Gold-table diagnoses count verdicts
+  instead of assuming every result has wrong values.
+- Free checkpoint `20261006T171802Z`: 4,615 rows; 1,148 text, 627 Markdown,
+  504 table and 145 geometry results scored. Eight saved geometry errors remain;
+  455 schema contracts need rerun; unfinished KV and missing catalogues are N/A.
+  The 110 silver estimates are explicitly historical. No OCR/judge was called.
+- Verified every scored table's F1 and rendered cell count, every Markdown
+  headline against verdicts and every geometry overlay count against parsed
+  boxes. JavaScript syntax passed; headless Chrome rendered the overview and
+  its screenshot was inspected. Filter interactions and all detailed views were
+  not exhaustively browser-tested. All 369 offline tests pass.
+- Keep provisional JSONL/CSVs under session scratch `offline-rescore/`, and the
+  self-contained viewer at `/private/tmp/ocr-eval-rebuild-20261006/ocr-results.html`.
+  No experimental artifacts committed and no final report replaced. The small
+  excluded-field fix postdates this checkpoint; final rescore must include it.

@@ -4,6 +4,14 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — portable rescoring and current evidence viewer
+
+- Preserve original call provenance across repeated rescoring and relocate
+  document paths in fresh checkouts. Add document-type filtering and current
+  scorer-specific tables, boxes, Markdown, field evidence and text metrics.
+- Free rescore checkpoint retained outside git for verification; unfinished
+  schema/KV/reference work remains clearly pending. Published report unchanged.
+
 ## 2026-10-06 — excluded fields do not block KV completion
 
 - Respect explicit human field exclusions before requesting key synonyms.
