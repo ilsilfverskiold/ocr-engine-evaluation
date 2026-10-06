@@ -1253,14 +1253,25 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     """Describe saved scores, without relabelling historical judge runs as code."""
     spec = LEGS[leg]
     methods = set()
+    current_versions = {"markdown": "markdown-structure-v1", "tables": "gold-table-cells-v1",
+                        "key_value": "shared-fields-v1", "schema": "shared-fields-v1"}
+    current_only = True
     for record in records:
         if not record.get("applicable") or record.get("score") is None:
             continue
         metrics = record.get("metrics") or {}
         scorer = next((metrics[k] for k in ("scorer", "kv_scorer", "schema_scorer")
                        if metrics.get(k)), None)
+        if leg in current_versions and scorer != current_versions[leg]:
+            current_only = False
         if scorer:
-            methods.add(f"{spec.method} ({scorer})")
+            if str(scorer).startswith("code-v"):
+                method_name = "code verdicts against cached image checklist"
+            elif str(scorer).startswith("kv-schema-code"):
+                method_name = "code verdicts using legacy field/printed-label matching"
+            else:
+                method_name = spec.method
+            methods.add(f"{method_name} ({scorer})")
         elif leg in ("key_value", "schema"):
             methods.add("legacy local field verification + LLM verdicts")
         elif (metrics.get("judge_element_accuracy") is not None
@@ -1273,7 +1284,7 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
             methods.add("deterministic supporting metric" if leg in ("markdown", "tables")
                         else "deterministic")
     method = "; ".join(sorted(methods)) if methods else "no scored rows"
-    current_only = bool(methods) and all("code verdicts" in m for m in methods)
+    current_only = bool(methods) and current_only
     if leg in ("markdown", "tables", "key_value", "schema") and not current_only:
         return "saved headline score (see per-row metrics)", method
     return spec.scored_on, method

@@ -1451,3 +1451,14 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   publication, failed-call journaling/no retry, budget checks and successful
   resume with mocked provider responses. These verify mechanics, not model
   mapping accuracy; inspect live mappings before final reporting.
+
+## 2026-10-06 — preserve saved scoring-method labels
+
+- Full suite after the synonym CLI: 342 passed and one historical-report label
+  regression failed. Updating current table labels had also relabeled saved
+  code-v3 results as gold-reference F1. Fix the report to derive legacy/current
+  method descriptions from the recorded scorer version; mixed versions retain
+  a generic saved-headline title.
+- All 20 report tests pass after the fix, including old model verdicts, old code
+  checklist scores, new gold-cell F1 and mixed-version descriptions. No report
+  generation, inference or paid call. This closes the remaining suite failure.

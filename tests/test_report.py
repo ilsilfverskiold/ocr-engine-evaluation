@@ -60,6 +60,10 @@ def test_report_method_uses_saved_scorer_not_todays_registry():
     assert "code verdicts" in run_benchmark._recorded_scoring_method("tables", [current])[1]
     mixed = run_benchmark._recorded_scoring_method("tables", [old, current])[1]
     assert "LLM verdicts" in mixed and "code verdicts" in mixed
+    gold = dict(old, metrics={"cell_f1": .7, "scorer": "gold-table-cells-v1"})
+    title, method = run_benchmark._recorded_scoring_method("tables", [gold])
+    assert "cell F1" in title and "reviewed table references" in method
+    assert "saved headline" in run_benchmark._recorded_scoring_method("tables", [gold, current])[0]
 
 
 def test_estimate_does_not_charge_for_removed_table_judge(monkeypatch, tmp_path, capsys):
