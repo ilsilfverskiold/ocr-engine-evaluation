@@ -29,7 +29,8 @@ class MistralOCRRunner(OCRRunner):
         structured-extraction path, not a prompt we invented. Any other task
         is ignored: markdown and tables come from the default conversion.
 
-        UNVALIDATED: exercise on 2 documents before any full run."""
+        The pinned OCR-4.0 annotation route was exercised on all 65 shared
+        schema pages in the 2026-10-06 run; native conversion is separate."""
         t0 = self._timer()
 
         schema = task.json_schema if (task and task.leg == "schema" and task.json_schema) else None

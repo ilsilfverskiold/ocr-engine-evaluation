@@ -1,0 +1,3584 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/shipping/shipping_002.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Document Number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client Number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Issue Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer page number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Dispatch Station / Sender\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Weight in Kg\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 1 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 2 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 4 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 5 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 1 — Charge 5 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Dispatch Station / Sender\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Type of Service / Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Weight in Kg\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Base Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Charge 2 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 2 — Charge 2 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Type of Service / Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Base Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 1 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 2 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 3 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 4 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 3 — Charge 4 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Number of Shipments\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Base Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 1 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 2 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 2 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 3 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 3 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 3 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 4 — Charge 3 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 5 — Receiving Station / Recipient\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 5 — Base Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 5 — Charge 1 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 5 — Charge 1 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Receiving Station / Recipient\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Type of Service / Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Weight in Kg\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 1 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 1 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 2 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 3 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 3 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 4 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 4 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 5 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 6 — Charge 5 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Dispatch Station / Sender\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Weight in Kg\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Base Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 2 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 2 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 4 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 4 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 5 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 5 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 7 — Charge 5 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Dispatch Station / Sender\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Type of Service / Charge\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Weight in Kg\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 1 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 1 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 2 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 2 — Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 2 — VAT / Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 3 — Description of Additional Charges\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Shipment 8 — Charge 4 — Gross Value\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Document Number\",\n    \"Client Number\",\n    \"Issue Date\",\n    \"Page\",\n    \"Footer page number\",\n    \"Shipment 1 — Dispatch Station / Sender\",\n    \"Shipment 1 — Weight in Kg\",\n    \"Shipment 1 — Charge 1 — Description of Additional Charges\",\n    \"Shipment 1 — Charge 1 — Additional Charges\",\n    \"Shipment 1 — Charge 2 — Gross Value\",\n    \"Shipment 1 — Charge 4 — VAT / Code\",\n    \"Shipment 1 — Charge 5 — VAT / Code\",\n    \"Shipment 1 — Charge 5 — Gross Value\",\n    \"Shipment 2 — Dispatch Station / Sender\",\n    \"Shipment 2 — Type of Service / Charge\",\n    \"Shipment 2 — Weight in Kg\",\n    \"Shipment 2 — Base Charge\",\n    \"Shipment 2 — Charge 1 — Additional Charges\",\n    \"Shipment 2 — Charge 2 — VAT / Code\",\n    \"Shipment 2 — Charge 2 — Gross Value\",\n    \"Shipment 3 — Date\",\n    \"Shipment 3 — Type of Service / Charge\",\n    \"Shipment 3 — Base Charge\",\n    \"Shipment 3 — Charge 1 — Description of Additional Charges\",\n    \"Shipment 3 — Charge 1 — Additional Charges\",\n    \"Shipment 3 — Charge 2 — VAT / Code\",\n    \"Shipment 3 — Charge 3 — VAT / Code\",\n    \"Shipment 3 — Charge 4 — Description of Additional Charges\",\n    \"Shipment 3 — Charge 4 — Additional Charges\",\n    \"Shipment 4 — Date\",\n    \"Shipment 4 — Number of Shipments\",\n    \"Shipment 4 — Base Charge\",\n    \"Shipment 4 — Charge 1 — Additional Charges\",\n    \"Shipment 4 — Charge 1 — Gross Value\",\n    \"Shipment 4 — Charge 2 — VAT / Code\",\n    \"Shipment 4 — Charge 2 — Gross Value\",\n    \"Shipment 4 — Charge 3 — Description of Additional Charges\",\n    \"Shipment 4 — Charge 3 — Additional Charges\",\n    \"Shipment 4 — Charge 3 — VAT / Code\",\n    \"Shipment 4 — Charge 3 — Gross Value\",\n    \"Shipment 5 — Receiving Station / Recipient\",\n    \"Shipment 5 — Base Charge\",\n    \"Shipment 5 — Charge 1 — Description of Additional Charges\",\n    \"Shipment 5 — Charge 1 — VAT / Code\",\n    \"Shipment 6 — Date\",\n    \"Shipment 6 — Receiving Station / Recipient\",\n    \"Shipment 6 — Type of Service / Charge\",\n    \"Shipment 6 — Weight in Kg\",\n    \"Shipment 6 — Charge 1 — Description of Additional Charges\",\n    \"Shipment 6 — Charge 1 — Additional Charges\",\n    \"Shipment 6 — Charge 1 — VAT / Code\",\n    \"Shipment 6 — Charge 2 — VAT / Code\",\n    \"Shipment 6 — Charge 3 — Additional Charges\",\n    \"Shipment 6 — Charge 3 — Gross Value\",\n    \"Shipment 6 — Charge 4 — Additional Charges\",\n    \"Shipment 6 — Charge 4 — VAT / Code\",\n    \"Shipment 6 — Charge 5 — Additional Charges\",\n    \"Shipment 6 — Charge 5 — VAT / Code\",\n    \"Shipment 7 — Dispatch Station / Sender\",\n    \"Shipment 7 — Weight in Kg\",\n    \"Shipment 7 — Base Charge\",\n    \"Shipment 7 — Charge 1 — Additional Charges\",\n    \"Shipment 7 — Charge 2 — Description of Additional Charges\",\n    \"Shipment 7 — Charge 2 — Additional Charges\",\n    \"Shipment 7 — Charge 4 — VAT / Code\",\n    \"Shipment 7 — Charge 4 — Gross Value\",\n    \"Shipment 7 — Charge 5 — Description of Additional Charges\",\n    \"Shipment 7 — Charge 5 — VAT / Code\",\n    \"Shipment 7 — Charge 5 — Gross Value\",\n    \"Shipment 8 — Date\",\n    \"Shipment 8 — Dispatch Station / Sender\",\n    \"Shipment 8 — Type of Service / Charge\",\n    \"Shipment 8 — Weight in Kg\",\n    \"Shipment 8 — Charge 1 — Additional Charges\",\n    \"Shipment 8 — Charge 1 — Gross Value\",\n    \"Shipment 8 — Charge 2 — Description of Additional Charges\",\n    \"Shipment 8 — Charge 2 — Additional Charges\",\n    \"Shipment 8 — Charge 2 — VAT / Code\",\n    \"Shipment 8 — Charge 3 — Description of Additional Charges\",\n    \"Shipment 8 — Charge 4 — Gross Value\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Document Number": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client Number": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Issue Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Page": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Footer page number": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Dispatch Station / Sender": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Weight in Kg": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 1 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 2 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 4 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 5 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 1 — Charge 5 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Dispatch Station / Sender": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Type of Service / Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Weight in Kg": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Base Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Charge 2 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 2 — Charge 2 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Type of Service / Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Base Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 1 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 2 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 3 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 4 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 3 — Charge 4 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Number of Shipments": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Base Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 1 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 2 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 2 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 3 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 3 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 3 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 4 — Charge 3 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 5 — Receiving Station / Recipient": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 5 — Base Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 5 — Charge 1 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 5 — Charge 1 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Receiving Station / Recipient": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Type of Service / Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Weight in Kg": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 1 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 1 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 2 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 3 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 3 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 4 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 4 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 5 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 6 — Charge 5 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Dispatch Station / Sender": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Weight in Kg": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Base Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 2 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 2 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 4 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 4 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 5 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 5 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 7 — Charge 5 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Dispatch Station / Sender": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Type of Service / Charge": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Weight in Kg": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 1 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 1 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 2 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 2 — Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 2 — VAT / Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 3 — Description of Additional Charges": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Shipment 8 — Charge 4 — Gross Value": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Document Number",
+   "Client Number",
+   "Issue Date",
+   "Page",
+   "Footer page number",
+   "Shipment 1 — Dispatch Station / Sender",
+   "Shipment 1 — Weight in Kg",
+   "Shipment 1 — Charge 1 — Description of Additional Charges",
+   "Shipment 1 — Charge 1 — Additional Charges",
+   "Shipment 1 — Charge 2 — Gross Value",
+   "Shipment 1 — Charge 4 — VAT / Code",
+   "Shipment 1 — Charge 5 — VAT / Code",
+   "Shipment 1 — Charge 5 — Gross Value",
+   "Shipment 2 — Dispatch Station / Sender",
+   "Shipment 2 — Type of Service / Charge",
+   "Shipment 2 — Weight in Kg",
+   "Shipment 2 — Base Charge",
+   "Shipment 2 — Charge 1 — Additional Charges",
+   "Shipment 2 — Charge 2 — VAT / Code",
+   "Shipment 2 — Charge 2 — Gross Value",
+   "Shipment 3 — Date",
+   "Shipment 3 — Type of Service / Charge",
+   "Shipment 3 — Base Charge",
+   "Shipment 3 — Charge 1 — Description of Additional Charges",
+   "Shipment 3 — Charge 1 — Additional Charges",
+   "Shipment 3 — Charge 2 — VAT / Code",
+   "Shipment 3 — Charge 3 — VAT / Code",
+   "Shipment 3 — Charge 4 — Description of Additional Charges",
+   "Shipment 3 — Charge 4 — Additional Charges",
+   "Shipment 4 — Date",
+   "Shipment 4 — Number of Shipments",
+   "Shipment 4 — Base Charge",
+   "Shipment 4 — Charge 1 — Additional Charges",
+   "Shipment 4 — Charge 1 — Gross Value",
+   "Shipment 4 — Charge 2 — VAT / Code",
+   "Shipment 4 — Charge 2 — Gross Value",
+   "Shipment 4 — Charge 3 — Description of Additional Charges",
+   "Shipment 4 — Charge 3 — Additional Charges",
+   "Shipment 4 — Charge 3 — VAT / Code",
+   "Shipment 4 — Charge 3 — Gross Value",
+   "Shipment 5 — Receiving Station / Recipient",
+   "Shipment 5 — Base Charge",
+   "Shipment 5 — Charge 1 — Description of Additional Charges",
+   "Shipment 5 — Charge 1 — VAT / Code",
+   "Shipment 6 — Date",
+   "Shipment 6 — Receiving Station / Recipient",
+   "Shipment 6 — Type of Service / Charge",
+   "Shipment 6 — Weight in Kg",
+   "Shipment 6 — Charge 1 — Description of Additional Charges",
+   "Shipment 6 — Charge 1 — Additional Charges",
+   "Shipment 6 — Charge 1 — VAT / Code",
+   "Shipment 6 — Charge 2 — VAT / Code",
+   "Shipment 6 — Charge 3 — Additional Charges",
+   "Shipment 6 — Charge 3 — Gross Value",
+   "Shipment 6 — Charge 4 — Additional Charges",
+   "Shipment 6 — Charge 4 — VAT / Code",
+   "Shipment 6 — Charge 5 — Additional Charges",
+   "Shipment 6 — Charge 5 — VAT / Code",
+   "Shipment 7 — Dispatch Station / Sender",
+   "Shipment 7 — Weight in Kg",
+   "Shipment 7 — Base Charge",
+   "Shipment 7 — Charge 1 — Additional Charges",
+   "Shipment 7 — Charge 2 — Description of Additional Charges",
+   "Shipment 7 — Charge 2 — Additional Charges",
+   "Shipment 7 — Charge 4 — VAT / Code",
+   "Shipment 7 — Charge 4 — Gross Value",
+   "Shipment 7 — Charge 5 — Description of Additional Charges",
+   "Shipment 7 — Charge 5 — VAT / Code",
+   "Shipment 7 — Charge 5 — Gross Value",
+   "Shipment 8 — Date",
+   "Shipment 8 — Dispatch Station / Sender",
+   "Shipment 8 — Type of Service / Charge",
+   "Shipment 8 — Weight in Kg",
+   "Shipment 8 — Charge 1 — Additional Charges",
+   "Shipment 8 — Charge 1 — Gross Value",
+   "Shipment 8 — Charge 2 — Description of Additional Charges",
+   "Shipment 8 — Charge 2 — Additional Charges",
+   "Shipment 8 — Charge 2 — VAT / Code",
+   "Shipment 8 — Charge 3 — Description of Additional Charges",
+   "Shipment 8 — Charge 4 — Gross Value"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 19.75245579192415,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Document Number\": \"QJFAH2WZ5U\", \"Client Number\": \"408797953\", \"Issue Date\": \"02-16-1951\", \"Page\": \"38 of 83\", \"Footer page number\": \"38\", \"Shipment 1 — Dispatch Station / Sender\": null, \"Shipment 1 — Weight in Kg\": \"10\", \"Shipment 1 — Charge 1 — Description of Additional Charges\": \"PEAK SEASON SURCHARGE\", \"Shipment 1 — Charge 1 — Additional Charges\": \"4.07\", \"Shipment 1 — Charge 2 — Gross Value\": \"19.89\", \"Shipment 1 — Charge 4 — VAT / Code\": \"3.79\", \"Shipment 1 — Charge 5 — VAT / Code\": \"4.64\", \"Shipment 1 — Charge 5 — Gross Value\": \"30.83\", \"Shipment 2 — Dispatch Station / Sender\": null, \"Shipment 2 — Type of Service / Charge\": \"DOMESTIC PRIORITY\", \"Shipment 2 — Weight in Kg\": \"23.2\", \"Shipment 2 — Base Charge\": \"118.68\", \"Shipment 2 — Charge 1 — Additional Charges\": \"9.92\", \"Shipment 2 — Charge 2 — VAT / Code\": \"4.75\", \"Shipment 2 — Charge 2 — Gross Value\": \"21.56\", \"Shipment 3 — Date\": \"06-06-1979\", \"Shipment 3 — Type of Service / Charge\": \"DOMESTIC PRIORITY\", \"Shipment 3 — Base Charge\": \"174.06\", \"Shipment 3 — Charge 1 — Description of Additional Charges\": \"PERISHABLE ITEM SURCHARGE\", \"Shipment 3 — Charge 1 — Additional Charges\": \"3.29\", \"Shipment 3 — Charge 2 — VAT / Code\": \"4.41\", \"Shipment 3 — Charge 3 — VAT / Code\": \"4.5\", \"Shipment 3 — Charge 4 — Description of Additional Charges\": \"FUEL ADJUSTMENT CHARGE\", \"Shipment 3 — Charge 4 — Additional Charges\": \"8.59\", \"Shipment 4 — Date\": \"12-13-1981\", \"Shipment 4 — Number of Shipments\": null, \"Shipment 4 — Base Charge\": \"79.83\", \"Shipment 4 — Charge 1 — Additional Charges\": \"1.22\", \"Shipment 4 — Charge 1 — Gross Value\": \"49.83\", \"Shipment 4 — Charge 2 — VAT / Code\": \"0.98\", \"Shipment 4 — Charge 2 — Gross Value\": \"28.72\", \"Shipment 4 — Charge 3 — Description of Additional Charges\": \"STORAGE FEE\", \"Shipment 4 — Charge 3 — Additional Charges\": \"5.03\", \"Shipment 4 — Charge 3 — VAT / Code\": \"1.07\", \"Shipment 4 — Charge 3 — Gross Value\": \"30.57\", \"Shipment 5 — Receiving Station / Recipient\": null, \"Shipment 5 — Base Charge\": null, \"Shipment 5 — Charge 1 — Description of Additional Charges\": null, \"Shipment 5 — Charge 1 — VAT / Code\": null, \"Shipment 6 — Date\": null, \"Shipment 6 — Receiving Station / Recipient\": null, \"Shipment 6 — Type of Service / Charge\": null, \"Shipment 6 — Weight in Kg\": null, \"Shipment 6 — Charge 1 — Description of Additional Charges\": null, \"Shipment 6 — Charge 1 — Additional Charges\": null, \"Shipment 6 — Charge 1 — VAT / Code\": null, \"Shipment 6 — Charge 2 — VAT / Code\": null, \"Shipment 6 — Charge 3 — Additional Charges\": null, \"Shipment 6 — Charge 3 — Gross Value\": null, \"Shipment 6 — Charge 4 — Additional Charges\": null, \"Shipment 6 — Charge 4 — VAT / Code\": null, \"Shipment 6 — Charge 5 — Additional Charges\": null, \"Shipment 6 — Charge 5 — VAT / Code\": null, \"Shipment 7 — Dispatch Station / Sender\": null, \"Shipment 7 — Weight in Kg\": null, \"Shipment 7 — Base Charge\": null, \"Shipment 7 — Charge 1 — Additional Charges\": null, \"Shipment 7 — Charge 2 — Description of Additional Charges\": null, \"Shipment 7 — Charge 2 — Additional Charges\": null, \"Shipment 7 — Charge 4 — VAT / Code\": null, \"Shipment 7 — Charge 4 — Gross Value\": null, \"Shipment 7 — Charge 5 — Description of Additional Charges\": null, \"Shipment 7 — Charge 5 — VAT / Code\": null, \"Shipment 7 — Charge 5 — Gross Value\": null, \"Shipment 8 — Date\": null, \"Shipment 8 — Dispatch Station / Sender\": null, \"Shipment 8 — Type of Service / Charge\": null, \"Shipment 8 — Weight in Kg\": null, \"Shipment 8 — Charge 1 — Additional Charges\": null, \"Shipment 8 — Charge 1 — Gross Value\": null, \"Shipment 8 — Charge 2 — Description of Additional Charges\": null, \"Shipment 8 — Charge 2 — Additional Charges\": null, \"Shipment 8 — Charge 2 — VAT / Code\": null, \"Shipment 8 — Charge 3 — Description of Additional Charges\": null, \"Shipment 8 — Charge 4 — Gross Value\": null}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-06 21:35:12.515274+00:00",
+  "data": {
+   "Document Number": "QJFAH2WZ5U",
+   "Client Number": "408797953",
+   "Issue Date": "02-16-1951",
+   "Page": "38 of 83",
+   "Footer page number": "38",
+   "Shipment 1 — Dispatch Station / Sender": null,
+   "Shipment 1 — Weight in Kg": "10",
+   "Shipment 1 — Charge 1 — Description of Additional Charges": "PEAK SEASON SURCHARGE",
+   "Shipment 1 — Charge 1 — Additional Charges": "4.07",
+   "Shipment 1 — Charge 2 — Gross Value": "19.89",
+   "Shipment 1 — Charge 4 — VAT / Code": "3.79",
+   "Shipment 1 — Charge 5 — VAT / Code": "4.64",
+   "Shipment 1 — Charge 5 — Gross Value": "30.83",
+   "Shipment 2 — Dispatch Station / Sender": null,
+   "Shipment 2 — Type of Service / Charge": "DOMESTIC PRIORITY",
+   "Shipment 2 — Weight in Kg": "23.2",
+   "Shipment 2 — Base Charge": "118.68",
+   "Shipment 2 — Charge 1 — Additional Charges": "9.92",
+   "Shipment 2 — Charge 2 — VAT / Code": "4.75",
+   "Shipment 2 — Charge 2 — Gross Value": "21.56",
+   "Shipment 3 — Date": "06-06-1979",
+   "Shipment 3 — Type of Service / Charge": "DOMESTIC PRIORITY",
+   "Shipment 3 — Base Charge": "174.06",
+   "Shipment 3 — Charge 1 — Description of Additional Charges": "PERISHABLE ITEM SURCHARGE",
+   "Shipment 3 — Charge 1 — Additional Charges": "3.29",
+   "Shipment 3 — Charge 2 — VAT / Code": "4.41",
+   "Shipment 3 — Charge 3 — VAT / Code": "4.5",
+   "Shipment 3 — Charge 4 — Description of Additional Charges": "FUEL ADJUSTMENT CHARGE",
+   "Shipment 3 — Charge 4 — Additional Charges": "8.59",
+   "Shipment 4 — Date": "12-13-1981",
+   "Shipment 4 — Number of Shipments": null,
+   "Shipment 4 — Base Charge": "79.83",
+   "Shipment 4 — Charge 1 — Additional Charges": "1.22",
+   "Shipment 4 — Charge 1 — Gross Value": "49.83",
+   "Shipment 4 — Charge 2 — VAT / Code": "0.98",
+   "Shipment 4 — Charge 2 — Gross Value": "28.72",
+   "Shipment 4 — Charge 3 — Description of Additional Charges": "STORAGE FEE",
+   "Shipment 4 — Charge 3 — Additional Charges": "5.03",
+   "Shipment 4 — Charge 3 — VAT / Code": "1.07",
+   "Shipment 4 — Charge 3 — Gross Value": "30.57",
+   "Shipment 5 — Receiving Station / Recipient": null,
+   "Shipment 5 — Base Charge": null,
+   "Shipment 5 — Charge 1 — Description of Additional Charges": null,
+   "Shipment 5 — Charge 1 — VAT / Code": null,
+   "Shipment 6 — Date": null,
+   "Shipment 6 — Receiving Station / Recipient": null,
+   "Shipment 6 — Type of Service / Charge": null,
+   "Shipment 6 — Weight in Kg": null,
+   "Shipment 6 — Charge 1 — Description of Additional Charges": null,
+   "Shipment 6 — Charge 1 — Additional Charges": null,
+   "Shipment 6 — Charge 1 — VAT / Code": null,
+   "Shipment 6 — Charge 2 — VAT / Code": null,
+   "Shipment 6 — Charge 3 — Additional Charges": null,
+   "Shipment 6 — Charge 3 — Gross Value": null,
+   "Shipment 6 — Charge 4 — Additional Charges": null,
+   "Shipment 6 — Charge 4 — VAT / Code": null,
+   "Shipment 6 — Charge 5 — Additional Charges": null,
+   "Shipment 6 — Charge 5 — VAT / Code": null,
+   "Shipment 7 — Dispatch Station / Sender": null,
+   "Shipment 7 — Weight in Kg": null,
+   "Shipment 7 — Base Charge": null,
+   "Shipment 7 — Charge 1 — Additional Charges": null,
+   "Shipment 7 — Charge 2 — Description of Additional Charges": null,
+   "Shipment 7 — Charge 2 — Additional Charges": null,
+   "Shipment 7 — Charge 4 — VAT / Code": null,
+   "Shipment 7 — Charge 4 — Gross Value": null,
+   "Shipment 7 — Charge 5 — Description of Additional Charges": null,
+   "Shipment 7 — Charge 5 — VAT / Code": null,
+   "Shipment 7 — Charge 5 — Gross Value": null,
+   "Shipment 8 — Date": null,
+   "Shipment 8 — Dispatch Station / Sender": null,
+   "Shipment 8 — Type of Service / Charge": null,
+   "Shipment 8 — Weight in Kg": null,
+   "Shipment 8 — Charge 1 — Additional Charges": null,
+   "Shipment 8 — Charge 1 — Gross Value": null,
+   "Shipment 8 — Charge 2 — Description of Additional Charges": null,
+   "Shipment 8 — Charge 2 — Additional Charges": null,
+   "Shipment 8 — Charge 2 — VAT / Code": null,
+   "Shipment 8 — Charge 3 — Description of Additional Charges": null,
+   "Shipment 8 — Charge 4 — Gross Value": null
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Document Number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Client Number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Issue Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Page": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Footer page number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Dispatch Station / Sender": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Weight in Kg": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 1 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 2 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 4 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 5 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 1 — Charge 5 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Dispatch Station / Sender": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Type of Service / Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Weight in Kg": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Base Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Charge 2 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 2 — Charge 2 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Type of Service / Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Base Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 1 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 2 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 3 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 4 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 3 — Charge 4 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Number of Shipments": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Base Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 1 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 2 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 2 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 3 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 3 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 3 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 4 — Charge 3 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 5 — Receiving Station / Recipient": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 5 — Base Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 5 — Charge 1 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 5 — Charge 1 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Receiving Station / Recipient": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Type of Service / Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Weight in Kg": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 1 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 1 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 2 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 3 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 3 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 4 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 4 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 5 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 6 — Charge 5 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Dispatch Station / Sender": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Weight in Kg": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Base Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 2 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 2 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 4 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 4 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 5 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 5 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 7 — Charge 5 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Dispatch Station / Sender": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Type of Service / Charge": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Weight in Kg": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 1 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 1 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 2 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 2 — Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 2 — VAT / Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 3 — Description of Additional Charges": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Shipment 8 — Charge 4 — Gross Value": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Document Number",
+    "Client Number",
+    "Issue Date",
+    "Page",
+    "Footer page number",
+    "Shipment 1 — Dispatch Station / Sender",
+    "Shipment 1 — Weight in Kg",
+    "Shipment 1 — Charge 1 — Description of Additional Charges",
+    "Shipment 1 — Charge 1 — Additional Charges",
+    "Shipment 1 — Charge 2 — Gross Value",
+    "Shipment 1 — Charge 4 — VAT / Code",
+    "Shipment 1 — Charge 5 — VAT / Code",
+    "Shipment 1 — Charge 5 — Gross Value",
+    "Shipment 2 — Dispatch Station / Sender",
+    "Shipment 2 — Type of Service / Charge",
+    "Shipment 2 — Weight in Kg",
+    "Shipment 2 — Base Charge",
+    "Shipment 2 — Charge 1 — Additional Charges",
+    "Shipment 2 — Charge 2 — VAT / Code",
+    "Shipment 2 — Charge 2 — Gross Value",
+    "Shipment 3 — Date",
+    "Shipment 3 — Type of Service / Charge",
+    "Shipment 3 — Base Charge",
+    "Shipment 3 — Charge 1 — Description of Additional Charges",
+    "Shipment 3 — Charge 1 — Additional Charges",
+    "Shipment 3 — Charge 2 — VAT / Code",
+    "Shipment 3 — Charge 3 — VAT / Code",
+    "Shipment 3 — Charge 4 — Description of Additional Charges",
+    "Shipment 3 — Charge 4 — Additional Charges",
+    "Shipment 4 — Date",
+    "Shipment 4 — Number of Shipments",
+    "Shipment 4 — Base Charge",
+    "Shipment 4 — Charge 1 — Additional Charges",
+    "Shipment 4 — Charge 1 — Gross Value",
+    "Shipment 4 — Charge 2 — VAT / Code",
+    "Shipment 4 — Charge 2 — Gross Value",
+    "Shipment 4 — Charge 3 — Description of Additional Charges",
+    "Shipment 4 — Charge 3 — Additional Charges",
+    "Shipment 4 — Charge 3 — VAT / Code",
+    "Shipment 4 — Charge 3 — Gross Value",
+    "Shipment 5 — Receiving Station / Recipient",
+    "Shipment 5 — Base Charge",
+    "Shipment 5 — Charge 1 — Description of Additional Charges",
+    "Shipment 5 — Charge 1 — VAT / Code",
+    "Shipment 6 — Date",
+    "Shipment 6 — Receiving Station / Recipient",
+    "Shipment 6 — Type of Service / Charge",
+    "Shipment 6 — Weight in Kg",
+    "Shipment 6 — Charge 1 — Description of Additional Charges",
+    "Shipment 6 — Charge 1 — Additional Charges",
+    "Shipment 6 — Charge 1 — VAT / Code",
+    "Shipment 6 — Charge 2 — VAT / Code",
+    "Shipment 6 — Charge 3 — Additional Charges",
+    "Shipment 6 — Charge 3 — Gross Value",
+    "Shipment 6 — Charge 4 — Additional Charges",
+    "Shipment 6 — Charge 4 — VAT / Code",
+    "Shipment 6 — Charge 5 — Additional Charges",
+    "Shipment 6 — Charge 5 — VAT / Code",
+    "Shipment 7 — Dispatch Station / Sender",
+    "Shipment 7 — Weight in Kg",
+    "Shipment 7 — Base Charge",
+    "Shipment 7 — Charge 1 — Additional Charges",
+    "Shipment 7 — Charge 2 — Description of Additional Charges",
+    "Shipment 7 — Charge 2 — Additional Charges",
+    "Shipment 7 — Charge 4 — VAT / Code",
+    "Shipment 7 — Charge 4 — Gross Value",
+    "Shipment 7 — Charge 5 — Description of Additional Charges",
+    "Shipment 7 — Charge 5 — VAT / Code",
+    "Shipment 7 — Charge 5 — Gross Value",
+    "Shipment 8 — Date",
+    "Shipment 8 — Dispatch Station / Sender",
+    "Shipment 8 — Type of Service / Charge",
+    "Shipment 8 — Weight in Kg",
+    "Shipment 8 — Charge 1 — Additional Charges",
+    "Shipment 8 — Charge 1 — Gross Value",
+    "Shipment 8 — Charge 2 — Description of Additional Charges",
+    "Shipment 8 — Charge 2 — Additional Charges",
+    "Shipment 8 — Charge 2 — VAT / Code",
+    "Shipment 8 — Charge 3 — Description of Additional Charges",
+    "Shipment 8 — Charge 4 — Gross Value"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 2221,
+    "num_output_tokens": 1066
+   },
+   "parse_job_id": "bee621d8-e623-4e3a-81f1-4babbd17b59e"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "3f7654bd-fe40-492b-a986-5a23a8082b14",
+  "from_ui": false,
+  "id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+  "job_id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-06 21:35:28.091932+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "interface": "v1 stateless extraction",
+  "job_id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+  "submission_attempts": 1,
+  "cost_is_estimate": true
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": false,
+     "cite_sources": false,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
+      "Document Number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Client Number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Issue Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Page": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Footer page number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Dispatch Station / Sender": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Weight in Kg": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 1 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 2 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 4 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 5 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 1 — Charge 5 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Dispatch Station / Sender": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Type of Service / Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Weight in Kg": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Base Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Charge 2 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 2 — Charge 2 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Type of Service / Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Base Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 1 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 2 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 3 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 4 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 3 — Charge 4 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Number of Shipments": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Base Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 1 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 2 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 2 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 3 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 3 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 3 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 4 — Charge 3 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 5 — Receiving Station / Recipient": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 5 — Base Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 5 — Charge 1 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 5 — Charge 1 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Receiving Station / Recipient": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Type of Service / Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Weight in Kg": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 1 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 1 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 2 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 3 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 3 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 4 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 4 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 5 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 6 — Charge 5 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Dispatch Station / Sender": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Weight in Kg": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Base Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 2 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 2 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 4 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 4 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 5 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 5 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 7 — Charge 5 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Dispatch Station / Sender": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Type of Service / Charge": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Weight in Kg": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 1 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 1 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 2 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 2 — Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 2 — VAT / Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 3 — Description of Additional Charges": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Shipment 8 — Charge 4 — Gross Value": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "Document Number",
+      "Client Number",
+      "Issue Date",
+      "Page",
+      "Footer page number",
+      "Shipment 1 — Dispatch Station / Sender",
+      "Shipment 1 — Weight in Kg",
+      "Shipment 1 — Charge 1 — Description of Additional Charges",
+      "Shipment 1 — Charge 1 — Additional Charges",
+      "Shipment 1 — Charge 2 — Gross Value",
+      "Shipment 1 — Charge 4 — VAT / Code",
+      "Shipment 1 — Charge 5 — VAT / Code",
+      "Shipment 1 — Charge 5 — Gross Value",
+      "Shipment 2 — Dispatch Station / Sender",
+      "Shipment 2 — Type of Service / Charge",
+      "Shipment 2 — Weight in Kg",
+      "Shipment 2 — Base Charge",
+      "Shipment 2 — Charge 1 — Additional Charges",
+      "Shipment 2 — Charge 2 — VAT / Code",
+      "Shipment 2 — Charge 2 — Gross Value",
+      "Shipment 3 — Date",
+      "Shipment 3 — Type of Service / Charge",
+      "Shipment 3 — Base Charge",
+      "Shipment 3 — Charge 1 — Description of Additional Charges",
+      "Shipment 3 — Charge 1 — Additional Charges",
+      "Shipment 3 — Charge 2 — VAT / Code",
+      "Shipment 3 — Charge 3 — VAT / Code",
+      "Shipment 3 — Charge 4 — Description of Additional Charges",
+      "Shipment 3 — Charge 4 — Additional Charges",
+      "Shipment 4 — Date",
+      "Shipment 4 — Number of Shipments",
+      "Shipment 4 — Base Charge",
+      "Shipment 4 — Charge 1 — Additional Charges",
+      "Shipment 4 — Charge 1 — Gross Value",
+      "Shipment 4 — Charge 2 — VAT / Code",
+      "Shipment 4 — Charge 2 — Gross Value",
+      "Shipment 4 — Charge 3 — Description of Additional Charges",
+      "Shipment 4 — Charge 3 — Additional Charges",
+      "Shipment 4 — Charge 3 — VAT / Code",
+      "Shipment 4 — Charge 3 — Gross Value",
+      "Shipment 5 — Receiving Station / Recipient",
+      "Shipment 5 — Base Charge",
+      "Shipment 5 — Charge 1 — Description of Additional Charges",
+      "Shipment 5 — Charge 1 — VAT / Code",
+      "Shipment 6 — Date",
+      "Shipment 6 — Receiving Station / Recipient",
+      "Shipment 6 — Type of Service / Charge",
+      "Shipment 6 — Weight in Kg",
+      "Shipment 6 — Charge 1 — Description of Additional Charges",
+      "Shipment 6 — Charge 1 — Additional Charges",
+      "Shipment 6 — Charge 1 — VAT / Code",
+      "Shipment 6 — Charge 2 — VAT / Code",
+      "Shipment 6 — Charge 3 — Additional Charges",
+      "Shipment 6 — Charge 3 — Gross Value",
+      "Shipment 6 — Charge 4 — Additional Charges",
+      "Shipment 6 — Charge 4 — VAT / Code",
+      "Shipment 6 — Charge 5 — Additional Charges",
+      "Shipment 6 — Charge 5 — VAT / Code",
+      "Shipment 7 — Dispatch Station / Sender",
+      "Shipment 7 — Weight in Kg",
+      "Shipment 7 — Base Charge",
+      "Shipment 7 — Charge 1 — Additional Charges",
+      "Shipment 7 — Charge 2 — Description of Additional Charges",
+      "Shipment 7 — Charge 2 — Additional Charges",
+      "Shipment 7 — Charge 4 — VAT / Code",
+      "Shipment 7 — Charge 4 — Gross Value",
+      "Shipment 7 — Charge 5 — Description of Additional Charges",
+      "Shipment 7 — Charge 5 — VAT / Code",
+      "Shipment 7 — Charge 5 — Gross Value",
+      "Shipment 8 — Date",
+      "Shipment 8 — Dispatch Station / Sender",
+      "Shipment 8 — Type of Service / Charge",
+      "Shipment 8 — Weight in Kg",
+      "Shipment 8 — Charge 1 — Additional Charges",
+      "Shipment 8 — Charge 1 — Gross Value",
+      "Shipment 8 — Charge 2 — Description of Additional Charges",
+      "Shipment 8 — Charge 2 — Additional Charges",
+      "Shipment 8 — Charge 2 — VAT / Code",
+      "Shipment 8 — Charge 3 — Description of Additional Charges",
+      "Shipment 8 — Charge 4 — Gross Value"
+     ],
+     "additionalProperties": false
+    },
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-06 21:35:12.208911+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-mxe6hdg8.png",
+    "file_size": 639347,
+    "file_type": "png",
+    "id": "3f7654bd-fe40-492b-a986-5a23a8082b14",
+    "last_modified_at": "2026-10-06 21:35:12+00:00",
+    "name": "extraction_file-mxe6hdg8.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 639347,
+     "last_modified_at": "2026-10-06T21:35:12"
+    },
+    "updated_at": "2026-10-06 21:35:12.208911+00:00"
+   },
+   "file_id": "3f7654bd-fe40-492b-a986-5a23a8082b14",
+   "id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+   "status": "PENDING"
+  },
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": false,
+    "cite_sources": false,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-06 21:35:12.515274+00:00",
+   "data": {
+    "Document Number": "QJFAH2WZ5U",
+    "Client Number": "408797953",
+    "Issue Date": "02-16-1951",
+    "Page": "38 of 83",
+    "Footer page number": "38",
+    "Shipment 1 — Dispatch Station / Sender": null,
+    "Shipment 1 — Weight in Kg": "10",
+    "Shipment 1 — Charge 1 — Description of Additional Charges": "PEAK SEASON SURCHARGE",
+    "Shipment 1 — Charge 1 — Additional Charges": "4.07",
+    "Shipment 1 — Charge 2 — Gross Value": "19.89",
+    "Shipment 1 — Charge 4 — VAT / Code": "3.79",
+    "Shipment 1 — Charge 5 — VAT / Code": "4.64",
+    "Shipment 1 — Charge 5 — Gross Value": "30.83",
+    "Shipment 2 — Dispatch Station / Sender": null,
+    "Shipment 2 — Type of Service / Charge": "DOMESTIC PRIORITY",
+    "Shipment 2 — Weight in Kg": "23.2",
+    "Shipment 2 — Base Charge": "118.68",
+    "Shipment 2 — Charge 1 — Additional Charges": "9.92",
+    "Shipment 2 — Charge 2 — VAT / Code": "4.75",
+    "Shipment 2 — Charge 2 — Gross Value": "21.56",
+    "Shipment 3 — Date": "06-06-1979",
+    "Shipment 3 — Type of Service / Charge": "DOMESTIC PRIORITY",
+    "Shipment 3 — Base Charge": "174.06",
+    "Shipment 3 — Charge 1 — Description of Additional Charges": "PERISHABLE ITEM SURCHARGE",
+    "Shipment 3 — Charge 1 — Additional Charges": "3.29",
+    "Shipment 3 — Charge 2 — VAT / Code": "4.41",
+    "Shipment 3 — Charge 3 — VAT / Code": "4.5",
+    "Shipment 3 — Charge 4 — Description of Additional Charges": "FUEL ADJUSTMENT CHARGE",
+    "Shipment 3 — Charge 4 — Additional Charges": "8.59",
+    "Shipment 4 — Date": "12-13-1981",
+    "Shipment 4 — Number of Shipments": null,
+    "Shipment 4 — Base Charge": "79.83",
+    "Shipment 4 — Charge 1 — Additional Charges": "1.22",
+    "Shipment 4 — Charge 1 — Gross Value": "49.83",
+    "Shipment 4 — Charge 2 — VAT / Code": "0.98",
+    "Shipment 4 — Charge 2 — Gross Value": "28.72",
+    "Shipment 4 — Charge 3 — Description of Additional Charges": "STORAGE FEE",
+    "Shipment 4 — Charge 3 — Additional Charges": "5.03",
+    "Shipment 4 — Charge 3 — VAT / Code": "1.07",
+    "Shipment 4 — Charge 3 — Gross Value": "30.57",
+    "Shipment 5 — Receiving Station / Recipient": null,
+    "Shipment 5 — Base Charge": null,
+    "Shipment 5 — Charge 1 — Description of Additional Charges": null,
+    "Shipment 5 — Charge 1 — VAT / Code": null,
+    "Shipment 6 — Date": null,
+    "Shipment 6 — Receiving Station / Recipient": null,
+    "Shipment 6 — Type of Service / Charge": null,
+    "Shipment 6 — Weight in Kg": null,
+    "Shipment 6 — Charge 1 — Description of Additional Charges": null,
+    "Shipment 6 — Charge 1 — Additional Charges": null,
+    "Shipment 6 — Charge 1 — VAT / Code": null,
+    "Shipment 6 — Charge 2 — VAT / Code": null,
+    "Shipment 6 — Charge 3 — Additional Charges": null,
+    "Shipment 6 — Charge 3 — Gross Value": null,
+    "Shipment 6 — Charge 4 — Additional Charges": null,
+    "Shipment 6 — Charge 4 — VAT / Code": null,
+    "Shipment 6 — Charge 5 — Additional Charges": null,
+    "Shipment 6 — Charge 5 — VAT / Code": null,
+    "Shipment 7 — Dispatch Station / Sender": null,
+    "Shipment 7 — Weight in Kg": null,
+    "Shipment 7 — Base Charge": null,
+    "Shipment 7 — Charge 1 — Additional Charges": null,
+    "Shipment 7 — Charge 2 — Description of Additional Charges": null,
+    "Shipment 7 — Charge 2 — Additional Charges": null,
+    "Shipment 7 — Charge 4 — VAT / Code": null,
+    "Shipment 7 — Charge 4 — Gross Value": null,
+    "Shipment 7 — Charge 5 — Description of Additional Charges": null,
+    "Shipment 7 — Charge 5 — VAT / Code": null,
+    "Shipment 7 — Charge 5 — Gross Value": null,
+    "Shipment 8 — Date": null,
+    "Shipment 8 — Dispatch Station / Sender": null,
+    "Shipment 8 — Type of Service / Charge": null,
+    "Shipment 8 — Weight in Kg": null,
+    "Shipment 8 — Charge 1 — Additional Charges": null,
+    "Shipment 8 — Charge 1 — Gross Value": null,
+    "Shipment 8 — Charge 2 — Description of Additional Charges": null,
+    "Shipment 8 — Charge 2 — Additional Charges": null,
+    "Shipment 8 — Charge 2 — VAT / Code": null,
+    "Shipment 8 — Charge 3 — Description of Additional Charges": null,
+    "Shipment 8 — Charge 4 — Gross Value": null
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Document Number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Client Number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Issue Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Page": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Footer page number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Dispatch Station / Sender": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Weight in Kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 1 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 2 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 4 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 5 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 1 — Charge 5 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Dispatch Station / Sender": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Type of Service / Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Weight in Kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Base Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Charge 2 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 2 — Charge 2 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Type of Service / Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Base Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 1 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 2 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 3 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 4 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 3 — Charge 4 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Number of Shipments": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Base Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 1 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 2 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 2 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 3 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 3 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 3 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 4 — Charge 3 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 5 — Receiving Station / Recipient": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 5 — Base Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 5 — Charge 1 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 5 — Charge 1 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Receiving Station / Recipient": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Type of Service / Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Weight in Kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 1 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 1 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 2 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 3 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 3 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 4 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 4 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 5 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 6 — Charge 5 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Dispatch Station / Sender": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Weight in Kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Base Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 2 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 2 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 4 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 4 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 5 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 5 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 7 — Charge 5 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Dispatch Station / Sender": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Type of Service / Charge": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Weight in Kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 1 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 1 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 2 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 2 — Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 2 — VAT / Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 3 — Description of Additional Charges": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Shipment 8 — Charge 4 — Gross Value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "Document Number",
+     "Client Number",
+     "Issue Date",
+     "Page",
+     "Footer page number",
+     "Shipment 1 — Dispatch Station / Sender",
+     "Shipment 1 — Weight in Kg",
+     "Shipment 1 — Charge 1 — Description of Additional Charges",
+     "Shipment 1 — Charge 1 — Additional Charges",
+     "Shipment 1 — Charge 2 — Gross Value",
+     "Shipment 1 — Charge 4 — VAT / Code",
+     "Shipment 1 — Charge 5 — VAT / Code",
+     "Shipment 1 — Charge 5 — Gross Value",
+     "Shipment 2 — Dispatch Station / Sender",
+     "Shipment 2 — Type of Service / Charge",
+     "Shipment 2 — Weight in Kg",
+     "Shipment 2 — Base Charge",
+     "Shipment 2 — Charge 1 — Additional Charges",
+     "Shipment 2 — Charge 2 — VAT / Code",
+     "Shipment 2 — Charge 2 — Gross Value",
+     "Shipment 3 — Date",
+     "Shipment 3 — Type of Service / Charge",
+     "Shipment 3 — Base Charge",
+     "Shipment 3 — Charge 1 — Description of Additional Charges",
+     "Shipment 3 — Charge 1 — Additional Charges",
+     "Shipment 3 — Charge 2 — VAT / Code",
+     "Shipment 3 — Charge 3 — VAT / Code",
+     "Shipment 3 — Charge 4 — Description of Additional Charges",
+     "Shipment 3 — Charge 4 — Additional Charges",
+     "Shipment 4 — Date",
+     "Shipment 4 — Number of Shipments",
+     "Shipment 4 — Base Charge",
+     "Shipment 4 — Charge 1 — Additional Charges",
+     "Shipment 4 — Charge 1 — Gross Value",
+     "Shipment 4 — Charge 2 — VAT / Code",
+     "Shipment 4 — Charge 2 — Gross Value",
+     "Shipment 4 — Charge 3 — Description of Additional Charges",
+     "Shipment 4 — Charge 3 — Additional Charges",
+     "Shipment 4 — Charge 3 — VAT / Code",
+     "Shipment 4 — Charge 3 — Gross Value",
+     "Shipment 5 — Receiving Station / Recipient",
+     "Shipment 5 — Base Charge",
+     "Shipment 5 — Charge 1 — Description of Additional Charges",
+     "Shipment 5 — Charge 1 — VAT / Code",
+     "Shipment 6 — Date",
+     "Shipment 6 — Receiving Station / Recipient",
+     "Shipment 6 — Type of Service / Charge",
+     "Shipment 6 — Weight in Kg",
+     "Shipment 6 — Charge 1 — Description of Additional Charges",
+     "Shipment 6 — Charge 1 — Additional Charges",
+     "Shipment 6 — Charge 1 — VAT / Code",
+     "Shipment 6 — Charge 2 — VAT / Code",
+     "Shipment 6 — Charge 3 — Additional Charges",
+     "Shipment 6 — Charge 3 — Gross Value",
+     "Shipment 6 — Charge 4 — Additional Charges",
+     "Shipment 6 — Charge 4 — VAT / Code",
+     "Shipment 6 — Charge 5 — Additional Charges",
+     "Shipment 6 — Charge 5 — VAT / Code",
+     "Shipment 7 — Dispatch Station / Sender",
+     "Shipment 7 — Weight in Kg",
+     "Shipment 7 — Base Charge",
+     "Shipment 7 — Charge 1 — Additional Charges",
+     "Shipment 7 — Charge 2 — Description of Additional Charges",
+     "Shipment 7 — Charge 2 — Additional Charges",
+     "Shipment 7 — Charge 4 — VAT / Code",
+     "Shipment 7 — Charge 4 — Gross Value",
+     "Shipment 7 — Charge 5 — Description of Additional Charges",
+     "Shipment 7 — Charge 5 — VAT / Code",
+     "Shipment 7 — Charge 5 — Gross Value",
+     "Shipment 8 — Date",
+     "Shipment 8 — Dispatch Station / Sender",
+     "Shipment 8 — Type of Service / Charge",
+     "Shipment 8 — Weight in Kg",
+     "Shipment 8 — Charge 1 — Additional Charges",
+     "Shipment 8 — Charge 1 — Gross Value",
+     "Shipment 8 — Charge 2 — Description of Additional Charges",
+     "Shipment 8 — Charge 2 — Additional Charges",
+     "Shipment 8 — Charge 2 — VAT / Code",
+     "Shipment 8 — Charge 3 — Description of Additional Charges",
+     "Shipment 8 — Charge 4 — Gross Value"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {},
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 2221,
+     "num_output_tokens": 1066
+    },
+    "parse_job_id": "bee621d8-e623-4e3a-81f1-4babbd17b59e"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "3f7654bd-fe40-492b-a986-5a23a8082b14",
+   "from_ui": false,
+   "id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+   "job_id": "5b83f0f7-5ad5-4403-acf3-5a378531cc27",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-06 21:35:28.091932+00:00"
+  }
+ }
+}

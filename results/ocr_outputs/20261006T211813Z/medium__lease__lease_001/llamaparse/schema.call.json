@@ -1,0 +1,1514 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/lease/lease_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lessor — street address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lessor — State of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"name of lessee\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lessee — street address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lessee — State of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1. DESCRIPTION OF LEASED PREMISES — square feet (SF)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1. DESCRIPTION OF LEASED PREMISES — of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1. DESCRIPTION OF LEASED PREMISES — street address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1. DESCRIPTION OF LEASED PREMISES — State of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — year(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — month(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — commencing on the\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — commencing — day of (first blank)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — commencing — day of (second blank)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — expiring at Midnight on the\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — expiring — day of (first blank)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2. TERM OF LEASE — expiring — day of (second blank)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3. BASE RENT — The net monthly payment shall be\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3. BASE RENT — dollars per month (printed parenthetical)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3. BASE RENT — A security deposit of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3. BASE RENT — security deposit dollars (printed parenthetical)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3. BASE RENT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"4. Options to Renew (Check one) — Lessee may not renew the Lease.\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"4. Options to Renew — renewal period(s)\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"4. Options to Renew — year(s)\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"4. Options to Renew — month(s)\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Prepared using\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Document title\",\n    \"Lessor — street address\",\n    \"Lessor — State of\",\n    \"name of lessee\",\n    \"Lessee — street address\",\n    \"Lessee — State of\",\n    \"1. DESCRIPTION OF LEASED PREMISES — square feet (SF)\",\n    \"1. DESCRIPTION OF LEASED PREMISES — of\",\n    \"1. DESCRIPTION OF LEASED PREMISES — street address\",\n    \"1. DESCRIPTION OF LEASED PREMISES — State of\",\n    \"2. TERM OF LEASE — year(s)\",\n    \"2. TERM OF LEASE — month(s)\",\n    \"2. TERM OF LEASE — commencing on the\",\n    \"2. TERM OF LEASE — commencing — day of (first blank)\",\n    \"2. TERM OF LEASE — commencing — day of (second blank)\",\n    \"2. TERM OF LEASE — expiring at Midnight on the\",\n    \"2. TERM OF LEASE — expiring — day of (first blank)\",\n    \"2. TERM OF LEASE — expiring — day of (second blank)\",\n    \"3. BASE RENT — The net monthly payment shall be\",\n    \"3. BASE RENT — dollars per month (printed parenthetical)\",\n    \"3. BASE RENT — A security deposit of\",\n    \"3. BASE RENT — security deposit dollars (printed parenthetical)\",\n    \"3. BASE RENT\",\n    \"4. Options to Renew (Check one) — Lessee may not renew the Lease.\",\n    \"4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.\",\n    \"4. Options to Renew — renewal period(s)\",\n    \"4. Options to Renew — year(s)\",\n    \"4. Options to Renew — month(s)\",\n    \"Prepared using\",\n    \"Page\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Document title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lessor — street address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lessor — State of": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "name of lessee": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lessee — street address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lessee — State of": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1. DESCRIPTION OF LEASED PREMISES — of": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1. DESCRIPTION OF LEASED PREMISES — street address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1. DESCRIPTION OF LEASED PREMISES — State of": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — year(s)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — month(s)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — commencing on the": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — commencing — day of (first blank)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — commencing — day of (second blank)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — expiring at Midnight on the": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — expiring — day of (first blank)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2. TERM OF LEASE — expiring — day of (second blank)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3. BASE RENT — The net monthly payment shall be": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3. BASE RENT — dollars per month (printed parenthetical)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3. BASE RENT — A security deposit of": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3. BASE RENT — security deposit dollars (printed parenthetical)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3. BASE RENT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "4. Options to Renew (Check one) — Lessee may not renew the Lease.": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "4. Options to Renew — renewal period(s)": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "4. Options to Renew — year(s)": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "4. Options to Renew — month(s)": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Prepared using": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Page": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Document title",
+   "Lessor — street address",
+   "Lessor — State of",
+   "name of lessee",
+   "Lessee — street address",
+   "Lessee — State of",
+   "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)",
+   "1. DESCRIPTION OF LEASED PREMISES — of",
+   "1. DESCRIPTION OF LEASED PREMISES — street address",
+   "1. DESCRIPTION OF LEASED PREMISES — State of",
+   "2. TERM OF LEASE — year(s)",
+   "2. TERM OF LEASE — month(s)",
+   "2. TERM OF LEASE — commencing on the",
+   "2. TERM OF LEASE — commencing — day of (first blank)",
+   "2. TERM OF LEASE — commencing — day of (second blank)",
+   "2. TERM OF LEASE — expiring at Midnight on the",
+   "2. TERM OF LEASE — expiring — day of (first blank)",
+   "2. TERM OF LEASE — expiring — day of (second blank)",
+   "3. BASE RENT — The net monthly payment shall be",
+   "3. BASE RENT — dollars per month (printed parenthetical)",
+   "3. BASE RENT — A security deposit of",
+   "3. BASE RENT — security deposit dollars (printed parenthetical)",
+   "3. BASE RENT",
+   "4. Options to Renew (Check one) — Lessee may not renew the Lease.",
+   "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+   "4. Options to Renew — renewal period(s)",
+   "4. Options to Renew — year(s)",
+   "4. Options to Renew — month(s)",
+   "Prepared using",
+   "Page"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 16.587669999804348,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Document title\": \"CALIFORNIA COMMERCIAL LEASE AGREEMENT\", \"Lessor — street address\": \"76232 S 1st Avenue\", \"Lessor — State of\": \"California\", \"name of lessee\": \"Zieme - Leuschke\", \"Lessee — street address\": \"2138 Cullen Lock\", \"Lessee — State of\": \"California\", \"1. DESCRIPTION OF LEASED PREMISES — square feet (SF)\": \"9664\", \"1. DESCRIPTION OF LEASED PREMISES — of\": \"Retail Space\", \"1. DESCRIPTION OF LEASED PREMISES — street address\": \"125 S Broadway Street\", \"1. DESCRIPTION OF LEASED PREMISES — State of\": \"California\", \"2. TERM OF LEASE — year(s)\": \"3\", \"2. TERM OF LEASE — month(s)\": \"5\", \"2. TERM OF LEASE — commencing on the\": \"7\", \"2. TERM OF LEASE — commencing — day of (first blank)\": \"April 2025\", \"2. TERM OF LEASE — commencing — day of (second blank)\": \"April 2025\", \"2. TERM OF LEASE — expiring at Midnight on the\": \"7\", \"2. TERM OF LEASE — expiring — day of (first blank)\": \"September 2028\", \"2. TERM OF LEASE — expiring — day of (second blank)\": \"September 2028\", \"3. BASE RENT — The net monthly payment shall be\": \"2572\", \"3. BASE RENT — dollars per month (printed parenthetical)\": \"$2572\", \"3. BASE RENT — A security deposit of\": \"1180\", \"3. BASE RENT — security deposit dollars (printed parenthetical)\": \"$1180\", \"3. BASE RENT\": null, \"4. Options to Renew (Check one) — Lessee may not renew the Lease.\": true, \"4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.\": true, \"4. Options to Renew — renewal period(s)\": null, \"4. Options to Renew — year(s)\": null, \"4. Options to Renew — month(s)\": null, \"Prepared using\": \"zipForm® software\", \"Page\": \"5 of 8\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-06 21:25:09.454188+00:00",
+  "data": {
+   "Document title": "CALIFORNIA COMMERCIAL LEASE AGREEMENT",
+   "Lessor — street address": "76232 S 1st Avenue",
+   "Lessor — State of": "California",
+   "name of lessee": "Zieme - Leuschke",
+   "Lessee — street address": "2138 Cullen Lock",
+   "Lessee — State of": "California",
+   "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": "9664",
+   "1. DESCRIPTION OF LEASED PREMISES — of": "Retail Space",
+   "1. DESCRIPTION OF LEASED PREMISES — street address": "125 S Broadway Street",
+   "1. DESCRIPTION OF LEASED PREMISES — State of": "California",
+   "2. TERM OF LEASE — year(s)": "3",
+   "2. TERM OF LEASE — month(s)": "5",
+   "2. TERM OF LEASE — commencing on the": "7",
+   "2. TERM OF LEASE — commencing — day of (first blank)": "April 2025",
+   "2. TERM OF LEASE — commencing — day of (second blank)": "April 2025",
+   "2. TERM OF LEASE — expiring at Midnight on the": "7",
+   "2. TERM OF LEASE — expiring — day of (first blank)": "September 2028",
+   "2. TERM OF LEASE — expiring — day of (second blank)": "September 2028",
+   "3. BASE RENT — The net monthly payment shall be": "2572",
+   "3. BASE RENT — dollars per month (printed parenthetical)": "$2572",
+   "3. BASE RENT — A security deposit of": "1180",
+   "3. BASE RENT — security deposit dollars (printed parenthetical)": "$1180",
+   "3. BASE RENT": null,
+   "4. Options to Renew (Check one) — Lessee may not renew the Lease.": true,
+   "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": true,
+   "4. Options to Renew — renewal period(s)": null,
+   "4. Options to Renew — year(s)": null,
+   "4. Options to Renew — month(s)": null,
+   "Prepared using": "zipForm® software",
+   "Page": "5 of 8"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Document title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lessor — street address": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lessor — State of": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "name of lessee": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lessee — street address": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lessee — State of": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1. DESCRIPTION OF LEASED PREMISES — of": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1. DESCRIPTION OF LEASED PREMISES — street address": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1. DESCRIPTION OF LEASED PREMISES — State of": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — year(s)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — month(s)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — commencing on the": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — commencing — day of (first blank)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — commencing — day of (second blank)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — expiring at Midnight on the": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — expiring — day of (first blank)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2. TERM OF LEASE — expiring — day of (second blank)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3. BASE RENT — The net monthly payment shall be": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3. BASE RENT — dollars per month (printed parenthetical)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3. BASE RENT — A security deposit of": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3. BASE RENT — security deposit dollars (printed parenthetical)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3. BASE RENT": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4. Options to Renew (Check one) — Lessee may not renew the Lease.": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4. Options to Renew — renewal period(s)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4. Options to Renew — year(s)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4. Options to Renew — month(s)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Prepared using": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Page": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Document title",
+    "Lessor — street address",
+    "Lessor — State of",
+    "name of lessee",
+    "Lessee — street address",
+    "Lessee — State of",
+    "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)",
+    "1. DESCRIPTION OF LEASED PREMISES — of",
+    "1. DESCRIPTION OF LEASED PREMISES — street address",
+    "1. DESCRIPTION OF LEASED PREMISES — State of",
+    "2. TERM OF LEASE — year(s)",
+    "2. TERM OF LEASE — month(s)",
+    "2. TERM OF LEASE — commencing on the",
+    "2. TERM OF LEASE — commencing — day of (first blank)",
+    "2. TERM OF LEASE — commencing — day of (second blank)",
+    "2. TERM OF LEASE — expiring at Midnight on the",
+    "2. TERM OF LEASE — expiring — day of (first blank)",
+    "2. TERM OF LEASE — expiring — day of (second blank)",
+    "3. BASE RENT — The net monthly payment shall be",
+    "3. BASE RENT — dollars per month (printed parenthetical)",
+    "3. BASE RENT — A security deposit of",
+    "3. BASE RENT — security deposit dollars (printed parenthetical)",
+    "3. BASE RENT",
+    "4. Options to Renew (Check one) — Lessee may not renew the Lease.",
+    "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+    "4. Options to Renew — renewal period(s)",
+    "4. Options to Renew — year(s)",
+    "4. Options to Renew — month(s)",
+    "Prepared using",
+    "Page"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 547,
+    "num_output_tokens": 490
+   },
+   "parse_job_id": "27c35b83-6241-43b2-a493-d71e94e10be2"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "dc4c182c-7f51-42f2-95d1-64c09a4dfdb8",
+  "from_ui": false,
+  "id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+  "job_id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-06 21:25:23.122909+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "interface": "v1 stateless extraction",
+  "job_id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+  "submission_attempts": 1,
+  "cost_is_estimate": true
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": false,
+     "cite_sources": false,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
+      "Document title": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lessor — street address": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lessor — State of": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "name of lessee": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lessee — street address": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lessee — State of": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1. DESCRIPTION OF LEASED PREMISES — of": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1. DESCRIPTION OF LEASED PREMISES — street address": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1. DESCRIPTION OF LEASED PREMISES — State of": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — year(s)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — month(s)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — commencing on the": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — commencing — day of (first blank)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — commencing — day of (second blank)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — expiring at Midnight on the": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — expiring — day of (first blank)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2. TERM OF LEASE — expiring — day of (second blank)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3. BASE RENT — The net monthly payment shall be": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3. BASE RENT — dollars per month (printed parenthetical)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3. BASE RENT — A security deposit of": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3. BASE RENT — security deposit dollars (printed parenthetical)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3. BASE RENT": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4. Options to Renew (Check one) — Lessee may not renew the Lease.": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4. Options to Renew — renewal period(s)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4. Options to Renew — year(s)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4. Options to Renew — month(s)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Prepared using": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Page": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "Document title",
+      "Lessor — street address",
+      "Lessor — State of",
+      "name of lessee",
+      "Lessee — street address",
+      "Lessee — State of",
+      "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)",
+      "1. DESCRIPTION OF LEASED PREMISES — of",
+      "1. DESCRIPTION OF LEASED PREMISES — street address",
+      "1. DESCRIPTION OF LEASED PREMISES — State of",
+      "2. TERM OF LEASE — year(s)",
+      "2. TERM OF LEASE — month(s)",
+      "2. TERM OF LEASE — commencing on the",
+      "2. TERM OF LEASE — commencing — day of (first blank)",
+      "2. TERM OF LEASE — commencing — day of (second blank)",
+      "2. TERM OF LEASE — expiring at Midnight on the",
+      "2. TERM OF LEASE — expiring — day of (first blank)",
+      "2. TERM OF LEASE — expiring — day of (second blank)",
+      "3. BASE RENT — The net monthly payment shall be",
+      "3. BASE RENT — dollars per month (printed parenthetical)",
+      "3. BASE RENT — A security deposit of",
+      "3. BASE RENT — security deposit dollars (printed parenthetical)",
+      "3. BASE RENT",
+      "4. Options to Renew (Check one) — Lessee may not renew the Lease.",
+      "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+      "4. Options to Renew — renewal period(s)",
+      "4. Options to Renew — year(s)",
+      "4. Options to Renew — month(s)",
+      "Prepared using",
+      "Page"
+     ],
+     "additionalProperties": false
+    },
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-06 21:25:09.274257+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-vbbc6t82.png",
+    "file_size": 838679,
+    "file_type": "png",
+    "id": "dc4c182c-7f51-42f2-95d1-64c09a4dfdb8",
+    "last_modified_at": "2026-10-06 21:25:09+00:00",
+    "name": "extraction_file-vbbc6t82.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 838679,
+     "last_modified_at": "2026-10-06T21:25:09"
+    },
+    "updated_at": "2026-10-06 21:25:09.274257+00:00"
+   },
+   "file_id": "dc4c182c-7f51-42f2-95d1-64c09a4dfdb8",
+   "id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+   "status": "PENDING"
+  },
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": false,
+    "cite_sources": false,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-06 21:25:09.454188+00:00",
+   "data": {
+    "Document title": "CALIFORNIA COMMERCIAL LEASE AGREEMENT",
+    "Lessor — street address": "76232 S 1st Avenue",
+    "Lessor — State of": "California",
+    "name of lessee": "Zieme - Leuschke",
+    "Lessee — street address": "2138 Cullen Lock",
+    "Lessee — State of": "California",
+    "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": "9664",
+    "1. DESCRIPTION OF LEASED PREMISES — of": "Retail Space",
+    "1. DESCRIPTION OF LEASED PREMISES — street address": "125 S Broadway Street",
+    "1. DESCRIPTION OF LEASED PREMISES — State of": "California",
+    "2. TERM OF LEASE — year(s)": "3",
+    "2. TERM OF LEASE — month(s)": "5",
+    "2. TERM OF LEASE — commencing on the": "7",
+    "2. TERM OF LEASE — commencing — day of (first blank)": "April 2025",
+    "2. TERM OF LEASE — commencing — day of (second blank)": "April 2025",
+    "2. TERM OF LEASE — expiring at Midnight on the": "7",
+    "2. TERM OF LEASE — expiring — day of (first blank)": "September 2028",
+    "2. TERM OF LEASE — expiring — day of (second blank)": "September 2028",
+    "3. BASE RENT — The net monthly payment shall be": "2572",
+    "3. BASE RENT — dollars per month (printed parenthetical)": "$2572",
+    "3. BASE RENT — A security deposit of": "1180",
+    "3. BASE RENT — security deposit dollars (printed parenthetical)": "$1180",
+    "3. BASE RENT": null,
+    "4. Options to Renew (Check one) — Lessee may not renew the Lease.": true,
+    "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": true,
+    "4. Options to Renew — renewal period(s)": null,
+    "4. Options to Renew — year(s)": null,
+    "4. Options to Renew — month(s)": null,
+    "Prepared using": "zipForm® software",
+    "Page": "5 of 8"
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Document title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lessor — street address": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lessor — State of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "name of lessee": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lessee — street address": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lessee — State of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1. DESCRIPTION OF LEASED PREMISES — of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1. DESCRIPTION OF LEASED PREMISES — street address": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1. DESCRIPTION OF LEASED PREMISES — State of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — year(s)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — month(s)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — commencing on the": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — commencing — day of (first blank)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — commencing — day of (second blank)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — expiring at Midnight on the": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — expiring — day of (first blank)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2. TERM OF LEASE — expiring — day of (second blank)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3. BASE RENT — The net monthly payment shall be": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3. BASE RENT — dollars per month (printed parenthetical)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3. BASE RENT — A security deposit of": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3. BASE RENT — security deposit dollars (printed parenthetical)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3. BASE RENT": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4. Options to Renew (Check one) — Lessee may not renew the Lease.": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4. Options to Renew — renewal period(s)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4. Options to Renew — year(s)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4. Options to Renew — month(s)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Prepared using": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Page": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "Document title",
+     "Lessor — street address",
+     "Lessor — State of",
+     "name of lessee",
+     "Lessee — street address",
+     "Lessee — State of",
+     "1. DESCRIPTION OF LEASED PREMISES — square feet (SF)",
+     "1. DESCRIPTION OF LEASED PREMISES — of",
+     "1. DESCRIPTION OF LEASED PREMISES — street address",
+     "1. DESCRIPTION OF LEASED PREMISES — State of",
+     "2. TERM OF LEASE — year(s)",
+     "2. TERM OF LEASE — month(s)",
+     "2. TERM OF LEASE — commencing on the",
+     "2. TERM OF LEASE — commencing — day of (first blank)",
+     "2. TERM OF LEASE — commencing — day of (second blank)",
+     "2. TERM OF LEASE — expiring at Midnight on the",
+     "2. TERM OF LEASE — expiring — day of (first blank)",
+     "2. TERM OF LEASE — expiring — day of (second blank)",
+     "3. BASE RENT — The net monthly payment shall be",
+     "3. BASE RENT — dollars per month (printed parenthetical)",
+     "3. BASE RENT — A security deposit of",
+     "3. BASE RENT — security deposit dollars (printed parenthetical)",
+     "3. BASE RENT",
+     "4. Options to Renew (Check one) — Lessee may not renew the Lease.",
+     "4. Options to Renew (Check one) — The Lessee may have the right to renew the Lease with a total of ____ renewal period(s) with each term being ____ year(s) ____ month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+     "4. Options to Renew — renewal period(s)",
+     "4. Options to Renew — year(s)",
+     "4. Options to Renew — month(s)",
+     "Prepared using",
+     "Page"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {},
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 547,
+     "num_output_tokens": 490
+    },
+    "parse_job_id": "27c35b83-6241-43b2-a493-d71e94e10be2"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "dc4c182c-7f51-42f2-95d1-64c09a4dfdb8",
+   "from_ui": false,
+   "id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+   "job_id": "30ed7a9c-e823-4934-8133-96273cd54c17",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-06 21:25:23.122909+00:00"
+  }
+ }
+}

@@ -5,9 +5,10 @@ extraction and geometry. The silver-document judge is a separate estimate.
 
 **Implementation status, 2026-10-06:** the reviewed-reference scorers below are
 implemented and tested offline. The last published scores, run
-`20261002T162630Z`, predate these changes. A new rescore, paid schema reruns,
-missing Markdown references and prompt controls are still
-required before a replacement report is final. The inline KV rescore
+`20261002T162630Z`, predate these changes. The sampled schema run
+`20261006T214240Z` has 453 scored results and two server errors. Markdown
+catalogues now cover 92 pages; newspaper_000 remains missing. The remaining
+prompt controls and combined all-leg report are still pending. The inline KV rescore
 `20261006T195826Z` is complete across all 65 accepted structured-reference pages. The execution checklist is
 [follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 

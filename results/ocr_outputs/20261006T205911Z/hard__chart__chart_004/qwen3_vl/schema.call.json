@@ -1,0 +1,361 @@
+{
+ "engine": "qwen3_vl",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Report type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Report title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Publisher\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Question\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Source\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 2\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Report type\",\n    \"Report title\",\n    \"Publisher\",\n    \"Figure\",\n    \"Figure 1 — Title\",\n    \"Figure 1 — Question\",\n    \"Cost — Very concerned\",\n    \"Cost — Somewhat concerned\",\n    \"Cost — Slightly concerned\",\n    \"Cost — Not concerned\",\n    \"Forecasting future data center capacity requirements — Very concerned\",\n    \"Forecasting future data center capacity requirements — Somewhat concerned\",\n    \"Forecasting future data center capacity requirements — Slightly concerned\",\n    \"Forecasting future data center capacity requirements — Not concerned\",\n    \"Improving energy performance for facilities equipment — Very concerned\",\n    \"Improving energy performance for facilities equipment — Somewhat concerned\",\n    \"Improving energy performance for facilities equipment — Slightly concerned\",\n    \"Improving energy performance for facilities equipment — Not concerned\",\n    \"Lack of qualified staff — Very concerned\",\n    \"Lack of qualified staff — Somewhat concerned\",\n    \"Lack of qualified staff — Slightly concerned\",\n    \"Lack of qualified staff — Not concerned\",\n    \"Accommodating significantly denser IT — Very concerned\",\n    \"Accommodating significantly denser IT — Somewhat concerned\",\n    \"Accommodating significantly denser IT — Slightly concerned\",\n    \"Accommodating significantly denser IT — Not concerned\",\n    \"Improving energy performance for IT — Very concerned\",\n    \"Improving energy performance for IT — Somewhat concerned\",\n    \"Improving energy performance for IT — Slightly concerned\",\n    \"Improving energy performance for IT — Not concerned\",\n    \"Figure 1 — Source\",\n    \"Body — Paragraph 1\",\n    \"Body — Paragraph 2\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Report type": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Report title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Publisher": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Question": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Source": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Body — Paragraph 1": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Body — Paragraph 2": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Report type",
+   "Report title",
+   "Publisher",
+   "Figure",
+   "Figure 1 — Title",
+   "Figure 1 — Question",
+   "Cost — Very concerned",
+   "Cost — Somewhat concerned",
+   "Cost — Slightly concerned",
+   "Cost — Not concerned",
+   "Forecasting future data center capacity requirements — Very concerned",
+   "Forecasting future data center capacity requirements — Somewhat concerned",
+   "Forecasting future data center capacity requirements — Slightly concerned",
+   "Forecasting future data center capacity requirements — Not concerned",
+   "Improving energy performance for facilities equipment — Very concerned",
+   "Improving energy performance for facilities equipment — Somewhat concerned",
+   "Improving energy performance for facilities equipment — Slightly concerned",
+   "Improving energy performance for facilities equipment — Not concerned",
+   "Lack of qualified staff — Very concerned",
+   "Lack of qualified staff — Somewhat concerned",
+   "Lack of qualified staff — Slightly concerned",
+   "Lack of qualified staff — Not concerned",
+   "Accommodating significantly denser IT — Very concerned",
+   "Accommodating significantly denser IT — Somewhat concerned",
+   "Accommodating significantly denser IT — Slightly concerned",
+   "Accommodating significantly denser IT — Not concerned",
+   "Improving energy performance for IT — Very concerned",
+   "Improving energy performance for IT — Somewhat concerned",
+   "Improving energy performance for IT — Slightly concerned",
+   "Improving energy performance for IT — Not concerned",
+   "Figure 1 — Source",
+   "Body — Paragraph 1",
+   "Body — Paragraph 2"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+ "latency_seconds": 3.8743144161764698,
+ "cost_per_page": 0.0026887742048264697,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"Report type\": \"KEYNOTE REPORT\",\n  \"Report title\": \"Uptime Institute Global Data Center Survey 2024\",\n  \"Publisher\": \"uptime INTELLIGENCE\",\n  \"Figure\": \"Figure 1\",\n  \"Figure 1 — Title\": \"Cost issues are the top concern for management in 2024\",\n  \"Figure 1 — Question\": \"Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)\",\n  \"Cost — Very concerned\": \"44%\",\n  \"Cost — Somewhat concerned\": \"36%\",\n  \"Cost — Slightly concerned\": \"17%\",\n  \"Cost — Not concerned\": \"3%\",\n  \"Forecasting future data center capacity requirements — Very concerned\": \"30%\",\n  \"Forecasting future data center capacity requirements — Somewhat concerned\": \"38%\",\n  \"Forecasting future data center capacity requirements — Slightly concerned\": \"24%\",\n  \"Forecasting future data center capacity requirements — Not concerned\": \"9%\",\n  \"Improving energy performance for facilities equipment — Very concerned\": \"29%\",\n  \"Improving energy performance for facilities equipment — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for facilities equipment — Slightly concerned\": \"23%\",\n  \"Improving energy performance for facilities equipment — Not concerned\": \"8%\",\n  \"Lack of qualified staff — Very concerned\": \"27%\",\n  \"Lack of qualified staff — Somewhat concerned\": \"44%\",\n  \"Lack of qualified staff — Slightly concerned\": \"24%\",\n  \"Lack of qualified staff — Not concerned\": \"6%\",\n  \"Accommodating significantly denser IT — Very concerned\": \"24%\",\n  \"Accommodating significantly denser IT — Somewhat concerned\": \"41%\",\n  \"Accommodating significantly denser IT — Slightly concerned\": \"25%\",\n  \"Accommodating significantly denser IT — Not concerned\": \"9%\",\n  \"Improving energy performance for IT — Very concerned\": \"24%\",\n  \"Improving energy performance for IT — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for IT — Slightly concerned\": \"26%\",\n  \"Improving energy performance for IT — Not concerned\": \"10%\",\n  \"Figure 1 — Source\": \"UPTIME INSTITUTE GLOBAL SURVEY OF IT AND DATA CENTER MANAGERS 2024\",\n  \"Body — Paragraph 1\": \"Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.\",\n  \"Body — Paragraph 2\": \"Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment.\"\n}",
+ "structured_output": {
+  "api_response": {
+   "id": "chatcmpl-8e084e81c0f7c707",
+   "object": "chat.completion",
+   "created": 1791320933,
+   "prompt_routed_experts": null,
+   "model": "qwen3-vl",
+   "choices": [
+    {
+     "index": 0,
+     "message": {
+      "role": "assistant",
+      "content": "{\n  \"Report type\": \"KEYNOTE REPORT\",\n  \"Report title\": \"Uptime Institute Global Data Center Survey 2024\",\n  \"Publisher\": \"uptime INTELLIGENCE\",\n  \"Figure\": \"Figure 1\",\n  \"Figure 1 — Title\": \"Cost issues are the top concern for management in 2024\",\n  \"Figure 1 — Question\": \"Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)\",\n  \"Cost — Very concerned\": \"44%\",\n  \"Cost — Somewhat concerned\": \"36%\",\n  \"Cost — Slightly concerned\": \"17%\",\n  \"Cost — Not concerned\": \"3%\",\n  \"Forecasting future data center capacity requirements — Very concerned\": \"30%\",\n  \"Forecasting future data center capacity requirements — Somewhat concerned\": \"38%\",\n  \"Forecasting future data center capacity requirements — Slightly concerned\": \"24%\",\n  \"Forecasting future data center capacity requirements — Not concerned\": \"9%\",\n  \"Improving energy performance for facilities equipment — Very concerned\": \"29%\",\n  \"Improving energy performance for facilities equipment — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for facilities equipment — Slightly concerned\": \"23%\",\n  \"Improving energy performance for facilities equipment — Not concerned\": \"8%\",\n  \"Lack of qualified staff — Very concerned\": \"27%\",\n  \"Lack of qualified staff — Somewhat concerned\": \"44%\",\n  \"Lack of qualified staff — Slightly concerned\": \"24%\",\n  \"Lack of qualified staff — Not concerned\": \"6%\",\n  \"Accommodating significantly denser IT — Very concerned\": \"24%\",\n  \"Accommodating significantly denser IT — Somewhat concerned\": \"41%\",\n  \"Accommodating significantly denser IT — Slightly concerned\": \"25%\",\n  \"Accommodating significantly denser IT — Not concerned\": \"9%\",\n  \"Improving energy performance for IT — Very concerned\": \"24%\",\n  \"Improving energy performance for IT — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for IT — Slightly concerned\": \"26%\",\n  \"Improving energy performance for IT — Not concerned\": \"10%\",\n  \"Figure 1 — Source\": \"UPTIME INSTITUTE GLOBAL SURVEY OF IT AND DATA CENTER MANAGERS 2024\",\n  \"Body — Paragraph 1\": \"Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.\",\n  \"Body — Paragraph 2\": \"Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment.\"\n}",
+      "refusal": null,
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [],
+      "reasoning": null
+     },
+     "logprobs": null,
+     "finish_reason": "stop",
+     "stop_reason": null,
+     "token_ids": null,
+     "routed_experts": null
+    }
+   ],
+   "service_tier": null,
+   "system_fingerprint": "vllm-0.21.0-8c500980",
+   "usage": {
+    "prompt_tokens": 3930,
+    "total_tokens": 4625,
+    "completion_tokens": 695,
+    "prompt_tokens_details": null
+   },
+   "prompt_logprobs": null,
+   "prompt_token_ids": null,
+   "prompt_text": null,
+   "kv_transfer_params": null
+  }
+ },
+ "metadata": {
+  "gpu_type": "A100-80GB",
+  "gpu_seconds": 3.8743144161764698,
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false,
+  "measurement_scope": "modal_batch",
+  "batch_id": "cce69e23211a4aad82d5384e9c605c98",
+  "batch_gpu_seconds": 65.86334507499998,
+  "batch_size": 17,
+  "effective_gpu_seconds_per_document": 3.8743144161764698,
+  "gpu_rate_usd_per_second": 0.000694,
+  "startup_excluded": true
+ },
+ "raw_response": {
+  "raw_text": "{\n  \"Report type\": \"KEYNOTE REPORT\",\n  \"Report title\": \"Uptime Institute Global Data Center Survey 2024\",\n  \"Publisher\": \"uptime INTELLIGENCE\",\n  \"Figure\": \"Figure 1\",\n  \"Figure 1 — Title\": \"Cost issues are the top concern for management in 2024\",\n  \"Figure 1 — Question\": \"Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)\",\n  \"Cost — Very concerned\": \"44%\",\n  \"Cost — Somewhat concerned\": \"36%\",\n  \"Cost — Slightly concerned\": \"17%\",\n  \"Cost — Not concerned\": \"3%\",\n  \"Forecasting future data center capacity requirements — Very concerned\": \"30%\",\n  \"Forecasting future data center capacity requirements — Somewhat concerned\": \"38%\",\n  \"Forecasting future data center capacity requirements — Slightly concerned\": \"24%\",\n  \"Forecasting future data center capacity requirements — Not concerned\": \"9%\",\n  \"Improving energy performance for facilities equipment — Very concerned\": \"29%\",\n  \"Improving energy performance for facilities equipment — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for facilities equipment — Slightly concerned\": \"23%\",\n  \"Improving energy performance for facilities equipment — Not concerned\": \"8%\",\n  \"Lack of qualified staff — Very concerned\": \"27%\",\n  \"Lack of qualified staff — Somewhat concerned\": \"44%\",\n  \"Lack of qualified staff — Slightly concerned\": \"24%\",\n  \"Lack of qualified staff — Not concerned\": \"6%\",\n  \"Accommodating significantly denser IT — Very concerned\": \"24%\",\n  \"Accommodating significantly denser IT — Somewhat concerned\": \"41%\",\n  \"Accommodating significantly denser IT — Slightly concerned\": \"25%\",\n  \"Accommodating significantly denser IT — Not concerned\": \"9%\",\n  \"Improving energy performance for IT — Very concerned\": \"24%\",\n  \"Improving energy performance for IT — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for IT — Slightly concerned\": \"26%\",\n  \"Improving energy performance for IT — Not concerned\": \"10%\",\n  \"Figure 1 — Source\": \"UPTIME INSTITUTE GLOBAL SURVEY OF IT AND DATA CENTER MANAGERS 2024\",\n  \"Body — Paragraph 1\": \"Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.\",\n  \"Body — Paragraph 2\": \"Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment.\"\n}",
+  "structured_output": {
+   "api_response": {
+    "id": "chatcmpl-8e084e81c0f7c707",
+    "object": "chat.completion",
+    "created": 1791320933,
+    "prompt_routed_experts": null,
+    "model": "qwen3-vl",
+    "choices": [
+     {
+      "index": 0,
+      "message": {
+       "role": "assistant",
+       "content": "{\n  \"Report type\": \"KEYNOTE REPORT\",\n  \"Report title\": \"Uptime Institute Global Data Center Survey 2024\",\n  \"Publisher\": \"uptime INTELLIGENCE\",\n  \"Figure\": \"Figure 1\",\n  \"Figure 1 — Title\": \"Cost issues are the top concern for management in 2024\",\n  \"Figure 1 — Question\": \"Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)\",\n  \"Cost — Very concerned\": \"44%\",\n  \"Cost — Somewhat concerned\": \"36%\",\n  \"Cost — Slightly concerned\": \"17%\",\n  \"Cost — Not concerned\": \"3%\",\n  \"Forecasting future data center capacity requirements — Very concerned\": \"30%\",\n  \"Forecasting future data center capacity requirements — Somewhat concerned\": \"38%\",\n  \"Forecasting future data center capacity requirements — Slightly concerned\": \"24%\",\n  \"Forecasting future data center capacity requirements — Not concerned\": \"9%\",\n  \"Improving energy performance for facilities equipment — Very concerned\": \"29%\",\n  \"Improving energy performance for facilities equipment — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for facilities equipment — Slightly concerned\": \"23%\",\n  \"Improving energy performance for facilities equipment — Not concerned\": \"8%\",\n  \"Lack of qualified staff — Very concerned\": \"27%\",\n  \"Lack of qualified staff — Somewhat concerned\": \"44%\",\n  \"Lack of qualified staff — Slightly concerned\": \"24%\",\n  \"Lack of qualified staff — Not concerned\": \"6%\",\n  \"Accommodating significantly denser IT — Very concerned\": \"24%\",\n  \"Accommodating significantly denser IT — Somewhat concerned\": \"41%\",\n  \"Accommodating significantly denser IT — Slightly concerned\": \"25%\",\n  \"Accommodating significantly denser IT — Not concerned\": \"9%\",\n  \"Improving energy performance for IT — Very concerned\": \"24%\",\n  \"Improving energy performance for IT — Somewhat concerned\": \"40%\",\n  \"Improving energy performance for IT — Slightly concerned\": \"26%\",\n  \"Improving energy performance for IT — Not concerned\": \"10%\",\n  \"Figure 1 — Source\": \"UPTIME INSTITUTE GLOBAL SURVEY OF IT AND DATA CENTER MANAGERS 2024\",\n  \"Body — Paragraph 1\": \"Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.\",\n  \"Body — Paragraph 2\": \"Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment.\"\n}",
+       "refusal": null,
+       "annotations": null,
+       "audio": null,
+       "function_call": null,
+       "tool_calls": [],
+       "reasoning": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+     }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.21.0-8c500980",
+    "usage": {
+     "prompt_tokens": 3930,
+     "total_tokens": 4625,
+     "completion_tokens": 695,
+     "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null
+   }
+  },
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Report type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Report title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Publisher\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Question\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Source\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 2\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Report type\",\n    \"Report title\",\n    \"Publisher\",\n    \"Figure\",\n    \"Figure 1 — Title\",\n    \"Figure 1 — Question\",\n    \"Cost — Very concerned\",\n    \"Cost — Somewhat concerned\",\n    \"Cost — Slightly concerned\",\n    \"Cost — Not concerned\",\n    \"Forecasting future data center capacity requirements — Very concerned\",\n    \"Forecasting future data center capacity requirements — Somewhat concerned\",\n    \"Forecasting future data center capacity requirements — Slightly concerned\",\n    \"Forecasting future data center capacity requirements — Not concerned\",\n    \"Improving energy performance for facilities equipment — Very concerned\",\n    \"Improving energy performance for facilities equipment — Somewhat concerned\",\n    \"Improving energy performance for facilities equipment — Slightly concerned\",\n    \"Improving energy performance for facilities equipment — Not concerned\",\n    \"Lack of qualified staff — Very concerned\",\n    \"Lack of qualified staff — Somewhat concerned\",\n    \"Lack of qualified staff — Slightly concerned\",\n    \"Lack of qualified staff — Not concerned\",\n    \"Accommodating significantly denser IT — Very concerned\",\n    \"Accommodating significantly denser IT — Somewhat concerned\",\n    \"Accommodating significantly denser IT — Slightly concerned\",\n    \"Accommodating significantly denser IT — Not concerned\",\n    \"Improving energy performance for IT — Very concerned\",\n    \"Improving energy performance for IT — Somewhat concerned\",\n    \"Improving energy performance for IT — Slightly concerned\",\n    \"Improving energy performance for IT — Not concerned\",\n    \"Figure 1 — Source\",\n    \"Body — Paragraph 1\",\n    \"Body — Paragraph 2\"\n  ],\n  \"additionalProperties\": false\n}",
+  "gpu_seconds": 3.8743144161764698,
+  "gpu_type": "A100-80GB",
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_004.png",
+  "startup_gpu_seconds": 0.0,
+  "is_cold_start": false
+ }
+}

@@ -1,0 +1,1610 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Report type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Report title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Publisher\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Question\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cost — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Forecasting future data center capacity requirements — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for facilities equipment — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Lack of qualified staff — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accommodating significantly denser IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Very concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Somewhat concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Slightly concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Improving energy performance for IT — Not concerned\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Figure 1 — Source\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Body — Paragraph 2\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Report type\",\n    \"Report title\",\n    \"Publisher\",\n    \"Figure\",\n    \"Figure 1 — Title\",\n    \"Figure 1 — Question\",\n    \"Cost — Very concerned\",\n    \"Cost — Somewhat concerned\",\n    \"Cost — Slightly concerned\",\n    \"Cost — Not concerned\",\n    \"Forecasting future data center capacity requirements — Very concerned\",\n    \"Forecasting future data center capacity requirements — Somewhat concerned\",\n    \"Forecasting future data center capacity requirements — Slightly concerned\",\n    \"Forecasting future data center capacity requirements — Not concerned\",\n    \"Improving energy performance for facilities equipment — Very concerned\",\n    \"Improving energy performance for facilities equipment — Somewhat concerned\",\n    \"Improving energy performance for facilities equipment — Slightly concerned\",\n    \"Improving energy performance for facilities equipment — Not concerned\",\n    \"Lack of qualified staff — Very concerned\",\n    \"Lack of qualified staff — Somewhat concerned\",\n    \"Lack of qualified staff — Slightly concerned\",\n    \"Lack of qualified staff — Not concerned\",\n    \"Accommodating significantly denser IT — Very concerned\",\n    \"Accommodating significantly denser IT — Somewhat concerned\",\n    \"Accommodating significantly denser IT — Slightly concerned\",\n    \"Accommodating significantly denser IT — Not concerned\",\n    \"Improving energy performance for IT — Very concerned\",\n    \"Improving energy performance for IT — Somewhat concerned\",\n    \"Improving energy performance for IT — Slightly concerned\",\n    \"Improving energy performance for IT — Not concerned\",\n    \"Figure 1 — Source\",\n    \"Body — Paragraph 1\",\n    \"Body — Paragraph 2\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Report type": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Report title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Publisher": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Question": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cost — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Forecasting future data center capacity requirements — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for facilities equipment — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Lack of qualified staff — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Accommodating significantly denser IT — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Very concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Somewhat concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Slightly concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Improving energy performance for IT — Not concerned": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Figure 1 — Source": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Body — Paragraph 1": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Body — Paragraph 2": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Report type",
+   "Report title",
+   "Publisher",
+   "Figure",
+   "Figure 1 — Title",
+   "Figure 1 — Question",
+   "Cost — Very concerned",
+   "Cost — Somewhat concerned",
+   "Cost — Slightly concerned",
+   "Cost — Not concerned",
+   "Forecasting future data center capacity requirements — Very concerned",
+   "Forecasting future data center capacity requirements — Somewhat concerned",
+   "Forecasting future data center capacity requirements — Slightly concerned",
+   "Forecasting future data center capacity requirements — Not concerned",
+   "Improving energy performance for facilities equipment — Very concerned",
+   "Improving energy performance for facilities equipment — Somewhat concerned",
+   "Improving energy performance for facilities equipment — Slightly concerned",
+   "Improving energy performance for facilities equipment — Not concerned",
+   "Lack of qualified staff — Very concerned",
+   "Lack of qualified staff — Somewhat concerned",
+   "Lack of qualified staff — Slightly concerned",
+   "Lack of qualified staff — Not concerned",
+   "Accommodating significantly denser IT — Very concerned",
+   "Accommodating significantly denser IT — Somewhat concerned",
+   "Accommodating significantly denser IT — Slightly concerned",
+   "Accommodating significantly denser IT — Not concerned",
+   "Improving energy performance for IT — Very concerned",
+   "Improving energy performance for IT — Somewhat concerned",
+   "Improving energy performance for IT — Slightly concerned",
+   "Improving energy performance for IT — Not concerned",
+   "Figure 1 — Source",
+   "Body — Paragraph 1",
+   "Body — Paragraph 2"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 14.232349082827568,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Report type\": \"KEYNOTE REPORT\", \"Report title\": \"Uptime Institute Global Data Center Survey 2024\", \"Publisher\": \"Uptime Institute / Uptime Intelligence\", \"Figure\": \"Figure 1\", \"Figure 1 — Title\": \"Cost issues are the top concern for management in 2024\", \"Figure 1 — Question\": \"Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)\", \"Cost — Very concerned\": \"44\", \"Cost — Somewhat concerned\": \"36\", \"Cost — Slightly concerned\": \"17\", \"Cost — Not concerned\": \"3\", \"Forecasting future data center capacity requirements — Very concerned\": \"30\", \"Forecasting future data center capacity requirements — Somewhat concerned\": \"38\", \"Forecasting future data center capacity requirements — Slightly concerned\": \"24\", \"Forecasting future data center capacity requirements — Not concerned\": \"9\", \"Improving energy performance for facilities equipment — Very concerned\": \"29\", \"Improving energy performance for facilities equipment — Somewhat concerned\": \"40\", \"Improving energy performance for facilities equipment — Slightly concerned\": \"23\", \"Improving energy performance for facilities equipment — Not concerned\": \"8\", \"Lack of qualified staff — Very concerned\": \"27\", \"Lack of qualified staff — Somewhat concerned\": \"44\", \"Lack of qualified staff — Slightly concerned\": \"24\", \"Lack of qualified staff — Not concerned\": \"6\", \"Accommodating significantly denser IT — Very concerned\": \"24\", \"Accommodating significantly denser IT — Somewhat concerned\": \"41\", \"Accommodating significantly denser IT — Slightly concerned\": \"25\", \"Accommodating significantly denser IT — Not concerned\": \"9\", \"Improving energy performance for IT — Very concerned\": \"24\", \"Improving energy performance for IT — Somewhat concerned\": \"40\", \"Improving energy performance for IT — Slightly concerned\": \"26\", \"Improving energy performance for IT — Not concerned\": \"10\", \"Figure 1 — Source\": null, \"Body — Paragraph 1\": \"Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.\", \"Body — Paragraph 2\": \"Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment.\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-06 21:38:55.642703+00:00",
+  "data": {
+   "Report type": "KEYNOTE REPORT",
+   "Report title": "Uptime Institute Global Data Center Survey 2024",
+   "Publisher": "Uptime Institute / Uptime Intelligence",
+   "Figure": "Figure 1",
+   "Figure 1 — Title": "Cost issues are the top concern for management in 2024",
+   "Figure 1 — Question": "Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)",
+   "Cost — Very concerned": "44",
+   "Cost — Somewhat concerned": "36",
+   "Cost — Slightly concerned": "17",
+   "Cost — Not concerned": "3",
+   "Forecasting future data center capacity requirements — Very concerned": "30",
+   "Forecasting future data center capacity requirements — Somewhat concerned": "38",
+   "Forecasting future data center capacity requirements — Slightly concerned": "24",
+   "Forecasting future data center capacity requirements — Not concerned": "9",
+   "Improving energy performance for facilities equipment — Very concerned": "29",
+   "Improving energy performance for facilities equipment — Somewhat concerned": "40",
+   "Improving energy performance for facilities equipment — Slightly concerned": "23",
+   "Improving energy performance for facilities equipment — Not concerned": "8",
+   "Lack of qualified staff — Very concerned": "27",
+   "Lack of qualified staff — Somewhat concerned": "44",
+   "Lack of qualified staff — Slightly concerned": "24",
+   "Lack of qualified staff — Not concerned": "6",
+   "Accommodating significantly denser IT — Very concerned": "24",
+   "Accommodating significantly denser IT — Somewhat concerned": "41",
+   "Accommodating significantly denser IT — Slightly concerned": "25",
+   "Accommodating significantly denser IT — Not concerned": "9",
+   "Improving energy performance for IT — Very concerned": "24",
+   "Improving energy performance for IT — Somewhat concerned": "40",
+   "Improving energy performance for IT — Slightly concerned": "26",
+   "Improving energy performance for IT — Not concerned": "10",
+   "Figure 1 — Source": null,
+   "Body — Paragraph 1": "Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.",
+   "Body — Paragraph 2": "Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment."
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Report type": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Report title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Publisher": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Figure": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Figure 1 — Title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Figure 1 — Question": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Cost — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Cost — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Cost — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Cost — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Forecasting future data center capacity requirements — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Forecasting future data center capacity requirements — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Forecasting future data center capacity requirements — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Forecasting future data center capacity requirements — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for facilities equipment — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for facilities equipment — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for facilities equipment — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for facilities equipment — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lack of qualified staff — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lack of qualified staff — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lack of qualified staff — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Lack of qualified staff — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Accommodating significantly denser IT — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Accommodating significantly denser IT — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Accommodating significantly denser IT — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Accommodating significantly denser IT — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for IT — Very concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for IT — Somewhat concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for IT — Slightly concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Improving energy performance for IT — Not concerned": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Figure 1 — Source": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Body — Paragraph 1": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Body — Paragraph 2": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Report type",
+    "Report title",
+    "Publisher",
+    "Figure",
+    "Figure 1 — Title",
+    "Figure 1 — Question",
+    "Cost — Very concerned",
+    "Cost — Somewhat concerned",
+    "Cost — Slightly concerned",
+    "Cost — Not concerned",
+    "Forecasting future data center capacity requirements — Very concerned",
+    "Forecasting future data center capacity requirements — Somewhat concerned",
+    "Forecasting future data center capacity requirements — Slightly concerned",
+    "Forecasting future data center capacity requirements — Not concerned",
+    "Improving energy performance for facilities equipment — Very concerned",
+    "Improving energy performance for facilities equipment — Somewhat concerned",
+    "Improving energy performance for facilities equipment — Slightly concerned",
+    "Improving energy performance for facilities equipment — Not concerned",
+    "Lack of qualified staff — Very concerned",
+    "Lack of qualified staff — Somewhat concerned",
+    "Lack of qualified staff — Slightly concerned",
+    "Lack of qualified staff — Not concerned",
+    "Accommodating significantly denser IT — Very concerned",
+    "Accommodating significantly denser IT — Somewhat concerned",
+    "Accommodating significantly denser IT — Slightly concerned",
+    "Accommodating significantly denser IT — Not concerned",
+    "Improving energy performance for IT — Very concerned",
+    "Improving energy performance for IT — Somewhat concerned",
+    "Improving energy performance for IT — Slightly concerned",
+    "Improving energy performance for IT — Not concerned",
+    "Figure 1 — Source",
+    "Body — Paragraph 1",
+    "Body — Paragraph 2"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 471,
+    "num_output_tokens": 541
+   },
+   "parse_job_id": "de883334-b41b-46b1-8b33-716a879323aa"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "69210131-4ad8-4f07-9cc9-3ddd42e13d4d",
+  "from_ui": false,
+  "id": "834e4fce-37f2-49af-925a-5b440868d851",
+  "job_id": "834e4fce-37f2-49af-925a-5b440868d851",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-06 21:39:06.701128+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "interface": "v1 stateless extraction",
+  "job_id": "834e4fce-37f2-49af-925a-5b440868d851",
+  "submission_attempts": 1,
+  "cost_is_estimate": true
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": false,
+     "cite_sources": false,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
+      "Report type": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Report title": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Publisher": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Figure": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Figure 1 — Title": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Figure 1 — Question": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Cost — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Cost — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Cost — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Cost — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Forecasting future data center capacity requirements — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Forecasting future data center capacity requirements — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Forecasting future data center capacity requirements — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Forecasting future data center capacity requirements — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for facilities equipment — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for facilities equipment — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for facilities equipment — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for facilities equipment — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lack of qualified staff — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lack of qualified staff — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lack of qualified staff — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Lack of qualified staff — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Accommodating significantly denser IT — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Accommodating significantly denser IT — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Accommodating significantly denser IT — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Accommodating significantly denser IT — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for IT — Very concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for IT — Somewhat concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for IT — Slightly concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Improving energy performance for IT — Not concerned": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Figure 1 — Source": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Body — Paragraph 1": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Body — Paragraph 2": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "Report type",
+      "Report title",
+      "Publisher",
+      "Figure",
+      "Figure 1 — Title",
+      "Figure 1 — Question",
+      "Cost — Very concerned",
+      "Cost — Somewhat concerned",
+      "Cost — Slightly concerned",
+      "Cost — Not concerned",
+      "Forecasting future data center capacity requirements — Very concerned",
+      "Forecasting future data center capacity requirements — Somewhat concerned",
+      "Forecasting future data center capacity requirements — Slightly concerned",
+      "Forecasting future data center capacity requirements — Not concerned",
+      "Improving energy performance for facilities equipment — Very concerned",
+      "Improving energy performance for facilities equipment — Somewhat concerned",
+      "Improving energy performance for facilities equipment — Slightly concerned",
+      "Improving energy performance for facilities equipment — Not concerned",
+      "Lack of qualified staff — Very concerned",
+      "Lack of qualified staff — Somewhat concerned",
+      "Lack of qualified staff — Slightly concerned",
+      "Lack of qualified staff — Not concerned",
+      "Accommodating significantly denser IT — Very concerned",
+      "Accommodating significantly denser IT — Somewhat concerned",
+      "Accommodating significantly denser IT — Slightly concerned",
+      "Accommodating significantly denser IT — Not concerned",
+      "Improving energy performance for IT — Very concerned",
+      "Improving energy performance for IT — Somewhat concerned",
+      "Improving energy performance for IT — Slightly concerned",
+      "Improving energy performance for IT — Not concerned",
+      "Figure 1 — Source",
+      "Body — Paragraph 1",
+      "Body — Paragraph 2"
+     ],
+     "additionalProperties": false
+    },
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-06 21:38:55.426246+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-fa6r0hzj.png",
+    "file_size": 212712,
+    "file_type": "png",
+    "id": "69210131-4ad8-4f07-9cc9-3ddd42e13d4d",
+    "last_modified_at": "2026-10-06 21:38:55+00:00",
+    "name": "extraction_file-fa6r0hzj.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 212712,
+     "last_modified_at": "2026-10-06T21:38:55"
+    },
+    "updated_at": "2026-10-06 21:38:55.426246+00:00"
+   },
+   "file_id": "69210131-4ad8-4f07-9cc9-3ddd42e13d4d",
+   "id": "834e4fce-37f2-49af-925a-5b440868d851",
+   "status": "PENDING"
+  },
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": false,
+    "cite_sources": false,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-06 21:38:55.642703+00:00",
+   "data": {
+    "Report type": "KEYNOTE REPORT",
+    "Report title": "Uptime Institute Global Data Center Survey 2024",
+    "Publisher": "Uptime Institute / Uptime Intelligence",
+    "Figure": "Figure 1",
+    "Figure 1 — Title": "Cost issues are the top concern for management in 2024",
+    "Figure 1 — Question": "Looking at the next 12 months, how concerned is your digital infrastructure management regarding each of the following issues? (n=638)",
+    "Cost — Very concerned": "44",
+    "Cost — Somewhat concerned": "36",
+    "Cost — Slightly concerned": "17",
+    "Cost — Not concerned": "3",
+    "Forecasting future data center capacity requirements — Very concerned": "30",
+    "Forecasting future data center capacity requirements — Somewhat concerned": "38",
+    "Forecasting future data center capacity requirements — Slightly concerned": "24",
+    "Forecasting future data center capacity requirements — Not concerned": "9",
+    "Improving energy performance for facilities equipment — Very concerned": "29",
+    "Improving energy performance for facilities equipment — Somewhat concerned": "40",
+    "Improving energy performance for facilities equipment — Slightly concerned": "23",
+    "Improving energy performance for facilities equipment — Not concerned": "8",
+    "Lack of qualified staff — Very concerned": "27",
+    "Lack of qualified staff — Somewhat concerned": "44",
+    "Lack of qualified staff — Slightly concerned": "24",
+    "Lack of qualified staff — Not concerned": "6",
+    "Accommodating significantly denser IT — Very concerned": "24",
+    "Accommodating significantly denser IT — Somewhat concerned": "41",
+    "Accommodating significantly denser IT — Slightly concerned": "25",
+    "Accommodating significantly denser IT — Not concerned": "9",
+    "Improving energy performance for IT — Very concerned": "24",
+    "Improving energy performance for IT — Somewhat concerned": "40",
+    "Improving energy performance for IT — Slightly concerned": "26",
+    "Improving energy performance for IT — Not concerned": "10",
+    "Figure 1 — Source": null,
+    "Body — Paragraph 1": "Although AI and high-performance compute workloads garner significant media attention, their broader industry impact will likely take time to materialize. Managers also report that the need to accommodate higher density workloads is a less pressing concern than rising costs and the need for greater energy efficiency. While 65% of operators are at least somewhat concerned about their ability to accommodate rising densities, most are currently planning to meet the need for denser IT infrastructure by limiting their efforts to specific areas of their data halls.",
+    "Body — Paragraph 2": "Compared with 2023, other response categories show little change. About two-thirds of managers are at least somewhat concerned with forecasting future data center capacity requirements, a lack of qualified staff, and energy performance for IT and facilities equipment."
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Report type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Report title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Publisher": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Figure": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Figure 1 — Title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Figure 1 — Question": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Cost — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Cost — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Cost — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Cost — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Forecasting future data center capacity requirements — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Forecasting future data center capacity requirements — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Forecasting future data center capacity requirements — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Forecasting future data center capacity requirements — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for facilities equipment — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for facilities equipment — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for facilities equipment — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for facilities equipment — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lack of qualified staff — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lack of qualified staff — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lack of qualified staff — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Lack of qualified staff — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Accommodating significantly denser IT — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Accommodating significantly denser IT — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Accommodating significantly denser IT — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Accommodating significantly denser IT — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for IT — Very concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for IT — Somewhat concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for IT — Slightly concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Improving energy performance for IT — Not concerned": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Figure 1 — Source": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Body — Paragraph 1": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Body — Paragraph 2": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "Report type",
+     "Report title",
+     "Publisher",
+     "Figure",
+     "Figure 1 — Title",
+     "Figure 1 — Question",
+     "Cost — Very concerned",
+     "Cost — Somewhat concerned",
+     "Cost — Slightly concerned",
+     "Cost — Not concerned",
+     "Forecasting future data center capacity requirements — Very concerned",
+     "Forecasting future data center capacity requirements — Somewhat concerned",
+     "Forecasting future data center capacity requirements — Slightly concerned",
+     "Forecasting future data center capacity requirements — Not concerned",
+     "Improving energy performance for facilities equipment — Very concerned",
+     "Improving energy performance for facilities equipment — Somewhat concerned",
+     "Improving energy performance for facilities equipment — Slightly concerned",
+     "Improving energy performance for facilities equipment — Not concerned",
+     "Lack of qualified staff — Very concerned",
+     "Lack of qualified staff — Somewhat concerned",
+     "Lack of qualified staff — Slightly concerned",
+     "Lack of qualified staff — Not concerned",
+     "Accommodating significantly denser IT — Very concerned",
+     "Accommodating significantly denser IT — Somewhat concerned",
+     "Accommodating significantly denser IT — Slightly concerned",
+     "Accommodating significantly denser IT — Not concerned",
+     "Improving energy performance for IT — Very concerned",
+     "Improving energy performance for IT — Somewhat concerned",
+     "Improving energy performance for IT — Slightly concerned",
+     "Improving energy performance for IT — Not concerned",
+     "Figure 1 — Source",
+     "Body — Paragraph 1",
+     "Body — Paragraph 2"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {},
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 471,
+     "num_output_tokens": 541
+    },
+    "parse_job_id": "de883334-b41b-46b1-8b33-716a879323aa"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "69210131-4ad8-4f07-9cc9-3ddd42e13d4d",
+   "from_ui": false,
+   "id": "834e4fce-37f2-49af-925a-5b440868d851",
+   "job_id": "834e4fce-37f2-49af-925a-5b440868d851",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-06 21:39:06.701128+00:00"
+  }
+ }
+}

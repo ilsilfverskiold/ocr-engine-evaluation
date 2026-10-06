@@ -1813,3 +1813,26 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   rejection, denominator/extra-field behavior, unchanged full KV reference,
   vendor submission/polling and corpus self-consistency. No table-gold edits,
   model version changes, deployments, judge calls or push.
+
+
+## 2026-10-06 — sampled schema run completed and audited
+
+- Canonical free consolidation: 20261006T214240Z, sourced from API
+  20261006T205850Z, Modal 20261006T205911Z and Llama 20261006T211813Z.
+  455 unique planned pairs attempted; 453 scored, Gemini bank_001 503 and
+  DeepSeek shipping_003 500 retained without retries. Sonnet completed after
+  the user added credits, reusing its first 50 successful responses.
+- Total recorded/estimated cost $4.727862, including measured GPU startup and
+  the failed DeepSeek item's batch share; excludes Modal CPU/RAM and idle.
+  The permanent schema audit records per-engine costs, score means and the
+  63-page common-success comparison. No completed extraction was repeated.
+- Audited all 455 request contracts, all 453 reference denominators and score
+  formulas, unique successful pairs, and report payload/JavaScript syntax.
+  Browser report results/reports/ocr-benchmark-schema.html has source images,
+  exact shared sampled schemas, actual returned pairs and per-field verdicts.
+- Source inference records/calls are retained. Moved uncharged sandbox-DNS run
+  and redundant source-run CSV exports to session scratch. Canonical CSVs and
+  reproducible report commands remain; generated HTML is gitignored.
+- The schema run used the approved sample, without engine tuning or a judge.
+  Remaining all-leg controls are explicitly listed in the follow-up. 407
+  offline tests passed; no push.

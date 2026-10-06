@@ -1,0 +1,3458 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_001.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Merchant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Registration No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Store\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TEL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"FAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST ID\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE NO\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"COUNTER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"OPERATOR\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Time\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Currency\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Unit price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — GST code\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QUANTITY\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total Sales (Incl. GST @6%)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Rounding Adjustment\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Net Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Payment Method\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR (0%) — Sales Amt (RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR (0%) — Tax Amt (RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR (6%) — Sales Amt (RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR (6%) — Tax Amt (RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Receipt notice\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closing\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Merchant\",\n    \"Registration No.\",\n    \"Store\",\n    \"Address\",\n    \"Website\",\n    \"TEL\",\n    \"FAX\",\n    \"GST ID\",\n    \"Document title\",\n    \"Customer\",\n    \"Customer name\",\n    \"TAX INVOICE NO\",\n    \"COUNTER\",\n    \"OPERATOR\",\n    \"Date\",\n    \"Time\",\n    \"Currency\",\n    \"Item 1 — Description\",\n    \"Item 1 — Unit price\",\n    \"Item 1 — Code\",\n    \"Item 1 — Quantity\",\n    \"Item 1 — Amount\",\n    \"Item 1 — GST code\",\n    \"Item 2 — Unit price\",\n    \"Item 2 — Code\",\n    \"Item 2 — Quantity\",\n    \"Item 2 — Amount\",\n    \"Item 2 — GST code\",\n    \"Item 3 — Unit price\",\n    \"Item 3 — Code\",\n    \"Item 3 — Quantity\",\n    \"Item 3 — Amount\",\n    \"Item 3 — GST code\",\n    \"Item 4 — Unit price\",\n    \"Item 4 — Code\",\n    \"Item 4 — Quantity\",\n    \"Item 4 — Amount\",\n    \"Item 4 — GST code\",\n    \"Item 5 — Description\",\n    \"Item 5 — Unit price\",\n    \"Item 5 — Code\",\n    \"Item 5 — Quantity\",\n    \"Item 5 — Amount\",\n    \"Item 5 — GST code\",\n    \"Item 6 — Description\",\n    \"Item 6 — Unit price\",\n    \"Item 6 — Quantity\",\n    \"Item 6 — Amount\",\n    \"Item 6 — GST code\",\n    \"Item 7 — Description\",\n    \"Item 7 — Unit price\",\n    \"Item 7 — Quantity\",\n    \"Item 7 — Amount\",\n    \"Item 7 — GST code\",\n    \"Item 8 — Description\",\n    \"Item 8 — Unit price\",\n    \"Item 8 — Code\",\n    \"Item 8 — Quantity\",\n    \"Item 8 — Amount\",\n    \"Item 8 — GST code\",\n    \"Item 9 — Description\",\n    \"Item 9 — Unit price\",\n    \"Item 9 — Code\",\n    \"Item 9 — Quantity\",\n    \"Item 9 — Amount\",\n    \"Item 9 — GST code\",\n    \"QUANTITY\",\n    \"Total Sales (Incl. GST @6%)\",\n    \"Rounding Adjustment\",\n    \"Net Total\",\n    \"Payment Method\",\n    \"GST Summary — ZR (0%) — Sales Amt (RM)\",\n    \"GST Summary — ZR (0%) — Tax Amt (RM)\",\n    \"GST Summary — SR (6%) — Sales Amt (RM)\",\n    \"GST Summary — SR (6%) — Tax Amt (RM)\",\n    \"Receipt notice\",\n    \"Closing\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Merchant": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Registration No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Store": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Website": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TEL": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "FAX": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "GST ID": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Document title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Customer": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Customer name": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE NO": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "COUNTER": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "OPERATOR": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Date": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Time": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Currency": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Unit price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — GST code": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "QUANTITY": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Total Sales (Incl. GST @6%)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Rounding Adjustment": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Net Total": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Payment Method": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "GST Summary — ZR (0%) — Sales Amt (RM)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "GST Summary — ZR (0%) — Tax Amt (RM)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "GST Summary — SR (6%) — Sales Amt (RM)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "GST Summary — SR (6%) — Tax Amt (RM)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Receipt notice": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Closing": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Merchant",
+   "Registration No.",
+   "Store",
+   "Address",
+   "Website",
+   "TEL",
+   "FAX",
+   "GST ID",
+   "Document title",
+   "Customer",
+   "Customer name",
+   "TAX INVOICE NO",
+   "COUNTER",
+   "OPERATOR",
+   "Date",
+   "Time",
+   "Currency",
+   "Item 1 — Description",
+   "Item 1 — Unit price",
+   "Item 1 — Code",
+   "Item 1 — Quantity",
+   "Item 1 — Amount",
+   "Item 1 — GST code",
+   "Item 2 — Unit price",
+   "Item 2 — Code",
+   "Item 2 — Quantity",
+   "Item 2 — Amount",
+   "Item 2 — GST code",
+   "Item 3 — Unit price",
+   "Item 3 — Code",
+   "Item 3 — Quantity",
+   "Item 3 — Amount",
+   "Item 3 — GST code",
+   "Item 4 — Unit price",
+   "Item 4 — Code",
+   "Item 4 — Quantity",
+   "Item 4 — Amount",
+   "Item 4 — GST code",
+   "Item 5 — Description",
+   "Item 5 — Unit price",
+   "Item 5 — Code",
+   "Item 5 — Quantity",
+   "Item 5 — Amount",
+   "Item 5 — GST code",
+   "Item 6 — Description",
+   "Item 6 — Unit price",
+   "Item 6 — Quantity",
+   "Item 6 — Amount",
+   "Item 6 — GST code",
+   "Item 7 — Description",
+   "Item 7 — Unit price",
+   "Item 7 — Quantity",
+   "Item 7 — Amount",
+   "Item 7 — GST code",
+   "Item 8 — Description",
+   "Item 8 — Unit price",
+   "Item 8 — Code",
+   "Item 8 — Quantity",
+   "Item 8 — Amount",
+   "Item 8 — GST code",
+   "Item 9 — Description",
+   "Item 9 — Unit price",
+   "Item 9 — Code",
+   "Item 9 — Quantity",
+   "Item 9 — Amount",
+   "Item 9 — GST code",
+   "QUANTITY",
+   "Total Sales (Incl. GST @6%)",
+   "Rounding Adjustment",
+   "Net Total",
+   "Payment Method",
+   "GST Summary — ZR (0%) — Sales Amt (RM)",
+   "GST Summary — ZR (0%) — Tax Amt (RM)",
+   "GST Summary — SR (6%) — Sales Amt (RM)",
+   "GST Summary — SR (6%) — Tax Amt (RM)",
+   "Receipt notice",
+   "Closing"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 17.61416041618213,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Merchant\": \"SUPER SEVEN CASH & CARRY SDN BHD\", \"Registration No.\": \"590150-A\", \"Store\": \"PASARAYA BORONG SUPER SEVEN\", \"Address\": \"NO. 1 Jalan Euro 1\\nOff Jalan Batu Tiga\\nSungai Buloh Seksyen U3 Shah Alam, 40150\", \"Website\": \"http://www.super7.com.my\", \"TEL\": \"03-78590861\", \"FAX\": \"03-78590864\", \"GST ID\": \"000639090688\", \"Document title\": \"TAX INVOICE\", \"Customer\": \"[77853745]\", \"Customer name\": \"Mrs. ONG GUAT CHYE\", \"TAX INVOICE NO\": \"179509\", \"COUNTER\": \"004\", \"OPERATOR\": \"[NUR ATIQAH BINTI MUH-CASHIER]\", \"Date\": \"01-03-2018\", \"Time\": \"09:23:06 AM\", \"Currency\": \"RM\", \"Item 1 — Description\": \"TENDERLOIN\", \"Item 1 — Unit price\": \"43.37\", \"Item 1 — Code\": \"40212\", \"Item 1 — Quantity\": \"1\", \"Item 1 — Amount\": \"43.37\", \"Item 1 — GST code\": \"ZR\", \"Item 2 — Unit price\": \"49.42\", \"Item 2 — Code\": \"40240\", \"Item 2 — Quantity\": \"1\", \"Item 2 — Amount\": \"49.42\", \"Item 2 — GST code\": \"ZR\", \"Item 3 — Unit price\": \"43.90\", \"Item 3 — Code\": \"40240\", \"Item 3 — Quantity\": \"1\", \"Item 3 — Amount\": \"43.90\", \"Item 3 — GST code\": \"ZR\", \"Item 4 — Unit price\": \"49.66\", \"Item 4 — Code\": \"40240\", \"Item 4 — Quantity\": \"1\", \"Item 4 — Amount\": \"49.66\", \"Item 4 — GST code\": \"ZR\", \"Item 5 — Description\": \"AYAMAS CHICKEN FRANKFURTER 340G\", \"Item 5 — Unit price\": \"4.30\", \"Item 5 — Code\": \"9556276020392\", \"Item 5 — Quantity\": \"8\", \"Item 5 — Amount\": \"34.40\", \"Item 5 — GST code\": \"SR\", \"Item 6 — Description\": \"BUTTERCUP LUXURY SPREAD 500G\", \"Item 6 — Unit price\": \"9.90\", \"Item 6 — Quantity\": \"1\", \"Item 6 — Amount\": \"9.90\", \"Item 6 — GST code\": \"SR\", \"Item 7 — Description\": \"BUTTERCUP LUXURY SPREAD 500G\", \"Item 7 — Unit price\": \"9.90\", \"Item 7 — Quantity\": \"1\", \"Item 7 — Amount\": \"9.90\", \"Item 7 — GST code\": \"SR\", \"Item 8 — Description\": \"QY CINCALI 2KG\", \"Item 8 — Unit price\": \"3.90\", \"Item 8 — Code\": \"9554100149455\", \"Item 8 — Quantity\": \"1\", \"Item 8 — Amount\": \"3.90\", \"Item 8 — GST code\": \"SR\", \"Item 9 — Description\": \"CRAB NUGGET 500G MUSHROOM\", \"Item 9 — Unit price\": \"8.20\", \"Item 9 — Code\": \"9557240160502\", \"Item 9 — Quantity\": \"20\", \"Item 9 — Amount\": \"164.00\", \"Item 9 — GST code\": \"SR\", \"QUANTITY\": \"35 Units\", \"Total Sales (Incl. GST @6%)\": \"RM408.45\", \"Rounding Adjustment\": \"RM0.00\", \"Net Total\": \"RM408.45\", \"Payment Method\": \"MASTER CARD\", \"GST Summary — ZR (0%) — Sales Amt (RM)\": \"186.35\", \"GST Summary — ZR (0%) — Tax Amt (RM)\": \"0.00\", \"GST Summary — SR (6%) — Sales Amt (RM)\": \"209.53\", \"GST Summary — SR (6%) — Tax Amt (RM)\": \"12.57\", \"Receipt notice\": \"PLEASE VERIFY YOUR RECEIPT BEFORE LEAVING THE COUNTER. GOODS SOLD ARE NOT RETURNABLE.\", \"Closing\": \"THANK YOU\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-06 21:32:24.550496+00:00",
+  "data": {
+   "Merchant": "SUPER SEVEN CASH & CARRY SDN BHD",
+   "Registration No.": "590150-A",
+   "Store": "PASARAYA BORONG SUPER SEVEN",
+   "Address": "NO. 1 Jalan Euro 1\nOff Jalan Batu Tiga\nSungai Buloh Seksyen U3 Shah Alam, 40150",
+   "Website": "http://www.super7.com.my",
+   "TEL": "03-78590861",
+   "FAX": "03-78590864",
+   "GST ID": "000639090688",
+   "Document title": "TAX INVOICE",
+   "Customer": "[77853745]",
+   "Customer name": "Mrs. ONG GUAT CHYE",
+   "TAX INVOICE NO": "179509",
+   "COUNTER": "004",
+   "OPERATOR": "[NUR ATIQAH BINTI MUH-CASHIER]",
+   "Date": "01-03-2018",
+   "Time": "09:23:06 AM",
+   "Currency": "RM",
+   "Item 1 — Description": "TENDERLOIN",
+   "Item 1 — Unit price": "43.37",
+   "Item 1 — Code": "40212",
+   "Item 1 — Quantity": "1",
+   "Item 1 — Amount": "43.37",
+   "Item 1 — GST code": "ZR",
+   "Item 2 — Unit price": "49.42",
+   "Item 2 — Code": "40240",
+   "Item 2 — Quantity": "1",
+   "Item 2 — Amount": "49.42",
+   "Item 2 — GST code": "ZR",
+   "Item 3 — Unit price": "43.90",
+   "Item 3 — Code": "40240",
+   "Item 3 — Quantity": "1",
+   "Item 3 — Amount": "43.90",
+   "Item 3 — GST code": "ZR",
+   "Item 4 — Unit price": "49.66",
+   "Item 4 — Code": "40240",
+   "Item 4 — Quantity": "1",
+   "Item 4 — Amount": "49.66",
+   "Item 4 — GST code": "ZR",
+   "Item 5 — Description": "AYAMAS CHICKEN FRANKFURTER 340G",
+   "Item 5 — Unit price": "4.30",
+   "Item 5 — Code": "9556276020392",
+   "Item 5 — Quantity": "8",
+   "Item 5 — Amount": "34.40",
+   "Item 5 — GST code": "SR",
+   "Item 6 — Description": "BUTTERCUP LUXURY SPREAD 500G",
+   "Item 6 — Unit price": "9.90",
+   "Item 6 — Quantity": "1",
+   "Item 6 — Amount": "9.90",
+   "Item 6 — GST code": "SR",
+   "Item 7 — Description": "BUTTERCUP LUXURY SPREAD 500G",
+   "Item 7 — Unit price": "9.90",
+   "Item 7 — Quantity": "1",
+   "Item 7 — Amount": "9.90",
+   "Item 7 — GST code": "SR",
+   "Item 8 — Description": "QY CINCALI 2KG",
+   "Item 8 — Unit price": "3.90",
+   "Item 8 — Code": "9554100149455",
+   "Item 8 — Quantity": "1",
+   "Item 8 — Amount": "3.90",
+   "Item 8 — GST code": "SR",
+   "Item 9 — Description": "CRAB NUGGET 500G MUSHROOM",
+   "Item 9 — Unit price": "8.20",
+   "Item 9 — Code": "9557240160502",
+   "Item 9 — Quantity": "20",
+   "Item 9 — Amount": "164.00",
+   "Item 9 — GST code": "SR",
+   "QUANTITY": "35 Units",
+   "Total Sales (Incl. GST @6%)": "RM408.45",
+   "Rounding Adjustment": "RM0.00",
+   "Net Total": "RM408.45",
+   "Payment Method": "MASTER CARD",
+   "GST Summary — ZR (0%) — Sales Amt (RM)": "186.35",
+   "GST Summary — ZR (0%) — Tax Amt (RM)": "0.00",
+   "GST Summary — SR (6%) — Sales Amt (RM)": "209.53",
+   "GST Summary — SR (6%) — Tax Amt (RM)": "12.57",
+   "Receipt notice": "PLEASE VERIFY YOUR RECEIPT BEFORE LEAVING THE COUNTER. GOODS SOLD ARE NOT RETURNABLE.",
+   "Closing": "THANK YOU"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Merchant": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Registration No.": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Store": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Address": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Website": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "TEL": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "FAX": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "GST ID": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Document title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Customer": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Customer name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "TAX INVOICE NO": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "COUNTER": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "OPERATOR": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Time": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Currency": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 1 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 2 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 2 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 2 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 2 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 2 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 3 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 3 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 3 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 3 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 3 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 4 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 4 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 4 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 4 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 4 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 5 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 6 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 6 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 6 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 6 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 6 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 7 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 7 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 7 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 7 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 7 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 8 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — Description": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — Unit price": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — Code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — Quantity": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — Amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Item 9 — GST code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "QUANTITY": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Total Sales (Incl. GST @6%)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Rounding Adjustment": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Net Total": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Payment Method": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "GST Summary — ZR (0%) — Sales Amt (RM)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "GST Summary — ZR (0%) — Tax Amt (RM)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "GST Summary — SR (6%) — Sales Amt (RM)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "GST Summary — SR (6%) — Tax Amt (RM)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Receipt notice": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Closing": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Merchant",
+    "Registration No.",
+    "Store",
+    "Address",
+    "Website",
+    "TEL",
+    "FAX",
+    "GST ID",
+    "Document title",
+    "Customer",
+    "Customer name",
+    "TAX INVOICE NO",
+    "COUNTER",
+    "OPERATOR",
+    "Date",
+    "Time",
+    "Currency",
+    "Item 1 — Description",
+    "Item 1 — Unit price",
+    "Item 1 — Code",
+    "Item 1 — Quantity",
+    "Item 1 — Amount",
+    "Item 1 — GST code",
+    "Item 2 — Unit price",
+    "Item 2 — Code",
+    "Item 2 — Quantity",
+    "Item 2 — Amount",
+    "Item 2 — GST code",
+    "Item 3 — Unit price",
+    "Item 3 — Code",
+    "Item 3 — Quantity",
+    "Item 3 — Amount",
+    "Item 3 — GST code",
+    "Item 4 — Unit price",
+    "Item 4 — Code",
+    "Item 4 — Quantity",
+    "Item 4 — Amount",
+    "Item 4 — GST code",
+    "Item 5 — Description",
+    "Item 5 — Unit price",
+    "Item 5 — Code",
+    "Item 5 — Quantity",
+    "Item 5 — Amount",
+    "Item 5 — GST code",
+    "Item 6 — Description",
+    "Item 6 — Unit price",
+    "Item 6 — Quantity",
+    "Item 6 — Amount",
+    "Item 6 — GST code",
+    "Item 7 — Description",
+    "Item 7 — Unit price",
+    "Item 7 — Quantity",
+    "Item 7 — Amount",
+    "Item 7 — GST code",
+    "Item 8 — Description",
+    "Item 8 — Unit price",
+    "Item 8 — Code",
+    "Item 8 — Quantity",
+    "Item 8 — Amount",
+    "Item 8 — GST code",
+    "Item 9 — Description",
+    "Item 9 — Unit price",
+    "Item 9 — Code",
+    "Item 9 — Quantity",
+    "Item 9 — Amount",
+    "Item 9 — GST code",
+    "QUANTITY",
+    "Total Sales (Incl. GST @6%)",
+    "Rounding Adjustment",
+    "Net Total",
+    "Payment Method",
+    "GST Summary — ZR (0%) — Sales Amt (RM)",
+    "GST Summary — ZR (0%) — Tax Amt (RM)",
+    "GST Summary — SR (6%) — Sales Amt (RM)",
+    "GST Summary — SR (6%) — Tax Amt (RM)",
+    "Receipt notice",
+    "Closing"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 628,
+    "num_output_tokens": 848
+   },
+   "parse_job_id": "64ecc304-bab2-47ff-89cf-289330633ae1"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "4342c273-a927-4d29-9562-9d4478a08be6",
+  "from_ui": false,
+  "id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+  "job_id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-06 21:32:38.356782+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "interface": "v1 stateless extraction",
+  "job_id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+  "submission_attempts": 1,
+  "cost_is_estimate": true
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": false,
+     "cite_sources": false,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
+      "Merchant": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Registration No.": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Store": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Address": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Website": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "TEL": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "FAX": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "GST ID": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Document title": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Customer": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Customer name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "TAX INVOICE NO": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "COUNTER": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "OPERATOR": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Date": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Time": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Currency": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 1 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 2 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 2 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 2 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 2 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 2 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 3 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 3 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 3 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 3 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 3 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 4 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 4 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 4 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 4 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 4 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 5 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 6 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 6 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 6 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 6 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 6 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 7 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 7 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 7 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 7 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 7 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 8 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — Description": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — Unit price": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — Code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — Quantity": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — Amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Item 9 — GST code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "QUANTITY": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Total Sales (Incl. GST @6%)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Rounding Adjustment": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Net Total": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Payment Method": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "GST Summary — ZR (0%) — Sales Amt (RM)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "GST Summary — ZR (0%) — Tax Amt (RM)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "GST Summary — SR (6%) — Sales Amt (RM)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "GST Summary — SR (6%) — Tax Amt (RM)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Receipt notice": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Closing": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "Merchant",
+      "Registration No.",
+      "Store",
+      "Address",
+      "Website",
+      "TEL",
+      "FAX",
+      "GST ID",
+      "Document title",
+      "Customer",
+      "Customer name",
+      "TAX INVOICE NO",
+      "COUNTER",
+      "OPERATOR",
+      "Date",
+      "Time",
+      "Currency",
+      "Item 1 — Description",
+      "Item 1 — Unit price",
+      "Item 1 — Code",
+      "Item 1 — Quantity",
+      "Item 1 — Amount",
+      "Item 1 — GST code",
+      "Item 2 — Unit price",
+      "Item 2 — Code",
+      "Item 2 — Quantity",
+      "Item 2 — Amount",
+      "Item 2 — GST code",
+      "Item 3 — Unit price",
+      "Item 3 — Code",
+      "Item 3 — Quantity",
+      "Item 3 — Amount",
+      "Item 3 — GST code",
+      "Item 4 — Unit price",
+      "Item 4 — Code",
+      "Item 4 — Quantity",
+      "Item 4 — Amount",
+      "Item 4 — GST code",
+      "Item 5 — Description",
+      "Item 5 — Unit price",
+      "Item 5 — Code",
+      "Item 5 — Quantity",
+      "Item 5 — Amount",
+      "Item 5 — GST code",
+      "Item 6 — Description",
+      "Item 6 — Unit price",
+      "Item 6 — Quantity",
+      "Item 6 — Amount",
+      "Item 6 — GST code",
+      "Item 7 — Description",
+      "Item 7 — Unit price",
+      "Item 7 — Quantity",
+      "Item 7 — Amount",
+      "Item 7 — GST code",
+      "Item 8 — Description",
+      "Item 8 — Unit price",
+      "Item 8 — Code",
+      "Item 8 — Quantity",
+      "Item 8 — Amount",
+      "Item 8 — GST code",
+      "Item 9 — Description",
+      "Item 9 — Unit price",
+      "Item 9 — Code",
+      "Item 9 — Quantity",
+      "Item 9 — Amount",
+      "Item 9 — GST code",
+      "QUANTITY",
+      "Total Sales (Incl. GST @6%)",
+      "Rounding Adjustment",
+      "Net Total",
+      "Payment Method",
+      "GST Summary — ZR (0%) — Sales Amt (RM)",
+      "GST Summary — ZR (0%) — Tax Amt (RM)",
+      "GST Summary — SR (6%) — Sales Amt (RM)",
+      "GST Summary — SR (6%) — Tax Amt (RM)",
+      "Receipt notice",
+      "Closing"
+     ],
+     "additionalProperties": false
+    },
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-06 21:32:24.200641+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-3mi2sqm9.png",
+    "file_size": 644669,
+    "file_type": "png",
+    "id": "4342c273-a927-4d29-9562-9d4478a08be6",
+    "last_modified_at": "2026-10-06 21:32:24+00:00",
+    "name": "extraction_file-3mi2sqm9.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 644669,
+     "last_modified_at": "2026-10-06T21:32:24"
+    },
+    "updated_at": "2026-10-06 21:32:24.200641+00:00"
+   },
+   "file_id": "4342c273-a927-4d29-9562-9d4478a08be6",
+   "id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+   "status": "PENDING"
+  },
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": false,
+    "cite_sources": false,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-06 21:32:24.550496+00:00",
+   "data": {
+    "Merchant": "SUPER SEVEN CASH & CARRY SDN BHD",
+    "Registration No.": "590150-A",
+    "Store": "PASARAYA BORONG SUPER SEVEN",
+    "Address": "NO. 1 Jalan Euro 1\nOff Jalan Batu Tiga\nSungai Buloh Seksyen U3 Shah Alam, 40150",
+    "Website": "http://www.super7.com.my",
+    "TEL": "03-78590861",
+    "FAX": "03-78590864",
+    "GST ID": "000639090688",
+    "Document title": "TAX INVOICE",
+    "Customer": "[77853745]",
+    "Customer name": "Mrs. ONG GUAT CHYE",
+    "TAX INVOICE NO": "179509",
+    "COUNTER": "004",
+    "OPERATOR": "[NUR ATIQAH BINTI MUH-CASHIER]",
+    "Date": "01-03-2018",
+    "Time": "09:23:06 AM",
+    "Currency": "RM",
+    "Item 1 — Description": "TENDERLOIN",
+    "Item 1 — Unit price": "43.37",
+    "Item 1 — Code": "40212",
+    "Item 1 — Quantity": "1",
+    "Item 1 — Amount": "43.37",
+    "Item 1 — GST code": "ZR",
+    "Item 2 — Unit price": "49.42",
+    "Item 2 — Code": "40240",
+    "Item 2 — Quantity": "1",
+    "Item 2 — Amount": "49.42",
+    "Item 2 — GST code": "ZR",
+    "Item 3 — Unit price": "43.90",
+    "Item 3 — Code": "40240",
+    "Item 3 — Quantity": "1",
+    "Item 3 — Amount": "43.90",
+    "Item 3 — GST code": "ZR",
+    "Item 4 — Unit price": "49.66",
+    "Item 4 — Code": "40240",
+    "Item 4 — Quantity": "1",
+    "Item 4 — Amount": "49.66",
+    "Item 4 — GST code": "ZR",
+    "Item 5 — Description": "AYAMAS CHICKEN FRANKFURTER 340G",
+    "Item 5 — Unit price": "4.30",
+    "Item 5 — Code": "9556276020392",
+    "Item 5 — Quantity": "8",
+    "Item 5 — Amount": "34.40",
+    "Item 5 — GST code": "SR",
+    "Item 6 — Description": "BUTTERCUP LUXURY SPREAD 500G",
+    "Item 6 — Unit price": "9.90",
+    "Item 6 — Quantity": "1",
+    "Item 6 — Amount": "9.90",
+    "Item 6 — GST code": "SR",
+    "Item 7 — Description": "BUTTERCUP LUXURY SPREAD 500G",
+    "Item 7 — Unit price": "9.90",
+    "Item 7 — Quantity": "1",
+    "Item 7 — Amount": "9.90",
+    "Item 7 — GST code": "SR",
+    "Item 8 — Description": "QY CINCALI 2KG",
+    "Item 8 — Unit price": "3.90",
+    "Item 8 — Code": "9554100149455",
+    "Item 8 — Quantity": "1",
+    "Item 8 — Amount": "3.90",
+    "Item 8 — GST code": "SR",
+    "Item 9 — Description": "CRAB NUGGET 500G MUSHROOM",
+    "Item 9 — Unit price": "8.20",
+    "Item 9 — Code": "9557240160502",
+    "Item 9 — Quantity": "20",
+    "Item 9 — Amount": "164.00",
+    "Item 9 — GST code": "SR",
+    "QUANTITY": "35 Units",
+    "Total Sales (Incl. GST @6%)": "RM408.45",
+    "Rounding Adjustment": "RM0.00",
+    "Net Total": "RM408.45",
+    "Payment Method": "MASTER CARD",
+    "GST Summary — ZR (0%) — Sales Amt (RM)": "186.35",
+    "GST Summary — ZR (0%) — Tax Amt (RM)": "0.00",
+    "GST Summary — SR (6%) — Sales Amt (RM)": "209.53",
+    "GST Summary — SR (6%) — Tax Amt (RM)": "12.57",
+    "Receipt notice": "PLEASE VERIFY YOUR RECEIPT BEFORE LEAVING THE COUNTER. GOODS SOLD ARE NOT RETURNABLE.",
+    "Closing": "THANK YOU"
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Merchant": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Registration No.": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Store": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Address": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Website": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "TEL": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "FAX": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "GST ID": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Document title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Customer": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Customer name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "TAX INVOICE NO": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "COUNTER": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "OPERATOR": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Time": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Currency": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 1 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 2 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 2 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 2 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 2 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 2 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 3 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 3 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 3 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 3 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 3 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 4 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 4 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 4 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 4 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 4 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 5 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 6 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 6 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 6 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 6 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 6 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 7 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 7 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 7 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 7 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 7 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 8 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — Description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — Unit price": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — Code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — Quantity": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — Amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Item 9 — GST code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "QUANTITY": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Total Sales (Incl. GST @6%)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Rounding Adjustment": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Net Total": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Payment Method": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "GST Summary — ZR (0%) — Sales Amt (RM)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "GST Summary — ZR (0%) — Tax Amt (RM)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "GST Summary — SR (6%) — Sales Amt (RM)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "GST Summary — SR (6%) — Tax Amt (RM)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Receipt notice": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Closing": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "Merchant",
+     "Registration No.",
+     "Store",
+     "Address",
+     "Website",
+     "TEL",
+     "FAX",
+     "GST ID",
+     "Document title",
+     "Customer",
+     "Customer name",
+     "TAX INVOICE NO",
+     "COUNTER",
+     "OPERATOR",
+     "Date",
+     "Time",
+     "Currency",
+     "Item 1 — Description",
+     "Item 1 — Unit price",
+     "Item 1 — Code",
+     "Item 1 — Quantity",
+     "Item 1 — Amount",
+     "Item 1 — GST code",
+     "Item 2 — Unit price",
+     "Item 2 — Code",
+     "Item 2 — Quantity",
+     "Item 2 — Amount",
+     "Item 2 — GST code",
+     "Item 3 — Unit price",
+     "Item 3 — Code",
+     "Item 3 — Quantity",
+     "Item 3 — Amount",
+     "Item 3 — GST code",
+     "Item 4 — Unit price",
+     "Item 4 — Code",
+     "Item 4 — Quantity",
+     "Item 4 — Amount",
+     "Item 4 — GST code",
+     "Item 5 — Description",
+     "Item 5 — Unit price",
+     "Item 5 — Code",
+     "Item 5 — Quantity",
+     "Item 5 — Amount",
+     "Item 5 — GST code",
+     "Item 6 — Description",
+     "Item 6 — Unit price",
+     "Item 6 — Quantity",
+     "Item 6 — Amount",
+     "Item 6 — GST code",
+     "Item 7 — Description",
+     "Item 7 — Unit price",
+     "Item 7 — Quantity",
+     "Item 7 — Amount",
+     "Item 7 — GST code",
+     "Item 8 — Description",
+     "Item 8 — Unit price",
+     "Item 8 — Code",
+     "Item 8 — Quantity",
+     "Item 8 — Amount",
+     "Item 8 — GST code",
+     "Item 9 — Description",
+     "Item 9 — Unit price",
+     "Item 9 — Code",
+     "Item 9 — Quantity",
+     "Item 9 — Amount",
+     "Item 9 — GST code",
+     "QUANTITY",
+     "Total Sales (Incl. GST @6%)",
+     "Rounding Adjustment",
+     "Net Total",
+     "Payment Method",
+     "GST Summary — ZR (0%) — Sales Amt (RM)",
+     "GST Summary — ZR (0%) — Tax Amt (RM)",
+     "GST Summary — SR (6%) — Sales Amt (RM)",
+     "GST Summary — SR (6%) — Tax Amt (RM)",
+     "Receipt notice",
+     "Closing"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {},
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 628,
+     "num_output_tokens": 848
+    },
+    "parse_job_id": "64ecc304-bab2-47ff-89cf-289330633ae1"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "4342c273-a927-4d29-9562-9d4478a08be6",
+   "from_ui": false,
+   "id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+   "job_id": "fdc586b9-ac60-4878-8384-40bdb4618856",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-06 21:32:38.356782+00:00"
+  }
+ }
+}

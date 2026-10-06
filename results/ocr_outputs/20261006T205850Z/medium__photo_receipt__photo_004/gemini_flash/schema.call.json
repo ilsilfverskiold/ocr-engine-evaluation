@@ -1,0 +1,716 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_004.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Store\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Logo\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Currency\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"BUY 2 FOR R29.00\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL FOR 18 ITEMS\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"REWARDS — Buy 2 Koo Baked\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TENDERED EFT C/Card\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"POINTS EARNED — This Sale\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — excl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — incl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — excl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — incl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Today SPAR Saved You\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SLIP\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TILL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASHIER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TIME\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closing message\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cell No\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Store\",\n    \"Logo\",\n    \"Customer\",\n    \"Currency\",\n    \"Item 1 — Description\",\n    \"Item 1 — Size / unit\",\n    \"Item 1 — Quantity\",\n    \"Item 1 — R\",\n    \"Item 1 — Tax marker\",\n    \"Item 2 — Description\",\n    \"Item 2 — Size / unit\",\n    \"Item 2 — Quantity\",\n    \"Item 2 — R\",\n    \"Item 2 — Tax marker\",\n    \"Item 3 — Description\",\n    \"Item 3 — Size / unit\",\n    \"Item 3 — Quantity\",\n    \"Item 3 — R\",\n    \"Item 3 — Tax marker\",\n    \"Item 4 — Description\",\n    \"Item 4 — Size / unit\",\n    \"Item 4 — Quantity\",\n    \"Item 4 — R\",\n    \"Item 4 — Tax marker\",\n    \"Item 5 — Description\",\n    \"Item 5 — Size / unit\",\n    \"Item 5 — R\",\n    \"Item 5 — Tax marker\",\n    \"Item 6 — Description\",\n    \"Item 6 — Size / unit\",\n    \"Item 6 — Quantity\",\n    \"Item 6 — R\",\n    \"Item 6 — Tax marker\",\n    \"Item 7 — Description\",\n    \"Item 7 — Size / unit\",\n    \"Item 7 — Quantity\",\n    \"Item 7 — R\",\n    \"Item 7 — Tax marker\",\n    \"Item 8 — Description\",\n    \"Item 8 — Size / unit\",\n    \"Item 8 — Quantity\",\n    \"Item 8 — R\",\n    \"Item 8 — Tax marker\",\n    \"Item 9 — Description\",\n    \"Item 9 — Size / unit\",\n    \"Item 9 — Quantity\",\n    \"Item 9 — R\",\n    \"Item 9 — Tax marker\",\n    \"Item 10 — Description\",\n    \"Item 10 — Size / unit\",\n    \"Item 10 — R\",\n    \"Item 10 — Tax marker\",\n    \"Item 11 — Description\",\n    \"Item 11 — Size / unit\",\n    \"Item 11 — R\",\n    \"Item 11 — Tax marker\",\n    \"Item 12 — Description\",\n    \"Item 12 — Size / unit\",\n    \"Item 12 — Quantity\",\n    \"Item 12 — R\",\n    \"Item 12 — Tax marker\",\n    \"BUY 2 FOR R29.00\",\n    \"TOTAL FOR 18 ITEMS\",\n    \"REWARDS — Buy 2 Koo Baked\",\n    \"TOTAL\",\n    \"TENDERED EFT C/Card\",\n    \"POINTS EARNED — This Sale\",\n    \"Document type\",\n    \"TAX INVOICE — 0.00% — excl.\",\n    \"TAX INVOICE — 0.00% — TAX\",\n    \"TAX INVOICE — 0.00% — incl.\",\n    \"TAX INVOICE — 0.00% — Tax marker\",\n    \"TAX INVOICE — 15.00% — excl.\",\n    \"TAX INVOICE — 15.00% — TAX\",\n    \"TAX INVOICE — 15.00% — incl.\",\n    \"TAX INVOICE — 15.00% — Tax marker\",\n    \"Today SPAR Saved You\",\n    \"SLIP\",\n    \"TILL\",\n    \"CASHIER\",\n    \"DATE\",\n    \"TIME\",\n    \"Closing message\",\n    \"Cell No\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Store": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Logo": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Customer": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Currency": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 6 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 7 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 8 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 9 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 10 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 10 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 10 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 10 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 11 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 11 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 11 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 11 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 12 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 12 — Size / unit": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 12 — Quantity": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 12 — R": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 12 — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "BUY 2 FOR R29.00": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TOTAL FOR 18 ITEMS": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "REWARDS — Buy 2 Koo Baked": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TOTAL": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TENDERED EFT C/Card": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "POINTS EARNED — This Sale": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Document type": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 0.00% — excl.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 0.00% — TAX": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 0.00% — incl.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 0.00% — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 15.00% — excl.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 15.00% — TAX": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 15.00% — incl.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TAX INVOICE — 15.00% — Tax marker": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Today SPAR Saved You": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SLIP": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TILL": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "CASHIER": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DATE": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "TIME": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Closing message": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Cell No": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Footer": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Store",
+   "Logo",
+   "Customer",
+   "Currency",
+   "Item 1 — Description",
+   "Item 1 — Size / unit",
+   "Item 1 — Quantity",
+   "Item 1 — R",
+   "Item 1 — Tax marker",
+   "Item 2 — Description",
+   "Item 2 — Size / unit",
+   "Item 2 — Quantity",
+   "Item 2 — R",
+   "Item 2 — Tax marker",
+   "Item 3 — Description",
+   "Item 3 — Size / unit",
+   "Item 3 — Quantity",
+   "Item 3 — R",
+   "Item 3 — Tax marker",
+   "Item 4 — Description",
+   "Item 4 — Size / unit",
+   "Item 4 — Quantity",
+   "Item 4 — R",
+   "Item 4 — Tax marker",
+   "Item 5 — Description",
+   "Item 5 — Size / unit",
+   "Item 5 — R",
+   "Item 5 — Tax marker",
+   "Item 6 — Description",
+   "Item 6 — Size / unit",
+   "Item 6 — Quantity",
+   "Item 6 — R",
+   "Item 6 — Tax marker",
+   "Item 7 — Description",
+   "Item 7 — Size / unit",
+   "Item 7 — Quantity",
+   "Item 7 — R",
+   "Item 7 — Tax marker",
+   "Item 8 — Description",
+   "Item 8 — Size / unit",
+   "Item 8 — Quantity",
+   "Item 8 — R",
+   "Item 8 — Tax marker",
+   "Item 9 — Description",
+   "Item 9 — Size / unit",
+   "Item 9 — Quantity",
+   "Item 9 — R",
+   "Item 9 — Tax marker",
+   "Item 10 — Description",
+   "Item 10 — Size / unit",
+   "Item 10 — R",
+   "Item 10 — Tax marker",
+   "Item 11 — Description",
+   "Item 11 — Size / unit",
+   "Item 11 — R",
+   "Item 11 — Tax marker",
+   "Item 12 — Description",
+   "Item 12 — Size / unit",
+   "Item 12 — Quantity",
+   "Item 12 — R",
+   "Item 12 — Tax marker",
+   "BUY 2 FOR R29.00",
+   "TOTAL FOR 18 ITEMS",
+   "REWARDS — Buy 2 Koo Baked",
+   "TOTAL",
+   "TENDERED EFT C/Card",
+   "POINTS EARNED — This Sale",
+   "Document type",
+   "TAX INVOICE — 0.00% — excl.",
+   "TAX INVOICE — 0.00% — TAX",
+   "TAX INVOICE — 0.00% — incl.",
+   "TAX INVOICE — 0.00% — Tax marker",
+   "TAX INVOICE — 15.00% — excl.",
+   "TAX INVOICE — 15.00% — TAX",
+   "TAX INVOICE — 15.00% — incl.",
+   "TAX INVOICE — 15.00% — Tax marker",
+   "Today SPAR Saved You",
+   "SLIP",
+   "TILL",
+   "CASHIER",
+   "DATE",
+   "TIME",
+   "Closing message",
+   "Cell No",
+   "Footer"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 6.3230075826868415,
+ "cost_per_page": 0.00327175,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"Store\": \"Groblersdal Mall Superspar\",\n  \"Logo\": \"SUPERSPAR\",\n  \"Customer\": \"Loyalty Customer\",\n  \"Currency\": \"R\",\n  \"Item 1 — Description\": \"L/STAR TOMATO\",\n  \"Item 1 — Size / unit\": \"400GR\",\n  \"Item 1 — Quantity\": \"2\",\n  \"Item 1 — R\": \"49.98\",\n  \"Item 1 — Tax marker\": \"*\",\n  \"Item 2 — Description\": \"CHIEF'S CHOICE INDUNA W PKG\",\n  \"Item 2 — Size / unit\": \"0.586kg\",\n  \"Item 2 — Quantity\": \"0.586kg\",\n  \"Item 2 — R\": \"54.49\",\n  \"Item 2 — Tax marker\": \"A\",\n  \"Item 3 — Description\": \"CHIEF'S CHOICE INDUNA W PKG\",\n  \"Item 3 — Size / unit\": \"0.560kg\",\n  \"Item 3 — Quantity\": \"0.560kg\",\n  \"Item 3 — R\": \"52.07\",\n  \"Item 3 — Tax marker\": \"A\",\n  \"Item 4 — Description\": \"KNORR SOUP\",\n  \"Item 4 — Size / unit\": \"50GR\",\n  \"Item 4 — Quantity\": \"4\",\n  \"Item 4 — R\": \"23.96\",\n  \"Item 4 — Tax marker\": \"A\",\n  \"Item 5 — Description\": \"ROYCO SMOKEY BBQ\",\n  \"Item 5 — Size / unit\": \"40GR\",\n  \"Item 5 — R\": \"20.99\",\n  \"Item 5 — Tax marker\": \"A\",\n  \"Item 6 — Description\": \"TOMATOES LOOSE\",\n  \"Item 6 — Size / unit\": \"PKG\",\n  \"Item 6 — Quantity\": \"1.282kg\",\n  \"Item 6 — R\": \"41.01\",\n  \"Item 6 — Tax marker\": \"*\",\n  \"Item 7 — Description\": \"BEEF LIVER\",\n  \"Item 7 — Size / unit\": \"PKG\",\n  \"Item 7 — Quantity\": \"1.216kg\",\n  \"Item 7 — R\": \"60.79\",\n  \"Item 7 — Tax marker\": \"A\",\n  \"Item 8 — Description\": \"ONIONS LOOSE\",\n  \"Item 8 — Size / unit\": \"KG\",\n  \"Item 8 — Quantity\": \"0.838kg\",\n  \"Item 8 — R\": \"10.89\",\n  \"Item 8 — Tax marker\": \"*\",\n  \"Item 9 — Description\": \"SPAR CARR VT1\",\n  \"Item 9 — Size / unit\": \"1'S\",\n  \"Item 9 — Quantity\": \"2\",\n  \"Item 9 — R\": \"2.40\",\n  \"Item 9 — Tax marker\": \"A\",\n  \"Item 10 — Description\": \"SPAR MILK F/CR\",\n  \"Item 10 — Size / unit\": \"1LT\",\n  \"Item 10 — R\": \"19.49\",\n  \"Item 10 — Tax marker\": \"*\",\n  \"Item 11 — Description\": \"LIQUI FRUIT M/OR\",\n  \"Item 11 — Size / unit\": \"300ML\",\n  \"Item 11 — R\": \"16.99\",\n  \"Item 11 — Tax marker\": \"A\",\n  \"Item 12 — Description\": \"KOO BAKED BEANS\",\n  \"Item 12 — Size / unit\": \"410GR\",\n  \"Item 12 — Quantity\": \"2\",\n  \"Item 12 — R\": \"35.98\",\n  \"Item 12 — Tax marker\": \"A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS — Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"POINTS EARNED — This Sale\": \"189\",\n  \"Document type\": \"TAX INVOICE\",\n  \"TAX INVOICE — 0.00% — excl.\": \"121.37\",\n  \"TAX INVOICE — 0.00% — TAX\": \"0.00\",\n  \"TAX INVOICE — 0.00% — incl.\": \"121.37\",\n  \"TAX INVOICE — 0.00% — Tax marker\": \"*\",\n  \"TAX INVOICE — 15.00% — excl.\": \"226.69\",\n  \"TAX INVOICE — 15.00% — TAX\": \"34.00\",\n  \"TAX INVOICE — 15.00% — incl.\": \"260.69\",\n  \"TAX INVOICE — 15.00% — Tax marker\": \"A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"SLIP\": \"2338\",\n  \"TILL\": \"003\",\n  \"CASHIER\": \"Ntswaki Mogadime\",\n  \"DATE\": \"04.04.24\",\n  \"TIME\": \"15:12\",\n  \"Closing message\": \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALL. SUPERSPAR HAVE A LOVELY DAY!\",\n  \"Cell No\": null,\n  \"Footer\": \"Good Products, Good Service, Good Advice\"\n}",
+ "structured_output": {},
+ "metadata": {
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Store\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Logo\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Currency\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 10 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 11 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Size / unit\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — R\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 12 — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"BUY 2 FOR R29.00\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL FOR 18 ITEMS\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"REWARDS — Buy 2 Koo Baked\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TENDERED EFT C/Card\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"POINTS EARNED — This Sale\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — excl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — incl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 0.00% — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — excl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — incl.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TAX INVOICE — 15.00% — Tax marker\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Today SPAR Saved You\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SLIP\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TILL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASHIER\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DATE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TIME\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closing message\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cell No\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Store\",\n    \"Logo\",\n    \"Customer\",\n    \"Currency\",\n    \"Item 1 — Description\",\n    \"Item 1 — Size / unit\",\n    \"Item 1 — Quantity\",\n    \"Item 1 — R\",\n    \"Item 1 — Tax marker\",\n    \"Item 2 — Description\",\n    \"Item 2 — Size / unit\",\n    \"Item 2 — Quantity\",\n    \"Item 2 — R\",\n    \"Item 2 — Tax marker\",\n    \"Item 3 — Description\",\n    \"Item 3 — Size / unit\",\n    \"Item 3 — Quantity\",\n    \"Item 3 — R\",\n    \"Item 3 — Tax marker\",\n    \"Item 4 — Description\",\n    \"Item 4 — Size / unit\",\n    \"Item 4 — Quantity\",\n    \"Item 4 — R\",\n    \"Item 4 — Tax marker\",\n    \"Item 5 — Description\",\n    \"Item 5 — Size / unit\",\n    \"Item 5 — R\",\n    \"Item 5 — Tax marker\",\n    \"Item 6 — Description\",\n    \"Item 6 — Size / unit\",\n    \"Item 6 — Quantity\",\n    \"Item 6 — R\",\n    \"Item 6 — Tax marker\",\n    \"Item 7 — Description\",\n    \"Item 7 — Size / unit\",\n    \"Item 7 — Quantity\",\n    \"Item 7 — R\",\n    \"Item 7 — Tax marker\",\n    \"Item 8 — Description\",\n    \"Item 8 — Size / unit\",\n    \"Item 8 — Quantity\",\n    \"Item 8 — R\",\n    \"Item 8 — Tax marker\",\n    \"Item 9 — Description\",\n    \"Item 9 — Size / unit\",\n    \"Item 9 — Quantity\",\n    \"Item 9 — R\",\n    \"Item 9 — Tax marker\",\n    \"Item 10 — Description\",\n    \"Item 10 — Size / unit\",\n    \"Item 10 — R\",\n    \"Item 10 — Tax marker\",\n    \"Item 11 — Description\",\n    \"Item 11 — Size / unit\",\n    \"Item 11 — R\",\n    \"Item 11 — Tax marker\",\n    \"Item 12 — Description\",\n    \"Item 12 — Size / unit\",\n    \"Item 12 — Quantity\",\n    \"Item 12 — R\",\n    \"Item 12 — Tax marker\",\n    \"BUY 2 FOR R29.00\",\n    \"TOTAL FOR 18 ITEMS\",\n    \"REWARDS — Buy 2 Koo Baked\",\n    \"TOTAL\",\n    \"TENDERED EFT C/Card\",\n    \"POINTS EARNED — This Sale\",\n    \"Document type\",\n    \"TAX INVOICE — 0.00% — excl.\",\n    \"TAX INVOICE — 0.00% — TAX\",\n    \"TAX INVOICE — 0.00% — incl.\",\n    \"TAX INVOICE — 0.00% — Tax marker\",\n    \"TAX INVOICE — 15.00% — excl.\",\n    \"TAX INVOICE — 15.00% — TAX\",\n    \"TAX INVOICE — 15.00% — incl.\",\n    \"TAX INVOICE — 15.00% — Tax marker\",\n    \"Today SPAR Saved You\",\n    \"SLIP\",\n    \"TILL\",\n    \"CASHIER\",\n    \"DATE\",\n    \"TIME\",\n    \"Closing message\",\n    \"Cell No\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+  "input_tokens": 4825,
+  "output_tokens": 1377,
+  "thinking_tokens": 0,
+  "leg": "schema",
+  "max_output_tokens": 4096,
+  "temperature": 0,
+  "sdk_attempts": 1
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Tue, 06 Oct 2026 21:28:14 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=6275",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"Store\": \"Groblersdal Mall Superspar\",\n  \"Logo\": \"SUPERSPAR\",\n  \"Customer\": \"Loyalty Customer\",\n  \"Currency\": \"R\",\n  \"Item 1 — Description\": \"L/STAR TOMATO\",\n  \"Item 1 — Size / unit\": \"400GR\",\n  \"Item 1 — Quantity\": \"2\",\n  \"Item 1 — R\": \"49.98\",\n  \"Item 1 — Tax marker\": \"*\",\n  \"Item 2 — Description\": \"CHIEF'S CHOICE INDUNA W PKG\",\n  \"Item 2 — Size / unit\": \"0.586kg\",\n  \"Item 2 — Quantity\": \"0.586kg\",\n  \"Item 2 — R\": \"54.49\",\n  \"Item 2 — Tax marker\": \"A\",\n  \"Item 3 — Description\": \"CHIEF'S CHOICE INDUNA W PKG\",\n  \"Item 3 — Size / unit\": \"0.560kg\",\n  \"Item 3 — Quantity\": \"0.560kg\",\n  \"Item 3 — R\": \"52.07\",\n  \"Item 3 — Tax marker\": \"A\",\n  \"Item 4 — Description\": \"KNORR SOUP\",\n  \"Item 4 — Size / unit\": \"50GR\",\n  \"Item 4 — Quantity\": \"4\",\n  \"Item 4 — R\": \"23.96\",\n  \"Item 4 — Tax marker\": \"A\",\n  \"Item 5 — Description\": \"ROYCO SMOKEY BBQ\",\n  \"Item 5 — Size / unit\": \"40GR\",\n  \"Item 5 — R\": \"20.99\",\n  \"Item 5 — Tax marker\": \"A\",\n  \"Item 6 — Description\": \"TOMATOES LOOSE\",\n  \"Item 6 — Size / unit\": \"PKG\",\n  \"Item 6 — Quantity\": \"1.282kg\",\n  \"Item 6 — R\": \"41.01\",\n  \"Item 6 — Tax marker\": \"*\",\n  \"Item 7 — Description\": \"BEEF LIVER\",\n  \"Item 7 — Size / unit\": \"PKG\",\n  \"Item 7 — Quantity\": \"1.216kg\",\n  \"Item 7 — R\": \"60.79\",\n  \"Item 7 — Tax marker\": \"A\",\n  \"Item 8 — Description\": \"ONIONS LOOSE\",\n  \"Item 8 — Size / unit\": \"KG\",\n  \"Item 8 — Quantity\": \"0.838kg\",\n  \"Item 8 — R\": \"10.89\",\n  \"Item 8 — Tax marker\": \"*\",\n  \"Item 9 — Description\": \"SPAR CARR VT1\",\n  \"Item 9 — Size / unit\": \"1'S\",\n  \"Item 9 — Quantity\": \"2\",\n  \"Item 9 — R\": \"2.40\",\n  \"Item 9 — Tax marker\": \"A\",\n  \"Item 10 — Description\": \"SPAR MILK F/CR\",\n  \"Item 10 — Size / unit\": \"1LT\",\n  \"Item 10 — R\": \"19.49\",\n  \"Item 10 — Tax marker\": \"*\",\n  \"Item 11 — Description\": \"LIQUI FRUIT M/OR\",\n  \"Item 11 — Size / unit\": \"300ML\",\n  \"Item 11 — R\": \"16.99\",\n  \"Item 11 — Tax marker\": \"A\",\n  \"Item 12 — Description\": \"KOO BAKED BEANS\",\n  \"Item 12 — Size / unit\": \"410GR\",\n  \"Item 12 — Quantity\": \"2\",\n  \"Item 12 — R\": \"35.98\",\n  \"Item 12 — Tax marker\": \"A\",\n  \"BUY 2 FOR R29.00\": \"-6.98\",\n  \"TOTAL FOR 18 ITEMS\": \"382.06\",\n  \"REWARDS — Buy 2 Koo Baked\": \"1.00\",\n  \"TOTAL\": \"381.06\",\n  \"TENDERED EFT C/Card\": \"381.06\",\n  \"POINTS EARNED — This Sale\": \"189\",\n  \"Document type\": \"TAX INVOICE\",\n  \"TAX INVOICE — 0.00% — excl.\": \"121.37\",\n  \"TAX INVOICE — 0.00% — TAX\": \"0.00\",\n  \"TAX INVOICE — 0.00% — incl.\": \"121.37\",\n  \"TAX INVOICE — 0.00% — Tax marker\": \"*\",\n  \"TAX INVOICE — 15.00% — excl.\": \"226.69\",\n  \"TAX INVOICE — 15.00% — TAX\": \"34.00\",\n  \"TAX INVOICE — 15.00% — incl.\": \"260.69\",\n  \"TAX INVOICE — 15.00% — Tax marker\": \"A\",\n  \"Today SPAR Saved You\": \"15.98\",\n  \"SLIP\": \"2338\",\n  \"TILL\": \"003\",\n  \"CASHIER\": \"Ntswaki Mogadime\",\n  \"DATE\": \"04.04.24\",\n  \"TIME\": \"15:12\",\n  \"Closing message\": \"THANK YOU FOR SHOPPING AT GROBLERSDAL MALL. SUPERSPAR HAVE A LOVELY DAY!\",\n  \"Cell No\": null,\n  \"Footer\": \"Good Products, Good Service, Good Advice\"\n}",
+       "thought": null,
+       "thought_signature": "b'\\x12s\\nq\\x01i\\x14}\\x13%W\\xf3\\x83C\\x8c\\xee\\xb5\\x7f^\\x88\\xfe\\\\&\\xb4\\xa0/$|\\xd5H\\xad\\x07\\x1b#\\x83g\\x8fS\\xb0exK\\x02\\xf9\\xd4\\xac\\xed\\xd0\\xa5\\x17\\x1bx\\xb2\\xc6\\xe5\\x1d\\xb66nU^\\xcd\\x0e\\x7fk7\\x0f\\xdb\\x03C\\x8e\\\\\\xf9\\xf0\\x97\\xc8\\xd9r\\x8fG\\x8a\\xe5\\x8dfR\\xc4\\xbe~\\xf7\\x95\\xf9\\xa2\\xbf\\x83\\xc4f\\x9d\\x18\\xba\\x89\\xc5\\x7f\\x8b:\\xea\\x17V\\x00\\xd0\\x10\\xa3\\x952\\xb1\\x9b\\xb1\\xb6'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "6WfFar-uOOGxnsEPyoqH0AY",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 1377,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 4825,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 3725
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1100
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 6202,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

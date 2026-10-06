@@ -1,0 +1,386 @@
+{
+ "engine": "mistral_ocr_4",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Invoice no\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date of issue\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — Tax Id\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — IBAN\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client — Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client — Tax Id\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Invoice no\",\n    \"Date of issue\",\n    \"Seller\",\n    \"Seller — Address\",\n    \"Seller — Tax Id\",\n    \"Seller — IBAN\",\n    \"Client\",\n    \"Client — Address\",\n    \"Client — Tax Id\",\n    \"Item 1 — No.\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — UM\",\n    \"Item 1 — Net price\",\n    \"Item 1 — Net worth\",\n    \"Item 1 — VAT [%]\",\n    \"Item 1 — Gross worth\",\n    \"SUMMARY — VAT [%]\",\n    \"SUMMARY — 10% — Net worth\",\n    \"SUMMARY — 10% — VAT\",\n    \"SUMMARY — 10% — Gross worth\",\n    \"SUMMARY — Total — Net worth\",\n    \"SUMMARY — Total — VAT\",\n    \"SUMMARY — Total — Gross worth\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Invoice no": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Date of issue": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — Address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — Tax Id": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — IBAN": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client — Address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client — Tax Id": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — VAT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — VAT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Invoice no",
+   "Date of issue",
+   "Seller",
+   "Seller — Address",
+   "Seller — Tax Id",
+   "Seller — IBAN",
+   "Client",
+   "Client — Address",
+   "Client — Tax Id",
+   "Item 1 — No.",
+   "Item 1 — Description",
+   "Item 1 — Qty",
+   "Item 1 — UM",
+   "Item 1 — Net price",
+   "Item 1 — Net worth",
+   "Item 1 — VAT [%]",
+   "Item 1 — Gross worth",
+   "SUMMARY — VAT [%]",
+   "SUMMARY — 10% — Net worth",
+   "SUMMARY — 10% — VAT",
+   "SUMMARY — 10% — Gross worth",
+   "SUMMARY — Total — Net worth",
+   "SUMMARY — Total — VAT",
+   "SUMMARY — Total — Gross worth"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "mistral-ocr-4-0",
+ "latency_seconds": 10.787754582706839,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Invoice no\": \"97159829\", \"Date of issue\": \"2015-09-18\", \"Seller\": \"Bradley-Andrade\", \"Seller — Address\": \"9879 Elizabeth Common\\nLake Jonathan, RI 12335\", \"Seller — Tax Id\": \"985-73-8194\", \"Seller — IBAN\": \"GB81LZWO32519172531418\", \"Client\": \"Castro PLC\", \"Client — Address\": \"Unit 9678 Box 9664\\nDPO AP 69387\", \"Client — Tax Id\": \"994-72-1270\", \"Item 1 — No.\": \"1.\", \"Item 1 — Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\", \"Item 1 — Qty\": \"2,00\", \"Item 1 — UM\": \"each\", \"Item 1 — Net price\": \"444,60\", \"Item 1 — Net worth\": \"889,20\", \"Item 1 — VAT [%\": \"10%\", \"Item 1 — Gross worth\": \"978,12\", \"SUMMARY — VAT [%\": \"10%\", \"SUMMARY — 10% — Net worth\": \"889,20\", \"SUMMARY — 10% — VAT\": \"88,92\", \"SUMMARY — 10% — Gross worth\": \"978,12\", \"SUMMARY — Total — Net worth\": \"889,20\", \"SUMMARY — Total — VAT\": \"88,92\", \"SUMMARY — Total — Gross worth\": \"978,12\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 97159829\n\nDate of issue:\n\n09/18/2015\n\nSeller:\n\nBradley-Andrade\n\n9879 Elizabeth Common\n\nLake Jonathan, RI 12335\n\nTax Id: 985-73-8194\n\nIBAN: GB81LZWO32519172531418\n\nClient:\n\nCastro PLC\n\nUnit 9678 Box 9664\n\nDPO AP 69387\n\nTax Id: 994-72-1270\n\nITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | 12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537 | 2,00 | each | 444,60 | 889,20 | 10% | 978,12  |\n\nSUMMARY\n\n|  VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- |\n|  10% | 889,20 | 88,92 | 978,12  |\n|  **Total** | **$ 889,20** | **$ 88,92** | **$ 978,12**  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 191,
+      "top_left_y": 105,
+      "bottom_right_x": 807,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 97159829",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1197,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "09/18/2015",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 660,
+      "bottom_right_x": 382,
+      "bottom_right_y": 716,
+      "content": "Seller:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 204,
+      "top_left_y": 755,
+      "bottom_right_x": 566,
+      "bottom_right_y": 808,
+      "content": "Bradley-Andrade",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 725,
+      "bottom_right_y": 857,
+      "content": "9879 Elizabeth Common",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 209,
+      "top_left_y": 864,
+      "bottom_right_x": 723,
+      "bottom_right_y": 913,
+      "content": "Lake Jonathan, RI 12335",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 204,
+      "top_left_y": 969,
+      "bottom_right_x": 641,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 985-73-8194",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 209,
+      "top_left_y": 1025,
+      "bottom_right_x": 954,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB81LZWO32519172531418",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1234,
+      "top_left_y": 660,
+      "bottom_right_x": 1423,
+      "bottom_right_y": 716,
+      "content": "Client:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 755,
+      "bottom_right_x": 1480,
+      "bottom_right_y": 804,
+      "content": "Castro PLC",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1666,
+      "bottom_right_y": 857,
+      "content": "Unit 9678 Box 9664",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1247,
+      "top_left_y": 864,
+      "bottom_right_x": 1552,
+      "bottom_right_y": 909,
+      "content": "DPO AP 69387",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 969,
+      "bottom_right_x": 1676,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 994-72-1270",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1138,
+      "bottom_right_x": 375,
+      "bottom_right_y": 1190,
+      "content": "ITEMS",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1236,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 1552,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | 12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537 | 2,00 | each | 444,60 | 889,20 | 10% | 978,12  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1615,
+      "bottom_right_x": 494,
+      "bottom_right_y": 1671,
+      "content": "SUMMARY",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1717,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 1995,
+      "content": "|  VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- |\n|  10% | 889,20 | 88,92 | 978,12  |\n|  **Total** | **$ 889,20** | **$ 88,92** | **$ 978,12**  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-0",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 539083
+  },
+  "document_annotation": "{\"Invoice no\": \"97159829\", \"Date of issue\": \"2015-09-18\", \"Seller\": \"Bradley-Andrade\", \"Seller — Address\": \"9879 Elizabeth Common\\nLake Jonathan, RI 12335\", \"Seller — Tax Id\": \"985-73-8194\", \"Seller — IBAN\": \"GB81LZWO32519172531418\", \"Client\": \"Castro PLC\", \"Client — Address\": \"Unit 9678 Box 9664\\nDPO AP 69387\", \"Client — Tax Id\": \"994-72-1270\", \"Item 1 — No.\": \"1.\", \"Item 1 — Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\", \"Item 1 — Qty\": \"2,00\", \"Item 1 — UM\": \"each\", \"Item 1 — Net price\": \"444,60\", \"Item 1 — Net worth\": \"889,20\", \"Item 1 — VAT [%\": \"10%\", \"Item 1 — Gross worth\": \"978,12\", \"SUMMARY — VAT [%\": \"10%\", \"SUMMARY — 10% — Net worth\": \"889,20\", \"SUMMARY — 10% — VAT\": \"88,92\", \"SUMMARY — 10% — Gross worth\": \"978,12\", \"SUMMARY — Total — Net worth\": \"889,20\", \"SUMMARY — Total — VAT\": \"88,92\", \"SUMMARY — Total — Gross worth\": \"978,12\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

@@ -1,0 +1,3670 @@
+{
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/tax_form/tax_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Form\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tax year\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"OMB No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Other tax year beginning\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Other tax year beginning — year\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Other tax year ending\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Other tax year ending — year\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your first name and middle initial\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your last name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your social security number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Spouse’s last name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Spouse’s social security number\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Home address (number and street)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"City, town, or post office\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"State\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Foreign country name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Foreign province/state/county\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Foreign postal code\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Presidential Election Campaign — You\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Presidential Election Campaign — Spouse\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Single\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Head of household (HOH)\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Qualifying surviving spouse (QSS)\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Filing Status — Nonresident alien or dual-status alien spouse name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Standard Deduction — Someone can claim you as a dependent\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Standard Deduction — Someone can claim your spouse as a dependent\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Age/Blindness — You were born before January 2, 1960\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Age/Blindness — You are blind\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Age/Blindness — Spouse was born before January 2, 1960\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — If more than four dependents, check here\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"1a — Total amount from Form(s) W-2, box 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1b — Household employee wages not reported on Form(s) W-2\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1d — Medicaid waiver payments not reported on Form(s) W-2\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1f — Employer-provided adoption benefits from Form 8839, line 29\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1h — Other earned income\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"1i — Nontaxable combat pay election\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"2b — Taxable interest\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3a — Qualified dividends\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"3b — Ordinary dividends\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"4a — IRA distributions\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"5a — Pensions and annuities\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"5b — Taxable amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"6a — Social security benefits\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"6b — Taxable amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"6c — If you elect to use the lump-sum election method, check here\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"7 — Capital gain or (loss)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"9 — Total income\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"10 — Adjustments to income from Schedule 1, line 26\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"13 — Qualified business income deduction from Form 8995 or Form 8995-A\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"15 — Taxable income\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Standard Deduction for — Head of household\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer form\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 1 — Last name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 1 — Social security number\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 1 — Relationship to you\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 1 — Child tax credit\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 1 — Credit for other dependents\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — First name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — Last name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — Social security number\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — Relationship to you\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — Child tax credit\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 2 — Credit for other dependents\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 3 — First name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 3 — Social security number\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 3 — Relationship to you\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 3 — Child tax credit\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 3 — Credit for other dependents\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 4 — First name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 4 — Relationship to you\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 4 — Child tax credit\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Dependents — Row 4 — Credit for other dependents\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Form\",\n    \"Title\",\n    \"Tax year\",\n    \"OMB No.\",\n    \"Other tax year beginning\",\n    \"Other tax year beginning — year\",\n    \"Other tax year ending\",\n    \"Other tax year ending — year\",\n    \"Your first name and middle initial\",\n    \"Your last name\",\n    \"Your social security number\",\n    \"Spouse’s last name\",\n    \"Spouse’s social security number\",\n    \"Home address (number and street)\",\n    \"City, town, or post office\",\n    \"State\",\n    \"Foreign country name\",\n    \"Foreign province/state/county\",\n    \"Foreign postal code\",\n    \"Presidential Election Campaign — You\",\n    \"Presidential Election Campaign — Spouse\",\n    \"Filing Status — Single\",\n    \"Filing Status — Head of household (HOH)\",\n    \"Filing Status — Qualifying surviving spouse (QSS)\",\n    \"Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS\",\n    \"Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year\",\n    \"Filing Status — Nonresident alien or dual-status alien spouse name\",\n    \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes\",\n    \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No\",\n    \"Standard Deduction — Someone can claim you as a dependent\",\n    \"Standard Deduction — Someone can claim your spouse as a dependent\",\n    \"Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien\",\n    \"Age/Blindness — You were born before January 2, 1960\",\n    \"Age/Blindness — You are blind\",\n    \"Age/Blindness — Spouse was born before January 2, 1960\",\n    \"Dependents — If more than four dependents, check here\",\n    \"1a — Total amount from Form(s) W-2, box 1\",\n    \"1b — Household employee wages not reported on Form(s) W-2\",\n    \"1d — Medicaid waiver payments not reported on Form(s) W-2\",\n    \"1f — Employer-provided adoption benefits from Form 8839, line 29\",\n    \"1h — Other earned income\",\n    \"1i — Nontaxable combat pay election\",\n    \"2b — Taxable interest\",\n    \"3a — Qualified dividends\",\n    \"3b — Ordinary dividends\",\n    \"4a — IRA distributions\",\n    \"5a — Pensions and annuities\",\n    \"5b — Taxable amount\",\n    \"6a — Social security benefits\",\n    \"6b — Taxable amount\",\n    \"6c — If you elect to use the lump-sum election method, check here\",\n    \"7 — Capital gain or (loss)\",\n    \"9 — Total income\",\n    \"10 — Adjustments to income from Schedule 1, line 26\",\n    \"13 — Qualified business income deduction from Form 8995 or Form 8995-A\",\n    \"15 — Taxable income\",\n    \"Standard Deduction for — Head of household\",\n    \"Footer form\",\n    \"Dependents — Row 1 — Last name\",\n    \"Dependents — Row 1 — Social security number\",\n    \"Dependents — Row 1 — Relationship to you\",\n    \"Dependents — Row 1 — Child tax credit\",\n    \"Dependents — Row 1 — Credit for other dependents\",\n    \"Dependents — Row 2 — First name\",\n    \"Dependents — Row 2 — Last name\",\n    \"Dependents — Row 2 — Social security number\",\n    \"Dependents — Row 2 — Relationship to you\",\n    \"Dependents — Row 2 — Child tax credit\",\n    \"Dependents — Row 2 — Credit for other dependents\",\n    \"Dependents — Row 3 — First name\",\n    \"Dependents — Row 3 — Social security number\",\n    \"Dependents — Row 3 — Relationship to you\",\n    \"Dependents — Row 3 — Child tax credit\",\n    \"Dependents — Row 3 — Credit for other dependents\",\n    \"Dependents — Row 4 — First name\",\n    \"Dependents — Row 4 — Relationship to you\",\n    \"Dependents — Row 4 — Child tax credit\",\n    \"Dependents — Row 4 — Credit for other dependents\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Form": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Tax year": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "OMB No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Other tax year beginning": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Other tax year beginning — year": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Other tax year ending": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Other tax year ending — year": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Your first name and middle initial": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Your last name": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Your social security number": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Spouse’s last name": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Spouse’s social security number": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Home address (number and street)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "City, town, or post office": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "State": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Foreign country name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Foreign province/state/county": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Foreign postal code": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Presidential Election Campaign — You": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Presidential Election Campaign — Spouse": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Single": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Head of household (HOH)": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Qualifying surviving spouse (QSS)": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Filing Status — Nonresident alien or dual-status alien spouse name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Standard Deduction — Someone can claim you as a dependent": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Standard Deduction — Someone can claim your spouse as a dependent": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Age/Blindness — You were born before January 2, 1960": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Age/Blindness — You are blind": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Age/Blindness — Spouse was born before January 2, 1960": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — If more than four dependents, check here": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "1a — Total amount from Form(s) W-2, box 1": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1b — Household employee wages not reported on Form(s) W-2": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1d — Medicaid waiver payments not reported on Form(s) W-2": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1f — Employer-provided adoption benefits from Form 8839, line 29": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1h — Other earned income": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "1i — Nontaxable combat pay election": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "2b — Taxable interest": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3a — Qualified dividends": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "3b — Ordinary dividends": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "4a — IRA distributions": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "5a — Pensions and annuities": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "5b — Taxable amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "6a — Social security benefits": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "6b — Taxable amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "6c — If you elect to use the lump-sum election method, check here": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "7 — Capital gain or (loss)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "9 — Total income": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "10 — Adjustments to income from Schedule 1, line 26": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "13 — Qualified business income deduction from Form 8995 or Form 8995-A": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "15 — Taxable income": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Standard Deduction for — Head of household": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Footer form": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Dependents — Row 1 — Last name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 1 — Social security number": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 1 — Relationship to you": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 1 — Child tax credit": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 1 — Credit for other dependents": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — First name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — Last name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — Social security number": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — Relationship to you": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — Child tax credit": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 2 — Credit for other dependents": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 3 — First name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 3 — Social security number": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 3 — Relationship to you": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 3 — Child tax credit": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 3 — Credit for other dependents": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 4 — First name": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 4 — Relationship to you": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 4 — Child tax credit": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Dependents — Row 4 — Credit for other dependents": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Form",
+   "Title",
+   "Tax year",
+   "OMB No.",
+   "Other tax year beginning",
+   "Other tax year beginning — year",
+   "Other tax year ending",
+   "Other tax year ending — year",
+   "Your first name and middle initial",
+   "Your last name",
+   "Your social security number",
+   "Spouse’s last name",
+   "Spouse’s social security number",
+   "Home address (number and street)",
+   "City, town, or post office",
+   "State",
+   "Foreign country name",
+   "Foreign province/state/county",
+   "Foreign postal code",
+   "Presidential Election Campaign — You",
+   "Presidential Election Campaign — Spouse",
+   "Filing Status — Single",
+   "Filing Status — Head of household (HOH)",
+   "Filing Status — Qualifying surviving spouse (QSS)",
+   "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS",
+   "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year",
+   "Filing Status — Nonresident alien or dual-status alien spouse name",
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes",
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No",
+   "Standard Deduction — Someone can claim you as a dependent",
+   "Standard Deduction — Someone can claim your spouse as a dependent",
+   "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien",
+   "Age/Blindness — You were born before January 2, 1960",
+   "Age/Blindness — You are blind",
+   "Age/Blindness — Spouse was born before January 2, 1960",
+   "Dependents — If more than four dependents, check here",
+   "1a — Total amount from Form(s) W-2, box 1",
+   "1b — Household employee wages not reported on Form(s) W-2",
+   "1d — Medicaid waiver payments not reported on Form(s) W-2",
+   "1f — Employer-provided adoption benefits from Form 8839, line 29",
+   "1h — Other earned income",
+   "1i — Nontaxable combat pay election",
+   "2b — Taxable interest",
+   "3a — Qualified dividends",
+   "3b — Ordinary dividends",
+   "4a — IRA distributions",
+   "5a — Pensions and annuities",
+   "5b — Taxable amount",
+   "6a — Social security benefits",
+   "6b — Taxable amount",
+   "6c — If you elect to use the lump-sum election method, check here",
+   "7 — Capital gain or (loss)",
+   "9 — Total income",
+   "10 — Adjustments to income from Schedule 1, line 26",
+   "13 — Qualified business income deduction from Form 8995 or Form 8995-A",
+   "15 — Taxable income",
+   "Standard Deduction for — Head of household",
+   "Footer form",
+   "Dependents — Row 1 — Last name",
+   "Dependents — Row 1 — Social security number",
+   "Dependents — Row 1 — Relationship to you",
+   "Dependents — Row 1 — Child tax credit",
+   "Dependents — Row 1 — Credit for other dependents",
+   "Dependents — Row 2 — First name",
+   "Dependents — Row 2 — Last name",
+   "Dependents — Row 2 — Social security number",
+   "Dependents — Row 2 — Relationship to you",
+   "Dependents — Row 2 — Child tax credit",
+   "Dependents — Row 2 — Credit for other dependents",
+   "Dependents — Row 3 — First name",
+   "Dependents — Row 3 — Social security number",
+   "Dependents — Row 3 — Relationship to you",
+   "Dependents — Row 3 — Child tax credit",
+   "Dependents — Row 3 — Credit for other dependents",
+   "Dependents — Row 4 — First name",
+   "Dependents — Row 4 — Relationship to you",
+   "Dependents — Row 4 — Child tax credit",
+   "Dependents — Row 4 — Credit for other dependents"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 22.573170957621187,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Form\": \"1040\", \"Title\": \"U.S. Individual Income Tax Return\", \"Tax year\": \"2024\", \"OMB No.\": \"1545-0074\", \"Other tax year beginning\": \"1/01\", \"Other tax year beginning — year\": \"2024\", \"Other tax year ending\": \"12/31\", \"Other tax year ending — year\": \"2024\", \"Your first name and middle initial\": \"Gussie R\", \"Your last name\": \"Gutmann\", \"Your social security number\": \"053 77 3400\", \"Spouse’s last name\": \"Johnston\", \"Spouse’s social security number\": \"297 75 4691\", \"Home address (number and street)\": \"995 S Main Apt. 168\", \"City, town, or post office\": \"Sandraboro\", \"State\": \"NE\", \"Foreign country name\": null, \"Foreign province/state/county\": null, \"Foreign postal code\": null, \"Presidential Election Campaign — You\": null, \"Presidential Election Campaign — Spouse\": null, \"Filing Status — Single\": false, \"Filing Status — Head of household (HOH)\": false, \"Filing Status — Qualifying surviving spouse (QSS)\": false, \"Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS\": \"Trystan H Johnston\", \"Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year\": null, \"Filing Status — Nonresident alien or dual-status alien spouse name\": null, \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes\": true, \"Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No\": false, \"Standard Deduction — Someone can claim you as a dependent\": true, \"Standard Deduction — Someone can claim your spouse as a dependent\": false, \"Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien\": false, \"Age/Blindness — You were born before January 2, 1960\": false, \"Age/Blindness — You are blind\": true, \"Age/Blindness — Spouse was born before January 2, 1960\": false, \"Dependents — If more than four dependents, check here\": false, \"1a — Total amount from Form(s) W-2, box 1\": \"124,890.00\", \"1b — Household employee wages not reported on Form(s) W-2\": \"12,136.00\", \"1d — Medicaid waiver payments not reported on Form(s) W-2\": \"5,433.00\", \"1f — Employer-provided adoption benefits from Form 8839, line 29\": \"5,723.00\", \"1h — Other earned income\": \"0.00\", \"1i — Nontaxable combat pay election\": \"9,891.00\", \"2b — Taxable interest\": \"0.00\", \"3a — Qualified dividends\": \"3,998.00\", \"3b — Ordinary dividends\": \"0.00\", \"4a — IRA distributions\": \"0.00\", \"5a — Pensions and annuities\": \"8,081.00\", \"5b — Taxable amount\": \"1,878.00\", \"6a — Social security benefits\": \"2,597.00\", \"6b — Taxable amount\": \"3,755.00\", \"6c — If you elect to use the lump-sum election method, check here\": true, \"7 — Capital gain or (loss)\": \"0.00\", \"9 — Total income\": \"174,451.00\", \"10 — Adjustments to income from Schedule 1, line 26\": \"0.00\", \"13 — Qualified business income deduction from Form 8995 or Form 8995-A\": \"1,816.00\", \"15 — Taxable income\": \"164,642.00\", \"Standard Deduction for — Head of household\": \"21,900\", \"Footer form\": \"1040\", \"Dependents — Row 1 — Last name\": null, \"Dependents — Row 1 — Social security number\": null, \"Dependents — Row 1 — Relationship to you\": null, \"Dependents — Row 1 — Child tax credit\": null, \"Dependents — Row 1 — Credit for other dependents\": null, \"Dependents — Row 2 — First name\": null, \"Dependents — Row 2 — Last name\": null, \"Dependents — Row 2 — Social security number\": null, \"Dependents — Row 2 — Relationship to you\": null, \"Dependents — Row 2 — Child tax credit\": null, \"Dependents — Row 2 — Credit for other dependents\": null, \"Dependents — Row 3 — First name\": null, \"Dependents — Row 3 — Social security number\": null, \"Dependents — Row 3 — Relationship to you\": null, \"Dependents — Row 3 — Child tax credit\": null, \"Dependents — Row 3 — Credit for other dependents\": null, \"Dependents — Row 4 — First name\": null, \"Dependents — Row 4 — Relationship to you\": null, \"Dependents — Row 4 — Child tax credit\": null, \"Dependents — Row 4 — Credit for other dependents\": null}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": false,
+   "cite_sources": false,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-06 21:37:18.376163+00:00",
+  "data": {
+   "Form": "1040",
+   "Title": "U.S. Individual Income Tax Return",
+   "Tax year": "2024",
+   "OMB No.": "1545-0074",
+   "Other tax year beginning": "1/01",
+   "Other tax year beginning — year": "2024",
+   "Other tax year ending": "12/31",
+   "Other tax year ending — year": "2024",
+   "Your first name and middle initial": "Gussie R",
+   "Your last name": "Gutmann",
+   "Your social security number": "053 77 3400",
+   "Spouse’s last name": "Johnston",
+   "Spouse’s social security number": "297 75 4691",
+   "Home address (number and street)": "995 S Main Apt. 168",
+   "City, town, or post office": "Sandraboro",
+   "State": "NE",
+   "Foreign country name": null,
+   "Foreign province/state/county": null,
+   "Foreign postal code": null,
+   "Presidential Election Campaign — You": null,
+   "Presidential Election Campaign — Spouse": null,
+   "Filing Status — Single": false,
+   "Filing Status — Head of household (HOH)": false,
+   "Filing Status — Qualifying surviving spouse (QSS)": false,
+   "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": "Trystan H Johnston",
+   "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": null,
+   "Filing Status — Nonresident alien or dual-status alien spouse name": null,
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": true,
+   "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": false,
+   "Standard Deduction — Someone can claim you as a dependent": true,
+   "Standard Deduction — Someone can claim your spouse as a dependent": false,
+   "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": false,
+   "Age/Blindness — You were born before January 2, 1960": false,
+   "Age/Blindness — You are blind": true,
+   "Age/Blindness — Spouse was born before January 2, 1960": false,
+   "Dependents — If more than four dependents, check here": false,
+   "1a — Total amount from Form(s) W-2, box 1": "124,890.00",
+   "1b — Household employee wages not reported on Form(s) W-2": "12,136.00",
+   "1d — Medicaid waiver payments not reported on Form(s) W-2": "5,433.00",
+   "1f — Employer-provided adoption benefits from Form 8839, line 29": "5,723.00",
+   "1h — Other earned income": "0.00",
+   "1i — Nontaxable combat pay election": "9,891.00",
+   "2b — Taxable interest": "0.00",
+   "3a — Qualified dividends": "3,998.00",
+   "3b — Ordinary dividends": "0.00",
+   "4a — IRA distributions": "0.00",
+   "5a — Pensions and annuities": "8,081.00",
+   "5b — Taxable amount": "1,878.00",
+   "6a — Social security benefits": "2,597.00",
+   "6b — Taxable amount": "3,755.00",
+   "6c — If you elect to use the lump-sum election method, check here": true,
+   "7 — Capital gain or (loss)": "0.00",
+   "9 — Total income": "174,451.00",
+   "10 — Adjustments to income from Schedule 1, line 26": "0.00",
+   "13 — Qualified business income deduction from Form 8995 or Form 8995-A": "1,816.00",
+   "15 — Taxable income": "164,642.00",
+   "Standard Deduction for — Head of household": "21,900",
+   "Footer form": "1040",
+   "Dependents — Row 1 — Last name": null,
+   "Dependents — Row 1 — Social security number": null,
+   "Dependents — Row 1 — Relationship to you": null,
+   "Dependents — Row 1 — Child tax credit": null,
+   "Dependents — Row 1 — Credit for other dependents": null,
+   "Dependents — Row 2 — First name": null,
+   "Dependents — Row 2 — Last name": null,
+   "Dependents — Row 2 — Social security number": null,
+   "Dependents — Row 2 — Relationship to you": null,
+   "Dependents — Row 2 — Child tax credit": null,
+   "Dependents — Row 2 — Credit for other dependents": null,
+   "Dependents — Row 3 — First name": null,
+   "Dependents — Row 3 — Social security number": null,
+   "Dependents — Row 3 — Relationship to you": null,
+   "Dependents — Row 3 — Child tax credit": null,
+   "Dependents — Row 3 — Credit for other dependents": null,
+   "Dependents — Row 4 — First name": null,
+   "Dependents — Row 4 — Relationship to you": null,
+   "Dependents — Row 4 — Child tax credit": null,
+   "Dependents — Row 4 — Credit for other dependents": null
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Form": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Tax year": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "OMB No.": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Other tax year beginning": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Other tax year beginning — year": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Other tax year ending": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Other tax year ending — year": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Your first name and middle initial": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Your last name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Your social security number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Spouse’s last name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Spouse’s social security number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Home address (number and street)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "City, town, or post office": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "State": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Foreign country name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Foreign province/state/county": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Foreign postal code": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Presidential Election Campaign — You": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Presidential Election Campaign — Spouse": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Single": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Head of household (HOH)": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Qualifying surviving spouse (QSS)": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Filing Status — Nonresident alien or dual-status alien spouse name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Standard Deduction — Someone can claim you as a dependent": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Standard Deduction — Someone can claim your spouse as a dependent": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Age/Blindness — You were born before January 2, 1960": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Age/Blindness — You are blind": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Age/Blindness — Spouse was born before January 2, 1960": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — If more than four dependents, check here": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1a — Total amount from Form(s) W-2, box 1": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1b — Household employee wages not reported on Form(s) W-2": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1d — Medicaid waiver payments not reported on Form(s) W-2": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1f — Employer-provided adoption benefits from Form 8839, line 29": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1h — Other earned income": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "1i — Nontaxable combat pay election": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "2b — Taxable interest": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3a — Qualified dividends": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "3b — Ordinary dividends": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "4a — IRA distributions": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "5a — Pensions and annuities": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "5b — Taxable amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "6a — Social security benefits": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "6b — Taxable amount": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "6c — If you elect to use the lump-sum election method, check here": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "7 — Capital gain or (loss)": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "9 — Total income": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "10 — Adjustments to income from Schedule 1, line 26": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "13 — Qualified business income deduction from Form 8995 or Form 8995-A": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "15 — Taxable income": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Standard Deduction for — Head of household": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Footer form": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 1 — Last name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 1 — Social security number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 1 — Relationship to you": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 1 — Child tax credit": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 1 — Credit for other dependents": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — First name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — Last name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — Social security number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — Relationship to you": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — Child tax credit": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 2 — Credit for other dependents": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 3 — First name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 3 — Social security number": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 3 — Relationship to you": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 3 — Child tax credit": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 3 — Credit for other dependents": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 4 — First name": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 4 — Relationship to you": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 4 — Child tax credit": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Dependents — Row 4 — Credit for other dependents": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Form",
+    "Title",
+    "Tax year",
+    "OMB No.",
+    "Other tax year beginning",
+    "Other tax year beginning — year",
+    "Other tax year ending",
+    "Other tax year ending — year",
+    "Your first name and middle initial",
+    "Your last name",
+    "Your social security number",
+    "Spouse’s last name",
+    "Spouse’s social security number",
+    "Home address (number and street)",
+    "City, town, or post office",
+    "State",
+    "Foreign country name",
+    "Foreign province/state/county",
+    "Foreign postal code",
+    "Presidential Election Campaign — You",
+    "Presidential Election Campaign — Spouse",
+    "Filing Status — Single",
+    "Filing Status — Head of household (HOH)",
+    "Filing Status — Qualifying surviving spouse (QSS)",
+    "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS",
+    "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year",
+    "Filing Status — Nonresident alien or dual-status alien spouse name",
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes",
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No",
+    "Standard Deduction — Someone can claim you as a dependent",
+    "Standard Deduction — Someone can claim your spouse as a dependent",
+    "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien",
+    "Age/Blindness — You were born before January 2, 1960",
+    "Age/Blindness — You are blind",
+    "Age/Blindness — Spouse was born before January 2, 1960",
+    "Dependents — If more than four dependents, check here",
+    "1a — Total amount from Form(s) W-2, box 1",
+    "1b — Household employee wages not reported on Form(s) W-2",
+    "1d — Medicaid waiver payments not reported on Form(s) W-2",
+    "1f — Employer-provided adoption benefits from Form 8839, line 29",
+    "1h — Other earned income",
+    "1i — Nontaxable combat pay election",
+    "2b — Taxable interest",
+    "3a — Qualified dividends",
+    "3b — Ordinary dividends",
+    "4a — IRA distributions",
+    "5a — Pensions and annuities",
+    "5b — Taxable amount",
+    "6a — Social security benefits",
+    "6b — Taxable amount",
+    "6c — If you elect to use the lump-sum election method, check here",
+    "7 — Capital gain or (loss)",
+    "9 — Total income",
+    "10 — Adjustments to income from Schedule 1, line 26",
+    "13 — Qualified business income deduction from Form 8995 or Form 8995-A",
+    "15 — Taxable income",
+    "Standard Deduction for — Head of household",
+    "Footer form",
+    "Dependents — Row 1 — Last name",
+    "Dependents — Row 1 — Social security number",
+    "Dependents — Row 1 — Relationship to you",
+    "Dependents — Row 1 — Child tax credit",
+    "Dependents — Row 1 — Credit for other dependents",
+    "Dependents — Row 2 — First name",
+    "Dependents — Row 2 — Last name",
+    "Dependents — Row 2 — Social security number",
+    "Dependents — Row 2 — Relationship to you",
+    "Dependents — Row 2 — Child tax credit",
+    "Dependents — Row 2 — Credit for other dependents",
+    "Dependents — Row 3 — First name",
+    "Dependents — Row 3 — Social security number",
+    "Dependents — Row 3 — Relationship to you",
+    "Dependents — Row 3 — Child tax credit",
+    "Dependents — Row 3 — Credit for other dependents",
+    "Dependents — Row 4 — First name",
+    "Dependents — Row 4 — Relationship to you",
+    "Dependents — Row 4 — Child tax credit",
+    "Dependents — Row 4 — Credit for other dependents"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {},
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 2541,
+    "num_output_tokens": 1099
+   },
+   "parse_job_id": "ae54cf65-95ba-4a75-a292-e19d84e5e58c"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "b88a9b33-9207-41f7-b87b-c70b764e5de5",
+  "from_ui": false,
+  "id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+  "job_id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-06 21:37:35.732950+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "interface": "v1 stateless extraction",
+  "job_id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+  "submission_attempts": 1,
+  "cost_is_estimate": true
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": false,
+     "cite_sources": false,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
+      "Form": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Title": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Tax year": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "OMB No.": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Other tax year beginning": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Other tax year beginning — year": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Other tax year ending": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Other tax year ending — year": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Your first name and middle initial": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Your last name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Your social security number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Spouse’s last name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Spouse’s social security number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Home address (number and street)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "City, town, or post office": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "State": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Foreign country name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Foreign province/state/county": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Foreign postal code": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Presidential Election Campaign — You": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Presidential Election Campaign — Spouse": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Single": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Head of household (HOH)": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Qualifying surviving spouse (QSS)": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Filing Status — Nonresident alien or dual-status alien spouse name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Standard Deduction — Someone can claim you as a dependent": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Standard Deduction — Someone can claim your spouse as a dependent": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Age/Blindness — You were born before January 2, 1960": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Age/Blindness — You are blind": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Age/Blindness — Spouse was born before January 2, 1960": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — If more than four dependents, check here": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1a — Total amount from Form(s) W-2, box 1": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1b — Household employee wages not reported on Form(s) W-2": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1d — Medicaid waiver payments not reported on Form(s) W-2": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1f — Employer-provided adoption benefits from Form 8839, line 29": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1h — Other earned income": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "1i — Nontaxable combat pay election": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "2b — Taxable interest": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3a — Qualified dividends": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "3b — Ordinary dividends": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "4a — IRA distributions": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "5a — Pensions and annuities": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "5b — Taxable amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "6a — Social security benefits": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "6b — Taxable amount": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "6c — If you elect to use the lump-sum election method, check here": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "7 — Capital gain or (loss)": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "9 — Total income": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "10 — Adjustments to income from Schedule 1, line 26": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "13 — Qualified business income deduction from Form 8995 or Form 8995-A": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "15 — Taxable income": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Standard Deduction for — Head of household": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Footer form": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 1 — Last name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 1 — Social security number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 1 — Relationship to you": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 1 — Child tax credit": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 1 — Credit for other dependents": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — First name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — Last name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — Social security number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — Relationship to you": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — Child tax credit": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 2 — Credit for other dependents": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 3 — First name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 3 — Social security number": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 3 — Relationship to you": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 3 — Child tax credit": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 3 — Credit for other dependents": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 4 — First name": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 4 — Relationship to you": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 4 — Child tax credit": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "Dependents — Row 4 — Credit for other dependents": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "Form",
+      "Title",
+      "Tax year",
+      "OMB No.",
+      "Other tax year beginning",
+      "Other tax year beginning — year",
+      "Other tax year ending",
+      "Other tax year ending — year",
+      "Your first name and middle initial",
+      "Your last name",
+      "Your social security number",
+      "Spouse’s last name",
+      "Spouse’s social security number",
+      "Home address (number and street)",
+      "City, town, or post office",
+      "State",
+      "Foreign country name",
+      "Foreign province/state/county",
+      "Foreign postal code",
+      "Presidential Election Campaign — You",
+      "Presidential Election Campaign — Spouse",
+      "Filing Status — Single",
+      "Filing Status — Head of household (HOH)",
+      "Filing Status — Qualifying surviving spouse (QSS)",
+      "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS",
+      "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year",
+      "Filing Status — Nonresident alien or dual-status alien spouse name",
+      "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes",
+      "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No",
+      "Standard Deduction — Someone can claim you as a dependent",
+      "Standard Deduction — Someone can claim your spouse as a dependent",
+      "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien",
+      "Age/Blindness — You were born before January 2, 1960",
+      "Age/Blindness — You are blind",
+      "Age/Blindness — Spouse was born before January 2, 1960",
+      "Dependents — If more than four dependents, check here",
+      "1a — Total amount from Form(s) W-2, box 1",
+      "1b — Household employee wages not reported on Form(s) W-2",
+      "1d — Medicaid waiver payments not reported on Form(s) W-2",
+      "1f — Employer-provided adoption benefits from Form 8839, line 29",
+      "1h — Other earned income",
+      "1i — Nontaxable combat pay election",
+      "2b — Taxable interest",
+      "3a — Qualified dividends",
+      "3b — Ordinary dividends",
+      "4a — IRA distributions",
+      "5a — Pensions and annuities",
+      "5b — Taxable amount",
+      "6a — Social security benefits",
+      "6b — Taxable amount",
+      "6c — If you elect to use the lump-sum election method, check here",
+      "7 — Capital gain or (loss)",
+      "9 — Total income",
+      "10 — Adjustments to income from Schedule 1, line 26",
+      "13 — Qualified business income deduction from Form 8995 or Form 8995-A",
+      "15 — Taxable income",
+      "Standard Deduction for — Head of household",
+      "Footer form",
+      "Dependents — Row 1 — Last name",
+      "Dependents — Row 1 — Social security number",
+      "Dependents — Row 1 — Relationship to you",
+      "Dependents — Row 1 — Child tax credit",
+      "Dependents — Row 1 — Credit for other dependents",
+      "Dependents — Row 2 — First name",
+      "Dependents — Row 2 — Last name",
+      "Dependents — Row 2 — Social security number",
+      "Dependents — Row 2 — Relationship to you",
+      "Dependents — Row 2 — Child tax credit",
+      "Dependents — Row 2 — Credit for other dependents",
+      "Dependents — Row 3 — First name",
+      "Dependents — Row 3 — Social security number",
+      "Dependents — Row 3 — Relationship to you",
+      "Dependents — Row 3 — Child tax credit",
+      "Dependents — Row 3 — Credit for other dependents",
+      "Dependents — Row 4 — First name",
+      "Dependents — Row 4 — Relationship to you",
+      "Dependents — Row 4 — Child tax credit",
+      "Dependents — Row 4 — Credit for other dependents"
+     ],
+     "additionalProperties": false
+    },
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-06 21:37:18.154130+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-mjsqpum2.png",
+    "file_size": 1468081,
+    "file_type": "png",
+    "id": "b88a9b33-9207-41f7-b87b-c70b764e5de5",
+    "last_modified_at": "2026-10-06 21:37:18+00:00",
+    "name": "extraction_file-mjsqpum2.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 1468081,
+     "last_modified_at": "2026-10-06T21:37:18"
+    },
+    "updated_at": "2026-10-06 21:37:18.154130+00:00"
+   },
+   "file_id": "b88a9b33-9207-41f7-b87b-c70b764e5de5",
+   "id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+   "status": "PENDING"
+  },
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": false,
+    "cite_sources": false,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-06 21:37:18.376163+00:00",
+   "data": {
+    "Form": "1040",
+    "Title": "U.S. Individual Income Tax Return",
+    "Tax year": "2024",
+    "OMB No.": "1545-0074",
+    "Other tax year beginning": "1/01",
+    "Other tax year beginning — year": "2024",
+    "Other tax year ending": "12/31",
+    "Other tax year ending — year": "2024",
+    "Your first name and middle initial": "Gussie R",
+    "Your last name": "Gutmann",
+    "Your social security number": "053 77 3400",
+    "Spouse’s last name": "Johnston",
+    "Spouse’s social security number": "297 75 4691",
+    "Home address (number and street)": "995 S Main Apt. 168",
+    "City, town, or post office": "Sandraboro",
+    "State": "NE",
+    "Foreign country name": null,
+    "Foreign province/state/county": null,
+    "Foreign postal code": null,
+    "Presidential Election Campaign — You": null,
+    "Presidential Election Campaign — Spouse": null,
+    "Filing Status — Single": false,
+    "Filing Status — Head of household (HOH)": false,
+    "Filing Status — Qualifying surviving spouse (QSS)": false,
+    "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": "Trystan H Johnston",
+    "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": null,
+    "Filing Status — Nonresident alien or dual-status alien spouse name": null,
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": true,
+    "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": false,
+    "Standard Deduction — Someone can claim you as a dependent": true,
+    "Standard Deduction — Someone can claim your spouse as a dependent": false,
+    "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": false,
+    "Age/Blindness — You were born before January 2, 1960": false,
+    "Age/Blindness — You are blind": true,
+    "Age/Blindness — Spouse was born before January 2, 1960": false,
+    "Dependents — If more than four dependents, check here": false,
+    "1a — Total amount from Form(s) W-2, box 1": "124,890.00",
+    "1b — Household employee wages not reported on Form(s) W-2": "12,136.00",
+    "1d — Medicaid waiver payments not reported on Form(s) W-2": "5,433.00",
+    "1f — Employer-provided adoption benefits from Form 8839, line 29": "5,723.00",
+    "1h — Other earned income": "0.00",
+    "1i — Nontaxable combat pay election": "9,891.00",
+    "2b — Taxable interest": "0.00",
+    "3a — Qualified dividends": "3,998.00",
+    "3b — Ordinary dividends": "0.00",
+    "4a — IRA distributions": "0.00",
+    "5a — Pensions and annuities": "8,081.00",
+    "5b — Taxable amount": "1,878.00",
+    "6a — Social security benefits": "2,597.00",
+    "6b — Taxable amount": "3,755.00",
+    "6c — If you elect to use the lump-sum election method, check here": true,
+    "7 — Capital gain or (loss)": "0.00",
+    "9 — Total income": "174,451.00",
+    "10 — Adjustments to income from Schedule 1, line 26": "0.00",
+    "13 — Qualified business income deduction from Form 8995 or Form 8995-A": "1,816.00",
+    "15 — Taxable income": "164,642.00",
+    "Standard Deduction for — Head of household": "21,900",
+    "Footer form": "1040",
+    "Dependents — Row 1 — Last name": null,
+    "Dependents — Row 1 — Social security number": null,
+    "Dependents — Row 1 — Relationship to you": null,
+    "Dependents — Row 1 — Child tax credit": null,
+    "Dependents — Row 1 — Credit for other dependents": null,
+    "Dependents — Row 2 — First name": null,
+    "Dependents — Row 2 — Last name": null,
+    "Dependents — Row 2 — Social security number": null,
+    "Dependents — Row 2 — Relationship to you": null,
+    "Dependents — Row 2 — Child tax credit": null,
+    "Dependents — Row 2 — Credit for other dependents": null,
+    "Dependents — Row 3 — First name": null,
+    "Dependents — Row 3 — Social security number": null,
+    "Dependents — Row 3 — Relationship to you": null,
+    "Dependents — Row 3 — Child tax credit": null,
+    "Dependents — Row 3 — Credit for other dependents": null,
+    "Dependents — Row 4 — First name": null,
+    "Dependents — Row 4 — Relationship to you": null,
+    "Dependents — Row 4 — Child tax credit": null,
+    "Dependents — Row 4 — Credit for other dependents": null
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Form": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Tax year": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "OMB No.": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Other tax year beginning": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Other tax year beginning — year": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Other tax year ending": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Other tax year ending — year": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Your first name and middle initial": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Your last name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Your social security number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Spouse’s last name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Spouse’s social security number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Home address (number and street)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "City, town, or post office": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "State": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Foreign country name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Foreign province/state/county": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Foreign postal code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Presidential Election Campaign — You": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Presidential Election Campaign — Spouse": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Single": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Head of household (HOH)": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Qualifying surviving spouse (QSS)": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Filing Status — Nonresident alien or dual-status alien spouse name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Standard Deduction — Someone can claim you as a dependent": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Standard Deduction — Someone can claim your spouse as a dependent": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Age/Blindness — You were born before January 2, 1960": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Age/Blindness — You are blind": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Age/Blindness — Spouse was born before January 2, 1960": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — If more than four dependents, check here": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1a — Total amount from Form(s) W-2, box 1": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1b — Household employee wages not reported on Form(s) W-2": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1d — Medicaid waiver payments not reported on Form(s) W-2": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1f — Employer-provided adoption benefits from Form 8839, line 29": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1h — Other earned income": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "1i — Nontaxable combat pay election": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "2b — Taxable interest": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3a — Qualified dividends": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "3b — Ordinary dividends": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "4a — IRA distributions": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "5a — Pensions and annuities": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "5b — Taxable amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "6a — Social security benefits": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "6b — Taxable amount": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "6c — If you elect to use the lump-sum election method, check here": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "7 — Capital gain or (loss)": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "9 — Total income": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "10 — Adjustments to income from Schedule 1, line 26": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "13 — Qualified business income deduction from Form 8995 or Form 8995-A": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "15 — Taxable income": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Standard Deduction for — Head of household": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Footer form": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 1 — Last name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 1 — Social security number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 1 — Relationship to you": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 1 — Child tax credit": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 1 — Credit for other dependents": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — First name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — Last name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — Social security number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — Relationship to you": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — Child tax credit": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 2 — Credit for other dependents": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 3 — First name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 3 — Social security number": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 3 — Relationship to you": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 3 — Child tax credit": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 3 — Credit for other dependents": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 4 — First name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 4 — Relationship to you": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 4 — Child tax credit": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Dependents — Row 4 — Credit for other dependents": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "Form",
+     "Title",
+     "Tax year",
+     "OMB No.",
+     "Other tax year beginning",
+     "Other tax year beginning — year",
+     "Other tax year ending",
+     "Other tax year ending — year",
+     "Your first name and middle initial",
+     "Your last name",
+     "Your social security number",
+     "Spouse’s last name",
+     "Spouse’s social security number",
+     "Home address (number and street)",
+     "City, town, or post office",
+     "State",
+     "Foreign country name",
+     "Foreign province/state/county",
+     "Foreign postal code",
+     "Presidential Election Campaign — You",
+     "Presidential Election Campaign — Spouse",
+     "Filing Status — Single",
+     "Filing Status — Head of household (HOH)",
+     "Filing Status — Qualifying surviving spouse (QSS)",
+     "Filing Status — Name of spouse if MFS, or qualifying child if HOH or QSS",
+     "Filing Status — Treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year",
+     "Filing Status — Nonresident alien or dual-status alien spouse name",
+     "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — Yes",
+     "Digital Assets — At any time during 2024, did you receive, sell, exchange, or otherwise dispose of a digital asset (or a financial interest in a digital asset)? — No",
+     "Standard Deduction — Someone can claim you as a dependent",
+     "Standard Deduction — Someone can claim your spouse as a dependent",
+     "Standard Deduction — Spouse itemizes on a separate return or you were a dual-status alien",
+     "Age/Blindness — You were born before January 2, 1960",
+     "Age/Blindness — You are blind",
+     "Age/Blindness — Spouse was born before January 2, 1960",
+     "Dependents — If more than four dependents, check here",
+     "1a — Total amount from Form(s) W-2, box 1",
+     "1b — Household employee wages not reported on Form(s) W-2",
+     "1d — Medicaid waiver payments not reported on Form(s) W-2",
+     "1f — Employer-provided adoption benefits from Form 8839, line 29",
+     "1h — Other earned income",
+     "1i — Nontaxable combat pay election",
+     "2b — Taxable interest",
+     "3a — Qualified dividends",
+     "3b — Ordinary dividends",
+     "4a — IRA distributions",
+     "5a — Pensions and annuities",
+     "5b — Taxable amount",
+     "6a — Social security benefits",
+     "6b — Taxable amount",
+     "6c — If you elect to use the lump-sum election method, check here",
+     "7 — Capital gain or (loss)",
+     "9 — Total income",
+     "10 — Adjustments to income from Schedule 1, line 26",
+     "13 — Qualified business income deduction from Form 8995 or Form 8995-A",
+     "15 — Taxable income",
+     "Standard Deduction for — Head of household",
+     "Footer form",
+     "Dependents — Row 1 — Last name",
+     "Dependents — Row 1 — Social security number",
+     "Dependents — Row 1 — Relationship to you",
+     "Dependents — Row 1 — Child tax credit",
+     "Dependents — Row 1 — Credit for other dependents",
+     "Dependents — Row 2 — First name",
+     "Dependents — Row 2 — Last name",
+     "Dependents — Row 2 — Social security number",
+     "Dependents — Row 2 — Relationship to you",
+     "Dependents — Row 2 — Child tax credit",
+     "Dependents — Row 2 — Credit for other dependents",
+     "Dependents — Row 3 — First name",
+     "Dependents — Row 3 — Social security number",
+     "Dependents — Row 3 — Relationship to you",
+     "Dependents — Row 3 — Child tax credit",
+     "Dependents — Row 3 — Credit for other dependents",
+     "Dependents — Row 4 — First name",
+     "Dependents — Row 4 — Relationship to you",
+     "Dependents — Row 4 — Child tax credit",
+     "Dependents — Row 4 — Credit for other dependents"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {},
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 2541,
+     "num_output_tokens": 1099
+    },
+    "parse_job_id": "ae54cf65-95ba-4a75-a292-e19d84e5e58c"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "b88a9b33-9207-41f7-b87b-c70b764e5de5",
+   "from_ui": false,
+   "id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+   "job_id": "97a00df6-6ad3-4a13-af84-40a92c04383c",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-06 21:37:35.732950+00:00"
+  }
+ }
+}

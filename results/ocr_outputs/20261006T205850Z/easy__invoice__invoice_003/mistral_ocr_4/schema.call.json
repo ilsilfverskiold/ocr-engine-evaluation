@@ -1,0 +1,610 @@
+{
+ "engine": "mistral_ocr_4",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Invoice no\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date of issue\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — Tax Id\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Seller — IBAN\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client — Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Client — Tax Id\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — No.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — UM\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Net price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — VAT [%]\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — 10% — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — Net worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SUMMARY — Total — Gross worth\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Invoice no\",\n    \"Date of issue\",\n    \"Seller\",\n    \"Seller — Address\",\n    \"Seller — Tax Id\",\n    \"Seller — IBAN\",\n    \"Client\",\n    \"Client — Address\",\n    \"Client — Tax Id\",\n    \"Item 1 — No.\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — UM\",\n    \"Item 1 — Net price\",\n    \"Item 1 — Net worth\",\n    \"Item 1 — VAT [%]\",\n    \"Item 1 — Gross worth\",\n    \"Item 2 — No.\",\n    \"Item 2 — Description\",\n    \"Item 2 — Qty\",\n    \"Item 2 — UM\",\n    \"Item 2 — Net price\",\n    \"Item 2 — Net worth\",\n    \"Item 2 — VAT [%]\",\n    \"Item 2 — Gross worth\",\n    \"Item 3 — No.\",\n    \"Item 3 — Description\",\n    \"Item 3 — Qty\",\n    \"Item 3 — UM\",\n    \"Item 3 — Net price\",\n    \"Item 3 — Net worth\",\n    \"Item 3 — VAT [%]\",\n    \"Item 3 — Gross worth\",\n    \"Item 4 — No.\",\n    \"Item 4 — Description\",\n    \"Item 4 — Qty\",\n    \"Item 4 — UM\",\n    \"Item 4 — Net price\",\n    \"Item 4 — Net worth\",\n    \"Item 4 — VAT [%]\",\n    \"Item 4 — Gross worth\",\n    \"Item 5 — No.\",\n    \"Item 5 — Description\",\n    \"Item 5 — Qty\",\n    \"Item 5 — UM\",\n    \"Item 5 — Net price\",\n    \"Item 5 — Net worth\",\n    \"Item 5 — VAT [%]\",\n    \"Item 5 — Gross worth\",\n    \"SUMMARY — VAT [%]\",\n    \"SUMMARY — 10% — Net worth\",\n    \"SUMMARY — 10% — VAT\",\n    \"SUMMARY — 10% — Gross worth\",\n    \"SUMMARY — Total — Net worth\",\n    \"SUMMARY — Total — VAT\",\n    \"SUMMARY — Total — Gross worth\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Invoice no": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Date of issue": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — Address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — Tax Id": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Seller — IBAN": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client — Address": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Client — Tax Id": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 1 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 2 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 3 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 4 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — No.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Description": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Qty": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — UM": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Net price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Item 5 — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — VAT [%]": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — VAT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — 10% — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — Net worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — VAT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SUMMARY — Total — Gross worth": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "Invoice no",
+   "Date of issue",
+   "Seller",
+   "Seller — Address",
+   "Seller — Tax Id",
+   "Seller — IBAN",
+   "Client",
+   "Client — Address",
+   "Client — Tax Id",
+   "Item 1 — No.",
+   "Item 1 — Description",
+   "Item 1 — Qty",
+   "Item 1 — UM",
+   "Item 1 — Net price",
+   "Item 1 — Net worth",
+   "Item 1 — VAT [%]",
+   "Item 1 — Gross worth",
+   "Item 2 — No.",
+   "Item 2 — Description",
+   "Item 2 — Qty",
+   "Item 2 — UM",
+   "Item 2 — Net price",
+   "Item 2 — Net worth",
+   "Item 2 — VAT [%]",
+   "Item 2 — Gross worth",
+   "Item 3 — No.",
+   "Item 3 — Description",
+   "Item 3 — Qty",
+   "Item 3 — UM",
+   "Item 3 — Net price",
+   "Item 3 — Net worth",
+   "Item 3 — VAT [%]",
+   "Item 3 — Gross worth",
+   "Item 4 — No.",
+   "Item 4 — Description",
+   "Item 4 — Qty",
+   "Item 4 — UM",
+   "Item 4 — Net price",
+   "Item 4 — Net worth",
+   "Item 4 — VAT [%]",
+   "Item 4 — Gross worth",
+   "Item 5 — No.",
+   "Item 5 — Description",
+   "Item 5 — Qty",
+   "Item 5 — UM",
+   "Item 5 — Net price",
+   "Item 5 — Net worth",
+   "Item 5 — VAT [%]",
+   "Item 5 — Gross worth",
+   "SUMMARY — VAT [%]",
+   "SUMMARY — 10% — Net worth",
+   "SUMMARY — 10% — VAT",
+   "SUMMARY — 10% — Gross worth",
+   "SUMMARY — Total — Net worth",
+   "SUMMARY — Total — VAT",
+   "SUMMARY — Total — Gross worth"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "mistral-ocr-4-0",
+ "latency_seconds": 14.345179041847587,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Invoice no\": \"26343874\", \"Date of issue\": \"2013-07-17\", \"Seller\": \"Smith Ltd\", \"Seller — Address\": \"290 Jodi Gardens, Charlesview, TN 10958\", \"Seller — Tax Id\": \"916-97-6743\", \"Seller — IBAN\": \"GB78TZMX55978564099007\", \"Client\": \"Herring-Floyd\", \"Client — Address\": \"8113 Hansen Cliff Apt. 826, Port Alice, ID 99663\", \"Client — Tax Id\": \"913-80-4636\", \"Item 1 — No.\": \"1.\", \"Item 1 — Description\": \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\", \"Item 1 — Qty\": \"5.00\", \"Item 1 — UM\": \"each\", \"Item 1 — Net price\": \"249.00\", \"Item 1 — Net worth\": \"1245.00\", \"Item 1 — VAT [%]\": \"10%\", \"Item 1 — Gross worth\": \"1369.50\", \"Item 2 — No.\": \"2.\", \"Item 2 — Description\": \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\", \"Item 2 — Qty\": \"5.00\", \"Item 2 — UM\": \"each\", \"Item 2 — Net price\": \"100.00\", \"Item 2 — Net worth\": \"500.00\", \"Item 2 — VAT [%]\": \"10%\", \"Item 2 — Gross worth\": \"550.00\", \"Item 3 — No.\": \"3.\", \"Item 3 — Description\": \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\", \"Item 3 — Qty\": \"4.00\", \"Item 3 — UM\": \"each\", \"Item 3 — Net price\": \"252.00\", \"Item 3 — Net worth\": \"1008.00\", \"Item 3 — VAT [%]\": \"10%\", \"Item 3 — Gross worth\": \"1108.80\", \"Item 4 — No.\": \"4.\", \"Item 4 — Description\": \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\", \"Item 4 — Qty\": \"2.00\", \"Item 4 — UM\": \"each\", \"Item 4 — Net price\": \"130.00\", \"Item 4 — Net worth\": \"260.00\", \"Item 4 — VAT [%]\": \"10%\", \"Item 4 — Gross worth\": \"286.00\", \"Item 5 — No.\": \"5.\", \"Item 5 — Description\": \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\", \"Item 5 — Qty\": \"1.00\", \"Item 5 — UM\": \"each\", \"Item 5 — Net price\": \"159.99\", \"Item 5 — Net worth\": \"159.99\", \"Item 5 — VAT [%]\": \"10%\", \"Item 5 — Gross worth\": \"175.99\", \"SUMMARY — VAT [%]\": \"10%\", \"SUMMARY — 10% — Net worth\": \"3172.99\", \"SUMMARY — 10% — VAT\": \"317.30\", \"SUMMARY — 10% — Gross worth\": \"3490.29\", \"SUMMARY — Total — Net worth\": \"3172.99\", \"SUMMARY — Total — VAT\": \"317.30\", \"SUMMARY — Total — Gross worth\": \"3490.29\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 26343874\n\nDate of issue:\n\n07/17/2013\n\n# Seller:\n\nSmith Ltd\n\n290 Jodi Gardens\n\nCharlesview, TN 10958\n\nTax Id: 916-97-6743\n\nIBAN: GB78TZMX55978564099007\n\n# Client:\n\nHerring-Floyd\n\n8113 Hansen Cliff Apt. 826\n\nPort Alice, ID 99663\n\nTax Id: 913-80-4636\n\nITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787 | 5,00 | each | 249,00 | 1 245,00 | 10% | 1 369,50  |\n|  2. | Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller | 5,00 | each | 100,00 | 500,00 | 10% | 550,00  |\n|  3. | PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested | 4,00 | each | 252,00 | 1 008,00 | 10% | 1 108,80  |\n|  4. | Nintendo Game Boy Micro Console - Black (OXYSFBB) | 2,00 | each | 130,00 | 260,00 | 10% | 286,00  |\n|  5. | Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT | 1,00 | each | 159,99 | 159,99 | 10% | 175,99  |\n\nSUMMARY\n\n|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 3 172,99 | 317,30 | 3 490,29  |\n|  **Total** |  | **$ 3 172,99** | **$ 317,30** | **$ 3 490,29**  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 191,
+      "top_left_y": 105,
+      "bottom_right_x": 810,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 26343874",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 1197,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "07/17/2013",
+      "confidence_scores": null,
+      "type": "header"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 660,
+      "bottom_right_x": 382,
+      "bottom_right_y": 716,
+      "content": "# Seller:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 201,
+      "top_left_y": 755,
+      "bottom_right_x": 420,
+      "bottom_right_y": 804,
+      "content": "Smith Ltd",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 571,
+      "bottom_right_y": 860,
+      "content": "290 Jodi Gardens",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 209,
+      "top_left_y": 864,
+      "bottom_right_x": 695,
+      "bottom_right_y": 913,
+      "content": "Charlesview, TN 10958",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 201,
+      "top_left_y": 969,
+      "bottom_right_x": 641,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 916-97-6743",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 1025,
+      "bottom_right_x": 946,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB78TZMX55978564099007",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1234,
+      "top_left_y": 660,
+      "bottom_right_x": 1423,
+      "bottom_right_y": 716,
+      "content": "# Client:",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 755,
+      "bottom_right_x": 1537,
+      "bottom_right_y": 808,
+      "content": "Herring-Floyd",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1815,
+      "bottom_right_y": 860,
+      "content": "8113 Hansen Cliff Apt. 826",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1247,
+      "top_left_y": 864,
+      "bottom_right_x": 1666,
+      "bottom_right_y": 913,
+      "content": "Port Alice, ID 99663",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 969,
+      "bottom_right_x": 1679,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 913-80-4636",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1138,
+      "bottom_right_x": 375,
+      "bottom_right_y": 1190,
+      "content": "ITEMS",
+      "confidence_scores": null,
+      "type": "caption"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1236,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 2195,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787 | 5,00 | each | 249,00 | 1 245,00 | 10% | 1 369,50  |\n|  2. | Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller | 5,00 | each | 100,00 | 500,00 | 10% | 550,00  |\n|  3. | PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested | 4,00 | each | 252,00 | 1 008,00 | 10% | 1 108,80  |\n|  4. | Nintendo Game Boy Micro Console - Black (OXYSFBB) | 2,00 | each | 130,00 | 260,00 | 10% | 286,00  |\n|  5. | Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT | 1,00 | each | 159,99 | 159,99 | 10% | 175,99  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 2261,
+      "bottom_right_x": 494,
+      "bottom_right_y": 2314,
+      "content": "SUMMARY",
+      "confidence_scores": null,
+      "type": "caption"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 2360,
+      "bottom_right_x": 2287,
+      "bottom_right_y": 2641,
+      "content": "|   | **VAT [%]** | **Net worth** | **VAT** | **Gross worth**  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 3 172,99 | 317,30 | 3 490,29  |\n|  **Total** |  | **$ 3 172,99** | **$ 317,30** | **$ 3 490,29**  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-0",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 849718
+  },
+  "document_annotation": "{\"Invoice no\": \"26343874\", \"Date of issue\": \"2013-07-17\", \"Seller\": \"Smith Ltd\", \"Seller — Address\": \"290 Jodi Gardens, Charlesview, TN 10958\", \"Seller — Tax Id\": \"916-97-6743\", \"Seller — IBAN\": \"GB78TZMX55978564099007\", \"Client\": \"Herring-Floyd\", \"Client — Address\": \"8113 Hansen Cliff Apt. 826, Port Alice, ID 99663\", \"Client — Tax Id\": \"913-80-4636\", \"Item 1 — No.\": \"1.\", \"Item 1 — Description\": \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\", \"Item 1 — Qty\": \"5.00\", \"Item 1 — UM\": \"each\", \"Item 1 — Net price\": \"249.00\", \"Item 1 — Net worth\": \"1245.00\", \"Item 1 — VAT [%]\": \"10%\", \"Item 1 — Gross worth\": \"1369.50\", \"Item 2 — No.\": \"2.\", \"Item 2 — Description\": \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\", \"Item 2 — Qty\": \"5.00\", \"Item 2 — UM\": \"each\", \"Item 2 — Net price\": \"100.00\", \"Item 2 — Net worth\": \"500.00\", \"Item 2 — VAT [%]\": \"10%\", \"Item 2 — Gross worth\": \"550.00\", \"Item 3 — No.\": \"3.\", \"Item 3 — Description\": \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\", \"Item 3 — Qty\": \"4.00\", \"Item 3 — UM\": \"each\", \"Item 3 — Net price\": \"252.00\", \"Item 3 — Net worth\": \"1008.00\", \"Item 3 — VAT [%]\": \"10%\", \"Item 3 — Gross worth\": \"1108.80\", \"Item 4 — No.\": \"4.\", \"Item 4 — Description\": \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\", \"Item 4 — Qty\": \"2.00\", \"Item 4 — UM\": \"each\", \"Item 4 — Net price\": \"130.00\", \"Item 4 — Net worth\": \"260.00\", \"Item 4 — VAT [%]\": \"10%\", \"Item 4 — Gross worth\": \"286.00\", \"Item 5 — No.\": \"5.\", \"Item 5 — Description\": \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\", \"Item 5 — Qty\": \"1.00\", \"Item 5 — UM\": \"each\", \"Item 5 — Net price\": \"159.99\", \"Item 5 — Net worth\": \"159.99\", \"Item 5 — VAT [%]\": \"10%\", \"Item 5 — Gross worth\": \"175.99\", \"SUMMARY — VAT [%]\": \"10%\", \"SUMMARY — 10% — Net worth\": \"3172.99\", \"SUMMARY — 10% — VAT\": \"317.30\", \"SUMMARY — 10% — Gross worth\": \"3490.29\", \"SUMMARY — Total — Net worth\": \"3172.99\", \"SUMMARY — Total — VAT\": \"317.30\", \"SUMMARY — Total — Gross worth\": \"3490.29\"}"
+ },
+ "metadata": {},
+ "raw_response": {}
+}

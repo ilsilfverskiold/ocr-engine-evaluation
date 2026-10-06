@@ -1,0 +1,708 @@
+{
+ "engine": "gemini_flash",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_003.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Footnote\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — Specific\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Standard tax-lot method for stocks in DRIPs\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Primary disposal method for non-fund, non-DRIP securities — LIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Default strategy for incrementally capturing market discount on varied bonds\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-29 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-28 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-09 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-06 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-05 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\",\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\",\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\",\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\",\n    \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\",\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\",\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\",\n    \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\",\n    \"PORTFOLIO OVERVIEW — Footnote\",\n    \"SPY — One Day Change\",\n    \"SPY — Classification\",\n    \"QQQ — One Day Change\",\n    \"QQQ — Avg. Daily Volume\",\n    \"QQQ — Price Change (YTD)\",\n    \"QQQ — Classification\",\n    \"VEA — Symbol\",\n    \"VEA — Closing Price\",\n    \"VEA — Avg. Daily Volume\",\n    \"VEA — Price Change (YTD)\",\n    \"VEA — Classification\",\n    \"VTI — Symbol\",\n    \"VTI — E.T.F.\",\n    \"VOO — One Day Change\",\n    \"VOO — Price Change (YTD)\",\n    \"VXUS — Symbol\",\n    \"VXUS — E.T.F.\",\n    \"VXUS — Avg. Daily Volume\",\n    \"IJR — Symbol\",\n    \"IJR — Closing Price\",\n    \"IJR — One Day Change\",\n    \"IJR — Avg. Daily Volume\",\n    \"IJR — Price Change (YTD)\",\n    \"IJR — Classification\",\n    \"IEMG — Avg. Daily Volume\",\n    \"IEMG — Price Change (YTD)\",\n    \"VGT — E.T.F.\",\n    \"VGT — Avg. Daily Volume\",\n    \"VGT — Classification\",\n    \"VWO — Symbol\",\n    \"VWO — Closing Price\",\n    \"VWO — One Day Change\",\n    \"VWO — Avg. Daily Volume\",\n    \"VWO — Price Change (YTD)\",\n    \"IVV — Symbol\",\n    \"IVV — Avg. Daily Volume\",\n    \"IVV — Price Change (YTD)\",\n    \"XLK — Symbol\",\n    \"XLK — E.T.F.\",\n    \"XLK — Avg. Daily Volume\",\n    \"IJH — Symbol\",\n    \"IJH — Avg. Daily Volume\",\n    \"IEFA — Closing Price\",\n    \"IEFA — One Day Change\",\n    \"IEFA — Avg. Daily Volume\",\n    \"IEFA — Classification\",\n    \"VUG — Symbol\",\n    \"VUG — E.T.F.\",\n    \"VUG — Price Change (YTD)\",\n    \"VUG — Classification\",\n    \"VIG — Closing Price\",\n    \"VIG — One Day Change\",\n    \"VIG — Avg. Daily Volume\",\n    \"Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — Specific\",\n    \"Standard tax-lot method for stocks in DRIPs\",\n    \"Primary disposal method for non-fund, non-DRIP securities — LIFO\",\n    \"Default strategy for incrementally capturing market discount on varied bonds\",\n    \"DAILY BALANCES — 2023-12-29 — Amount\",\n    \"DAILY BALANCES — 2023-12-28 — Amount\",\n    \"DAILY BALANCES — 2023-12-26 — Amount\",\n    \"DAILY BALANCES — 2023-12-22 — Amount\",\n    \"DAILY BALANCES — 2023-12-19 — Amount\",\n    \"DAILY BALANCES — 2023-12-16 — Amount\",\n    \"DAILY BALANCES — 2023-12-13 — Amount\",\n    \"DAILY BALANCES — 2023-12-12 — Amount\",\n    \"DAILY BALANCES — 2023-12-09 — Amount\",\n    \"DAILY BALANCES — 2023-12-06 — Amount\",\n    \"DAILY BALANCES — 2023-12-05 — Amount\",\n    \"DAILY BALANCES — 2023-12-02 — Amount\",\n    \"DAILY BALANCES — 2023-12-01 — Amount\",\n    \"Page\"\n  ],\n  \"additionalProperties\": false\n}",
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "PORTFOLIO OVERVIEW — STARTING VALUE — Current": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — STARTING VALUE — YTD": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Tactical Rebalancing — Current": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Interest Earnings — YTD": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Automatic Transfers In — Current": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Automatic Transfers In — YTD": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Unlabeled total — YTD": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "PORTFOLIO OVERVIEW — Footnote": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SPY — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "SPY — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "QQQ — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "QQQ — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "QQQ — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "QQQ — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VEA — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VEA — Closing Price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VEA — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VEA — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VEA — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VTI — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VTI — E.T.F.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VOO — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VOO — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VXUS — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VXUS — E.T.F.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VXUS — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — Closing Price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJR — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEMG — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEMG — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VGT — E.T.F.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VGT — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VGT — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VWO — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VWO — Closing Price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VWO — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VWO — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VWO — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IVV — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IVV — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IVV — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "XLK — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "XLK — E.T.F.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "XLK — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJH — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IJH — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEFA — Closing Price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEFA — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEFA — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "IEFA — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VUG — Symbol": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VUG — E.T.F.": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VUG — Price Change (YTD)": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VUG — Classification": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VIG — Closing Price": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VIG — One Day Change": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "VIG — Avg. Daily Volume": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Your Financial Consultant": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Contact Information — Business": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Preferred tax-lot approach for open-ended and mutual funds — AVERAGE": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Preferred tax-lot approach for open-ended and mutual funds — FIFO": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Preferred tax-lot approach for open-ended and mutual funds — Specific": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Standard tax-lot method for stocks in DRIPs": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Primary disposal method for non-fund, non-DRIP securities — LIFO": {
+    "type": [
+     "boolean",
+     "null"
+    ]
+   },
+   "Default strategy for incrementally capturing market discount on varied bonds": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-29 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-28 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-26 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-22 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-19 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-16 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-13 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-12 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-09 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-06 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-05 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-02 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DAILY BALANCES — 2023-12-01 — Amount": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Page": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
+  },
+  "required": [
+   "PORTFOLIO OVERVIEW — STARTING VALUE — Current",
+   "PORTFOLIO OVERVIEW — STARTING VALUE — YTD",
+   "PORTFOLIO OVERVIEW — Tactical Rebalancing — Current",
+   "PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD",
+   "PORTFOLIO OVERVIEW — Interest Earnings — YTD",
+   "PORTFOLIO OVERVIEW — Automatic Transfers In — Current",
+   "PORTFOLIO OVERVIEW — Automatic Transfers In — YTD",
+   "PORTFOLIO OVERVIEW — Unlabeled total — YTD",
+   "PORTFOLIO OVERVIEW — Footnote",
+   "SPY — One Day Change",
+   "SPY — Classification",
+   "QQQ — One Day Change",
+   "QQQ — Avg. Daily Volume",
+   "QQQ — Price Change (YTD)",
+   "QQQ — Classification",
+   "VEA — Symbol",
+   "VEA — Closing Price",
+   "VEA — Avg. Daily Volume",
+   "VEA — Price Change (YTD)",
+   "VEA — Classification",
+   "VTI — Symbol",
+   "VTI — E.T.F.",
+   "VOO — One Day Change",
+   "VOO — Price Change (YTD)",
+   "VXUS — Symbol",
+   "VXUS — E.T.F.",
+   "VXUS — Avg. Daily Volume",
+   "IJR — Symbol",
+   "IJR — Closing Price",
+   "IJR — One Day Change",
+   "IJR — Avg. Daily Volume",
+   "IJR — Price Change (YTD)",
+   "IJR — Classification",
+   "IEMG — Avg. Daily Volume",
+   "IEMG — Price Change (YTD)",
+   "VGT — E.T.F.",
+   "VGT — Avg. Daily Volume",
+   "VGT — Classification",
+   "VWO — Symbol",
+   "VWO — Closing Price",
+   "VWO — One Day Change",
+   "VWO — Avg. Daily Volume",
+   "VWO — Price Change (YTD)",
+   "IVV — Symbol",
+   "IVV — Avg. Daily Volume",
+   "IVV — Price Change (YTD)",
+   "XLK — Symbol",
+   "XLK — E.T.F.",
+   "XLK — Avg. Daily Volume",
+   "IJH — Symbol",
+   "IJH — Avg. Daily Volume",
+   "IEFA — Closing Price",
+   "IEFA — One Day Change",
+   "IEFA — Avg. Daily Volume",
+   "IEFA — Classification",
+   "VUG — Symbol",
+   "VUG — E.T.F.",
+   "VUG — Price Change (YTD)",
+   "VUG — Classification",
+   "VIG — Closing Price",
+   "VIG — One Day Change",
+   "VIG — Avg. Daily Volume",
+   "Your Financial Consultant",
+   "Contact Information — Business",
+   "Preferred tax-lot approach for open-ended and mutual funds — AVERAGE",
+   "Preferred tax-lot approach for open-ended and mutual funds — FIFO",
+   "Preferred tax-lot approach for open-ended and mutual funds — Specific",
+   "Standard tax-lot method for stocks in DRIPs",
+   "Primary disposal method for non-fund, non-DRIP securities — LIFO",
+   "Default strategy for incrementally capturing market discount on varied bonds",
+   "DAILY BALANCES — 2023-12-29 — Amount",
+   "DAILY BALANCES — 2023-12-28 — Amount",
+   "DAILY BALANCES — 2023-12-26 — Amount",
+   "DAILY BALANCES — 2023-12-22 — Amount",
+   "DAILY BALANCES — 2023-12-19 — Amount",
+   "DAILY BALANCES — 2023-12-16 — Amount",
+   "DAILY BALANCES — 2023-12-13 — Amount",
+   "DAILY BALANCES — 2023-12-12 — Amount",
+   "DAILY BALANCES — 2023-12-09 — Amount",
+   "DAILY BALANCES — 2023-12-06 — Amount",
+   "DAILY BALANCES — 2023-12-05 — Amount",
+   "DAILY BALANCES — 2023-12-02 — Amount",
+   "DAILY BALANCES — 2023-12-01 — Amount",
+   "Page"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "gemini-3.1-flash-lite",
+ "latency_seconds": 6.944438041187823,
+ "cost_per_page": 0.003919,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\n  \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\": \"$370,320.00\",\n  \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\": \"$559,307.00\",\n  \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\": \"$0.00\",\n  \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\": \"$80,653.09\",\n  \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\": \"$15,728.45\",\n  \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\": \"$51,066.05\",\n  \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\": \"$121,350.40\",\n  \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\": \"$730,693.84\",\n  \"PORTFOLIO OVERVIEW — Footnote\": \"Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — Price Change (YTD)\": \"0.2665\",\n  \"QQQ — Classification\": \"Equity\",\n  \"VEA — Symbol\": \"VEA\",\n  \"VEA — Closing Price\": \"47.81\",\n  \"VEA — Avg. Daily Volume\": \"10714970\",\n  \"VEA — Price Change (YTD)\": \"0.0312\",\n  \"VEA — Classification\": \"Equity\",\n  \"VTI — Symbol\": \"VTI\",\n  \"VTI — E.T.F.\": \"Vanguard Total Stock Market ETF\",\n  \"VOO — One Day Change\": \"-0.0111\",\n  \"VOO — Price Change (YTD)\": \"0.2548\",\n  \"VXUS — Symbol\": \"VXUS\",\n  \"VXUS — E.T.F.\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — Avg. Daily Volume\": \"3544059\",\n  \"IJR — Symbol\": \"IJR\",\n  \"IJR — Closing Price\": \"114.97\",\n  \"IJR — One Day Change\": \"-0.0072\",\n  \"IJR — Avg. Daily Volume\": \"3509577\",\n  \"IJR — Price Change (YTD)\": \"0.0839\",\n  \"IJR — Classification\": \"Equity\",\n  \"IEMG — Avg. Daily Volume\": \"8214263\",\n  \"IEMG — Price Change (YTD)\": \"0.1076\",\n  \"VGT — E.T.F.\": \"Vanguard Information Technology ETF\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — Classification\": \"Equity\",\n  \"VWO — Symbol\": \"VWO\",\n  \"VWO — Closing Price\": \"44.11\",\n  \"VWO — One Day Change\": \"-0.0088\",\n  \"VWO — Avg. Daily Volume\": \"9449047\",\n  \"VWO — Price Change (YTD)\": \"0.1076\",\n  \"IVV — Symbol\": \"IVV\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — Price Change (YTD)\": \"0.2542\",\n  \"XLK — Symbol\": \"XLK\",\n  \"XLK — E.T.F.\": \"Technology Select Sector SPDR Fund\",\n  \"XLK — Avg. Daily Volume\": \"4015302\",\n  \"IJH — Symbol\": \"IJH\",\n  \"IJH — Avg. Daily Volume\": \"7659450\",\n  \"IEFA — Closing Price\": \"70.32\",\n  \"IEFA — One Day Change\": \"-0.0066\",\n  \"IEFA — Avg. Daily Volume\": \"8199248\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VUG — Symbol\": \"VUG\",\n  \"VUG — E.T.F.\": \"Vanguard Growth ETF\",\n  \"VUG — Price Change (YTD)\": \"0.339\",\n  \"VUG — Classification\": \"Equity\",\n  \"VIG — Closing Price\": \"195.8\",\n  \"VIG — One Day Change\": \"-0.0125\",\n  \"VIG — Avg. Daily Volume\": \"965248\",\n  \"Your Financial Consultant\": \"Calvin Boyle\",\n  \"Contact Information — Business\": \"302-492-7693\",\n  \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\": false,\n  \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\": true,\n  \"Preferred tax-lot approach for open-ended and mutual funds — Specific\": false,\n  \"Standard tax-lot method for stocks in DRIPs\": \"Specific\",\n  \"Primary disposal method for non-fund, non-DRIP securities — LIFO\": false,\n  \"Default strategy for incrementally capturing market discount on varied bonds\": \"Straight\",\n  \"DAILY BALANCES — 2023-12-29 — Amount\": \"$463,968.00\",\n  \"DAILY BALANCES — 2023-12-28 — Amount\": \"$461,409.00\",\n  \"DAILY BALANCES — 2023-12-26 — Amount\": \"$461,492.00\",\n  \"DAILY BALANCES — 2023-12-22 — Amount\": \"$461,769.00\",\n  \"DAILY BALANCES — 2023-12-19 — Amount\": \"$461,970.00\",\n  \"DAILY BALANCES — 2023-12-16 — Amount\": \"$462,225.00\",\n  \"DAILY BALANCES — 2023-12-13 — Amount\": \"$457,688.00\",\n  \"DAILY BALANCES — 2023-12-12 — Amount\": \"$457,313.00\",\n  \"DAILY BALANCES — 2023-12-09 — Amount\": \"$457,308.00\",\n  \"DAILY BALANCES — 2023-12-06 — Amount\": \"$456,813.00\",\n  \"DAILY BALANCES — 2023-12-05 — Amount\": \"$456,993.00\",\n  \"DAILY BALANCES — 2023-12-02 — Amount\": \"$456,690.00\",\n  \"DAILY BALANCES — 2023-12-01 — Amount\": \"$452,113.00\",\n  \"Page\": \"38 / 65\"\n}",
+ "structured_output": {},
+ "metadata": {
+  "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"PORTFOLIO OVERVIEW — Footnote\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VEA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Symbol\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Closing Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — Specific\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Standard tax-lot method for stocks in DRIPs\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Primary disposal method for non-fund, non-DRIP securities — LIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Default strategy for incrementally capturing market discount on varied bonds\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-29 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-28 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-09 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-06 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-05 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\",\n    \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\",\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\",\n    \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\",\n    \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\",\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\",\n    \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\",\n    \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\",\n    \"PORTFOLIO OVERVIEW — Footnote\",\n    \"SPY — One Day Change\",\n    \"SPY — Classification\",\n    \"QQQ — One Day Change\",\n    \"QQQ — Avg. Daily Volume\",\n    \"QQQ — Price Change (YTD)\",\n    \"QQQ — Classification\",\n    \"VEA — Symbol\",\n    \"VEA — Closing Price\",\n    \"VEA — Avg. Daily Volume\",\n    \"VEA — Price Change (YTD)\",\n    \"VEA — Classification\",\n    \"VTI — Symbol\",\n    \"VTI — E.T.F.\",\n    \"VOO — One Day Change\",\n    \"VOO — Price Change (YTD)\",\n    \"VXUS — Symbol\",\n    \"VXUS — E.T.F.\",\n    \"VXUS — Avg. Daily Volume\",\n    \"IJR — Symbol\",\n    \"IJR — Closing Price\",\n    \"IJR — One Day Change\",\n    \"IJR — Avg. Daily Volume\",\n    \"IJR — Price Change (YTD)\",\n    \"IJR — Classification\",\n    \"IEMG — Avg. Daily Volume\",\n    \"IEMG — Price Change (YTD)\",\n    \"VGT — E.T.F.\",\n    \"VGT — Avg. Daily Volume\",\n    \"VGT — Classification\",\n    \"VWO — Symbol\",\n    \"VWO — Closing Price\",\n    \"VWO — One Day Change\",\n    \"VWO — Avg. Daily Volume\",\n    \"VWO — Price Change (YTD)\",\n    \"IVV — Symbol\",\n    \"IVV — Avg. Daily Volume\",\n    \"IVV — Price Change (YTD)\",\n    \"XLK — Symbol\",\n    \"XLK — E.T.F.\",\n    \"XLK — Avg. Daily Volume\",\n    \"IJH — Symbol\",\n    \"IJH — Avg. Daily Volume\",\n    \"IEFA — Closing Price\",\n    \"IEFA — One Day Change\",\n    \"IEFA — Avg. Daily Volume\",\n    \"IEFA — Classification\",\n    \"VUG — Symbol\",\n    \"VUG — E.T.F.\",\n    \"VUG — Price Change (YTD)\",\n    \"VUG — Classification\",\n    \"VIG — Closing Price\",\n    \"VIG — One Day Change\",\n    \"VIG — Avg. Daily Volume\",\n    \"Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — Specific\",\n    \"Standard tax-lot method for stocks in DRIPs\",\n    \"Primary disposal method for non-fund, non-DRIP securities — LIFO\",\n    \"Default strategy for incrementally capturing market discount on varied bonds\",\n    \"DAILY BALANCES — 2023-12-29 — Amount\",\n    \"DAILY BALANCES — 2023-12-28 — Amount\",\n    \"DAILY BALANCES — 2023-12-26 — Amount\",\n    \"DAILY BALANCES — 2023-12-22 — Amount\",\n    \"DAILY BALANCES — 2023-12-19 — Amount\",\n    \"DAILY BALANCES — 2023-12-16 — Amount\",\n    \"DAILY BALANCES — 2023-12-13 — Amount\",\n    \"DAILY BALANCES — 2023-12-12 — Amount\",\n    \"DAILY BALANCES — 2023-12-09 — Amount\",\n    \"DAILY BALANCES — 2023-12-06 — Amount\",\n    \"DAILY BALANCES — 2023-12-05 — Amount\",\n    \"DAILY BALANCES — 2023-12-02 — Amount\",\n    \"DAILY BALANCES — 2023-12-01 — Amount\",\n    \"Page\"\n  ],\n  \"additionalProperties\": false\n}",
+  "input_tokens": 5224,
+  "output_tokens": 1742,
+  "thinking_tokens": 0,
+  "leg": "schema",
+  "max_output_tokens": 4096,
+  "temperature": 0,
+  "sdk_attempts": 1
+ },
+ "raw_response": {
+  "sdk_http_response": {
+   "headers": {
+    "x-gemini-service-tier": "standard",
+    "content-type": "application/json; charset=UTF-8",
+    "vary": "Origin, X-Origin, Referer",
+    "content-encoding": "gzip",
+    "date": "Tue, 06 Oct 2026 21:26:30 GMT",
+    "server": "scaffolding on HTTPServer2",
+    "x-xss-protection": "0",
+    "x-frame-options": "SAMEORIGIN",
+    "x-content-type-options": "nosniff",
+    "server-timing": "gfet4t7; dur=6910",
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "transfer-encoding": "chunked"
+   },
+   "body": null
+  },
+  "candidates": [
+   {
+    "content": {
+     "parts": [
+      {
+       "media_resolution": null,
+       "code_execution_result": null,
+       "executable_code": null,
+       "file_data": null,
+       "function_call": null,
+       "function_response": null,
+       "inline_data": null,
+       "text": "{\n  \"PORTFOLIO OVERVIEW — STARTING VALUE — Current\": \"$370,320.00\",\n  \"PORTFOLIO OVERVIEW — STARTING VALUE — YTD\": \"$559,307.00\",\n  \"PORTFOLIO OVERVIEW — Tactical Rebalancing — Current\": \"$0.00\",\n  \"PORTFOLIO OVERVIEW — Tactical Rebalancing — YTD\": \"$80,653.09\",\n  \"PORTFOLIO OVERVIEW — Interest Earnings — YTD\": \"$15,728.45\",\n  \"PORTFOLIO OVERVIEW — Automatic Transfers In — Current\": \"$51,066.05\",\n  \"PORTFOLIO OVERVIEW — Automatic Transfers In — YTD\": \"$121,350.40\",\n  \"PORTFOLIO OVERVIEW — Unlabeled total — YTD\": \"$730,693.84\",\n  \"PORTFOLIO OVERVIEW — Footnote\": \"Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — Price Change (YTD)\": \"0.2665\",\n  \"QQQ — Classification\": \"Equity\",\n  \"VEA — Symbol\": \"VEA\",\n  \"VEA — Closing Price\": \"47.81\",\n  \"VEA — Avg. Daily Volume\": \"10714970\",\n  \"VEA — Price Change (YTD)\": \"0.0312\",\n  \"VEA — Classification\": \"Equity\",\n  \"VTI — Symbol\": \"VTI\",\n  \"VTI — E.T.F.\": \"Vanguard Total Stock Market ETF\",\n  \"VOO — One Day Change\": \"-0.0111\",\n  \"VOO — Price Change (YTD)\": \"0.2548\",\n  \"VXUS — Symbol\": \"VXUS\",\n  \"VXUS — E.T.F.\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — Avg. Daily Volume\": \"3544059\",\n  \"IJR — Symbol\": \"IJR\",\n  \"IJR — Closing Price\": \"114.97\",\n  \"IJR — One Day Change\": \"-0.0072\",\n  \"IJR — Avg. Daily Volume\": \"3509577\",\n  \"IJR — Price Change (YTD)\": \"0.0839\",\n  \"IJR — Classification\": \"Equity\",\n  \"IEMG — Avg. Daily Volume\": \"8214263\",\n  \"IEMG — Price Change (YTD)\": \"0.1076\",\n  \"VGT — E.T.F.\": \"Vanguard Information Technology ETF\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — Classification\": \"Equity\",\n  \"VWO — Symbol\": \"VWO\",\n  \"VWO — Closing Price\": \"44.11\",\n  \"VWO — One Day Change\": \"-0.0088\",\n  \"VWO — Avg. Daily Volume\": \"9449047\",\n  \"VWO — Price Change (YTD)\": \"0.1076\",\n  \"IVV — Symbol\": \"IVV\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — Price Change (YTD)\": \"0.2542\",\n  \"XLK — Symbol\": \"XLK\",\n  \"XLK — E.T.F.\": \"Technology Select Sector SPDR Fund\",\n  \"XLK — Avg. Daily Volume\": \"4015302\",\n  \"IJH — Symbol\": \"IJH\",\n  \"IJH — Avg. Daily Volume\": \"7659450\",\n  \"IEFA — Closing Price\": \"70.32\",\n  \"IEFA — One Day Change\": \"-0.0066\",\n  \"IEFA — Avg. Daily Volume\": \"8199248\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VUG — Symbol\": \"VUG\",\n  \"VUG — E.T.F.\": \"Vanguard Growth ETF\",\n  \"VUG — Price Change (YTD)\": \"0.339\",\n  \"VUG — Classification\": \"Equity\",\n  \"VIG — Closing Price\": \"195.8\",\n  \"VIG — One Day Change\": \"-0.0125\",\n  \"VIG — Avg. Daily Volume\": \"965248\",\n  \"Your Financial Consultant\": \"Calvin Boyle\",\n  \"Contact Information — Business\": \"302-492-7693\",\n  \"Preferred tax-lot approach for open-ended and mutual funds — AVERAGE\": false,\n  \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\": true,\n  \"Preferred tax-lot approach for open-ended and mutual funds — Specific\": false,\n  \"Standard tax-lot method for stocks in DRIPs\": \"Specific\",\n  \"Primary disposal method for non-fund, non-DRIP securities — LIFO\": false,\n  \"Default strategy for incrementally capturing market discount on varied bonds\": \"Straight\",\n  \"DAILY BALANCES — 2023-12-29 — Amount\": \"$463,968.00\",\n  \"DAILY BALANCES — 2023-12-28 — Amount\": \"$461,409.00\",\n  \"DAILY BALANCES — 2023-12-26 — Amount\": \"$461,492.00\",\n  \"DAILY BALANCES — 2023-12-22 — Amount\": \"$461,769.00\",\n  \"DAILY BALANCES — 2023-12-19 — Amount\": \"$461,970.00\",\n  \"DAILY BALANCES — 2023-12-16 — Amount\": \"$462,225.00\",\n  \"DAILY BALANCES — 2023-12-13 — Amount\": \"$457,688.00\",\n  \"DAILY BALANCES — 2023-12-12 — Amount\": \"$457,313.00\",\n  \"DAILY BALANCES — 2023-12-09 — Amount\": \"$457,308.00\",\n  \"DAILY BALANCES — 2023-12-06 — Amount\": \"$456,813.00\",\n  \"DAILY BALANCES — 2023-12-05 — Amount\": \"$456,993.00\",\n  \"DAILY BALANCES — 2023-12-02 — Amount\": \"$456,690.00\",\n  \"DAILY BALANCES — 2023-12-01 — Amount\": \"$452,113.00\",\n  \"Page\": \"38 / 65\"\n}",
+       "thought": null,
+       "thought_signature": "b'\\x12s\\nq\\x01i\\x14}\\x13<V\\x1b\\xd9\\x8fo\\x07\\x14X\\x9c\\x8e\\x02\\xb6\\xd7\\xdd\\xb2\\xce*\\xa0\\xb4\\x81\\x10\\xc8\\x84}\\xa9\\x93\\xc4.\\x03\\x07\\xc6\\\\\\xe7\\xbd!{.\\xd8\\x0c\\x1d\\x0c\\xdb\\x1e\\xa1Gfy6\\xceqp\\x83\\x93\\x04~]\\xd8Ge\\x990\\xa2\\xe7c\\x02\\xc3\\x99\\xbf\\x97\\x98\\x19\\xc5[;\\xdfH\\xb3N\\xaci@/\\xbeRc\\x03\\xb8\\x01\\xe4P-!\\xc4\\xce\\xaa\\x142J\\xf9\\x8eS\\x938\\x89u\\x84\\x1b'",
+       "video_metadata": null,
+       "tool_call": null,
+       "tool_response": null,
+       "part_metadata": null,
+       "audio_transcription": null
+      }
+     ],
+     "role": "model"
+    },
+    "citation_metadata": null,
+    "finish_message": null,
+    "token_count": null,
+    "finish_reason": "STOP",
+    "grounding_metadata": null,
+    "avg_logprobs": null,
+    "index": 0,
+    "logprobs_result": null,
+    "safety_ratings": null,
+    "url_context_metadata": null
+   }
+  ],
+  "create_time": null,
+  "model_version": "gemini-3.1-flash-lite",
+  "prompt_feedback": null,
+  "response_id": "gGfFauOCMOT-nsEPoLGLqQs",
+  "usage_metadata": {
+   "cache_tokens_details": null,
+   "cached_content_token_count": null,
+   "candidates_token_count": 1742,
+   "candidates_tokens_details": null,
+   "prompt_token_count": 5224,
+   "prompt_tokens_details": [
+    {
+     "modality": "TEXT",
+     "token_count": 4144
+    },
+    {
+     "modality": "IMAGE",
+     "token_count": 1080
+    }
+   ],
+   "thoughts_token_count": null,
+   "tool_use_prompt_token_count": null,
+   "tool_use_prompt_tokens_details": null,
+   "total_token_count": 6966,
+   "traffic_type": null
+  },
+  "model_status": null,
+  "automatic_function_calling_history": [],
+  "parsed": null
+ }
+}

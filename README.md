@@ -14,8 +14,9 @@ python run_benchmark.py --report 20261002T162630Z    # corrected saved results
 ```
 
 That saved run predates the current evaluation changes. The new scorers and
-accepted references are implemented, but schema reruns, key matching and a
-replacement report remain in progress. See the current
+accepted references and KV matching are implemented. The shared-sample schema
+run is `20261006T214240Z` (453 scored results, two server errors). Remaining leg
+controls and the replacement all-leg report are in progress. See the current
 [execution checklist](docs/follow-up-2026-10-03.md) for what has actually run.
 
 With the document corpus installed, build the browser report (no API calls):

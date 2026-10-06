@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — sampled schema results
+
+- Run 20261006T214240Z consolidates 453 scored results and two provider errors
+  across seven engines and 65 pages using identical sampled schemas.
+- Save request/scoring/cost audit and actual field evidence; estimated total
+  $4.72786 including measured GPU startup. No new judge or repeated successful call.
+
 ## 2026-10-06 — identical bounded schema samples
 
 - Freeze one common sample per page for all seven engines (3,316/4,251 fields).

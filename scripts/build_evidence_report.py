@@ -73,6 +73,8 @@ for r in rows:
   item['method']='One-to-one text/box matching and mutual centre containment. Recall is the headline; precision/F1 and box-text CER/WER are separate. Scope and line/word units are recorded below.'
  if r['leg']=='key_value' and str((r.get('metrics') or {}).get('kv_scorer','')).startswith('shared-fields-'):
   item['method']='Shared accepted KV/schema fields. Known keys first; unmatched complete-value candidates require judge confirmation. Key variations or contextual pairs are cached, then associated values checked. Unfinished decisions stay pending.'
+ if r['leg']=='schema' and c.get('json_schema') == gts[d].inference_schema:
+  item['engine_note']='Current shared-schema request. Failed provider calls remain errors; successful answers are compared with the exact supplied keys shown below.'
  if r['leg']=='schema' and (r.get('metrics') or {}).get('schema_sample'):
   sample=r['metrics']['schema_sample']
   item['method']='Correct values under exact requested keys / (sampled reference fields + unexpected or duplicate output fields). Same frozen schema sample for every engine; no judge.'
