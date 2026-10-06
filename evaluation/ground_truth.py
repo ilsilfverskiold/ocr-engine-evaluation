@@ -76,8 +76,8 @@ class GroundTruth:
         """The answer-free request contract, separate from scoring coverage."""
         if self.json_schema is None:
             return None
-        from evaluation.schema_contract import extraction_schema
-        return extraction_schema(self.json_schema, Path(self.document_path).stem)
+        from evaluation.schema_contract import sampled_request_schema
+        return sampled_request_schema(self)
 
     # Legs whose reference exists for this document. The scorers ask this
     # rather than probing file paths — see the loader docstring.

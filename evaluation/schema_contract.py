@@ -138,3 +138,60 @@ def repair_spanned_financial_rows(reference: dict, table_html: str) -> tuple[dic
     # an extraction target. Keeping it would contradict the repaired rows.
     result.pop("csv", None)
     return result, True
+
+
+SAMPLE_FILE = FIELD_FILE.with_name("schema_sample.json")
+
+
+def sample_reference_id(gt) -> str:
+    """Invalidate a frozen sample when keys, values or human exclusions change."""
+    gold = gt.metadata.get("structured_gold_reference") or {}
+    return contract_id({"schema": gt.json_schema, "values": gt.true_json,
+                        "excluded": sorted(gold.get("excluded_fields", []))})
+
+
+@lru_cache(maxsize=1)
+def sample_manifest() -> dict:
+    return json.loads(SAMPLE_FILE.read_text()) if SAMPLE_FILE.exists() else {}
+
+
+def sample_entry(gt) -> dict | None:
+    if gt.metadata.get("schema_sample_applied"):
+        return None
+    entry = sample_manifest().get("documents", {}).get(Path(gt.document_path).stem)
+    if entry and entry["reference_id"] != sample_reference_id(gt):
+        raise ValueError(f"{Path(gt.document_path).stem}: schema sample is stale; rebuild it before inference/scoring")
+    return entry
+
+
+def restrict_schema(schema: dict, keys: list[str]) -> dict:
+    """Preserve literal flat field names/types; all engines receive this subset."""
+    result = copy.deepcopy(schema)
+    properties = result.get("properties", {})
+    if len(keys) != len(set(keys)) or any(key not in properties for key in keys):
+        raise ValueError("Schema sample has duplicate or unknown keys")
+    result["properties"] = {key: properties[key] for key in keys}
+    result["required"] = [key for key in schema.get("required", []) if key in keys]
+    return result
+
+
+def sampled_request_schema(gt) -> dict:
+    schema = extraction_schema(gt.json_schema, Path(gt.document_path).stem)
+    entry = sample_entry(gt)
+    return restrict_schema(schema, entry["keys"]) if entry else schema
+
+
+def schema_scoring_reference(gt):
+    """A schema-only view. Never mutate the full gold or KV reference."""
+    from dataclasses import replace
+    entry = sample_entry(gt)
+    if entry is None:
+        return gt
+    schema = sampled_request_schema(gt)
+    metadata = dict(gt.metadata)
+    metadata["schema_sample_applied"] = True
+    metadata["schema_sample"] = {"version": sample_manifest()["version"],
+        "reference_id": entry["reference_id"], "selected": len(entry["keys"]),
+        "available": entry["available"], "keys": entry["keys"]}
+    return replace(gt, json_schema=schema,
+        true_json={key: gt.true_json[key] for key in entry["keys"]}, metadata=metadata)

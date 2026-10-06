@@ -2315,6 +2315,8 @@ def parse_args():
                    help="Discover documents, plan passes and validate — no inference")
     p.add_argument("--plan-output", type=Path, default=None,
                    help="With --dry-run, save exact task prompts/schemas and image/source hashes; no API calls")
+    p.add_argument("--stop-on-error", action="store_true",
+                   help="Stop further requests for an engine after an error; saved responses are retained")
     p.add_argument("--workers", type=int, default=0,
                    help="Parallel engine threads (default: number of engines)")
     p.add_argument("--max-docs", type=int, default=0,
@@ -2326,6 +2328,8 @@ def parse_args():
     p.add_argument("--resume", nargs="?", const="latest", metavar="TIMESTAMP",
                    help="Resume an interrupted run; completed (engine, doc, pass) "
                         "calls are skipped and results appended")
+    p.add_argument("--resume-unattempted", metavar="TIMESTAMP",
+                   help="Resume only never-attempted calls; preserve errors and never submit them again")
     p.add_argument("--report", nargs="?", const="latest", metavar="TIMESTAMP[,TIMESTAMP]",
                    help="Regenerate the report from stored results — no OCR re-run. "
                         "Several comma-separated runs are reported together "
@@ -2349,6 +2353,10 @@ def parse_args():
                    help="Record which baseline run this run adds engines to "
                         "(written to the run manifest; report both with --report A,B)")
     args = p.parse_args()
+    if args.resume_unattempted:
+        if args.resume or args.rerun_errors:
+            p.error("--resume-unattempted cannot combine with --resume/--rerun-errors")
+        args.resume = args.resume_unattempted
     if args.plan_output and not args.dry_run:
         p.error('--plan-output requires --dry-run')
     if args.dry_run and (args.rescore or args.score or args.report or args.check or args.resume):
@@ -2374,6 +2382,20 @@ def validate_keys(engines: list[str], skip_judge: bool) -> list[str]:
     if not skip_judge and not os.environ.get("GOOGLE_API_KEY"):
         missing.append("GOOGLE_API_KEY  (needed for the judge — or use --skip-judge)")
     return missing
+
+
+def inference_needs_stop(result, stop_on_truncation=False):
+    if result is None or result.error:
+        return True
+    def truncated(value):
+        if isinstance(value, dict):
+            return any((key in ("stop_reason", "finish_reason", "finishReason")
+                        and str(child).lower() in ("length", "max_tokens", "max_output_tokens"))
+                       or truncated(child) for key, child in value.items())
+        if isinstance(value, list):
+            return any(truncated(child) for child in value)
+        return False
+    return stop_on_truncation and (truncated(result.metadata) or truncated(result.raw_response))
 
 
 def pass_is_eligible(plan, gt, collect_only=False):
@@ -2658,7 +2680,7 @@ def main() -> None:
     done: set[tuple[str, str, str]] = set()
     if args.resume:
         for r in read_jsonl(inference_jsonl):
-            if not r.get("error"):
+            if args.resume_unattempted or not r.get("error"):
                 done.add((r["engine_name"], r["document_path"],
                           r.get("pass_name") or DEFAULT_PASS))
         log.info(f"Resuming run {ts} — {len(done)} completed call(s) will be skipped")
@@ -2872,6 +2894,9 @@ def main() -> None:
                     call_task = LEGS[plan.leg_for_task].task_for(gt.inference_schema, engine=plan.engine)
                 result = runner.run_safe(doc_path, call_task)
                 record_pass(engine, doc_path, gt, plan, result, result.error, task=call_task)
+                if args.stop_on_error and inference_needs_stop(result):
+                    log.error(f"[{engine}] Stopped after error; no automatic retry")
+                    return
 
     def _run_modal_all_passes(engine, runner, plans) -> None:
         """Merge every pass into one remote call so the container stays warm.
@@ -2938,12 +2963,17 @@ def main() -> None:
                 for _, doc_path, gt, plan, task in chunk:
                     record_pass(engine, doc_path, gt, plan, None, message,
                                 task=task)
+                if args.stop_on_error:
+                    return
                 continue
             for (_, doc_path, gt, plan, task), result in zip(chunk, results):
                 record_pass(engine, doc_path, gt, plan, result,
                             result.error if result else
                             "Modal batch returned no result",
                             task=task)
+            if args.stop_on_error and any(inference_needs_stop(result) for result in results):
+                log.error(f"[{engine}] Stopped after batch error; no automatic retry")
+                return
 
     # Phase 1: local CPU engines, one at a time so the machine is not saturated.
     if local_engines:

@@ -168,7 +168,9 @@ counts describe that run, not every integration available in the registry.
 | `schema` | Given *your* JSON schema, did it fill it correctly? | 65 | 7 |
 | `geometry` | Does it know *where* on the page each word is? | 17 | 9 |
 
-KV and schema use the same 65 accepted structured references and selected fields.
+KV and schema draw from the same 65 accepted structured references. KV uses all
+eligible fields; schema uses the frozen common sample in
+`documents/schema_sample.json` (3,316/4,251 fields), identical across engines.
 KV resolves unmatched wording during evaluation: complete-value candidates go
 to a judge only when needed; confirmed variations are cached for later engines.
 Geometry includes two later geometry-only engines; Marker has fewer successful pages.
@@ -241,7 +243,7 @@ The other deterministic legs do not make per-answer judge calls.
 | `markdown` | `(correct + 0.5 × partial) / elements` | Actual syntax, disjoint structural matches; image catalogue shared across engines; CER/WER separate |
 | `tables` | Cell F1 | Human gold; one-to-one cells including blanks/extras; precision, recall and span-aware structure diagnostic; shipping takes the better whole-page gold/original comparison |
 | `key_value` | `(correct + blank_ok) / selected fields` | Shared accepted references; known keys first, complete-value candidates judged when needed, confirmed variations cached |
-| `schema` | `(correct + blank_ok) / (selected fields + extra fields)` | Same accepted fields as KV; exact supplied keys; JSON/schema compliance separate; stale contracts require new inference |
+| `schema` | `(correct + blank_ok) / (selected fields + extra fields)` | Shared sampled subset of accepted KV references; exact supplied keys; JSON/schema compliance separate; stale contracts require new inference |
 | `geometry` | Located / reference units | One-to-one word/line matches; precision/F1, invalid boxes and box-text CER/WER; annotation scope and overlays recorded |
 
 The saved run covers 82 text, 57 Markdown, 42 table, 55 key-value, 65 schema
@@ -510,3 +512,17 @@ Code is MIT. The document images are excerpts from third-party datasets and
 keep their original licences — see
 [docs/documents-and-licensing.md](docs/documents-and-licensing.md), which is
 explicit about the ones restricted to research use.
+
+
+Schema requests use the committed common sample, with the same selected fields
+for every engine. Rebuild it offline with `scripts/build_schema_sample.py
+--tokenizer-dir PATH` only when references or engine budgets change. The builder
+uses pinned DeepSeek/Qwen/GLM tokenizer JSON files, not model inference; the
+manifest records their hashes and token budgets. Runtime evaluation does not
+need these tokenizer files. Sampling is schema-only and leaves full gold intact.
+
+To continue an interrupted run without submitting an already attempted call
+again (including errors), use `--resume-unattempted TIMESTAMP`. Ordinary
+`--resume` retries error rows. `--stop-on-error` halts further requests for an
+engine when a provider call fails; poor or truncated answers stay recorded and
+scored. No engine tuning or automatic regeneration is performed.

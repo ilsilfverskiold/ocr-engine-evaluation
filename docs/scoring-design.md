@@ -117,9 +117,14 @@ still require the reference metadata checks listed in the follow-up.
 ## Shared KV/schema references
 
 The accepted fresh, flat key/value extractions at
-`documents/structured_references/gold/` supply **the same selected fields and
-expected values for both legs**. Storage shape does not disqualify a KV field.
-No sampling or three-field minimum applies to shared gold. The corpus has 65
+`documents/structured_references/gold/` supply the same accepted keys and expected values for both legs. Storage shape
+does not disqualify a KV field. KV uses the full eligible set. For the current
+schema run, the user requested one shared field sample sized to fit every engine:
+`documents/schema_sample.json` selects 3,316 of 4,251 fields, identically for all
+seven engines. Forty-five pages keep every field; twenty are sampled. Schema
+requests and scoring both use that frozen selection; unexpected keys still
+incur the extra-key penalty. Full gold and KV coverage are unchanged. Reference
+edits invalidate the sample. There is no three-field minimum. The corpus has 65
 structured pages; uncertain readings remain explicitly excluded from both legs.
 The old nested references remain available as provenance, not the active target.
 

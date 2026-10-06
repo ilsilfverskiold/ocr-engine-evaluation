@@ -9,6 +9,7 @@ fix scoring never saw. Tests that read files would repeat that mistake.
 from __future__ import annotations
 
 from pathlib import Path
+from evaluation.schema_contract import schema_scoring_reference
 
 import pytest
 
@@ -263,7 +264,7 @@ def test_invoice_text_references_match_reviewed_printed_content():
         gt = invoices[stem]
         assert "00000000" not in gt.plain_text and "00OO" not in gt.plain_text
         assert gt.metadata["structured_reference_repairs"]["excluded_fields"] == [excluded]
-        score = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
+        score = score_schema(json.dumps(schema_scoring_reference(gt).true_json), gt, "gemini_flash")
         assert excluded not in {v.path for v in score.verdicts}
         assert score.score == 1
         raw = json.loads(Path(gt.document_path).with_name(stem + "_structured_gt.json").read_text())
@@ -323,7 +324,7 @@ def test_receipt_multiline_description_is_one_item_without_phantom_blanks():
     # Uncertain readings are excluded consistently in the accepted gold.
     excluded = gt.metadata["structured_reference_repairs"]["excluded_fields"]
     assert set(excluded) == {"Item 1 — Item/Desc.", "Included In Total — Tax rate"}
-    perfect = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
+    perfect = score_schema(json.dumps(schema_scoring_reference(gt).true_json), gt, "gemini_flash")
     assert perfect.fields_total == len(gt.true_json) - len(excluded) and perfect.score == 1
     assert perfect.blank_total == 0
     empty = score_schema('{}', gt, "deepseek_ocr")

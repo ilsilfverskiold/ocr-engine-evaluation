@@ -8,7 +8,7 @@ from jsonschema.exceptions import ValidationError
 
 from evaluation.ground_truth import load_corpus
 from evaluation.legs import instance_template
-from evaluation.schema_contract import extraction_schema, repair_spanned_financial_rows
+from evaluation.schema_contract import extraction_schema, repair_spanned_financial_rows, schema_scoring_reference
 
 
 def test_changed_or_unrecorded_schema_requires_rerun(tmp_path):
@@ -37,7 +37,8 @@ def test_all_reference_answers_satisfy_the_request_schema():
     corpus = [g for g in load_corpus() if g.json_schema]
     assert len(corpus) == 65
     errors = [(Path(g.document_path).stem, e.message)
-              for g in corpus for e in Draft7Validator(g.inference_schema).iter_errors(g.true_json)]
+              for g in corpus for e in Draft7Validator(g.inference_schema).iter_errors(
+                  schema_scoring_reference(g).true_json)]
     assert errors == []
 
 
@@ -77,12 +78,12 @@ def test_explicit_targets_survive_vendor_schema_sanitizer():
     for stem in ("funsd_001", "funsd_005"):
         g = docs[stem]
         effective = _sanitize_schema_for_llama(g.inference_schema)
-        assert set(effective["properties"]) == set(g.true_json)
+        assert set(effective["properties"]) == set(g.inference_schema["properties"])
         assert effective["additionalProperties"] is False
     g = docs["fintab_001"]
     effective = _sanitize_schema_for_llama(g.inference_schema)
     if g.metadata.get("structured_gold_reference"):
-        assert set(effective["properties"]) == set(g.true_json)
+        assert set(effective["properties"]) == set(g.inference_schema["properties"])
         assert effective["additionalProperties"] is False
     else:
         values = effective["properties"]["rows"]["items"]["properties"]["values"]
@@ -119,3 +120,47 @@ def test_financial_loader_omits_unrequested_csv_and_records_repairs():
     assert [Path(g.document_path).stem for g in repaired] == ["fintab_001"]
     row = next(r for r in repaired[0].true_json["rows"] if r["label"] == "Inspection")
     assert row["values"] == {"31.7.17": "70", "31.7.16": "336"}
+
+
+def test_sample_is_shared_and_does_not_change_full_gold_or_kv(monkeypatch):
+    import json
+    from evaluation import schema_contract as sc
+    from evaluation.ground_truth import GroundTruth
+    from evaluation.legs import LEGS
+    from evaluation.schema_leg import score_schema
+    from evaluation.shared_fields import reference_fields
+    from engines import ENGINES
+    gt = GroundTruth('fixture.png', 'easy', 'fixture', '', true_json={'A': '100', 'B': '200'},
+        json_schema={'type': 'object', 'properties': {'A': {'type': 'string'}, 'B': {'type': 'string'}},
+                     'required': ['A', 'B'], 'additionalProperties': False},
+        metadata={'structured_gold_reference': {'shared_field_selection': True}})
+    original = copy.deepcopy(gt)
+    entry = {'reference_id': sc.sample_reference_id(gt), 'available': 2, 'keys': ['A']}
+    monkeypatch.setattr(sc, 'sample_manifest', lambda: {'version': 'test', 'documents': {'fixture': entry}})
+    for engine, spec in ENGINES.items():
+        if 'schema' in spec.prompted_legs:
+            assert LEGS['schema'].task_for(gt.inference_schema, engine=engine).json_schema == gt.inference_schema
+    assert set(gt.inference_schema['properties']) == {'A'}
+    assert gt.inference_schema['required'] == ['A']
+    assert score_schema('{"A":"100"}', gt, 'test').score == 1
+    extra = score_schema('{"A":"100","B":"200"}', gt, 'test')
+    assert extra.fields_total == 1 and extra.score == .5
+    assert extra.sample['selected'] == 1 and extra.sample['available'] == 2
+    assert len(reference_fields(gt)) == 2  # KV still has the whole accepted reference.
+    assert gt == original
+    gt.true_json['A'] = 'changed'
+    with pytest.raises(ValueError, match='sample is stale'):
+        _ = gt.inference_schema
+
+
+def test_stop_guard_detects_truncation_inside_saved_provider_payload():
+    from types import SimpleNamespace
+    from run_benchmark import inference_needs_stop
+    result = SimpleNamespace(error=None, metadata={}, raw_response={
+        'structured_output': {'api_response': {'choices': [{'finish_reason': 'length'}]}}})
+    assert inference_needs_stop(result, stop_on_truncation=True)
+    assert not inference_needs_stop(result)  # Poor/looping responses stay scored; no cap increase.
+    result.raw_response = {'choices': [{'finish_reason': 'stop'}]}
+    assert not inference_needs_stop(result)
+    result.error = 'HTTP 400'
+    assert inference_needs_stop(result)

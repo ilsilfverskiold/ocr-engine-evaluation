@@ -4,6 +4,14 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — identical bounded schema samples
+
+- Freeze one common sample per page for all seven engines (3,316/4,251 fields).
+  Request and scorer use the same keys; full gold and KV coverage are preserved.
+- Add resume-unattempted to avoid paying again for previously attempted calls.
+- Preserve LlamaExtract Multimodal mode with stateless one-job submission and
+  correct nominal extraction cost; display actual sample/schema in the viewer.
+
 ## 2026-10-06 — API retry and usage accounting
 
 - Disable automatic Claude/Gemini SDK retries and persist generation settings.

@@ -1779,3 +1779,37 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   recorded cost. Exact SDK behavior covered by local configuration inspection;
   mocked runner tests verify caps, prompts and billed thinking. No live call,
   Modal deployment, reference change, or push.
+
+
+## 2026-10-06 — one common schema sample; authorized extraction in progress
+
+- User explicitly requested sampling as many fields as fit existing engine
+  limits, identically across engines, then executing without repeated paid
+  testing. Frozen selection: 3,316/4,251 fields, 65 pages; 45 pages retain all
+  eligible fields. Full gold and KV remain unchanged. Hash-order greedy filling
+  uses three pinned tokenizers, visual/context limits, 25% answer headroom.
+- Version documents/schema_sample.json. The loader supplies the sampled schema;
+  schema scoring uses a temporary matching reference view and still penalizes
+  unrequested/duplicate keys. Reference edits invalidate the sample. Exact
+  equality was checked across all 455 planned requests (seven engines/page).
+- Add --stop-on-error and --resume-unattempted. The latter skips every previous
+  attempt, including errors, preventing accidental re-submission. Truncated or
+  looping answers remain scored; no larger cap or repeated inference is used
+  to improve them. Initial guard also stopped on truncation; after identifying
+  GLM whitespace loops rather than request overflow, continuation keeps those
+  results and proceeds only to unattempted pages under unchanged model settings.
+- API run 20261006T205850Z: Sonnet/Gemini/Mistral. Modal run
+  20261006T205911Z: original DeepSeek/Qwen A100-80GB and GLM A10 deployments.
+  Llama run 20261006T211813Z: explicit v1 Multimodal stateless extraction,
+  same model mode as SDK's prior implicit default, one submission per page.
+  Correct its nominal price to $0.025/page and retain job IDs/provider replies.
+- Sonnet reached 50 saved answers before insufficient account credit. Gemini
+  had a 503 and DeepSeek a 500, retained without retries. Unattempted pages for
+  funded engines continue; completion counts and actual costs follow separately.
+  Initial sandbox DNS failures reached no providers and were moved to scratch.
+- Viewer now labels current sampled-schema rows with their actual sampled
+  coverage and supplied schema, rather than unrelated historical engine notes.
+- Validation: 407 offline tests pass, including sample fairness, stale-reference
+  rejection, denominator/extra-field behavior, unchanged full KV reference,
+  vendor submission/polling and corpus self-consistency. No table-gold edits,
+  model version changes, deployments, judge calls or push.

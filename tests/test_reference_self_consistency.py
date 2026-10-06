@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from evaluation.schema_contract import schema_scoring_reference
 
 import pytest
 
@@ -79,7 +80,7 @@ def _self_scores(leg: str):
         elif leg == "key_value":
             result = score_key_value(json.dumps(gt.true_json), gt, "gemini_flash")
         elif leg == "schema":
-            result = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
+            result = score_schema(json.dumps(schema_scoring_reference(gt).true_json), gt, "gemini_flash")
         else:
             result = score_geometry(gt.word_boxes, gt)
         # A reference with nothing scorable in it (a chart whose data is an

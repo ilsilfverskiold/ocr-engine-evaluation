@@ -39,6 +39,7 @@ class SchemaScore:
     unpenalized_accuracy: float | None = None
     extra_fields: list[dict] = field(default_factory=list)
     compliance: dict[str, Any] = field(default_factory=dict)
+    sample: dict[str, Any] = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -47,6 +48,7 @@ class SchemaScore:
     def as_metrics(self) -> dict[str, Any]:
         return {
             "schema_field_accuracy": self.field_accuracy,
+            "schema_sample": self.sample,
             "schema_fields_total": self.fields_total,
             "schema_fields_correct": self.fields_correct,
             "schema_fields_missing": self.fields_missing,
@@ -95,6 +97,8 @@ def score_schema(
     if not gt.has_gt_for("schema"):
         return SchemaScore(applicable=False, reason=gt.missing_gt_reason("schema"))
 
+    from evaluation.schema_contract import schema_scoring_reference
+    gt = schema_scoring_reference(gt)
     document_stem = Path(gt.document_path).stem
 
     # Code scoring (evaluation/kv_schema_code.py): the JSON answer parsed
@@ -124,6 +128,7 @@ def score_schema(
             field_accuracy=res.accuracy if res.total else None,
             unpenalized_accuracy=res.unpenalized_accuracy, extra_fields=res.extras,
             compliance=schema_compliance(output_text or "", gt.inference_schema),
+            sample=gt.metadata.get("schema_sample", {}),
             fields_total=res.total, fields_correct=res.correct, fields_missing=res.missing,
             fields_wrong_value=res.wrong, fields_invented_value=res.invented,
             blank_total=res.blank_total, blank_correct=res.blank_correct, engine_pairs=len(pairs),

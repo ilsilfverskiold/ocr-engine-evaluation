@@ -375,10 +375,43 @@ def test_api_existing_caps_and_billed_thinking(monkeypatch, tmp_path, engine, le
         assert result.metadata['max_output_tokens'] == captured['max_tokens']
     else:
         if leg == 'schema':
-            assert 'max_output_tokens' not in captured['config']
+            assert captured['config']['max_output_tokens'] == 4096
             assert captured['config']['response_mime_type'] == 'application/json'
         else:
             assert 'config' not in captured  # Preserve prior Markdown control settings.
         assert result.metadata['thinking_tokens'] == 50
         assert result.cost_per_page == pytest.approx(100 * .25e-6 + 250 * 1.5e-6)
     assert result.metadata['prompt_used'] == task.prompt
+
+
+def test_llama_schema_submits_once_and_polls_existing_job(monkeypatch, tmp_path):
+    from types import SimpleNamespace as NS
+    from llama_cloud import StatusEnum
+    from runners.llamaparse_runner import LlamaParseRunner
+    import llama_cloud.client
+    calls = []
+    def submit(**kwargs):
+        calls.append(kwargs)
+        return NS(id='saved-job')
+    endpoint = NS(extract_stateless=submit,
+                  get_job=lambda job_id: NS(status=StatusEnum.SUCCESS),
+                  get_run_by_job_id=lambda job_id: NS(data={'Total': '100'}))
+    monkeypatch.setattr(llama_cloud.client, 'LlamaCloud', lambda **kw: NS(llama_extract=endpoint))
+    monkeypatch.setenv('LLAMA_CLOUD_API_KEY', 'fixture')
+    runner = LlamaParseRunner.__new__(LlamaParseRunner)
+    path = tmp_path / 'page.png'
+    path.write_bytes(b'image')
+    schema = {'type': 'object', 'properties': {'Total': {'type': ['string', 'null']}},
+              'required': ['Total'], 'additionalProperties': False}
+    result = runner._run_extract(path, schema)
+    assert len(calls) == 1 and calls[0]['data_schema'] == schema
+    assert calls[0]['config'].extraction_mode.value == 'MULTIMODAL'
+    assert result.metadata['job_id'] == 'saved-job'
+    assert result.raw_text == '{"Total": "100"}'
+    assert result.cost_per_page == .025
+    def failed_poll(job_id):
+        raise RuntimeError('poll unavailable')
+    endpoint.get_job = failed_poll
+    result = runner._run_extract(path, schema)
+    assert len(calls) == 2  # One submission each; failed polling did not resubmit.
+    assert 'saved-job' in result.error and result.raw_response['job']['id'] == 'saved-job'

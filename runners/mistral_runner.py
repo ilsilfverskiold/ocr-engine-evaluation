@@ -20,7 +20,7 @@ class MistralOCRRunner(OCRRunner):
 
     def __init__(self) -> None:
         from mistralai.client import Mistral
-        self._client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
+        self._client = Mistral(api_key=os.environ["MISTRAL_API_KEY"], retry_config=None)
 
     def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
         """No free-text prompt exists on this endpoint. The schema leg is

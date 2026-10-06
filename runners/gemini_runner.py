@@ -46,6 +46,7 @@ class GeminiRunner(OCRRunner):
             config = types.GenerateContentConfig(
                 temperature=0,
                 response_mime_type="application/json",
+                **({"max_output_tokens": 4096} if task.leg == "schema" else {}),
             )
 
         response = self._client.models.generate_content(
@@ -82,7 +83,7 @@ class GeminiRunner(OCRRunner):
                 "output_tokens": output_tokens,
                 "thinking_tokens": thinking_tokens,
                 "leg": task.leg if task else "default",
-                "max_output_tokens": "provider_default",
+                "max_output_tokens": 4096 if task and task.leg == "schema" else "provider_default",
                 "temperature": 0 if task and task.wants_json else "provider_default",
                 "sdk_attempts": 1,
             },

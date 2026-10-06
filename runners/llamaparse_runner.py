@@ -6,6 +6,7 @@ from pathlib import Path
 from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 
 COST_PER_PAGE = 0.00375  # cost_effective tier: 3 credits/page × $1.25/1K credits
+EXTRACT_COST_PER_PAGE = 0.025  # v1 MULTIMODAL: 20 credits × $1.25/1000
 
 
 def _sanitize_schema_for_llama(schema: dict) -> dict:
@@ -65,8 +66,7 @@ class LlamaParseRunner(OCRRunner):
         not a prompt we invented. Other tasks are ignored: markdown and tables
         come from the default conversion.
 
-        UNVALIDATED: exercise on 2 documents before any full run. Needs the
-        llama-cloud-services package (in requirements.txt)."""
+        Schema extraction submits one stateless v1 Multimodal job per page."""
         if task is not None and task.leg == "schema" and task.json_schema:
             return self._run_extract(document_path, task.json_schema)
         t0 = self._timer()
@@ -93,39 +93,55 @@ class LlamaParseRunner(OCRRunner):
         )
 
     def _run_extract(self, document_path: Path, schema: dict) -> OCRResult:
-        import json as _json
+        """One stateless vendor extraction job, using the historical Multimodal mode.
+
+        The installed llama-cloud SDK sends one HTTP request per method (no
+        automatic retries). Polling reads the same job; it never resubmits it.
+        No persistent per-document agents or randomized agent names are needed.
+        """
+        import base64
+        import json
+        import time
+        from llama_cloud import ExtractConfig, ExtractMode, ExtractTarget, FileData, StatusEnum
+        from llama_cloud.client import LlamaCloud
 
         t0 = self._timer()
+        client = LlamaCloud(token=os.environ["LLAMA_CLOUD_API_KEY"])
+        config = ExtractConfig(extraction_mode=ExtractMode.MULTIMODAL,
+                               extraction_target=ExtractTarget.PER_DOC)
+        effective_schema = _sanitize_schema_for_llama(schema)
+        if effective_schema != schema:
+            raise ValueError("Vendor schema conversion would change the shared schema")
+        suffix = document_path.suffix.lower()
+        mime = "application/pdf" if suffix == ".pdf" else "image/jpeg" if suffix in (".jpg", ".jpeg") else "image/png"
+        job = client.llama_extract.extract_stateless(
+            config=config, data_schema=effective_schema,
+            file=FileData(data=base64.b64encode(document_path.read_bytes()).decode(), mime_type=mime))
+        reply = None
+        error = None
         try:
-            from llama_cloud_services import LlamaExtract
-        except ImportError as exc:
-            raise RuntimeError(
-                "LlamaExtract requires the llama-cloud-services package "
-                "(pip install llama-cloud-services)"
-            ) from exc
-
-        extractor = LlamaExtract(api_key=os.environ["LLAMA_CLOUD_API_KEY"])
-        # Stateless per-call extraction: one agent per schema shape, reused by
-        # name so repeated documents with the same doc_type do not recreate it.
-        agent_name = f"ocr-benchmark-{abs(hash(_json.dumps(schema, sort_keys=True))) % 10**8}"
-        try:
-            agent = extractor.get_agent(name=agent_name)
-        except Exception:
-            agent = None
-        if agent is None:
-            agent = extractor.create_agent(name=agent_name,
-                                           data_schema=_sanitize_schema_for_llama(schema))
-        result = agent.extract(str(document_path))
-        data = getattr(result, "data", None) or {}
-        elapsed = self._elapsed(t0)
-
+            while True:
+                status = client.llama_extract.get_job(job.id)
+                if status.status in (StatusEnum.SUCCESS, StatusEnum.PARTIAL_SUCCESS):
+                    reply = client.llama_extract.get_run_by_job_id(job.id)
+                    break
+                if status.status != StatusEnum.PENDING:
+                    raise RuntimeError(f"Job {job.id} ended with {status.status}")
+                if self._elapsed(t0) > 600:
+                    raise TimeoutError(f"Job {job.id} still pending; retrieve it, do not resubmit")
+                time.sleep(2)
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}; existing extraction job {job.id}, do not resubmit"
+        data = getattr(reply, "data", None) or {}
         return OCRResult(
-            engine_name=self.name,
-            document_path=str(document_path),
-            raw_text=_json.dumps(data, ensure_ascii=False),
-            structured_output=provider_payload(result),
-            latency_seconds=elapsed,
-            cost_per_page=COST_PER_PAGE,  # extraction pricing differs; verify on the 2-doc run
-            page_count=1,
-            model_version="llama-extract",
+            engine_name=self.name, document_path=str(document_path),
+            raw_text=json.dumps(data, ensure_ascii=False),
+            structured_output=provider_payload(reply) if reply else {},
+            latency_seconds=self._elapsed(t0), cost_per_page=EXTRACT_COST_PER_PAGE,
+            page_count=1, model_version="llama-extract",
+            metadata={"extraction_mode": "MULTIMODAL", "extraction_target": "PER_DOC",
+                      "interface": "v1 stateless extraction", "job_id": job.id,
+                      "submission_attempts": 1, "cost_is_estimate": True},
+            raw_response={"job": provider_payload(job), "result": provider_payload(reply) if reply else {}},
+            error=error,
         )
