@@ -79,6 +79,33 @@ def test_reference_edit_invalidates_synonyms():
     assert before != reference_id(ref)
 
 
+def test_numbered_printed_label_matches_without_judge_or_value_search():
+    ref = gt({"4b — Taxable amount": "100", "5b — Taxable amount": "200"})
+    assigned, pending, _ = match_keys(ref, [("b Taxable amount 4b", "900")], "key_value")
+    assert set(assigned) == {"4b — Taxable amount"} and not pending
+    result = score_shared(ref, [("b Taxable amount 4b", "900")], "key_value")
+    assert result.wrong == 1  # A matched key does not make its value correct.
+    for key in ['a Taxable amount 4b', 'Taxable amount', 'b Taxable amount 6b', 'b Subtotal taxable amount 4b']:
+        assert not match_keys(ref, [(key, "100")], "key_value")[0]
+    assert not match_keys(ref, [("b Taxable amount 4b", "100")], "schema")[0]
+
+
+def test_kv_waits_for_key_decisions_and_accepts_explicit_no_match(tmp_path, monkeypatch):
+    from evaluation import shared_fields
+    monkeypatch.setattr(shared_fields, "CACHE_ROOT", tmp_path)
+    ref = gt({"Total": "100"})
+    pending = score_key_value('{"Amount due":"100"}', ref, 'x')
+    assert not pending.applicable and pending.score is None
+    assert pending.pending_key_review == ['Amount due']
+    record = {'reference_id': reference_id(ref), 'matches': [{'output_key': 'Amount due', 'reference_key': None}]}
+    (tmp_path / 'x.json').write_text(json.dumps(record))
+    done = score_key_value('{"Amount due":"100"}', ref, 'x')
+    assert done.applicable and done.score == 0 and not done.pending_key_review
+    record['matches'][0]['reference_key'] = 'Total'
+    (tmp_path / 'x.json').write_text(json.dumps(record))
+    assert score_key_value('{"Amount due":"100"}', ref, 'x').score == 1
+
+
 def test_schema_usability_is_separate_from_recovered_values():
     ref = gt({"Total": "100"})
     result = score_schema('```json\n{"Total":"100"}\n```', ref, "x")

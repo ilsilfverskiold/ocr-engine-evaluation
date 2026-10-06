@@ -32,7 +32,7 @@ def reference_fields(gt):
     return [f for f in walk_fields(gt.true_json, None) if f.path and f.path not in excluded]
 
 
-def load_synonyms(gt) -> dict[str, str]:
+def load_synonym_decisions(gt) -> dict[str, str | None]:
     path = CACHE_ROOT / (Path(gt.document_path).stem + ".json")
     if not path.exists():
         return {}
@@ -41,7 +41,27 @@ def load_synonyms(gt) -> dict[str, str]:
         return {}  # A changed reference invalidates previous key decisions.
     allowed = {f.path for f in reference_fields(gt)}
     return {entry["output_key"]: entry["reference_key"] for entry in data.get("matches", [])
-            if entry.get("reference_key") in allowed and isinstance(entry.get("output_key"), str)}
+            if (entry.get("reference_key") in allowed or entry.get("reference_key") is None)
+            and isinstance(entry.get("output_key"), str)}
+
+
+def load_synonyms(gt) -> dict[str, str]:
+    return {key: value for key, value in load_synonym_decisions(gt).items() if value is not None}
+
+
+def _numbered_line_key(key: str) -> tuple[str, str] | None:
+    """Equivalent printed line identifiers, e.g. 'b Taxable amount 4b'.
+
+    Requires the same complete label and explicit number. Never uses values or
+    strips a numeric difference, owner or subtotal qualification.
+    """
+    start = re.fullmatch(r"(\d{1,2}[a-z]?)\s*[—–-]\s*(.+)", key.strip(), re.I)
+    if start:
+        return start[1].casefold(), normalize_label(start[2])
+    end = re.fullmatch(r"(?:(?P<letter>[a-z])\s+)?(?P<label>.+?)\s+(?P<line>\d{1,2}[a-z]?)", key.strip(), re.I)
+    if end and (not end['letter'] or end['line'].casefold().endswith(end['letter'].casefold())):
+        return end['line'].casefold(), normalize_label(end['label'])
+    return None
 
 
 def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
@@ -54,6 +74,10 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
             for alias in gold.get("kv_aliases", {}).get(f.path, {}).get("printed_labels", []):
                 candidates[normalize_label(alias)].add(f.path)
     by_path = {f.path: f for f in fields}
+    numbered = defaultdict(set)
+    for f in fields:
+        if re.match(r"^\d{1,2}[a-z]?\s*[—–-]", f.path, re.I):
+            numbered[_numbered_line_key(f.path)].add(f.path)
     proposals, unresolved = [], []
     for i, (key, value) in enumerate(pairs):
         key = str(key)
@@ -66,6 +90,9 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
             known = candidates.get(normalize_label(key), set())
             if len(known) == 1:
                 proposals.append((1, i, next(iter(known)), "unambiguous normalized key/printed alias"))
+            elif len(numbered.get(_numbered_line_key(key), set())) == 1:
+                proposals.append((1, i, next(iter(numbered[_numbered_line_key(key)])),
+                                  "same explicit line number and complete normalized label"))
             elif (synonyms or {}).get(key) in by_path:
                 proposals.append((2, i, synonyms[key], "cached judge key synonym"))
             else:

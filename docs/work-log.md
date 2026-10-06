@@ -1594,3 +1594,18 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Version geometry-v6 and document the region rule and residual annotation
   omissions. All 66 geometry/loader tests pass after correcting the fixture's
   list-versus-tuple comparison. No inference or paid call, no reference edits.
+
+## 2026-10-06 — distinguish pending KV decisions from engine failures
+
+- Unreviewed keys now make the KV result explicitly pending (N/A), with its
+  provisional arithmetic retained only as a diagnostic. A cached explicit
+  no-match is a completed decision; changed references invalidate old decisions.
+  This prevents an unfinished synonym workflow from becoming an engine ranking.
+- Resolve the control's tax-line miss deterministically when the entire label
+  and explicit line identifier match despite printed identifier placement:
+  `b Taxable amount 4b` matches `4b — Taxable amount`. Different line numbers,
+  extra qualifiers and contradictory leading letters do not match; values are
+  never consulted and schema still requires literal supplied keys.
+- 109 shared-field, synonym and structured-leg tests pass. No model call,
+  active cache, reference mutation or score publication. This closes the one
+  known control miss without another paid experiment.

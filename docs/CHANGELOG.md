@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — keep unfinished KV mapping out of published scores
+
+- Mark results with unreviewed keys pending instead of scoring missing synonyms
+  as engine failures. Retain provisional details and explicit cached no-matches.
+- Match equivalent explicit printed tax-line identifiers deterministically,
+  closing the control miss without another call. 109 relevant tests pass.
+
 ## 2026-10-06 — geometry diagnostics respect annotated scope
 
 - Add region and unreadable-area exclusions for extra-box precision/F1 and

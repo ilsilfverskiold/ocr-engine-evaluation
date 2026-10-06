@@ -42,6 +42,8 @@ class KeyValueScore:
     scorer: str | None = None
     unresolved_keys: list[dict] = field(default_factory=list)
     synonym_reference_id: str | None = None
+    pending_key_review: list[str] = field(default_factory=list)
+    provisional_accuracy: float | None = None
 
     @property
     def score(self) -> float | None:
@@ -65,6 +67,8 @@ class KeyValueScore:
             "kv_judge_cost_usd": self.judge_cost_usd,
             "kv_unresolved_keys": len(self.unresolved_keys),
             "kv_synonym_reference_id": self.synonym_reference_id,
+            "kv_pending_key_review": len(self.pending_key_review),
+            "kv_provisional_accuracy": self.provisional_accuracy,
         }
 
     def as_detail(self) -> dict[str, Any]:
@@ -72,6 +76,7 @@ class KeyValueScore:
             "cleanup": self.cleanup_log,
             "unresolved_keys": self.unresolved_keys,
             "synonym_reference_id": self.synonym_reference_id,
+            "pending_key_review": self.pending_key_review,
             "verdicts": [
                 {
                     "path": v.path,
@@ -156,11 +161,16 @@ def score_key_value(
         scorer = SCORER_VERSION
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
     if reviewed is not None and reviewed.get("shared_field_selection"):
-        from evaluation.shared_fields import VERSION, reference_id, score_shared
+        from evaluation.shared_fields import VERSION, reference_id, score_shared, load_synonym_decisions
         res = score_shared(gt, pairs, "key_value")
+        decisions = load_synonym_decisions(gt)
+        pending = sorted({r['key'] for r in res.unresolved if r['key'] not in decisions})
         return KeyValueScore(
-            applicable=res.total > 0, reason=None if res.total else "all shared reference fields excluded",
-            field_accuracy=res.accuracy if res.total else None,
+            applicable=res.total > 0 and not pending,
+            reason=("key-only synonym review pending; provisional calculation is not a benchmark score" if pending
+                    else None if res.total else "all shared reference fields excluded"),
+            field_accuracy=res.accuracy if res.total and not pending else None,
+            provisional_accuracy=res.accuracy if pending else None, pending_key_review=pending,
             pairs_total=res.total, pairs_correct=res.correct, pairs_missing=res.missing,
             pairs_wrong_value=res.wrong, pairs_invented_value=res.invented,
             blank_total=res.blank_total, blank_correct=res.blank_correct,
