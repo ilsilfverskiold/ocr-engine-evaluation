@@ -1639,3 +1639,23 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   self-contained viewer at `/private/tmp/ocr-eval-rebuild-20261006/ocr-results.html`.
   No experimental artifacts committed and no final report replaced. The small
   excluded-field fix postdates this checkpoint; final rescore must include it.
+
+## 2026-10-06 — prepare compact KV requests; hold spending and review reuse
+
+- Production preparation can reuse the exact compact control recipe, bounded
+  to 16 keys per request. Controls and corpus requests share one builder;
+  missing/invented IDs and duplicate properties remain rejected. No values
+  enter requests. The CLI can load credentials from the existing parent .env
+  without exposing them. All 369 offline tests pass.
+- Prepared a full replacement: 356 calls, 65 pages, 5,199 unresolved keys,
+  reserve $4.7173, proposed allowance $5. The user questioned repeating KV and
+  the price. **Not approved; not executed.** Correctly explain that the first
+  117 calls ran and the six later calls were controls, not corpus completion.
+- The initial failure/flag union covers 1,075 current keys, leaving 4,124
+  potential reuse decisions. The original risk screen misses known photo/chart
+  errors, so these are not certified reuse counts. A stricter exact-label
+  screen finds 607 positive candidates. All review lists remain in scratch;
+  no cache activated, original replies preserved and no further money spent.
+- Keep the full replacement on hold and review reuse before requesting a
+  smaller completion batch. Paid schema, prompt controls and catalogue work
+  remain separate unfinished parts of the user goal. No new engine removed.

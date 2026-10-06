@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — bounded compact key-only preparation
+
+- Share the tested compact JSON request builder between controls and corpus
+  preparation. Execution journals and held-cache policy are unchanged.
+- Full replacement is prepared but on hold; review existing paid decisions for
+  reuse before proposing additional spending. No new calls or active synonyms.
+
 ## 2026-10-06 — portable rescoring and current evidence viewer
 
 - Preserve original call provenance across repeated rescoring and relocate

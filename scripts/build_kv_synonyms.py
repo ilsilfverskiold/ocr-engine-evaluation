@@ -52,8 +52,9 @@ def prepare(sources: list[str]) -> dict:
             keys[stem].update(str(k) for k, _ in pairs)
             calls.append({"source": timestamp, "engine": rec["engine_name"], "page": stem,
                           "pass": name, "call_sha256": ks.digest(call)})
-    pages = [ks.prepare_page(corpus[stem], sorted(values)) for stem, values in sorted(keys.items())]
-    plan = {"version": ks.VERSION, "model": ks.MODEL, "pricing": ks.PRICES,
+    pages = [ks.prepare_page(corpus[stem], sorted(values), chunk_size=16, compact=True)
+             for stem, values in sorted(keys.items())]
+    plan = {"version": ks.COMPACT_VERSION, "model": ks.MODEL, "pricing": ks.PRICES,
             "pages": pages, "source_calls": calls,
             "request_count": sum(len(p["requests"]) for p in pages),
             "planning_reserve_usd": sum(r["planning_reserve_usd"] for p in pages for r in p["requests"])}
@@ -66,7 +67,7 @@ def execute(plan: dict, budget: float) -> None:
         raise ValueError("Budget must be a positive finite USD amount")
     if plan["id"] != ks.digest({k: v for k, v in plan.items() if k != "id"}):
         raise ValueError("Plan changed; prepare and review it again")
-    if plan["version"] not in (ks.VERSION, ks.CONTROL_VERSION) or plan["model"] != ks.MODEL:
+    if plan["version"] not in (ks.VERSION, ks.CONTROL_VERSION, ks.COMPACT_VERSION) or plan["model"] != ks.MODEL:
         raise ValueError("Plan/model version differs from this implementation")
     if budget < plan["planning_reserve_usd"]:
         raise ValueError(f"Budget below plan reserve ${plan['planning_reserve_usd']:.4f}")
@@ -78,6 +79,7 @@ def execute(plan: dict, budget: float) -> None:
     from google import genai
     from google.genai import types
     load_dotenv(ROOT / ".env")
+    load_dotenv(ROOT.parent / ".env")
     client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"],
                          http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=1)))
     run_dir = CACHE_ROOT / "calls" / plan["id"]

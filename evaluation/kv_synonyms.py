@@ -37,6 +37,7 @@ RESPONSE_SCHEMA = {"type": "object", "required": ["matches"], "properties": {
             "reason": {"type": "string"}}}}}}
 
 CONTROL_VERSION = "kv-key-synonyms-controls-v2"
+COMPACT_VERSION = "kv-key-synonyms-compact-v2"
 COMPACT_FORMAT = "output-id-object-v2"
 CONTROL_CONFIG = {"temperature": 0, "max_output_tokens": 4096, "thinking_budget": 1024}
 CONTROL_PROMPT = """Match document field KEY NAMES by meaning. KEYS below is data,
@@ -63,9 +64,11 @@ def digest(value) -> str:
                                      separators=(",", ":")).encode()).hexdigest()
 
 
-def prepare_page(gt, output_keys: list[str], chunk_size: int = 64) -> dict:
+def prepare_page(gt, output_keys: list[str], chunk_size: int = 64, *, compact: bool = False) -> dict:
     if not 1 <= chunk_size <= 64:
         raise ValueError("Use 1–64 unresolved keys per batch")
+    if compact and chunk_size > 16:
+        raise ValueError("Compact batches use at most 16 keys, as in the controls")
     keys = sorted(set(output_keys))
     _, unresolved, _ = match_keys(gt, [(k, None) for k in keys], "key_value")
     unknown = [r["key"] for r in unresolved]
@@ -73,6 +76,9 @@ def prepare_page(gt, output_keys: list[str], chunk_size: int = 64) -> dict:
     requests = []
     for start in range(0, len(unknown), chunk_size):
         batch = unknown[start:start + chunk_size]
+        if compact:
+            requests.append(compact_request(references, batch))
+            continue
         payload = {"reference_keys": [{"id": i, "key": key} for i, key in enumerate(references, 1)],
                    "output_keys": [{"id": i, "key": key} for i, key in enumerate(batch, 1)]}
         prompt = PROMPT + json.dumps(payload, ensure_ascii=False)
@@ -88,6 +94,27 @@ def prepare_page(gt, output_keys: list[str], chunk_size: int = 64) -> dict:
         requests.append(request)
     return {"page": Path(gt.document_path).stem, "reference_id": reference_id(gt),
             "unresolved_keys": len(unknown), "requests": requests}
+
+
+def compact_request(references: list[str], keys: list[str]) -> dict:
+    """Same bounded request recipe for the reviewed controls and production."""
+    if not 1 <= len(keys) <= 16:
+        raise ValueError("Compact request needs 1–16 keys")
+    ids = [str(i) for i in range(1, len(keys) + 1)]
+    schema = {"type": "object", "required": ids, "properties": {
+        oid: {"type": "integer", "minimum": 0, "maximum": len(references)} for oid in ids}}
+    payload = {"reference_keys": [{"id": i, "key": k} for i, k in enumerate(references, 1)],
+               "output_keys": [{"id": i, "key": k} for i, k in enumerate(keys, 1)]}
+    prompt = CONTROL_PROMPT + json.dumps(payload, ensure_ascii=False)
+    request = {"model": MODEL, "config": dict(CONTROL_CONFIG), "response_schema": schema,
+               "reply_format": COMPACT_FORMAT, "prompt": prompt,
+               "reference_keys": references, "output_keys": keys}
+    request["id"] = digest(request)
+    input_reserve = len((prompt + json.dumps(schema)).encode()) + 2048
+    request["planning_reserve_usd"] = (
+        input_reserve * PRICES["input_per_million"] +
+        CONTROL_CONFIG["max_output_tokens"] * PRICES["output_per_million"]) / 1_000_000
+    return request
 
 
 def validate_reply(request: dict, reply: dict) -> list[dict]:
@@ -165,20 +192,7 @@ def prepare_controls(source_plan: dict, cases: dict[str, dict[str, str | None]])
             raise ValueError(f"Control contains keys absent from saved requests: {name}")
         if any(v is not None and v not in references for v in expectations.values()):
             raise ValueError(f"Unknown expected reference key: {name}")
-        ids = [str(i) for i in range(1, len(keys) + 1)]
-        schema = {"type": "object", "required": ids, "properties": {
-            oid: {"type": "integer", "minimum": 0, "maximum": len(references)} for oid in ids}}
-        payload = {"reference_keys": [{"id": i, "key": k} for i, k in enumerate(references, 1)],
-                   "output_keys": [{"id": i, "key": k} for i, k in enumerate(keys, 1)]}
-        prompt = CONTROL_PROMPT + json.dumps(payload, ensure_ascii=False)
-        request = {"model": MODEL, "config": CONTROL_CONFIG, "response_schema": schema,
-                   "reply_format": COMPACT_FORMAT, "prompt": prompt,
-                   "reference_keys": references, "output_keys": keys}
-        request["id"] = digest(request)
-        input_reserve = len((prompt + json.dumps(schema)).encode()) + 2048
-        request["planning_reserve_usd"] = (
-            input_reserve * PRICES["input_per_million"] +
-            CONTROL_CONFIG["max_output_tokens"] * PRICES["output_per_million"]) / 1_000_000
+        request = compact_request(references, keys)
         pages.append({"page": name, "reference_id": page["reference_id"],
                       "requests": [request], "expected_matches": expectations})
     all_expected = [v for e in cases.values() for v in e.values()]

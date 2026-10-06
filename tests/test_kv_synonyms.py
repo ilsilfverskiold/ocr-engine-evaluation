@@ -23,6 +23,24 @@ def test_plan_is_key_only_deduplicated_and_deterministic():
     assert request["output_keys"] == ["Amount due", "Bill date"]
 
 
+def test_production_compact_batches_reuse_control_recipe_without_values():
+    from evaluation import kv_synonyms as ks
+    gt = reference()
+    gt.metadata['structured_gold_reference']['excluded_fields'] = ['Date']
+    page = prepare_page(gt, ['Total', 'Date'] + [f'Unknown {n}' for n in range(33)],
+                        chunk_size=16, compact=True)
+    assert [len(r['output_keys']) for r in page['requests']] == [16, 16, 1]
+    assert page['unresolved_keys'] == 33
+    for request in page['requests']:
+        assert request == ks.compact_request(request['reference_keys'], request['output_keys'])
+        assert 'SECRET' not in request['prompt']
+        assert request['config'] == ks.CONTROL_CONFIG
+        reply = {str(i): 0 for i in range(1, len(request['output_keys']) + 1)}
+        assert all(m['reference_key'] is None for m in validate_reply(request, reply))
+    with pytest.raises(ValueError, match='at most 16'):
+        prepare_page(gt, ['A'], compact=True)
+
+
 def test_freeze_null_decisions_and_reference_invalidation(tmp_path, monkeypatch):
     gt = reference()
     page = prepare_page(gt, ["Amount due", "Unknown"])
