@@ -10,9 +10,8 @@ list item, table row, paragraph — each carrying its normalised content, and we
 ask which blocks are present and whether they arrive in the same order.
 
 Normalised away, on both sides: heading depth, emphasis markers, list bullet
-style, table alignment rows, and trailing punctuation. `## Totals` and
-`**Totals**` are the same heading — a bold-only line is a heading, because that
-is how half the engines render one.
+style, table alignment rows, and trailing punctuation. Only actual heading syntax creates a heading. Bold emphasis stays a paragraph;
+embedded HTML headings are accepted. Plain TSV is not Markdown table syntax.
 
 Supporting score: `0.8 x element F1 + 0.2 x order`, where element F1 matches blocks by
 type and near-identical content (fuzzy, so an OCR typo inside a paragraph does
@@ -90,6 +89,9 @@ class MarkdownScore:
     code_counts: dict[str, int] = field(default_factory=dict)
     code_verdicts: list[dict] = field(default_factory=list)
     scorer: str | None = None
+    cer: float | None = None
+    wer: float | None = None
+    text_reference_source: str | None = None
 
     @property
     def score(self) -> float | None:
@@ -121,6 +123,9 @@ class MarkdownScore:
         d["reference_blocks"] = self.reference_blocks
         d["output_blocks"] = self.output_blocks
         d["matched_blocks"] = self.matched_blocks
+        d["markdown_cer"] = self.cer
+        d["markdown_wer"] = self.wer
+        d["markdown_text_reference_source"] = self.text_reference_source
         d.update({f"recall_{k}": v for k, v in self.per_type_recall.items()})
         if self.judge_cost_usd:
             d["judge_cost_usd"] = self.judge_cost_usd
@@ -232,6 +237,9 @@ def strip_wrapping_fence(text: str) -> str:
                 del body[k]
                 break
         return "\n".join(body)
+    if lines[0].strip() != "```":
+        # A Python/JSON/etc. example is document content, not Markdown packaging.
+        return text
     if not lines[-1].strip().startswith("```"):
         return text
     inner = lines[1:-1]
@@ -243,88 +251,10 @@ def strip_wrapping_fence(text: str) -> str:
 
 
 def parse_blocks(markdown: str) -> list[Block]:
-    """Markdown -> typed block sequence.
-
-    Deliberately hand-rolled rather than run through a renderer: engines emit
-    markdown that is only approximately well-formed, and a strict parser drops
-    exactly the malformed blocks whose presence the leg is trying to measure.
-    """
-    markdown = _tsv_tables_to_pipe(
-        _html_tables_to_pipe(strip_wrapping_fence(markdown or ""))
-    )
-    blocks: list[Block] = []
-    paragraph: list[str] = []
-    in_fence = False
-    lines = markdown.splitlines()
-
-    def flush_paragraph() -> None:
-        if not paragraph:
-            return
-        text = normalize_block_text(" ".join(paragraph))
-        paragraph.clear()
-        if text:
-            blocks.append(Block("paragraph", text, len(blocks)))
-
-    for i, raw in enumerate(lines):
-        if _FENCE_RE.match(raw):
-            in_fence = not in_fence
-            flush_paragraph()
-            continue
-        if in_fence:
-            continue
-
-        line = raw.rstrip()
-        if not line.strip():
-            flush_paragraph()
-            continue
-
-        heading = _HEADING_RE.match(line)
-        if heading:
-            flush_paragraph()
-            text = normalize_block_text(heading.group(1))
-            if text:
-                blocks.append(Block("heading", text, len(blocks)))
-            continue
-
-        # Setext heading: the underline belongs to the line above.
-        if _SETEXT_RE.match(line) and paragraph:
-            text = normalize_block_text(paragraph.pop())
-            flush_paragraph()
-            if text:
-                blocks.append(Block("heading", text, len(blocks)))
-            continue
-
-        bold = _BOLD_ONLY_RE.match(line)
-        if bold and ":" not in line.rstrip().rstrip(":"):
-            # `**Totals**` is the same heading as `## Totals`.
-            flush_paragraph()
-            text = normalize_block_text(bold.group(1))
-            if text:
-                blocks.append(Block("heading", text, len(blocks)))
-            continue
-
-        if _TABLE_ROW_RE.match(line):
-            flush_paragraph()
-            if _ALIGNMENT_ROW_RE.match(line):
-                continue  # alignment rows carry no content
-            cells = [normalize_block_text(c) for c in line.strip().strip("|").split("|")]
-            text = " | ".join(c for c in cells)
-            if text.replace("|", "").strip():
-                blocks.append(Block("table_row", text, len(blocks)))
-            continue
-
-        item = _LIST_RE.match(line)
-        if item:
-            flush_paragraph()
-            text = normalize_block_text(item.group(1))
-            if text:
-                blocks.append(Block("list_item", text, len(blocks)))
-            continue
-
-        paragraph.append(line.strip())
-
-    flush_paragraph()
-    return blocks
+    """Parse semantic Markdown/HTML; emphasis is not promoted to headings."""
+    from evaluation.markdown_structure import blocks
+    return [Block(kind, normalize_block_text(text), i)
+            for i, (kind, text, _) in enumerate(blocks(markdown or ""))]
 
 
 def _similarity(a: str, b: str) -> float:
@@ -453,6 +383,8 @@ def score_markdown(
     headline = (ELEMENT_WEIGHT * f1 + ORDER_WEIGHT * order) if matched >= 2 else f1
 
     det_score = round(headline, 4)
+    from evaluation.metrics import compute_cer, compute_wer
+    text_reference = gt.plain_text if gt.has_gt_for("text") else gt.markdown
     det_kwargs = dict(
         markdown_score=det_score,
         element_f1=round(f1, 4),
@@ -465,6 +397,9 @@ def score_markdown(
         matched_blocks=matched,
         reference_has_structure=any(b.kind in STRUCTURAL_TYPES for b in reference),
         missed=missed,
+        cer=round(compute_cer(output_markdown, text_reference), 4) if text_reference else None,
+        wer=round(compute_wer(output_markdown, text_reference), 4) if text_reference else None,
+        text_reference_source="plain_text" if gt.has_gt_for("text") else "markdown" if gt.markdown else None,
     )
 
     # --- headline: code verdicts against the image checklist ---------------
@@ -474,8 +409,9 @@ def score_markdown(
     # sent to a model from here.
     from pathlib import Path
     from evaluation.code_judges import (
-        SCORER_VERSION, load_markdown_checklist, score_markdown_code,
+        load_markdown_checklist, score_markdown_code,
     )
+    from evaluation.markdown_structure import VERSION
 
     items = load_markdown_checklist(Path(gt.document_path).stem)
     if items is None:
@@ -494,6 +430,6 @@ def score_markdown(
                      "engine_blocks": res.blocks},
         code_verdicts=[{"n": v.index, "type": v.type, "content": v.content,
                         "verdict": v.verdict, "how": v.how} for v in res.verdicts],
-        scorer=SCORER_VERSION,
+        scorer=VERSION,
         **det_kwargs,
     )

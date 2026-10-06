@@ -124,7 +124,7 @@ LEGS: dict[str, LegSpec] = {
             "Convert this document to Markdown. Preserve reading order, "
             "headings, lists and tables. Output only the Markdown."
         ),
-        scored_on="element accuracy + supporting block F1",
+        scored_on="structural element accuracy; CER/WER and block F1 separately",
         method="code verdicts against cached image checklist",
         pass_name="markdown",
     ),
@@ -133,11 +133,15 @@ LEGS: dict[str, LegSpec] = {
         title="Table extraction",
         question="Did the engine recover the table's grid and cells?",
         prompt=(
-            "Extract every table as a Markdown table. Preserve rows, columns "
-            "and merged cells. Output only the tables."
+            "Extract every printed table from this image. Output only the tables, "
+            "preserving cell text, row/column associations, headers, empty cells and "
+            "merged cells. Use valid Markdown for simple tables and HTML with "
+            "rowspan/colspan when needed. Do not invent headers or values, split "
+            "multiline cell text into unrelated rows, or turn unrelated prose/form "
+            "fields into table rows."
         ),
-        scored_on="nonempty cell accuracy + supporting TEDS",
-        method="code verdicts against cached image checklist",
+        scored_on="cell F1, precision/recall and span-aware structure similarity",
+        method="one-to-one cell matching against reviewed table references",
         pass_name="tables",
     ),
     KEY_VALUE: LegSpec(
@@ -149,8 +153,8 @@ LEGS: dict[str, LegSpec] = {
             "flat JSON object of label -> value. Use the label exactly as "
             "printed. Use null where a printed field is blank. Output only JSON."
         ),
-        scored_on="printed-field accuracy",
-        method="code verdicts using cached printed labels and ground-truth values",
+        scored_on="shared-reference field accuracy",
+        method="key matching with cached synonyms, then code value checks",
         pass_name="key_value",
     ),
     SCHEMA: LegSpec(
@@ -162,7 +166,7 @@ LEGS: dict[str, LegSpec] = {
             "to this schema. Use null for fields not present on the page. "
             "Output only JSON.\n\nSchema:\n{schema}"
         ),
-        scored_on="schema field accuracy",
+        scored_on="field accuracy with extra-key penalty; JSON/schema validity separately",
         method="code verdicts against schema ground truth",
         needs_schema=True,
         pass_name="schema",
@@ -176,7 +180,7 @@ LEGS: dict[str, LegSpec] = {
             '[{"text": ..., "bbox": [x0, y0, x1, y1]}], normalised to 0-1. '
             "Output only JSON."
         ),
-        scored_on="words located — text-matched, box centres agree",
+        scored_on="located-unit recall; precision/F1 and box-text CER/WER separately",
         pass_name="geometry",
     ),
 }

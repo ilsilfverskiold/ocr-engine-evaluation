@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v4 (2026-10-02; explicit frames and recoverable box syntax)"
+SCORER_VERSION = "geometry-v5 (2026-10-06; extra predictions and box-text CER/WER)"
 
 
 @dataclass
@@ -62,6 +62,15 @@ class GeometryScore:
     parsed_boxes: list[dict[str, Any]] = field(default_factory=list)
     scored_boxes: list[dict[str, Any]] = field(default_factory=list)
     reference_repairs: dict[str, Any] = field(default_factory=dict)
+    precision: float | None = None
+    f1: float | None = None
+    cer: float | None = None
+    wer: float | None = None
+    invalid_boxes: int = 0
+    unmatched_predictions: list[dict[str, Any]] = field(default_factory=list)
+    reference_text: str = ""
+    predicted_text: str = ""
+    scoring_unit: str = "word"
 
     @property
     def score(self) -> float | None:
@@ -85,10 +94,20 @@ class GeometryScore:
             "geometry_rescaled_from_thousand": self.rescaled_from_thousand,
             "geometry_axes_swapped": self.axes_swapped,
             "geometry_reference_repairs": self.reference_repairs,
+            "geometry_precision": self.precision,
+            "geometry_recall": self.geometry_score,
+            "geometry_f1": self.f1,
+            "geometry_cer": self.cer,
+            "geometry_wer": self.wer,
+            "geometry_invalid_boxes": self.invalid_boxes,
+            "geometry_scoring_unit": self.scoring_unit,
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {"worst_matches": self.worst_matches[:25], "matches": self.matches,
+                "unmatched_predictions": self.unmatched_predictions,
+                "reference_text": self.reference_text, "predicted_text": self.predicted_text,
+                "text_order": "top-to-bottom visual lines, left-to-right within each line; invalid-box text appended in returned order",
                 "parsed_boxes": self.parsed_boxes, "scored_boxes": self.scored_boxes,
                 "parsed_box_coordinates": "xyxy after box-key decoding, before scale/axis correction; original keys remain in source call",
                 "scored_box_coordinates": "normalized xyxy after recorded scale/axis correction, before line merging; includes unmatched predictions",
@@ -98,6 +117,16 @@ class GeometryScore:
 def normalize_word(text: str) -> str:
     text = unicodedata.normalize("NFKC", str(text or ""))
     return re.sub(r"[^\w]", "", text).casefold()
+
+
+def _text_errors(prediction: str, reference: str) -> tuple[float, float]:
+    """Box text is already plain text: never render it as Markdown or HTML."""
+    import editdistance
+    norm = lambda value: " ".join(unicodedata.normalize("NFKC", value).casefold().split())
+    pred, ref = norm(prediction), norm(reference)
+    if not ref:
+        return (0.0, 0.0) if not pred else (1.0, 1.0)
+    return editdistance.eval(pred, ref) / len(ref), editdistance.eval(pred.split(), ref.split()) / len(ref.split())
 
 
 def iou(a: BBox, b: BBox) -> float:
@@ -173,8 +202,8 @@ def _union_box(boxes: list) -> BBox:
             max(max(b[1], b[3]) for b in boxes))
 
 
-def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
-    """Accept the leg's JSON shape from a string, a list, or a wrapper object."""
+def _box_items(value: Any) -> list | None:
+    """Decode without discarding malformed items or their text."""
     data = value
     if isinstance(value, str):
         text = value.strip()
@@ -227,12 +256,21 @@ def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
                 break
     if not isinstance(data, list):
         return None
+    return data
+
+
+def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
+    """Accept the leg's JSON shape from a string, a list, or a wrapper object."""
+    data = _box_items(value)
+    if data is None:
+        return None
 
     words = []
     for item in data:
         if not isinstance(item, dict):
             continue
-        text = item.get("text") or item.get("word") or item.get("text_content")
+        text = next((item[k] for k in ("text", "word", "text_content")
+                     if item.get(k) is not None), None)
         if text is None:
             continue
         coords = _extract_box(item)
@@ -264,7 +302,9 @@ def _extract_box(item: dict) -> BBox | None:
         else:
             return None
     try:
-        return tuple(float(c) for c in box)
+        import math
+        coords = tuple(float(c) for c in box)
+        return coords if all(math.isfinite(c) for c in coords) else None
     except (TypeError, ValueError):
         return None
 
@@ -307,7 +347,19 @@ def score_geometry(
         return GeometryScore(applicable=False, reason="word-box reference is empty")
 
     pred_words = parse_word_boxes(predicted)
+    source_items = _box_items(predicted) or []
+    invalid = len(source_items) - len(pred_words or [])
+    invalid_text = []
+    for item in source_items:
+        if isinstance(item, dict) and _extract_box(item) is None:
+            text = next((item[k] for k in ("text", "word", "text_content") if item.get(k) is not None), "")
+            invalid_text.append(str(text))
+    def text_in_order(boxes):
+        return " ".join(line["text"] for line in merge_words_into_lines(boxes))
+    reference_text = text_in_order(ref_words)
     if pred_words is None:
+        predicted_text = " ".join(invalid_text)
+        cer, wer = _text_errors(predicted_text, reference_text)
         return GeometryScore(
             applicable=True,
             reason="engine output was not parseable word boxes",
@@ -318,6 +370,10 @@ def score_geometry(
             predicted_words=0,
             matched_words=0,
             parse_ok=False,
+            precision=0.0 if invalid else None, f1=0.0,
+            cer=cer, wer=wer, invalid_boxes=invalid,
+            reference_text=reference_text, predicted_text=predicted_text,
+            scoring_unit="line_segment" if granularity == "line" else "word",
             reference_repairs=gt.metadata.get("geometry_reference_repairs", {}) if gt else {},
         )
     parsed_boxes = pred_words
@@ -353,9 +409,21 @@ def score_geometry(
     if granularity == "line":
         pred_units = merge_words_into_lines(pred_words)
         pairs = _match_lines(ref_words, pred_units)
+        used = {id(word) for _, match in pairs if match for word in match["words"]}
+        unmatched = [w for w in pred_words if id(w) not in used]
+        # A reference line may be a column fragment. Count assigned disjoint
+        # segments plus the remaining visual-line segments, not full lines
+        # against fragment references (which could yield precision > 1).
+        prediction_count = sum(match is not None for _, match in pairs) + len(merge_words_into_lines(unmatched))
     else:
         pred_units = pred_words
         pairs = _match_words(ref_words, pred_units)
+        used = {id(match) for _, match in pairs if match}
+        unmatched = [w for w in pred_words if id(w) not in used]
+        prediction_count = len(pred_units)
+    prediction_count += invalid
+    predicted_text = " ".join([text_in_order(pred_words), *invalid_text]).strip()
+    cer, wer = _text_errors(predicted_text, reference_text)
 
     total_iou = 0.0
     matched = 0
@@ -381,10 +449,16 @@ def score_geometry(
     return GeometryScore(
         applicable=True,
         geometry_score=round(located / len(ref_words), 4),
+        precision=round(located / prediction_count, 4) if prediction_count else None,
+        f1=round(2 * located / (prediction_count + len(ref_words)), 4),
+        cer=round(cer, 4), wer=round(wer, 4),
+        invalid_boxes=invalid, unmatched_predictions=unmatched,
+        reference_text=reference_text, predicted_text=predicted_text,
+        scoring_unit="line_segment" if granularity == "line" else "word",
         mean_iou_matched=round(total_iou / matched, 4) if matched else None,
         match_rate=round(matched / len(ref_words), 4),
         reference_words=len(ref_words),
-        predicted_words=len(pred_units),
+        predicted_words=prediction_count,
         matched_words=matched,
         located_words=located,
         matches=matches,
@@ -571,5 +645,5 @@ def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:
         # Preserve the returned words: a fuzzy line match must not replace
         # the engine's spelling with the reference in the evidence record.
         out.append((ref, {"text": " ".join(str(w["text"]) for w in best_words),
-                          "bbox": best_box}))
+                          "bbox": best_box, "words": best_words}))
     return out

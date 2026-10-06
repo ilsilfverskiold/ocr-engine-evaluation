@@ -645,7 +645,8 @@ def align_rows(items, pairs: list[list[str]]) -> dict[str, str | None]:
 
 
 # ---------------------------------------------------------------- verdicts
-def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) -> KvSchemaCodeResult:
+def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None,
+                 *, array_rows: bool = True) -> KvSchemaCodeResult:
     """`items` are SchemaChecklistItem-like (path, value, is_blank)."""
     pairs, clog = cleanup(pairs)
     # a stage-1 file whose field paths do not match this reference (another
@@ -698,7 +699,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
                        for k, _ in pairs}
     # which reference fields each engine key belongs to (by name/label)
     owners = [{j for j, ns in enumerate(all_names) if key_matches(k, ns)} for k, _ in pairs]
-    aligned = align_rows(items, pairs)
+    aligned = align_rows(items, pairs) if array_rows else {}
     claimed = {erk for erk in aligned.values() if erk is not None}   # engine rows that belong to a reference row
     eng_row_pairs: dict[str, list[int]] = {}
     for p, (k, _) in enumerate(pairs):
@@ -720,7 +721,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None) 
             and any(" and " in norm_label(lab) for lab in labels))
 
         # -- arrays: judge the cell in the aligned engine row only
-        rk, fld = _row_split(it.path)
+        rk, fld = _row_split(it.path) if array_rows else (None, None)
         erk = aligned.get(rk) if rk else None
         if erk is not None:
             row_c = [(pairs[p][0], pairs[p][1]) for p in eng_row_pairs.get(erk, [])

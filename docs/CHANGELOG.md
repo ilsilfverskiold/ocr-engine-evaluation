@@ -4,6 +4,23 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — reviewed-reference scoring implementation
+
+- Gold tables now use cell F1 with precision/recall, blanks, extras and disjoint
+  matching. Shipping retains both gold/original comparisons and selects the
+  higher whole-page F1. Spans remain in the supporting structure diagnostic.
+- Markdown requires actual structural syntax and disjoint content matches;
+  separate CER/WER measure its returned text. Geometry adds precision/F1,
+  invalid/extra diagnostics and CER/WER from returned box text.
+- Shared KV/schema gold uses key-first matching and identical field exclusions.
+  Schema extras reduce its headline; JSON/contract validity stays separate.
+  Old or missing saved request contracts require rerun. Synonym cache creation,
+  annotation-scope handling, missing Markdown references and new scores remain
+  pending. No paid calls or replacement report in this checkpoint.
+- Restore the original tax_000 image identity after verifying an exact rotation;
+  preserve reviewed values and record the transformation. Refresh scoring docs
+  to remove obsolete current-method descriptions.
+
 ## 2026-10-06 — remove silver-document substring auto-credit
 
 - Remove punctuation-stripped substring acceptance from the silver-document
@@ -13,6 +30,51 @@ is given here.
   no paid calls or historical score changes. Refreshing estimates remains pending.
 - Record agreed geometry precision/F1 and CER/WER on box-associated text as
   follow-up work; no geometry scoring implementation or rerun in this change.
+
+## 2026-10-06 — separate human structured references for schema and KV
+
+- User accepted and activated all 65 fresh references for both legs. Preserve
+  flagged exclusions and back up prior bank_000 gold. Prepare explicit fresh
+  schemas without applying overrides intended for legacy open dictionaries.
+  New schema extraction and KV rescoring remain unrun.
+
+- Replace earlier machine proposals with 65 independent source-image
+  extractions for human review: flat readable keys/values, shared schema/KV
+  selection and uncertainty notes. Fresh JSON edits regenerate the schema;
+  saved gold retains source-extraction provenance. Existing gold is preserved.
+
+- Final review workflow uses one shared field selection: editable keys/values,
+  original-to-patched differences and Include in both. For these new shared
+  saves, schema and KV score the same complete selected fields, including
+  array leaves. No automatic array exclusion, three-scalar minimum or checklist
+  sampling. Historical scores and old saves remain unchanged until resaved.
+
+- Add a source-verified structured gold override for shared schema/KV values,
+  schema, KV labels and explicit exclusions. Old references remain the fallback;
+  proposals are never automatically selected and table gold is independent.
+- Add a local review/save server using the existing atomic-save and backup
+  protocol. The review workspace covers 65 pages; follow-up coverage expansion
+  brings provisional changes to 54 pages, including new targets on 48 pages.
+- Expose scalar KV checkboxes and an additive proposal merge that preserves
+  saved corrections and eligibility choices. Save original reference scope
+  and new field patterns as provenance; historical scoring still needs to
+  distinguish newly requested fields from corrected old targets.
+- Preserve declared child fields when a reviewed schema makes an object
+  nullable. No new scores or engine/judge calls; human approval and rescore
+  remain pending.
+
+## 2026-10-05 — separate human gold table references from proposals
+
+- GroundTruthLoader uses a source-verified gold table slot when present and
+  otherwise retains the original reference. Proposed patches are never an
+  automatic fallback; other legs are unchanged.
+- Local offline editor supports review of all 42 table pages and saved engine
+  evidence, accepting old/patched references, editing, saving and version
+  backups. The 24 proposed patches are separated from restored originals.
+- Saves now use a local HTTP server and the existing
+  `documents/table_references/gold/` folder, without browser folder permissions.
+- Existing scores are unchanged. Gold-based table headline scoring and the
+  uniform rescore remain pending human reference review.
 
 ## 2026-10-03 — report the actual reason for N/A
 

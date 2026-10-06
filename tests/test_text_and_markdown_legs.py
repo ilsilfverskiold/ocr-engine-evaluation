@@ -96,10 +96,10 @@ def test_heading_depth_is_ignored():
     assert score_markdown(variant, _gt(markdown=REFERENCE_MD)).element_f1 == 1.0
 
 
-def test_bold_line_is_the_same_heading_as_a_hash_heading():
+def test_bold_line_does_not_satisfy_a_heading():
     reference = "## Totals\n\nsome text\n"
     variant = "**Totals**\n\nsome text\n"
-    assert score_markdown(variant, _gt(markdown=reference)).element_f1 == 1.0
+    assert score_markdown(variant, _gt(markdown=reference)).element_f1 == 0.5
 
 
 def test_bullet_style_is_ignored():
@@ -191,13 +191,11 @@ def test_a_document_containing_a_code_sample_is_not_unwrapped():
     assert result.per_type_recall.get("heading") == 1.0
 
 
-def test_tab_separated_tables_count_as_table_rows():
-    # MinerU renders tables tab-separated. Without this the leg saw no table
-    # at all and scored 0.200 on a page it had parsed correctly.
+def test_plain_tsv_is_not_markdown_table_formatting():
     reference = "| No. | Description |\n| --- | --- |\n| 1. | Chess Table |\n"
     tsv = "No.\tDescription\n1.\tChess Table\n"
     result = score_markdown(tsv, _gt(markdown=reference))
-    assert result.per_type_recall.get("table_row") == 1.0
+    assert result.per_type_recall.get("table_row") == 0.0
 
 
 def test_matching_nothing_scores_zero_not_the_order_weight():
@@ -223,9 +221,9 @@ def test_order_still_counts_once_there_is_an_order_to_judge():
 # --------------------------------------------------------------------------
 from evaluation.code_judges import markdown_blocks, score_markdown_code  # noqa: E402
 
-def test_checkbox_line_is_a_list_item():
+def test_only_markdown_list_syntax_establishes_a_list_item():
     blocks = markdown_blocks("☐ Chills\n\nBlurred Vision ☑\n\n- [x] Fever\n")
-    assert [(t, c) for t, c, _ in blocks] == [("list_item", "Chills"), ("list_item", "Blurred Vision"), ("list_item", "Fever")]
+    assert [(t, c) for t, c, _ in blocks] == [("paragraph", "☐ Chills"), ("paragraph", "Blurred Vision ☑"), ("list_item", "Fever")]
 
 
 def test_legend_squares_are_not_a_checklist():
@@ -234,10 +232,9 @@ def test_legend_squares_are_not_a_checklist():
     assert blocks[0][0] == "paragraph"
 
 
-def test_heading_as_single_cell_table_row_is_correct():
-    res = score_markdown_code("| Turnover |  |  |\n| Wages | 10 | 20 |\n", [{"type": "heading", "content": "Turnover"}])
-    assert res.verdicts[0].verdict == "correct"
-    assert "single-cell" in res.verdicts[0].how
+def test_single_cell_table_row_does_not_establish_a_heading():
+    res = score_markdown_code("| Turnover |\n| --- |\n| Wages |\n", [{"type": "heading", "content": "Turnover"}])
+    assert res.verdicts[0].verdict == "wrong_type"
 
 
 def test_heading_inside_a_populated_row_is_wrong_type():
@@ -245,21 +242,17 @@ def test_heading_inside_a_populated_row_is_wrong_type():
     assert res.verdicts[0].verdict == "wrong_type"
 
 
-def test_list_item_as_a_whole_table_cell_is_correct():
+def test_table_cell_does_not_establish_a_list_item():
     res = score_markdown_code("<table><tr><td>Blurred Vision</td><td>Calf Pain</td></tr></table>", [{"type": "list_item", "content": "Calf Pain"}])
-    assert res.verdicts[0].verdict == "correct"
+    assert res.verdicts[0].verdict == "wrong_type"
 
 
 
 
-def test_checklist_grid_read_across_is_one_item_per_glyph():
-    # a two-column checkbox grid read across: each glyph ends (or starts) an item
+def test_flattened_checkbox_glyphs_do_not_invent_markdown_lists():
     blocks = markdown_blocks("Blurred Vision ☑ | Calf Pain ☑\nAllergies ☑ Black Outs ☐\n☑ Antidepressants ☐ Anti Inflammatory\n"
                              "Is the requested medication ☐NEW or a ☑CONTINUATION of THERAPY?\n")
-    assert [(b[0], b[1]) for b in blocks[:6]] == [("list_item", "Blurred Vision"), ("list_item", "Calf Pain"),
-                                                  ("list_item", "Allergies"), ("list_item", "Black Outs"),
-                                                  ("list_item", "Antidepressants"), ("list_item", "Anti Inflammatory")]
-    assert blocks[6][0] == "paragraph"      # glyphs mid-sentence: not a check-list
+    assert len(blocks) == 1 and blocks[0][0] == "paragraph"
 
 
 def test_explicit_markdown_fence_with_a_trailing_note_is_packaging():

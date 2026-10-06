@@ -36,6 +36,9 @@ class SchemaScore:
     cleanup_log: list[str] = field(default_factory=list)
     scorer: str | None = None
     reference_repairs: dict[str, Any] = field(default_factory=dict)
+    unpenalized_accuracy: float | None = None
+    extra_fields: list[dict] = field(default_factory=list)
+    compliance: dict[str, Any] = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -56,11 +59,17 @@ class SchemaScore:
             "schema_scorer": self.scorer,
             "schema_reference_repairs": self.reference_repairs,
             "schema_judge_cost_usd": self.judge_cost_usd,
+            "schema_unpenalized_accuracy": self.unpenalized_accuracy,
+            "schema_extra_fields": len(self.extra_fields),
+            "schema_valid_json": self.compliance.get("valid_json"),
+            "schema_contract_valid": self.compliance.get("schema_valid"),
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {
             "cleanup": self.cleanup_log,
+            "extra_fields": self.extra_fields,
+            "compliance": self.compliance,
             "verdicts": [
                 {
                     "path": v.path,
@@ -92,12 +101,35 @@ def score_schema(
     # (truncated JSON salvaged as far as it goes), keys matched by path or
     # its last segment, values matched exactly. No model.
     from evaluation.kv_schema_code import SCORER_VERSION, engine_pairs, score_fields
-    from evaluation.schema_judge import build_schema_checklist
+    from evaluation.schema_judge import SchemaChecklistItem, build_schema_checklist, _display_value
+    from evaluation.structured_metrics import is_blank, walk_fields
 
-    items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
-                                   use_cache=False, scalar_only=False,
-                                   excluded_paths=set(gt.metadata.get("structured_reference_repairs", {}).get("excluded_fields", [])))
+    reviewed = gt.metadata.get('structured_gold_reference')
+    shared = reviewed is not None and reviewed.get('shared_field_selection') is True
+    if shared:
+        excluded = set(reviewed.get('excluded_fields', []))
+        items = [SchemaChecklistItem(f.path, _display_value(f.value), is_blank(f.value))
+                 for f in walk_fields(gt.true_json, gt.json_schema)
+                 if f.path and f.path not in excluded]
+    else:
+        items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
+                                       use_cache=False, scalar_only=False,
+                                       excluded_paths=set(gt.metadata.get("structured_reference_repairs", {}).get("excluded_fields", [])))
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
+    if shared:
+        from evaluation.shared_fields import VERSION, schema_compliance, score_shared
+        res = score_shared(gt, pairs, "schema")
+        return SchemaScore(
+            applicable=res.total > 0, reason=None if res.total else "all shared reference fields excluded",
+            field_accuracy=res.accuracy if res.total else None,
+            unpenalized_accuracy=res.unpenalized_accuracy, extra_fields=res.extras,
+            compliance=schema_compliance(output_text or "", gt.inference_schema),
+            fields_total=res.total, fields_correct=res.correct, fields_missing=res.missing,
+            fields_wrong_value=res.wrong, fields_invented_value=res.invented,
+            blank_total=res.blank_total, blank_correct=res.blank_correct, engine_pairs=len(pairs),
+            parsed_how=parsed_how, scorer=VERSION, verdicts=res.verdicts,
+            reference_repairs=gt.metadata.get("structured_reference_repairs", {}),
+        )
     res = score_fields(items, pairs, "schema", None)
     return SchemaScore(
         applicable=True,
@@ -112,7 +144,7 @@ def score_schema(
         engine_pairs=res.pairs,
         parsed_how=parsed_how,
         cleanup_log=res.cleanup_log,
-        scorer=SCORER_VERSION,
+        scorer=SCORER_VERSION + '+shared-reference-v1' if shared else SCORER_VERSION,
         reference_repairs=gt.metadata.get("structured_reference_repairs", {}),
         verdicts=res.verdicts,
     )

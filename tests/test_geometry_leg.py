@@ -18,6 +18,48 @@ REFERENCE = [
 ]
 
 
+def test_duplicate_boxes_reduce_precision_and_increase_text_error():
+    result = score_geometry(REFERENCE + [dict(REFERENCE[0])], reference=REFERENCE)
+    assert result.geometry_score == 1.0
+    assert result.precision == .75
+    assert result.f1 == .8571
+    assert result.cer > 0 and result.wer > 0
+    assert len(result.unmatched_predictions) == 1
+
+
+def test_empty_extra_box_still_reduces_geometry_precision():
+    result = score_geometry(REFERENCE + [{"text": "", "bbox": [0, 0, .1, .1]}], reference=REFERENCE)
+    assert result.precision == .75
+    assert result.cer == result.wer == 0
+
+
+def test_invalid_coordinates_are_counted_and_their_text_is_retained():
+    result = score_geometry(REFERENCE + [{"text": "invented", "bbox": [0, 1]}], reference=REFERENCE)
+    assert result.invalid_boxes == 1
+    assert result.precision == .75
+    assert result.predicted_text.endswith("invented")
+    assert result.wer > 0
+
+
+def test_correct_box_text_does_not_excuse_displaced_geometry():
+    shifted = [{"text": w["text"], "bbox": [b + .02 for b in w["bbox"]]} for w in REFERENCE]
+    result = score_geometry(shifted, reference=REFERENCE)
+    assert result.cer == result.wer == 0
+    far = [{"text": w["text"], "bbox": [b + .5 for b in w["bbox"]]} for w in REFERENCE]
+    assert score_geometry(far, reference=REFERENCE, infer_scale=False).geometry_score == 0
+
+
+def test_line_fragment_precision_is_bounded_and_includes_extra_segments():
+    ref = [{"text": "QTY", "bbox": [.1, .1, .2, .2]},
+           {"text": "PRICE", "bbox": [.4, .1, .6, .2]}]
+    perfect = score_geometry(ref, reference=ref, granularity="line")
+    extra = score_geometry(ref + [{"text": "invented", "bbox": [.1, .5, .3, .6]}],
+                           reference=ref, granularity="line")
+    assert perfect.precision == perfect.f1 == 1
+    assert extra.geometry_score == 1 and extra.precision == .6667
+    assert extra.scoring_unit == "line_segment" and extra.wer > 0
+
+
 def test_iou_of_identical_boxes_is_one():
     assert iou((0, 0, 1, 1), (0, 0, 1, 1)) == 1.0
 

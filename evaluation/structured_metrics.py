@@ -264,6 +264,10 @@ def walk_fields(
     """
     fields: list[Field] = []
     schema_type = (schema or {}).get("type") if isinstance(schema, dict) else None
+    # Human review may make an object nullable without changing its fields.
+    # Keep walking those declared child keys when the reference object is null.
+    if isinstance(schema_type, list):
+        schema_type = next((t for t in schema_type if t != "null"), None)
 
     if isinstance(obj, dict) or schema_type == "object":
         properties = (schema or {}).get("properties") if isinstance(schema, dict) else None

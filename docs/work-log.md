@@ -1392,3 +1392,36 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   No provider calls, benchmark commands, reference changes or rescoring. Update
   the existing follow-up and changelog; keep unrelated pending reference/editor
   changes out of this commit. No push.
+
+## 2026-10-06 — implement reviewed-reference scoring, before reruns
+
+- Integrate the existing offline table and structured reference editors and
+  loaders. Active schema/KV gold uses the same complete field selection and
+  explicit exclusions; table gold remains independent.
+- Add deterministic table cell precision/recall/F1 with blanks, extras,
+  disjoint matching, native-table preference and the whole-page shipping
+  gold/original maximum. Preserve spans in the separate structure diagnostic.
+  Keep parser omissions/extra cells visible instead of silently padding/trimming.
+- Replace permissive Markdown heading/type credit with semantic Markdown/HTML
+  parsing, full-content similarity and disjoint block matching. Add separate
+  CER/WER from the actual Markdown answer. Missing references remain pending.
+- Add geometry precision/F1, invalid/unmatched prediction counts and CER/WER
+  from box-associated text. Preserve word versus line-segment units. Annotation
+  scope handling and the new Sonnet inference controls remain pending.
+- Match shared structured keys before checking values. Schema uses literal
+  supplied keys and penalizes unexpected/duplicate fields; raw JSON/schema
+  validity is a separate diagnostic. Consume reference-versioned KV synonyms
+  offline; the paid key-only synonym builder remains pending.
+- Guard live/stored schema scoring against changed or missing request contracts.
+  Old answers need rerun, not retrospective failure against new keys. Rescore
+  manifests name current scorers; copied silver verdicts are marked historical.
+- Recover canonical tax_000 image bytes from the table review's embedded PNG.
+  Verify the upright image is an exact 180-degree RGB rotation, back it up under
+  /private/tmp/ocr-eval-rebuild-20261006/tax-identity-backup, and restore the
+  manifest hash. Update structured reference image provenance without changing
+  values. Table gold unchanged; all 93 corpus pages load.
+- Validation: full offline suite 332 passed; request-contract and registry tests
+  26 passed after adding the guard. Test changes replace obsolete nested-key
+  expectations with the accepted flat gold while preserving isolated legacy
+  repair coverage. No engine inference, paid judge call, published rescore or
+  report regeneration. Gold packaging, fair-prompt controls and cleanup remain.

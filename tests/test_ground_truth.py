@@ -17,6 +17,49 @@ from evaluation.ground_truth import DOCUMENTS_ROOT, GroundTruthLoader, load_corp
 CORPUS = load_corpus()
 
 
+def test_gold_table_overrides_only_tables_and_patch_is_not_fallback(tmp_path):
+    import hashlib
+    import json
+    doc = tmp_path / "documents" / "easy" / "sample" / "review_page.png"
+    doc.parent.mkdir(parents=True)
+    doc.write_bytes(b"fixture image")
+    old = '<table><tr><td>old</td></tr></table>'
+    (doc.parent / 'review_page_gt.json').write_text(json.dumps({'plain_text': 'unchanged', 'table_html': old}))
+    root = tmp_path / 'documents' / 'table_references'
+    (root / 'patched').mkdir(parents=True)
+    (root / 'patched' / 'review_page.json').write_text(json.dumps({'table_html': '<table><tr><td>proposal</td></tr></table>'}))
+    assert GroundTruthLoader().load(doc).table_html == old
+    (tmp_path / 'documents' / 'table_references' / 'gold').mkdir(parents=True)
+    path = tmp_path / 'documents' / 'table_references' / 'gold' / 'review_page.json'
+    record = {'page': doc.stem, 'version': 1, 'image_sha256': hashlib.sha256(doc.read_bytes()).hexdigest(), 'table_html': '<table><tr><td>accepted</td></tr></table>', 'selection': 'patched'}
+    path.write_text(json.dumps(record))
+    gt = GroundTruthLoader().load(doc)
+    assert 'accepted' in gt.table_html
+    assert gt.plain_text == 'unchanged'
+    assert gt.metadata['table_gold_reference']['selection'] == 'patched'
+    record['image_sha256'] = 'wrong'
+    path.write_text(json.dumps(record))
+    with pytest.raises(ValueError, match='source image changed'):
+        GroundTruthLoader().load(doc)
+    path.unlink()
+    assert GroundTruthLoader().load(doc).table_html == old
+
+
+def test_empty_gold_table_explicitly_removes_table_eligibility(tmp_path):
+    import hashlib
+    import json
+    doc = tmp_path / 'documents' / 'easy' / 'sample' / 'empty.png'
+    doc.parent.mkdir(parents=True)
+    doc.write_bytes(b'image')
+    (doc.parent / 'empty_gt.json').write_text(json.dumps({'plain_text': 'text', 'table_html': '<table><tr><td>old</td></tr></table>'}))
+    dest = tmp_path / 'documents' / 'table_references' / 'gold'
+    dest.mkdir(parents=True)
+    (dest / 'empty.json').write_text(json.dumps({'version': 1, 'page': 'empty', 'image_sha256': hashlib.sha256(doc.read_bytes()).hexdigest(), 'table_html': ''}))
+    gt = GroundTruthLoader().load(doc)
+    assert not gt.has_gt_for('tables')
+    assert gt.plain_text == 'text'
+
+
 def test_every_document_loads():
     assert len(CORPUS) == 93
     assert all(gt.plain_text for gt in CORPUS)
@@ -53,9 +96,8 @@ def test_per_leg_reference_counts():
     assert n("markdown") == 57
     assert n("tables") == 42        # a human marked the page as a table page
     assert n("schema") == 65
-    # One rule for key_value, shared by runner and scorer: at least 3 scalar
-    # (non-array) fields. 9 chart/table pages have structured GT but fewer.
-    assert n("key_value") == 56
+    # Accepted flat gold supplies the same field set for both legs.
+    assert n("key_value") == 65
     # 17 sidecars built 2026-08 from the source datasets' own boxes: SROIE 6
     # (pixel coords / image size), FUNSD 6 (LayoutLM 0-1000 -> /1000 — dividing
     # by image size corrupted x-coords once), SynFinTabs 5 (cell word boxes).
@@ -136,7 +178,8 @@ def test_reviewed_text_references_only_require_printed_content():
         assert key not in chart.true_json
         assert key not in chart.inference_schema["properties"]
         assert key not in chart.inference_schema["required"]
-    assert chart.true_json["topWorkforceSector"] == "Operations"
+    assert "topWorkforceSector" not in chart.true_json  # inferred, not printed
+    assert "Operations" in chart.true_json["Figure 20 — Legend"]
     # The archived annotation and its estimated series are still available.
     raw = json.loads(Path(chart.document_path).with_name("chart_003_structured_gt.json").read_text())
     assert "employmentLevelBreakdown" in raw["true_json"]
@@ -176,8 +219,8 @@ def test_invoice_text_references_match_reviewed_printed_content():
     assert "3 172,99" in text and "1 369,50" in text
     assert '15"' in invoices["invoice_000"].plain_text
     assert "50 GB" in invoices["invoice_004"].plain_text
-    for stem, excluded in (("invoice_004", "items[2].item_desc"),
-                           ("invoice_005", "items[0].item_desc")):
+    for stem, excluded in (("invoice_004", "Item 3 — Description"),
+                           ("invoice_005", "Item 1 — Description")):
         gt = invoices[stem]
         assert "00000000" not in gt.plain_text and "00OO" not in gt.plain_text
         assert gt.metadata["structured_reference_repairs"]["excluded_fields"] == [excluded]
@@ -186,7 +229,7 @@ def test_invoice_text_references_match_reviewed_printed_content():
         assert score.score == 1
         raw = json.loads(Path(gt.document_path).with_name(stem + "_structured_gt.json").read_text())
         assert raw["true_json"] != gt.true_json
-    assert 'White " / TESTED' in invoices["invoice_005"].true_json["items"][4]["item_desc"]
+    assert 'White " / TESTED' in invoices["invoice_005"].true_json["Item 5 — Description"]
 
 
 def test_receipt_repairs_preserve_boxes_and_disclose_exclusions():
@@ -215,7 +258,7 @@ def test_receipt_repairs_preserve_boxes_and_disclose_exclusions():
     assert len(receipts["sroie_003"].word_boxes) == 35
     assert [w["text"] for w in receipts["sroie_003"].word_boxes].count("TOTAL QTY :") == 1
     assert "INCLUSLVE" not in receipts["sroie_002"].plain_text
-    assert receipts["sroie_000"].true_json["items"][0]["description"] == "KINGS SAFETY SHOES KWD B05"
+    assert receipts["sroie_000"].true_json["Item 1 — Description"] == "KINGS SAFETY SHOES KWD B05"
     # The receipt with uncertain registration digits is not silently edited.
     assert "text_reference_repairs" not in receipts["sroie_001"].metadata
 
@@ -234,16 +277,19 @@ def test_receipt_multiline_description_is_one_item_without_phantom_blanks():
     from evaluation.schema_leg import score_schema
 
     gt = next(g for g in CORPUS if Path(g.document_path).stem == "sroie_003")
-    item, = gt.true_json["items"]
-    assert item == {"description": "20X30 BEG 1KG91X30) 20X30 1KG",
-                    "qty": "1", "price": "8.00", "amount": "8.00"}
-    assert item["description"] in gt.table_html
+    assert gt.true_json["Item 1 — Item/Desc."] == "20X30 BEG 1KG91X30)\n20X30 1KG"
+    assert gt.true_json["Item 1 — Qty"] == "1"
+    assert gt.true_json["Item 1 — Price"] == gt.true_json["Item 1 — Amt."] == "8.00"
+    assert not any(k.startswith("Item 2") for k in gt.true_json)
+    # Uncertain readings are excluded consistently in the accepted gold.
+    excluded = gt.metadata["structured_reference_repairs"]["excluded_fields"]
+    assert set(excluded) == {"Item 1 — Item/Desc.", "Included In Total — Tax rate"}
     perfect = score_schema(json.dumps(gt.true_json), gt, "gemini_flash")
-    assert perfect.fields_total == 20 and perfect.score == 1
+    assert perfect.fields_total == len(gt.true_json) - len(excluded) and perfect.score == 1
     assert perfect.blank_total == 0
     empty = score_schema('{}', gt, "deepseek_ocr")
     assert empty.score == 0 and empty.blank_correct == 0
     raw = json.loads(Path(gt.document_path).with_name("sroie_003_structured_gt.json").read_text())
     assert len(raw["true_json"]["items"]) == 2
-    assert raw["json_schema"] == gt.json_schema  # no retrospective prompt change
-    assert perfect.as_metrics()["schema_reference_repairs"]["original_items"] == raw["true_json"]["items"]
+    assert raw["json_schema"] != gt.json_schema  # fresh schema requires new inference
+    assert perfect.as_metrics()["schema_reference_repairs"]["previous_repairs"]["original_items"] == raw["true_json"]["items"]

@@ -11,6 +11,28 @@ from evaluation.legs import instance_template
 from evaluation.schema_contract import extraction_schema, repair_spanned_financial_rows
 
 
+def test_changed_or_unrecorded_schema_requires_rerun(tmp_path):
+    import json
+    from evaluation.ground_truth import GroundTruth
+    from run_benchmark import _score_pass_legs
+
+    gt = GroundTruth(document_path="fixture.png", tier="easy", doc_type="fixture", plain_text="yes",
+                     true_json={"Reviewed key": "yes"},
+                     json_schema={"type": "object", "properties": {
+                         "Reviewed key": {"type": "string"}}, "additionalProperties": False})
+    for supplied in (None, {"type": "object", "properties": {"oldKey": {"type": "string"}}}):
+        target = tmp_path / ("missing.jsonl" if supplied is None else "old.jsonl")
+        parts = _score_pass_legs("gemini_flash", Path("fixture.png"), gt, {}, "schema", ["schema"],
+                                '{"Reviewed key":"yes"}', {}, 0, 0, "fixture", False, target,
+                                supplied_schema=supplied)
+        row = json.loads(target.read_text())
+        assert parts == ["schema=rerun-required"]
+        assert row["score"] is None and row["metrics"]["schema_rerun_required"]
+        assert row["error"] is None
+    from evaluation.schema_contract import stored_contract_status
+    assert stored_contract_status(gt, gt.inference_schema)["schema_contract_matches"]
+
+
 def test_all_reference_answers_satisfy_the_request_schema():
     corpus = [g for g in load_corpus() if g.json_schema]
     assert len(corpus) == 65
@@ -38,6 +60,17 @@ def test_open_dictionary_cannot_silently_become_an_empty_extraction():
         extraction_schema({"type": "object", "additionalProperties": {"type": "string"}})
 
 
+@pytest.mark.parametrize('stem', ['fintab_001', 'funsd_001', 'funsd_004'])
+def test_reviewed_explicit_schema_is_not_rewritten_by_legacy_targets(stem):
+    schema = {'type': 'object', 'properties': {
+        'Reviewed printed label': {'type': 'string'}}, 'additionalProperties': False}
+    before = copy.deepcopy(schema)
+    result = extraction_schema(schema, stem)
+    assert schema == before
+    assert set(result['properties']) == {'Reviewed printed label'}
+    assert result['properties']['Reviewed printed label']['type'] == ['string', 'null']
+
+
 def test_explicit_targets_survive_vendor_schema_sanitizer():
     from runners.llamaparse_runner import _sanitize_schema_for_llama
     docs = {Path(g.document_path).stem: g for g in load_corpus()}
@@ -48,9 +81,13 @@ def test_explicit_targets_survive_vendor_schema_sanitizer():
         assert effective["additionalProperties"] is False
     g = docs["fintab_001"]
     effective = _sanitize_schema_for_llama(g.inference_schema)
-    values = effective["properties"]["rows"]["items"]["properties"]["values"]
-    assert set(values["properties"]) == {"31.7.17", "31.7.16"}
-    assert values["additionalProperties"] is False
+    if g.metadata.get("structured_gold_reference"):
+        assert set(effective["properties"]) == set(g.true_json)
+        assert effective["additionalProperties"] is False
+    else:
+        values = effective["properties"]["rows"]["items"]["properties"]["values"]
+        assert set(values["properties"]) == {"31.7.17", "31.7.16"}
+        assert values["additionalProperties"] is False
 
 
 def test_merged_header_repair_changes_attribution_without_changing_amounts():
@@ -71,7 +108,14 @@ def test_financial_loader_omits_unrequested_csv_and_records_repairs():
     financial = [g for g in load_corpus() if g.doc_type == "financial_table"]
     assert len(financial) == 5
     assert all("csv" not in g.true_json for g in financial)
-    repaired = [g for g in financial if g.metadata["structured_reference_repairs"]["spanning_headers_corrected"]]
+    legacy = [g for g in financial if not g.metadata.get("structured_gold_reference")]
+    for g in financial:
+        if g.metadata.get("structured_gold_reference"):
+            assert g.true_json == g.metadata["structured_gold_reference"]["true_json"]
+            assert "rows" not in g.inference_schema["properties"]
+    repaired = [g for g in legacy if g.metadata["structured_reference_repairs"]["spanning_headers_corrected"]]
+    if not legacy:
+        return  # Legacy span repair is exercised by the isolated test above.
     assert [Path(g.document_path).stem for g in repaired] == ["fintab_001"]
     row = next(r for r in repaired[0].true_json["rows"] if r["label"] == "Inspection")
     assert row["values"] == {"31.7.17": "70", "31.7.16": "336"}

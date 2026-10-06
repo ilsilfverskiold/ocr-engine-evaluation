@@ -9,12 +9,30 @@ with extra blank fields merely because an inference schema is made explicit.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from functools import lru_cache
 from pathlib import Path
 
 CONTRACT_VERSION = "schema-contract-v1 (2026-10-02)"
 FIELD_FILE = Path(__file__).parent.parent / "documents" / "schema_fields.json"
+
+
+def contract_id(schema: dict | None) -> str | None:
+    if schema is None:
+        return None
+    return hashlib.sha256(json.dumps(schema, sort_keys=True, ensure_ascii=False,
+                                     separators=(",", ":")).encode()).hexdigest()
+
+
+def stored_contract_status(gt, supplied_schema: dict | None) -> dict:
+    """Never judge an earlier extraction against a contract it did not receive."""
+    expected = gt.inference_schema
+    same = supplied_schema is not None and supplied_schema == expected
+    return {"schema_contract_matches": same,
+            "schema_expected_contract_id": contract_id(expected),
+            "schema_supplied_contract_id": contract_id(supplied_schema),
+            "schema_rerun_required": not same}
 
 
 @lru_cache(maxsize=1)
@@ -25,7 +43,20 @@ def _field_definitions() -> dict:
 def extraction_schema(schema: dict, document_stem: str = "") -> dict:
     """Explicit target fields, with nullable values; never reads true_json."""
     result = copy.deepcopy(schema)
-    for override in _field_definitions().get(document_stem, []):
+
+    def has_open_object(node):
+        if isinstance(node, list):
+            return any(has_open_object(child) for child in node)
+        if not isinstance(node, dict):
+            return False
+        return isinstance(node.get('additionalProperties'), dict) or any(
+            has_open_object(child) for child in node.values())
+
+    # These overrides expand historical open dictionaries. A reviewed,
+    # explicit replacement schema already defines its targets and must not
+    # be forced back into the old document's object/array structure.
+    overrides = _field_definitions().get(document_stem, []) if has_open_object(result) else []
+    for override in overrides:
         node = result
         for key in override["schema_path"]:
             node = node[key]

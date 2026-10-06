@@ -1,37 +1,10 @@
-"""Leg 3 — table extraction, scored with TEDS.
+"""Gold-reference table evaluation: cell precision/recall/F1 and structure.
 
-**Why this was rewritten.** The previous implementation compared HTML dialects.
-A byte-perfect table scored 0.846 because the engine's markdown renderer wrapped
-the first row in `<thead><th>` where the reference had plain `<tr><td>`. It also
-flattened every cell to an opaque tree label, so a one-character OCR slip in a
-long cell cost the same as losing the cell entirely, and cell text containing
-`{` or `}` corrupted the bracket-encoded tree it handed to APTED.
-
-What replaced it:
-
-* **Both sides are normalised to a presentation-free grid first** — `thead`,
-  `tbody` and `tfoot` unwrapped, `th` rewritten to `td`, all attributes
-  dropped, entities unescaped, whitespace collapsed. This is mandatory, not an
-  option: if a comparison can be fooled by formatting, it is measuring
-  formatting. The regression test asserts that a table differing only in
-  `thead`/`th` scores exactly 1.000.
-* **Cell content is compared by normalised edit distance**, so a near-correct
-  cell costs a fraction of a node rather than a whole one — the standard TEDS
-  definition, and the reason TEDS is used instead of exact grid equality.
-* **The tree is built as objects**, not parsed back out of a bracket string, so
-  cell text can contain any character.
-
-For the supporting TEDS diagnostic only, attributes including spans are
-dropped on both sides. The current code-verdict headline preserves spans and
-anchors values to named rows/headers. The TEDS simplification is a
-deliberate limit of this corpus rather than a claim that spans do not matter:
-40 of the 45 references were converted from markdown, which cannot express a
-span at all, so scoring spans would measure the reference's dialect and not the
-engine. `documents/gt_limitations.json` records the five references that are
-weaker still, and the scorer surfaces each document's `table_html_source` so a
-number can always be traced to the provenance of what it was compared against.
+Logical cells, including blanks, count once; output extras reduce precision.
+Native tables take precedence over another rendering of the same answer.
+Every table/row/cell matches at most once. Shipping alone accepts the better
+whole-page comparison against the original or human-gold reference.
 """
-
 from __future__ import annotations
 
 import re
@@ -54,6 +27,8 @@ class TableNode:
     label: str                       # "table" | "tr" | "td"
     text: str = ""                   # cell content, normalised; "" for structure
     children: list["TableNode"] = field(default_factory=list)
+    rowspan: int = 1
+    colspan: int = 1
 
     def size(self) -> int:
         return 1 + sum(child.size() for child in self.children)
@@ -89,15 +64,30 @@ class TableScore:
     code_counts: dict[str, int] = field(default_factory=dict)
     code_verdicts: list[dict] = field(default_factory=list)
     scorer: str | None = None
+    cell_f1: float | None = None
+    cell_precision: float | None = None
+    cell_recall: float | None = None
+    structure_similarity: float | None = None
+    cell_counts: dict[str, int] = field(default_factory=dict)
+    reference_comparisons: dict[str, Any] = field(default_factory=dict)
+    selected_reference: str | None = None
+    output_tables: list[str] = field(default_factory=list)
 
     @property
     def score(self) -> float | None:
+        if self.cell_f1 is not None:
+            return self.cell_f1
         if self.cell_accuracy is not None:
             return self.cell_accuracy
         return self.teds
 
     def as_metrics(self) -> dict[str, Any]:
         d: dict[str, Any] = {}
+        if self.cell_f1 is not None:
+            d.update(cell_f1=self.cell_f1, cell_precision=self.cell_precision,
+                     cell_recall=self.cell_recall, structure_similarity=self.structure_similarity,
+                     scorer=self.scorer, selected_reference=self.selected_reference,
+                     **self.cell_counts)
         if self.cell_accuracy is not None:
             d["cell_accuracy"] = self.cell_accuracy
             if self.scorer:
@@ -131,6 +121,9 @@ class TableScore:
         }
         if self.code_verdicts:
             d["verdicts"] = self.code_verdicts
+        d["reference_comparisons"] = self.reference_comparisons
+        d["selected_reference"] = self.selected_reference
+        d["output_tables"] = self.output_tables
         return d
 
 
@@ -159,7 +152,7 @@ def normalize_table_html(html: str) -> str:
     # border/class attributes would survive the strip.
     table.attrs = {}
     for tag in table.find_all(True):
-        tag.attrs = {}
+        tag.attrs = {k: v for k, v in tag.attrs.items() if k in ("rowspan", "colspan", "data-padding")}
     return str(table)
 
 
@@ -173,7 +166,15 @@ def _table_to_tree(table) -> TableNode | None:
     for row in table.find_all("tr"):
         row_node = TableNode("tr")
         for cell in row.find_all("td", recursive=False) or row.find_all("td"):
-            row_node.children.append(TableNode("td", _cell_text(cell)))
+            if cell.get("data-padding") == "true":
+                continue
+            def span(name):
+                try:
+                    return max(1, min(1000, int(cell.get(name, 1))))
+                except (TypeError, ValueError):
+                    return 1
+            row_node.children.append(TableNode("td", _cell_text(cell),
+                                               rowspan=span("rowspan"), colspan=span("colspan")))
         root.children.append(row_node)
     return root if root.children else None
 
@@ -231,6 +232,8 @@ def _rename_cost(a: TableNode, b: TableNode) -> float:
         return 1.0
     if a.label != "td":
         return 0.0
+    if (a.rowspan, a.colspan) != (b.rowspan, b.colspan):
+        return 1.0
     return _cell_cost(a.text, b.text)
 
 
@@ -338,6 +341,34 @@ def _cell_match_rate(hyp: TableNode | None, ref: TableNode | None) -> float | No
     return round(sum(1 for c in ref_cells if c in hyp_cells) / len(ref_cells), 4)
 
 
+def _structure_score(reference, predicted, mapping: dict[int, int], *, content: bool) -> float:
+    """One-to-one table forest similarity; unmatched tables pay full size."""
+    from copy import deepcopy
+    def tree(table):
+        result = deepcopy(html_to_tree(table.html))
+        if result is not None and not content:
+            for row in result.children:
+                for cell in row.children:
+                    cell.text = ""
+        return result
+    refs, preds = [tree(t) for t in reference], [tree(t) for t in predicted]
+    denominator = distance = 0.0
+    used = set()
+    for ri, ref in enumerate(refs):
+        pi = mapping.get(ri)
+        pred = preds[pi] if pi is not None else None
+        if pi is not None:
+            used.add(pi)
+        distance += _tree_edit_distance(ref, pred)
+        denominator += max(ref.size() if ref else 0, pred.size() if pred else 0)
+    for pi, pred in enumerate(preds):
+        if pi not in used:
+            size = pred.size() if pred else 0
+            distance += size
+            denominator += size
+    return max(0.0, 1 - distance / denominator) if denominator else 1.0
+
+
 def score_tables(
     output_text: str,
     gt: GroundTruth,
@@ -346,119 +377,51 @@ def score_tables(
     use_judge: bool | None = None,
     judge_model: str | None = None,
 ) -> TableScore:
-    """Score cached nonempty table cells by code; TEDS supports/falls back.
-
-    Legacy judge arguments are accepted for caller compatibility. This scorer
-    makes no model call and never creates a missing image checklist.
-    """
-    # Human table HTML establishes eligibility. The shared image checklist
-    # supplies cells for code verdicts; it cannot add extra eligible pages.
-    from evaluation.code_judges import (
-        SCORER_VERSION, checklist_is_table, load_table_checklist, score_tables_code, tnorm,
-    )
+    """Score every gold cell. No image checklist or model call is used."""
+    import hashlib
+    from evaluation.table_cells import VERSION, compare_cells, parse_tables
     if not gt.has_gt_for("tables"):
         return TableScore(applicable=False, reason=gt.missing_gt_reason("tables"))
-    checklist = load_table_checklist(Path(gt.document_path).stem, gt.table_html) or []
-    # The checklist is the headline reference when it describes a grid (or
-    # when a human table reference says the page is a table page); otherwise
-    # the human table_html alone gives the TEDS diagnostic.
-    checklist_nonempty = ([c for c in checklist if not c.get("empty") and tnorm(c.get("value"))]
-                          if (checklist_is_table(checklist) or gt.table_html) else [])
-
-    # --- TEDS (supporting metric, computed when table_html exists) ----------
-    candidates: list[str] = []
-    tables = (structured_output or {}).get("tables") or []
-    for table in tables:
-        html = (table or {}).get("html")
-        if html:
-            candidates.append(html)
-    if not candidates:
-        candidates = extract_all_tables_html(output_text or "", engine)
-    if len(candidates) > 1:
-        candidates.append(_concatenate_tables(candidates))
-    hypothesis_html = candidates[0] if candidates else None
-
-    source = gt.table_html_source
-    is_weak = source in WEAK_TABLE_SOURCES
-    ref_trees = html_to_trees(gt.table_html or "")
-    ref_tree = ref_trees[0] if ref_trees else None
-    ref_rows = sum(len(t.children) for t in ref_trees)
-    ref_cols = max((max((len(r.children) for r in t.children), default=0)
-                    for t in ref_trees), default=0)
-    ref_cells = sum(len(r.children) for t in ref_trees for r in t.children)
-
-    if len(candidates) > 1 and gt.table_html:
-        hypothesis_html = max(candidates,
-                              key=lambda h: compute_teds(h, gt.table_html))
-
-    teds_score: float | None = None
-    hyp_rows = hyp_cols = hyp_cells = 0
-    cmr: float | None = None
-
-    if hypothesis_html:
-        hyp_tree = html_to_tree(hypothesis_html)
-        hyp_rows, hyp_cols, hyp_cells = _grid_shape(hyp_tree)
-        cmr = _cell_match_rate(hyp_tree, ref_tree)
-        hyp_trees = [t for t in (html_to_tree(h) for h in candidates) if t]
-        if len(ref_trees) > 1 and hyp_trees:
-            total_weight = sum(t.size() for t in ref_trees) or 1
-            teds_score = round(sum(
-                max(teds_trees(h, ref) for h in hyp_trees) * ref.size()
-                for ref in ref_trees
-            ) / total_weight, 4)
-        else:
-            teds_score = compute_teds(hypothesis_html, gt.table_html or "")
-    elif not checklist_nonempty:
-        return TableScore(
-            applicable=True,
-            teds=0.0,
-            reference_rows=ref_rows,
-            reference_cols=ref_cols,
-            reference_cells=ref_cells,
-            reference_source=source,
-            reference_is_weak=is_weak,
-            reason="engine produced no recoverable table structure",
-        )
-
-    # --- headline: code verdicts against the image cell checklist ---------
-    if checklist_nonempty:
-        context = load_table_checklist(Path(gt.document_path).stem, gt.table_html, sampled=False)
-        res = score_tables_code(output_text or "", engine, structured_output, checklist, context)
-        return TableScore(
-            applicable=True,
-            cell_accuracy=res.cell_accuracy,
-            teds=teds_score,
-            reference_rows=ref_rows,
-            reference_cols=ref_cols,
-            reference_cells=ref_cells,
-            output_rows=hyp_rows,
-            output_cols=hyp_cols,
-            output_cells=hyp_cells,
-            cell_match_rate=cmr,
-            reference_source=source,
-            reference_is_weak=is_weak,
-            checklist_cells=res.cells_total,
-            checklist_cells_empty=res.cells_empty,
-            code_counts={"correct": res.correct, "misplaced": res.misplaced,
-                         "wrong": res.wrong, "absent": res.absent, "grids": res.grids},
-            code_verdicts=[{"label": v.label, "value": v.value, "row": v.row, "col": v.col,
-                            "verdict": v.verdict, "how": v.how} for v in res.verdicts],
-            scorer=SCORER_VERSION,
-            judge_checklist_size=res.cells_total,
-            judge_full_checklist_size=len(checklist),
-        )
-
-    # --- TEDS only (human table_html, no image checklist) -----------------
+    native = [t["html"] for t in (structured_output or {}).get("tables", [])
+              if isinstance(t, dict) and isinstance(t.get("html"), str) and t["html"].strip()]
+    # Never combine native tables with their Markdown export. Duplicates within
+    # the chosen representation are real predictions and must remain counted.
+    htmls = native if native else extract_all_tables_html(output_text or "", engine)
+    predicted = [table for html in htmls for table in parse_tables(html)]
+    references = {"gold" if gt.metadata.get("table_gold_reference") else "original": gt.table_html}
+    if gt.doc_type == "shipping" and gt.metadata.get("table_original_reference"):
+        references["original"] = gt.metadata["table_original_reference"]["table_html"]
+    comparisons = {}
+    parsed_refs = {}
+    for name, markup in references.items():
+        ref = parse_tables(markup or "")
+        if not ref:
+            continue
+        parsed_refs[name] = ref
+        result = compare_cells(ref, predicted)
+        result["structure_similarity"] = _structure_score(ref, predicted, result["table_matches"], content=False)
+        result["teds"] = _structure_score(ref, predicted, result["table_matches"], content=True)
+        result["reference_sha256"] = hashlib.sha256((markup or "").encode()).hexdigest()
+        result["reference_html"] = markup
+        comparisons[name] = result
+    if not comparisons:
+        return TableScore(applicable=False, reason="table reference parsed to no logical cells")
+    # In a tie, prefer gold. Dict insertion order above makes this deterministic.
+    selected = max(comparisons, key=lambda name: comparisons[name]["f1"])
+    winner = comparisons[selected]
+    ref = parsed_refs[selected]
+    counts = {key: winner[key] for key in ("correct", "reference_cells", "output_cells",
+              "reference_blank_cells", "output_blank_cells", "correct_blank_cells")}
     return TableScore(
-        applicable=True,
-        teds=teds_score,
-        reference_rows=ref_rows,
-        reference_cols=ref_cols,
-        reference_cells=ref_cells,
-        output_rows=hyp_rows,
-        output_cols=hyp_cols,
-        output_cells=hyp_cells,
-        cell_match_rate=cmr,
-        reference_source=source,
-        reference_is_weak=is_weak,
+        applicable=True, cell_f1=winner["f1"], cell_precision=winner["precision"],
+        cell_recall=winner["recall"], structure_similarity=winner["structure_similarity"],
+        teds=winner["teds"], reference_cells=winner["reference_cells"],
+        output_cells=winner["output_cells"], reference_rows=sum(t.rows for t in ref),
+        reference_cols=max(t.cols for t in ref), output_rows=sum(t.rows for t in predicted),
+        output_cols=max((t.cols for t in predicted), default=0),
+        reference_source=gt.table_html_source, reference_is_weak=gt.table_html_source in WEAK_TABLE_SOURCES,
+        cell_counts=counts, code_verdicts=winner["verdicts"], scorer=VERSION,
+        reference_comparisons=comparisons, selected_reference=selected,
+        output_tables=[t.html for t in predicted],
+        reason=None if predicted else "engine produced no recoverable table structure",
     )

@@ -96,6 +96,8 @@ class GroundTruth:
         if leg == "schema":
             return self.true_json is not None
         if leg == "key_value":
+            if self.metadata.get('structured_gold_reference') is not None:
+                return self.true_json is not None
             # Same page set as the reference run's scorer: at least 3 scalar
             # (non-array) reference fields. One rule for runner and scorer.
             return self.true_json is not None and self.scalar_field_count() >= 3
@@ -115,7 +117,14 @@ class GroundTruth:
         """Scalar reference fields the page prints as label:value pairs (stage
         1), or None when stage 1 has not run for this document."""
         from evaluation.kv_schema_code import load_aliases
-        aliases = load_aliases(Path(self.document_path).stem)
+        reviewed = self.metadata.get('structured_gold_reference')
+        aliases = reviewed.get('kv_aliases') if reviewed is not None else load_aliases(Path(self.document_path).stem)
+        if reviewed is not None:
+            if aliases is None:
+                return None
+            excluded = set(reviewed.get('excluded_fields', []))
+            return sum(1 for path, a in aliases.items()
+                       if path not in excluded and a.get('is_printed_pair'))
         if not aliases:
             return None
         return sum(1 for path, a in aliases.items() if "[" not in path and a.get("is_printed_pair"))
@@ -240,6 +249,31 @@ class GroundTruthLoader:
         self._attach_structured(document_path, gt)
         self._attach_geometry(document_path, gt)
         self._apply_reviewed_reference_repairs(document_path, gt)
+        from evaluation.structured_references import load_gold_structured
+        structured_gold = load_gold_structured(document_path)
+        if structured_gold is not None:
+            gt.true_json = structured_gold['true_json']
+            gt.json_schema = structured_gold['json_schema']
+            gt.structured_note = 'Human-reviewed structured reference (schema and KV gold slot)'
+            gt.metadata['structured_gold_reference'] = structured_gold
+            previous_repairs = gt.metadata.get('structured_reference_repairs', {})
+            gt.metadata['structured_reference_repairs'] = {
+                'version': 'human-structured-gold-v1',
+                'excluded_fields': structured_gold.get('excluded_fields', []),
+                'previous_repairs': previous_repairs,
+                'gold_path': structured_gold['path'],
+            }
+        # Only an explicit human save/accept creates this slot. Proposed
+        # patches stay separate; without gold the original reference above wins.
+        from evaluation.table_references import load_gold_table, load_original_table
+        if gt.doc_type == "shipping":
+            original = load_original_table(document_path)
+            gt.metadata["table_original_reference"] = original or {"table_html": gt.table_html}
+        gold = load_gold_table(document_path)
+        if gold is not None:
+            gt.table_html = gold["table_html"] or None
+            gt.table_html_source = "human-reviewed table reference (gold slot)"
+            gt.metadata["table_gold_reference"] = gold
         return gt
 
     @staticmethod

@@ -257,122 +257,9 @@ def _checklist_items(line: str) -> list[str]:
 
 
 def markdown_blocks(text: str) -> list[tuple[str, str, int]]:
-    """(type, text, line_no) blocks from the engine's markdown."""
-    text = unfence(text)
-    out: list[tuple[str, str, int]] = []
-    para: list[str] = []
-    para_start: int | None = None
-
-    def flush() -> None:
-        nonlocal para, para_start
-        if para:
-            out.append(("paragraph", " ".join(para), para_start or 0))
-        para, para_start = [], None
-
-    lines = text.replace("\r", "").split("\n")
-    i = 0
-    in_code = False
-    while i < len(lines):
-        raw = lines[i]
-        s = _html.unescape(raw).replace(" ", " ").strip()
-        i += 1
-        if s.startswith("```"):
-            flush()
-            in_code = not in_code
-            continue
-        bolds = re.findall(r"\*\*([^*]+)\*\*", s)
-        if bolds and not re.sub(r"\*\*[^*]+\*\*|\s", "", s):
-            flush()
-            for b in bolds:
-                out.append(("heading", b.strip(), i))
-            continue
-        if in_code:
-            if not s:
-                flush()
-                continue
-            if para_start is None:
-                para_start = i
-            para.append(s)
-            continue
-        if not s:
-            flush()
-            continue
-        if _SEP.match(s):
-            continue
-        m = re.match(r"^#{1,6}\s+(.*)$", s)
-        if m:
-            flush()
-            out.append(("heading", m.group(1).strip("# ").strip(), i))
-            continue
-        m = re.match(r"^\*\*([^*]{1,80})\*\*\s+(\S.*)$", s)
-        if m and not re.match(r"^[^:]{1,60}:\s*$", m.group(1)):
-            flush()
-            out.append(("heading", m.group(1).strip(), i))
-            s = m.group(2)
-        if i < len(lines) and re.match(r"^\s*(=+|-+)\s*$", lines[i]) and not s.startswith("|"):
-            flush()
-            out.append(("heading", s, i))
-            i += 1
-            continue
-        if s.startswith("|") or s.count("|") >= 2:
-            flush()
-            cells = [c.strip() for c in s.strip("|").split("|")]
-            out.append(("table_row", " | ".join(cells), i))
-            continue
-        low = s.lower()
-        if "<table" in low or "<tr" in low or "<td" in low:
-            flush()
-            out.append(("html", s, i))
-            continue
-        m = re.match(r"^([-*+]|\d+[.)])\s+(.*)$", s)
-        if m:
-            flush()
-            out.append(("list_item", re.sub(rf"^{_CHECK}\s*", "", m.group(2)).strip(), i))
-            continue
-        m = _CHECK_LINE.match(s) if MARKDOWN_POLICY["checkbox_line_is_list_item"] else None
-        if m and len(re.findall(_CHECK, s)) == 1:
-            # one checkbox glyph on the line: a check-list item (several
-            # glyphs on one line is a flattened list, left as a paragraph)
-            flush()
-            out.append(("list_item", (m.group(1) or m.group(2)).strip(), i))
-            continue
-        if MARKDOWN_POLICY["checkbox_line_is_list_item"] and len(re.findall(_CHECK_MARK, s)) >= 2:
-            # several check-list items on one line — a two-column grid read
-            # across: "Allergies ☑ Black Outs ☐" (every item ends with its
-            # glyph) or "☑ Antidepressants ☐ Anti Inflammatory" (every item
-            # starts with one), with or without a "|" between them. The
-            # glyphs mark the item boundaries, so each is a list item. A line
-            # where the glyphs sit mid-sentence ("medication ☐NEW or a
-            # ☑CONTINUATION of THERAPY?") stays a paragraph.
-            items = _checklist_items(s)
-            if items:
-                flush()
-                for it in items:
-                    out.append(("list_item", it, i))
-                continue
-        m = re.match(r"^\*\*([^*]{1,80})\*\*\s*$", s)
-        if m:
-            flush()
-            out.append(("heading", m.group(1).strip(), i))
-            continue
-        m = re.match(r"^(?:\*\*)?([^:*]{1,60})(?:\*\*)?\s*:\s*(?:\*\*)?(.+?)(?:\*\*)?\s*$", s)
-        if m and len(s) <= 160:
-            flush()
-            out.append(("key_value", f"{m.group(1).strip()}: {m.group(2).strip()}", i))
-            continue
-        if para_start is None:
-            para_start = i
-        para.append(s)
-    flush()
-    if any(b[0] == "html" for b in out):
-        try:
-            from bs4 import BeautifulSoup
-            for tr in BeautifulSoup(text, "lxml").find_all("tr"):
-                out.append(("table_row", " | ".join(c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])), 0))
-        except Exception:
-            pass
-        out = [b for b in out if b[0] != "html"]
-    return out
+    """Actual rendered structure, with block positions rather than guessed lines."""
+    from evaluation.markdown_structure import blocks
+    return blocks(text)
 
 
 def _sim(a: str, b: str) -> float:
@@ -469,64 +356,16 @@ class MarkdownCodeResult:
 
 
 def score_markdown_code(text: str, items: list[dict]) -> MarkdownCodeResult:
-    blocks = markdown_blocks(text or "")
-    ntext = mnorm(unfence(text or ""))
-    verdicts: list[MarkdownVerdict] = []
-    def in_text(s: str) -> bool:
-        """Present anywhere in the output: contiguous, or every token in order
-        (a form's checkbox line interleaves label, boxes and answer)."""
-        ns = mnorm(s)
-        return bool(ns) and (ns in ntext or _subseq(ns, ntext))
-
-    for idx, it in enumerate(items, 1):
-        t, content = str(it.get("type") or ""), str(it.get("content") or "")
-        if t == "key_value":
-            # the rubric's own exception: correct when label and value both
-            # appear, in any format
-            m = re.match(r"^\s*([^:]{1,80}):\s*(.*)$", content)
-            lab, val = (m.group(1), m.group(2)) if m else (content, "")
-            lf = in_text(lab)
-            vf = bool(mnorm(val)) and in_text(val)
-            ok = lf and (not mnorm(val) or vf)
-            v = "correct" if ok else ("partial" if (lf or vf) else "absent")
-            verdicts.append(MarkdownVerdict(idx, t, content, v, f"label {'found' if lf else 'missing'}, value {'found' if vf else ('n/a' if not mnorm(val) else 'missing')}"))
-            continue
-        best, bt, bs = None, None, 0.0
-        cands = _merged_blocks(blocks) + (_table_columns(blocks) if t == "table_row" else [])
-        for (bt_, btext, ln) in cands:
-            s = _row_sim(content, btext) if (t == "table_row" and bt_ == "table_row") else _sim(content, btext)
-            if s > bs:
-                best, bt, bs = (btext, ln), bt_, s
-        if bs >= 0.85:
-            # A one-line paragraph with a colon ("Source: World Bank") is a
-            # paragraph; the key_value block type is this parser's guess, not
-            # a structure the engine chose.
-            same = bt == t or (t == "paragraph" and bt == "key_value")
-            note = ""
-            if not same and bt == "table_row" and t in ("heading", "list_item"):
-                cells = [mnorm(c) for c in best[0].split(" | ")]
-                cells = [c for c in cells if c]
-                if t == "heading" and cells == [mnorm(content)] and MARKDOWN_POLICY["heading_as_single_cell_row"]:
-                    same, note = True, "; heading as a single-cell table row"
-                elif t == "list_item" and mnorm(content) in cells and MARKDOWN_POLICY["list_item_as_table_cell"]:
-                    same, note = True, "; list item as a whole table cell"
-            verdicts.append(MarkdownVerdict(idx, t, content, "correct" if same else "wrong_type", f"best block: {bt} line {best[1]} ({bs:.2f}){note}"))
-        elif bs >= 0.5:
-            verdicts.append(MarkdownVerdict(idx, t, content, "partial", f"best block: {bt} line {best[1]} ({bs:.2f})"))
-        elif t == "table_row" and _cells_present(content, ntext):
-            # every cell of the row is in the output but not as a table row:
-            # present, wrong structure — the rubric's wrong_type, not absent
-            verdicts.append(MarkdownVerdict(idx, t, content, "wrong_type", "all cells present in the text, no table row"))
-        elif in_text(content):
-            verdicts.append(MarkdownVerdict(idx, t, content, "wrong_type", "text present, not as a block of this type"))
-        else:
-            verdicts.append(MarkdownVerdict(idx, t, content, "absent", f"best similarity {bs:.2f}"))
-    c = sum(1 for v in verdicts if v.verdict == "correct")
-    p = sum(1 for v in verdicts if v.verdict == "partial")
-    w = sum(1 for v in verdicts if v.verdict == "wrong_type")
-    a = sum(1 for v in verdicts if v.verdict == "absent")
-    n = len(verdicts)
-    return MarkdownCodeResult(round((c + 0.5 * p) / n, 4) if n else 0.0, n, c, p, w, a, verdicts, len(blocks))
+    from evaluation.markdown_structure import match_items
+    matches, blocks = match_items(text, items)
+    verdicts = [MarkdownVerdict(i + 1, str(item.get("type", "")), str(item.get("content", "")),
+                                match.verdict, match.how)
+                for i, (item, match) in enumerate(zip(items, matches))]
+    counts = {v: sum(m.verdict == v for m in matches) for v in ("correct", "partial", "wrong_type", "absent")}
+    n = len(items)
+    accuracy = (counts["correct"] + .5 * counts["partial"]) / n if n else 0.0
+    return MarkdownCodeResult(round(accuracy, 4), n, counts["correct"], counts["partial"],
+                              counts["wrong_type"], counts["absent"], verdicts, len(blocks))
 
 
 # ---------------------------------------------------------------- tables

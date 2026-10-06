@@ -648,6 +648,7 @@ def _score_pass_legs(
     legs: tuple[str, ...] | list[str], text: str, structured_output: dict | None,
     steady_latency: float, steady_cost: float, model_version: str,
     use_judge: bool | None, results_jsonl: Path,
+    supplied_schema: dict | None = None,
 ) -> list[str]:
     """Score one stored pass for every leg it feeds and append the leg rows.
 
@@ -657,6 +658,20 @@ def _score_pass_legs(
     """
     parts = []
     for leg in legs:
+        contract = {}
+        if leg == "schema" and gt.has_gt_for("schema"):
+            from evaluation.schema_contract import stored_contract_status
+            contract = stored_contract_status(gt, supplied_schema)
+            if not contract["schema_contract_matches"]:
+                log_record({
+                    **base, "leg": leg, "pass_name": pass_name, "applicable": False,
+                    "score": None, "reason": "schema rerun required: supplied contract is missing or differs from current reference",
+                    "metrics": contract, "detail": {}, "error": None,
+                    "latency_seconds": round(steady_latency, 3),
+                    "cost_per_page": round(steady_cost, 6), "model_version": model_version,
+                }, results_jsonl)
+                parts.append("schema=rerun-required")
+                continue
         try:
             score = score_leg(leg, engine, text, gt, structured_output, use_judge=use_judge)
         except Exception as exc:
@@ -678,7 +693,7 @@ def _score_pass_legs(
             "applicable": score.applicable,
             "score": score.score,
             "reason": score.reason,
-            "metrics": score.as_metrics(),
+            "metrics": {**score.as_metrics(), **contract},
             "detail": score.as_detail(),
             "latency_seconds": round(steady_latency, 3),
             "cost_per_page": round(steady_cost, 6),
@@ -831,6 +846,7 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
             float(rec.get("steady_cost_per_page") or 0.0),
             rec.get("model_version") or "unknown",
             use_judge, results_jsonl,
+            supplied_schema=call.get("json_schema"),
         )
         scored += len(legs)
         if parts:
@@ -864,8 +880,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     The manifest records `rescore_of` and the scorer versions.
     """
     from evaluation.ground_truth import GroundTruthLoader
-    from evaluation.code_judges import SCORER_VERSION as MD_TBL_VERSION
-    from evaluation.kv_schema_code import SCORER_VERSION as KV_VERSION
+    from evaluation.shared_fields import VERSION as KV_VERSION
+    from evaluation.table_cells import VERSION as TABLE_VERSION
     from evaluation.geometry_leg import SCORER_VERSION as GEOMETRY_VERSION
     from runners.textract_structured_runner import TABLE_ADAPTER_VERSION
 
@@ -901,7 +917,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         # judge rows (detail.items); they are copied, never re-asked.
         for r in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
             if r.get("leg") == "judge" and not r.get("error"):
-                log_record({**r, "timestamp": target, "source_timestamp": src}, results_jsonl)
+                log_record({**r, "timestamp": target, "source_timestamp": src,
+                            "metrics": {**r.get("metrics", {}), "historical_verdicts": True}}, results_jsonl)
                 copied_judge += 1
         # A call that failed and was then retried successfully is not a
         # failure of the run: only (engine, document, pass) triples with NO
@@ -989,6 +1006,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                 float(rec.get("steady_cost_per_page") or 0.0),
                 rec.get("model_version") or "unknown",
                 use_judge, results_jsonl,
+                supplied_schema=call.get("json_schema"),
             ) if legs else parts
             scored += len(legs)
             if parts:
@@ -1000,7 +1018,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         "rescore_of": sources, "collect_only": False, "scored": True,
         "scored_with_judge": not skip_judge,
         "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
-        "scorers": {"markdown/tables": MD_TBL_VERSION, "key_value/schema": KV_VERSION,
+        "scorers": {"markdown": "markdown-structure-v1", "tables": TABLE_VERSION,
+                    "key_value/schema": KV_VERSION,
                     "geometry": GEOMETRY_VERSION,
                     "text": "gt coverage (unchanged)"},
         "scored_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
@@ -2667,6 +2686,7 @@ def main() -> None:
             engine, doc_path, gt, base, plan.name, plan.legs, result.raw_text,
             result.structured_output, steady_latency, steady_cost,
             result.model_version, False if args.skip_judge else None, results_jsonl,
+            supplied_schema=getattr(task, "json_schema", None),
         )
         log.info(f"  [{engine}/{plan.name}] {doc_path.name}  " + "  ".join(parts)
                  + f"  {steady_latency:.1f}s  ${cost:.5f}")

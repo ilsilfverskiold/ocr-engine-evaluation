@@ -2,7 +2,8 @@
 
 Cached, engine-blind stage-1 aliases identify the printed label(s) for each
 scalar GT field. The matcher parses the engine's pairs and compares keys and
-values using the rules in kv_schema_code.py. Arrays belong to the schema leg.
+values using the rules in kv_schema_code.py. Human gold may select any leaf
+field, including fields stored inside arrays; its printed labels define KV.
 No stage-1 cache or no printed pairs means not applicable; this scorer never
 creates an alias cache or calls a judge. Score = (correct + blank_ok) / fields.
 """
@@ -39,6 +40,8 @@ class KeyValueScore:
     alias_missing: bool = False
     cleanup_log: list[str] = field(default_factory=list)
     scorer: str | None = None
+    unresolved_keys: list[dict] = field(default_factory=list)
+    synonym_reference_id: str | None = None
 
     @property
     def score(self) -> float | None:
@@ -60,11 +63,15 @@ class KeyValueScore:
             "kv_alias_missing": self.alias_missing,
             "kv_scorer": self.scorer,
             "kv_judge_cost_usd": self.judge_cost_usd,
+            "kv_unresolved_keys": len(self.unresolved_keys),
+            "kv_synonym_reference_id": self.synonym_reference_id,
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {
             "cleanup": self.cleanup_log,
+            "unresolved_keys": self.unresolved_keys,
+            "synonym_reference_id": self.synonym_reference_id,
             "verdicts": [
                 {
                     "path": v.path,
@@ -108,8 +115,9 @@ def score_key_value(
     if not gt.has_gt_for("key_value"):
         return KeyValueScore(applicable=False, reason=gt.missing_gt_reason("key_value"))
 
+    reviewed = gt.metadata.get('structured_gold_reference')
     pairs = _reference_pairs(gt)
-    if len(pairs) < 3:
+    if reviewed is None and len(pairs) < 3:
         return KeyValueScore(
             applicable=False,
             reason="too few scalar fields for key-value evaluation"
@@ -124,23 +132,53 @@ def score_key_value(
     from evaluation.kv_schema_code import (
         SCORER_VERSION, engine_pairs, load_aliases, score_fields,
     )
-    from evaluation.schema_judge import build_schema_checklist
+    from evaluation.schema_judge import SchemaChecklistItem, build_schema_checklist, _display_value
+    from evaluation.structured_metrics import is_blank
 
-    items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
-                                   use_cache=False, scalar_only=True)
+    if reviewed is not None:
+        aliases = reviewed.get('kv_aliases')
+        excluded = set(reviewed.get('excluded_fields', []))
+        # Human selection, not JSON storage shape or checklist sampling, is
+        # authoritative. Keep every selected field, including array leaves.
+        items = [SchemaChecklistItem(f.path, _display_value(f.value), is_blank(f.value))
+                 for f in walk_fields(gt.true_json, gt.json_schema)
+                 if f.path and f.path not in excluded
+                 and (reviewed.get('shared_field_selection') is True
+                      or (aliases or {}).get(f.path, {}).get('is_printed_pair'))]
+        scorer = SCORER_VERSION + '+human-kv-fields-v1'
+        if aliases is not None and not items:
+            return KeyValueScore(applicable=False, scorer=scorer,
+                                 reason='no fields selected as printed KV pairs in human gold')
+    else:
+        items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
+                                       use_cache=False, scalar_only=True)
+        aliases = load_aliases(document_stem)
+        scorer = SCORER_VERSION
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
-    aliases = load_aliases(document_stem)
-    res = score_fields(items, pairs, "key_value", aliases)
+    if reviewed is not None and reviewed.get("shared_field_selection"):
+        from evaluation.shared_fields import VERSION, reference_id, score_shared
+        res = score_shared(gt, pairs, "key_value")
+        return KeyValueScore(
+            applicable=res.total > 0, reason=None if res.total else "all shared reference fields excluded",
+            field_accuracy=res.accuracy if res.total else None,
+            pairs_total=res.total, pairs_correct=res.correct, pairs_missing=res.missing,
+            pairs_wrong_value=res.wrong, pairs_invented_value=res.invented,
+            blank_total=res.blank_total, blank_correct=res.blank_correct,
+            fields_all=res.total, engine_pairs=len(pairs), parsed_how=parsed_how,
+            scorer=VERSION, verdicts=res.verdicts, unresolved_keys=res.unresolved,
+            synonym_reference_id=reference_id(gt),
+        )
+    res = score_fields(items, pairs, "key_value", aliases, array_rows=reviewed is None)
     # The denominator is the set of fields the page prints as label+value
     # pairs, which only stage 1 can say. Without it, or when no scalar field
     # is a printed pair (chart_003: a page number, a footer, a value read off
     # a chart), the leg does not apply to the page — it is never "0 for
     # every engine".
     if res.alias_missing:
-        return KeyValueScore(applicable=False, scorer=SCORER_VERSION, fields_all=res.fields_all,
+        return KeyValueScore(applicable=False, scorer=scorer, fields_all=res.fields_all,
                              reason="stage 1 (printed labels) not run for this page: key_value denominator undefined")
     if res.fields_total == 0:
-        return KeyValueScore(applicable=False, scorer=SCORER_VERSION, fields_all=res.fields_all,
+        return KeyValueScore(applicable=False, scorer=scorer, fields_all=res.fields_all,
                              reason="no scalar field is printed as a label+value pair (stage 1)")
     return KeyValueScore(
         applicable=True,
@@ -158,6 +196,6 @@ def score_key_value(
         parsed_how=parsed_how,
         alias_missing=res.alias_missing,
         cleanup_log=res.cleanup_log,
-        scorer=SCORER_VERSION,
+        scorer=scorer,
         verdicts=res.verdicts,
     )
