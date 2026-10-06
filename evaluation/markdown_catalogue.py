@@ -42,7 +42,9 @@ Return JSON only: {"items":[{"type":"heading","content":"...",
 '''
 TYPES = ['heading', 'paragraph', 'list_item', 'table_header', 'table_row', 'key_value']
 SCHEMA = {'type': 'object', 'required': ['items'], 'properties': {'items': {
-    'type': 'array', 'maxItems': 40, 'items': {'type': 'object',
+    # Enforce the count locally: maxItems=40 exceeds Gemini's grammar-state
+    # limit for this nested object array, before any generation is attempted.
+    'type': 'array', 'items': {'type': 'object',
     'required': ['type', 'content', 'confident', 'notes'], 'properties': {
         'type': {'type': 'string', 'enum': TYPES}, 'content': {'type': 'string'},
         'confident': {'type': 'boolean'}, 'notes': {'type': 'string'}}}}}}
@@ -59,7 +61,7 @@ def source_hash(path):
 def validate(data):
     import jsonschema
     jsonschema.validate(data, SCHEMA)
-    if not data['items'] or any(not i['content'].strip() for i in data['items']):
+    if not 1 <= len(data['items']) <= 40 or any(not i['content'].strip() for i in data['items']):
         raise ValueError('Empty catalogue/content needs manual review')
     return data['items']
 
@@ -109,6 +111,8 @@ def _one(request):
     from google import genai
     from google.genai import types
     path = _check_request(request)
+    if (CACHE / (path.stem + '.json')).exists():
+        return {'document': request['document'], 'skipped': 'existing catalogue', 'cost_usd': 0}
     journal = CACHE / 'calls' / (request['id'] + '.json')
     journal.parent.mkdir(parents=True, exist_ok=True)
     if journal.exists():
@@ -135,10 +139,15 @@ def _one(request):
                       input_tokens=inputs, output_tokens=outputs,
                       cost_usd=(inputs * PRICING['input_per_million'] + outputs * PRICING['output_per_million']) / 1e6)
         journal.write_text(json.dumps(record, indent=2, ensure_ascii=False))
+        if not reply.text:
+            reasons = [str(getattr(candidate, 'finish_reason', None))
+                       for candidate in (reply.candidates or [])]
+            raise ValueError(f'No catalogue returned; finish reasons: {reasons}')
         items = validate(json.loads(reply.text))
         _write_proposal(request, items, journal)
     except Exception as exc:
         record['error'] = f'{type(exc).__name__}: {exc}'
+        record['http_status'] = getattr(exc, 'code', None)
     finally:
         journal.write_text(json.dumps(record, indent=2, ensure_ascii=False))
         client.close()
@@ -169,8 +178,13 @@ def execute(plan, allowance):
                    * PRICING['output_per_million'] / 1e6 for _ in requests)
     if not 0 < allowance < float('inf') or required > allowance:
         raise ValueError(f'Plan reserve ${required:.4f} exceeds allowance ${allowance:.2f}')
+    if not requests:
+        return []
+    first = _one(requests[0])
+    if first.get('error') or ('raw_text' not in first and not first.get('skipped')):
+        return [first]  # Validate this exact wire request before sending the batch.
     with ThreadPoolExecutor(max_workers=4) as pool:
-        return list(pool.map(_one, requests))
+        return [first, *pool.map(_one, requests[1:])]
 
 
 def accept(stem, reviewer, notes):

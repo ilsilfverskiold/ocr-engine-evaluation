@@ -130,7 +130,9 @@ def test_per_leg_reference_counts():
     def n(leg: str) -> int:
         return sum(1 for gt in CORPUS if gt.has_gt_for(leg))
 
-    assert n("markdown") == 57
+    # 57 existing sidecar-backed catalogues plus 35 source-reviewed additions.
+    # newspaper_000 returned RECITATION/no catalogue and remains ineligible.
+    assert n("markdown") == 92
     assert n("tables") == 42        # a human marked the page as a table page
     assert n("schema") == 65
     # Accepted flat gold supplies the same field set for both legs.

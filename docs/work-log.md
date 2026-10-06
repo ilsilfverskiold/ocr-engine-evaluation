@@ -1723,3 +1723,28 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   formulas to current scoring. Schema contracts now reach 200 selected fields;
   fixed context/output limits require sizing before a paid full-schema rerun.
   No schema/Modal call or model/GPU change. All-leg cache-only rescore underway.
+
+
+## 2026-10-06 — cached Markdown reuse and missing-only completion
+
+- Verified previous test 20261002T162630Z scored exactly the 57 pages already
+  cached. SHA-256 confirms every existing catalogue is unchanged. No repeat
+  generation for those pages; no other missing catalogues found in prior tests.
+- User approved missing-only generation. 36 Gemini 2.5 Pro requests cost
+  $0.64341; 35 returned catalogues reviewed against source images and activated.
+  newspaper_000 returned RECITATION/no content; no retry. First wire schema
+  failed with 36 uncharged HTTP 400s; removed provider maxItems, enforced it
+  locally, and added first-request validation before batch submission.
+- Corrected receipt row splitting, mistaken heading/list types, transcription
+  and column-continuation mistakes. Excluded uncertain elements; raw replies,
+  review edits and notes retained. These are assistant-reviewed references,
+  not additional human gold approval. Existing 57 deliberately stay unchanged.
+- Cache-only replay 20261006T202641Z: 908 scored results, 92 pages, zero errors;
+  all previous 627 scores unchanged. One newspaper page remains N/A. Paid schema,
+  Markdown/table prompt controls, geometry and silver reruns remain outstanding.
+- Moved redundant reviewed proposals and original invalid-schema journals to
+  session scratch; permanent audit records all failed requests and hashes.
+  Active catalogues and original successful replies remain versioned. No push.
+- Validation: 400 offline tests pass; the one updated corpus assertion now
+  expects 92 Markdown reference pages. Verified all 57 prior cache hashes and
+  all 627 prior scores unchanged. No new judge call during rescore.

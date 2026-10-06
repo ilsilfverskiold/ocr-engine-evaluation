@@ -29,9 +29,10 @@ def main():
         from dotenv import load_dotenv
         load_dotenv(catalogue.ROOT.parent / '.env')
         result = catalogue.execute(json.loads(args.plan.read_text()), args.budget_usd)
-        print(json.dumps({'calls': len(result), 'cost_usd': sum(r.get('cost_usd', 0) for r in result),
+        print(json.dumps({'requests': len(result), 'skipped_existing': sum(bool(r.get('skipped')) for r in result),
+                          'cost_usd': sum(r.get('cost_usd', 0) for r in result),
                           'errors': sum(bool(r.get('error')) for r in result),
-                          'unfinished_attempts': sum('raw_text' not in r for r in result)}, indent=2))
+                          'unfinished_attempts': sum('raw_text' not in r and not r.get('skipped') for r in result)}, indent=2))
     else:
         print(catalogue.accept(args.stem, args.reviewer, args.notes))
 

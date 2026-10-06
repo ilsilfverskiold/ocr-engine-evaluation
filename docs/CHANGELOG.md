@@ -4,6 +4,16 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — reused 57 Markdown catalogues; added 35 missing
+
+- Existing cache and its 627 scores are unchanged. New image-only generation
+  cost $0.64341; accepted 35 source-reviewed catalogues, retaining corrections,
+  exclusions and original responses. newspaper_000 returned no catalogue.
+- Free rescore 20261006T202641Z: 908 results scored across 92 pages, zero errors.
+  No additional engine inference; new checklist creation is cached permanently.
+- Fix provider response-schema rejection; validate one request before batch
+  submission, preserve existing caches at execution time, report no-content stops.
+
 ## 2026-10-06 — reviewed catalogues for missing Markdown pages
 
 - Prepare exact image-only catalogue requests and keep generated proposals

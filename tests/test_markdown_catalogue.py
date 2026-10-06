@@ -121,3 +121,28 @@ def test_pending_catalogue_in_active_directory_cannot_score(corpus, monkeypatch)
     monkeypatch.setattr(code_judges, 'MARKDOWN_CACHE_DIR', c.CACHE)
     assert code_judges.load_markdown_checklist('receipt') is None
     assert not GroundTruthLoader().load(corpus).has_gt_for('markdown')
+
+
+def test_execution_rechecks_existing_catalogue_before_any_paid_call(corpus, monkeypatch):
+    from google import genai
+    plan = c.prepare()
+    c.CACHE.mkdir(parents=True)
+    (c.CACHE / 'receipt.json').write_text(json.dumps({'items': items()}))
+    monkeypatch.setattr(genai, 'Client', lambda **kw: pytest.fail('existing reference must not trigger a call'))
+    assert c.execute(plan, 1)[0]['skipped'] == 'existing catalogue'
+
+
+def test_first_rejected_request_stops_batch(corpus, monkeypatch):
+    plan = c.prepare()
+    other = dict(plan['requests'][0], id='second')
+    plan['requests'].append(other)
+    monkeypatch.setattr(c, '_check_request', lambda r: corpus)
+    seen = []
+    monkeypatch.setattr(c, '_one', lambda r: seen.append(r['id']) or {'error': '400 invalid schema'})
+    assert len(c.execute(plan, 1)) == 1
+    assert seen == [plan['requests'][0]['id']]
+
+
+def test_item_limit_is_local_not_a_large_provider_grammar():
+    assert 'maxItems' not in c.SCHEMA['properties']['items']
+    with pytest.raises(ValueError): c.validate({'items': [items()[0]] * 41})
