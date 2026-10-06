@@ -1534,3 +1534,32 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   paid call, benchmark run, schema extraction, rescore, reference edit or report
   regeneration. Only the existing module, CLI, tests and three docs are changed;
   all exploratory artifacts remain outside the repo. Commit in nested repo only.
+
+## 2026-10-06 — execute approved six-call KV controls
+
+- Authorization: user said “yes fine” to six calls with the $0.10 allowance.
+  Verify the exact prepared plan hash, unchanged reference fingerprints and
+  empty request journals before submitting; use existing parent .env credentials
+  without exposing them. No prompt, model, configuration or case changes.
+- All six calls attempted once, zero retries. All six replies are valid JSON
+  and finish with STOP. Independently decode/validate saved text and reproduce
+  all 41 control verdicts from saved replies. Correct: bank 8/8, chart 4/4,
+  invoice 8/8, photo 8/8, shipping 5/5, tax 7/8.
+- Result: 40/41 correct, zero false associations, one missed association,
+  no missing decisions. All 23 intended no-matches rejected; 17/18 positive
+  synonyms accepted. Judge abstained on `b Taxable amount 4b` despite reference
+  `4b — Taxable amount`. Confirm the explicit line identity from both keys;
+  do not claim a hidden reason for a response with no explanation requested.
+- Recompute usage from the six raw provider records, including thinking tokens:
+  $0.0174635 total, within the allowance. No unknown-billing calls. Verify
+  artifact files contain no API credential and no active page synonym caches.
+- Preserve all nine experimental artifacts outside the repo in
+  /private/tmp/ocr-eval-rebuild-20261006/kv-controls-results/ (plan, six request
+  journals, execution summary, audit). Remove their generated repo directory by
+  moving it intact, not deleting evidence. Do not re-execute this control plan.
+- Update existing follow-up and changelog. The strict all-controls-pass gate
+  failed; stop before a larger batch, with the single explicit tax-line mapping
+  recorded for a reviewed correction. No further pilot is needed to discover
+  this same miss. No new schema/OCR call, gold edit, active cache, rescore or
+  report. No source-code changes, so no repeated unit suite; validate the actual
+  saved responses and costs instead. Commit only these three docs in nested git.

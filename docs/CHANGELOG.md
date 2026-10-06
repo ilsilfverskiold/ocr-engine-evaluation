@@ -4,6 +4,14 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — record approved KV control results
+
+- Six approved calls, no retries: all replies complete, 40/41 control decisions
+  correct, no incorrect associations and one missed explicit tax-line synonym.
+  Actual usage cost $0.0174635. No scores or caches activated.
+- Keep experimental plan/replies/audit outside GitHub. Record the narrow miss
+  and next action in the existing follow-up; no larger batch or schema calls.
+
 ## 2026-10-06 — prepare compact KV correction controls
 
 - Add offline preparation and grading of key-only controls using saved output
