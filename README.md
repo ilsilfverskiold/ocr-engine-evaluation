@@ -16,7 +16,8 @@ python run_benchmark.py --report 20261002T162630Z    # corrected saved results
 That saved run predates the current evaluation changes. The new scorers and
 accepted references and KV matching are implemented. The shared-sample schema
 run is `20261006T214240Z` (453 scored results, two server errors). Remaining leg
-controls and the replacement all-leg report are in progress. See the current
+controls are deferred under the no-more-paid-runs instruction; offline integration
+and the replacement all-leg report remain in progress. See the current
 [execution checklist](docs/follow-up-2026-10-03.md) for what has actually run.
 
 With the document corpus installed, build the browser report (no API calls):
@@ -223,16 +224,19 @@ the ask was the best one available to it.
 ## How each leg is scored
 
 The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). The saved run uses older scorers. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
-The completed KV-only rescore is **`20261006T195826Z`**: 260 scored outputs,
+The current KV-only rescore is **`20261006T214928Z`**: 260 scored outputs,
 65 accepted pages, four engines, zero pending decisions/errors. Its 342 judge
-calls cost **$1.4756**, including all responses; final replay made no new calls.
+calls in the earlier run cost **$1.4756**, including all responses. The current
+offline replay reuses them, fixes complete split-value matching and displays
+cached rejections; it made no new calls.
 See [the follow-up](docs/follow-up-2026-10-03.md#latest-kv-decision--inline-value-assisted-evaluation)
 and `results/runs/20261006T195826Z_kv_judge_audit.json`. The table below describes current scoring. Historical full-run scores still
-need replacement after the remaining approved reference/inference work.
+need replacement through offline rescoring and integration; no more paid runs
+are authorized for this delivery.
 Rebuild the KV viewer with:
 
 ```bash
-python scripts/build_evidence_report.py 20261006T195826Z --output results/reports/ocr-benchmark-kv.html --status 'Completed KV-only rescore; other legs are separate.'
+python scripts/build_evidence_report.py 20261006T214928Z --output results/reports/ocr-benchmark-kv.html --status 'KV offline correction; cached decisions reused; no new paid calls.'
 ```
 
 KV can call a judge during evaluation for unmatched pairs, caching confirmations.

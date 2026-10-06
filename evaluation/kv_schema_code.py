@@ -412,6 +412,9 @@ def as_number(s: Any):
     negative = t.startswith("(") and t.endswith(")")
     if negative:
         t = t[1:-1].strip()
+    # Currency glyphs are display formatting for numeric value comparison.
+    # Keep the sign, decimal and all digits; do not turn currency-only text into 0.
+    t = re.sub(r"[$€£¥₹]\s*$", "", t).strip()
     match = re.fullmatch(r"([+-])?\s*(?:RM|[$€£¥₹])?\s*([+-])?\s*(\d[\d.,\s]*)\s*%?", t, re.I)
     if not match or (match[1] and match[2]) or (negative and (match[1] or match[2])):
         return None

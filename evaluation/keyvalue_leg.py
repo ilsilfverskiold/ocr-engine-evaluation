@@ -109,6 +109,20 @@ def score_key_value(
     decisions = load_synonym_decisions(gt)
     pending = sorted({r['key'] for r in res.unresolved if r['key'] not in decisions
                       and pair_identity(*pairs[r['index']]) not in resolution.decided})
+    for item in res.unresolved:
+        key, value = pairs[item['index']]
+        decision = resolution.pair_decisions.get(pair_identity(key, value))
+        item['value'] = value
+        if decision:
+            item['decision'] = (decision.get('reason') or
+                                ('cached judge rejected proposed field: value mismatch'
+                                 if decision.get('rejected_value_proposal') else
+                                 'cached judge returned no match (incorrect or ambiguous)'))
+            item['request_id'] = decision.get('request_id')
+        elif str(key) in decisions and decisions[str(key)] is None:
+            item['decision'] = 'cached key-only no-match decision'
+        else:
+            item['decision'] = 'matching-value candidate awaits judgment; no paid call made'
     return KeyValueScore(
         applicable=res.total > 0 and not pending,
         reason=("KV pair judgment pending; provisional calculation is not a benchmark score" if pending

@@ -8,8 +8,10 @@ implemented and tested offline. The last published scores, run
 `20261002T162630Z`, predate these changes. The sampled schema run
 `20261006T214240Z` has 453 scored results and two server errors. Markdown
 catalogues now cover 92 pages; newspaper_000 remains missing. The remaining
-prompt controls and combined all-leg report are still pending. The inline KV rescore
-`20261006T195826Z` is complete across all 65 accepted structured-reference pages. The execution checklist is
+prompt controls are deferred: the user requested no more paid runs. The combined
+all-leg report is still pending. The inline KV rescore
+`20261006T214928Z` covers all 65 accepted structured-reference pages, reusing the
+paid decisions from `20261006T195826Z` with corrected split-value handling. The execution checklist is
 [follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 
 ## Prompts and provenance
@@ -145,6 +147,18 @@ confirmation. Code still checks every returned value after matching;
 a confirmed synonym cannot make a future wrong value correct. Reference changes
 invalidate the page cache. One output pair can satisfy only one reference field.
 `100` is not `1000`, and `12.34` is not `1234`.
+
+KV also accepts a complete value split into explicitly owner-prefixed components,
+such as Seller Name / Seller Address / Seller City. Components must cover the
+whole reference as non-overlapping contiguous token sequences; incomplete,
+wrong-owner, duplicate or extra components do not receive full credit. This can
+replace an empty parent but cannot bypass a nonempty contradictory answer or
+reuse a pair already assigned to another field. Verdicts retain the contributing
+keys. This is deterministic and does not apply to supplied-schema scoring.
+Numeric comparison ignores leading/trailing currency glyphs while preserving
+signs and decimals. Repeated equal amounts still require field identity.
+The report distinguishes cached no-match decisions from pending judgments;
+neither is evidence that value lookup was skipped.
 
 The shared path is `evaluation/keyvalue_leg.py` → `kv_value_judge.py`; live runs,
 saved-run scoring, rescoring and future engines all use it. `--skip-judge` reads

@@ -1836,3 +1836,32 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - The schema run used the approved sample, without engine tuning or a judge.
   Remaining all-leg controls are explicitly listed in the follow-up. 407
   offline tests passed; no push.
+
+
+## 2026-10-06 — KV split-value correction and no further paid runs
+
+- Investigated Sonnet invoice_001 against saved output and paid response journal.
+  Empty Seller/Client keys blocked complete Name/Address/City components. Added
+  deterministic owner-scoped whole-value assembly to the common KV evaluator;
+  preserve contributing keys and reject omissions, wrong owners, duplicate or
+  conflicting components, numeric sign/digit changes and reuse across fields.
+- Verified Net worth/Gross worth/VAT candidates actually reached the judge;
+  their stored replies are reference ID 0. Preserve those decisions, expose
+  request IDs and no-match reasons, remove misleading “no search by value”
+  wording. No inferred rationale is presented as the model's explanation.
+- Existing leading currency handling was correct; add trailing currency glyphs
+  without erasing signs or decimal distinctions. Supplied-schema scoring keeps
+  its existing exact-key contract. Gold files and paid caches are unchanged.
+- Replayed 288 stored KV rows as 20261006T214928Z: 260 scored, 28 no-reference
+  N/A, zero pending/errors, $0 new judge usage. Only Sonnet invoice_001 changes,
+  14/22 to 16/22. Audited all 260 scores and every stored detail by independently
+  reloading source calls with paid-call entry point disabled.
+- Rebuilt the ignored KV viewer with actual cached rejection evidence and
+  leg-specific notes. Checked its 288 unique rows, exact example, embedded data
+  and JavaScript syntax. Full offline suite: 420 passed; after adding the final
+  numeric-sign regression, all 30 KV-judge tests passed. No browser visual audit
+  is claimed for this change. Scratch scripts/logs remain outside the repo.
+- Updated follow-up, scoring design, README and changelog. The user now forbids
+  further paid runs: remaining prompt/pipeline/geometry/silver proposals are
+  deferred. Offline combined report, evidence audit and whole-folder cleanup
+  remain. No model/API/Modal request, new inference, or push was made.

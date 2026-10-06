@@ -4,6 +4,16 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — KV split values and cached-decision evidence
+
+- Credit complete owner-prefixed Name/Address/City components in KV, including
+  when the parent field is empty; retain each contributing key in the verdict.
+- Show actual cached no-match/pending decisions instead of claiming no value
+  search. Handle trailing currency glyphs as well as existing leading glyphs.
+- Offline rescore `20261006T214928Z`: Sonnet invoice_001 improves 14/22 to 16/22;
+  the other 259 scored results stay unchanged. No new paid calls. Further paid
+  prompt controls and silver refresh are deferred by user instruction.
+
 ## 2026-10-06 — sampled schema results
 
 - Run 20261006T214240Z consolidates 453 scored results and two provider errors

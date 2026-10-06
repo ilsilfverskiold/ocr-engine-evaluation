@@ -41,6 +41,54 @@ def test_known_keys_and_clearly_wrong_values_never_call_judge(monkeypatch):
     assert not calls
 
 
+def test_complete_split_owner_value_overrides_blank_parent_without_judge(monkeypatch):
+    calls = judge(monkeypatch, lambda r: pytest.fail('explicit components need no judge'))
+    ref = gt({'Seller': 'Trujillo-Hunt 430 Mark Ferry Suite 495 Maxside, DC 65686'})
+    pairs = {'Seller': '', 'Seller City': 'Maxside, DC 65686',
+             'Seller Name': 'Trujillo-Hunt', 'Seller Address': '430 Mark Ferry Suite 495'}
+    result = score_key_value(json.dumps(pairs), ref, 'x', use_judge=False)
+    assert result.score == 1 and not result.unresolved_keys and not calls
+    assert result.verdicts[0].key == 'Seller Name + Seller Address + Seller City'
+    assert 'split components' in result.verdicts[0].how
+    # Schema still requires the supplied value under its supplied key.
+    assert score_schema(json.dumps(pairs), ref, 'x').score == 0
+
+
+@pytest.mark.parametrize('parts', [
+    {'Seller Name': 'Alice'},  # incomplete
+    {'Seller Name': 'Alice', 'Client Address': '10 Main St'},  # wrong owner
+    {'Seller Name': 'Alice', 'Seller Address': '100 Main St'},  # numeric substring
+    {'Seller Name': 'Alice', 'Seller Address': '-10 Main St'},  # preserve signs
+    {'Seller Name': 'Alice', 'Seller Address': '10 Main St', 'Seller City': 'invented'},
+    {'Seller Name': 'Alice', 'Seller Address': 'Alice 10 Main St'},  # duplicated content
+    {'Seller': 'Bob', 'Seller Name': 'Alice', 'Seller Address': '10 Main St'},
+])
+def test_split_values_cannot_omit_conflicts_or_borrow_other_owners(parts):
+    result = score_key_value(json.dumps(parts), gt({'Seller': 'Alice 10 Main St'}), 'x', use_judge=False)
+    assert result.score != 1
+
+
+def test_split_child_cannot_also_satisfy_another_reference():
+    ref = gt({'Seller': 'Alice 10 Main St', 'Seller Name': 'Alice'})
+    result = score_key_value(json.dumps({'Seller Name': 'Alice', 'Seller Address': '10 Main St'}), ref, 'x', use_judge=False)
+    assert result.score == .5
+
+
+@pytest.mark.parametrize('amount', ['$ 8,50', '€8.50', '8,50 €', '8.50$'])
+def test_currency_formatted_values_nominate_same_candidates(amount):
+    _, requests, local = j.requests_for(gt({'Item net': '8,50', 'Summary net': '8.50'}), [('Net', amount)])
+    assert not local and requests[0]['output_pairs'][0]['candidate_ids'] == [1, 2]
+    assert not j.requests_for(gt({'Total': '12.34'}), [('Amount', '1234 €')])[1]
+
+
+def test_report_exposes_cached_rejection_instead_of_claiming_no_value_search(monkeypatch):
+    judge(monkeypatch, lambda r: {'1': {'reference_id': 0, 'synonym': False}})
+    result = score_key_value('{"Net":"8.50"}', gt({'Item net': '8.50', 'Summary net': '8.50'}), 'x')
+    assert 'cached judge returned no match' in result.unresolved_keys[0]['decision']
+    assert result.unresolved_keys[0]['request_id']
+    assert all('no search by value' not in v.how for v in result.verdicts)
+
+
 def test_confirmation_cached_for_next_engine_and_values_still_checked(monkeypatch):
     calls = judge(monkeypatch, lambda r: {'1': {'reference_id': 1, 'synonym': True}})
     ref = gt({'Total': '100'})

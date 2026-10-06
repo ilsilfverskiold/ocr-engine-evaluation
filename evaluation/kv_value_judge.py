@@ -15,7 +15,7 @@ from threading import RLock
 
 from evaluation.kv_schema_code import is_blank_value, value_equal
 from evaluation.kv_synonyms import digest, decode_reply, MODEL, CONTROL_CONFIG, PRICES
-from evaluation.shared_fields import reference_fields, reference_id, match_keys, load_synonyms
+from evaluation.shared_fields import reference_fields, reference_id, match_keys, load_synonyms, split_value_matches
 from evaluation.structured_metrics import normalize_label
 
 VERSION = "kv-value-assisted-v1"
@@ -123,11 +123,15 @@ def requests_for(gt, pairs):
     record = _read(gt)
     decisions, synonyms = _cache_maps(record)
     synonyms = {**load_synonyms(gt), **synonyms}
-    _, unresolved, _ = match_keys(gt, pairs, "key_value", synonyms)
+    assigned, unresolved, used = match_keys(gt, pairs, "key_value", synonyms)
+    split = split_value_matches(gt, pairs, assigned, used)
+    split_indices = {i for indices, _ in split.values() for i in indices}
     refs = [{"id": i, "key": f.path, "value": f.value}
             for i, f in enumerate(reference_fields(gt), 1)]
     pending, local, seen = [], [], set()
     for item in unresolved:
+        if item['index'] in split_indices:
+            continue
         key, value = pairs[item["index"]]
         identity = pair_identity(key, value)
         if identity in seen or identity in decisions:
@@ -243,6 +247,7 @@ class Resolution:
     decided: set = field(default_factory=set)
     cost_usd: float = 0.0
     errors: list[str] = field(default_factory=list)
+    pair_decisions: dict = field(default_factory=dict)
 
 
 def resolve(gt, pairs, use_judge=None):
@@ -274,6 +279,7 @@ def resolve(gt, pairs, use_judge=None):
             _save(gt, record)
         decisions, result.synonyms = _cache_maps(record)
         result.decided = set(decisions)
+        result.pair_decisions = {pair_identity(d['key'], d['value']): d for d in record['decisions']}
         return result
 
 
