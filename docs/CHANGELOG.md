@@ -4,6 +4,14 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — completed KV rescore
+
+- `20261006T195826Z`: 260 scored results / 65 pages, four engines, no pending
+  KV decisions or scoring errors. Completed cache replay makes no new calls.
+- 342 value-assisted calls cost $1.4755785. Preserve all request/response
+  journals, active caches and a hashed audit ledger. Keep final results only;
+  intermediate runs remain in local scratch. Schema/other legs remain separate.
+
 ## 2026-10-06 — value-assisted KV evaluation during scoring
 
 - Replace separate key-only synonym generation with a shared, incremental KV

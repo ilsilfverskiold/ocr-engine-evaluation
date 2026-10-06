@@ -220,6 +220,18 @@ the ask was the best one available to it.
 ## How each leg is scored
 
 The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). Current field code is v5; the saved run still records v4. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
+The completed KV-only rescore is **`20261006T195826Z`**: 260 scored outputs,
+65 accepted pages, four engines, zero pending decisions/errors. Its 342 judge
+calls cost **$1.4756**, including all responses; final replay made no new calls.
+See [the follow-up](docs/follow-up-2026-10-03.md#latest-kv-decision--inline-value-assisted-evaluation)
+and `results/runs/20261006T195826Z_kv_judge_audit.json`. The other rows below
+describe the historical full run; its remaining repairs are tracked separately.
+Rebuild the KV viewer with:
+
+```bash
+python scripts/build_evidence_report.py 20261006T195826Z --output results/reports/ocr-benchmark-kv.html --status 'Completed KV-only rescore; other legs are separate.'
+```
+
 KV can call a judge during evaluation for unmatched pairs, caching confirmations.
 The other deterministic legs do not make per-answer judge calls.
 
@@ -237,14 +249,14 @@ and 17 geometry pages. Coverage also varies by engine: Marker has only nine
 scored geometry pages and eight error rows. Errors and N/A are excluded from
 means. Headlines are means of document-type means, not pooled page averages.
 
-`--skip-judge` leaves all six legs available. It prevents new calls to the
-separate document judge on the 11 silver-GT pages. It does **not** disable a
-selected Gemini OCR engine. Markdown needs a cached image checklist; key-value
-needs a cached printed-label mapping. Those are not generated automatically.
+`--skip-judge` prevents new silver-document and KV judge calls. KV reuses saved
+confirmations and leaves genuinely unresolved candidates pending. It does **not**
+disable a selected Gemini OCR engine. Markdown needs a cached image checklist;
+KV learns needed variations during evaluation when judging is enabled.
 
 The document judge is an estimate, not a seventh leg. The saved rescore
 copies 110 previously saved judge rows unchanged and makes no new judge call.
-`--judge-model` affects that optional judge, not the six code-scored legs.
+`--judge-model` affects that optional document judge; inline KV uses Gemini 2.5 Flash.
 Its supported model identifiers and internal cost assumptions are in
 `evaluation/judge.py`; they are not current vendor price quotations.
 
@@ -391,8 +403,8 @@ python run_benchmark.py --report <TIMESTAMP>,20260810T130609Z
 
 Useful flags: `--tiers easy,medium,hard`, `--max-docs N` for a quick check,
 `--docs stem,stem` for a chosen cross-section,
-`--skip-judge` to disable the silver-document judge while keeping all six
-code-scored legs, and `--workers N` to cap parallelism. A selected Gemini OCR
+`--skip-judge` to prevent new document/KV judge calls while using existing
+confirmations, and `--workers N` to cap inference parallelism. A selected Gemini OCR
 engine still makes paid inference calls.
 
 **How a run executes.** Local CPU engines go first, one at a time, one document

@@ -1682,3 +1682,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   preserves the proposal as audit evidence, and recovers valid entries from the
   same saved reply. No repeated calls required for that recovery. Free replay
   20261006T195502Z applies the fixes. Final completion/results to be recorded below.
+
+
+## 2026-10-06 — KV completion, cached replay and evidence
+
+- Completion made 23 additional needed calls, bringing this implementation run
+  to 342 calls / $1.4755785 (original $2 cap). Cache-only final run
+  20261006T195826Z scores all 260 eligible outputs across 65 pages; no pending
+  judgments, scoring errors or new calls. Native outputs on 28 pages without
+  structured references stay N/A. No OCR/schema extraction.
+- Validate every saved response with the corrected per-pair rule and every
+  positive cached value against current gold. All pass; 172 wrong-value
+  proposals receive no credit. Preserve originals and their historical validation
+  errors as evidence. Report includes actual returned KV pairs and field verdicts.
+- Save cost/coverage/engine means/cache hashes in the final run audit JSON.
+  Generate ignored results/reports/ocr-benchmark-kv.html, verify its embedded
+  results, and retain only final JSONL/CSV in the repository; intermediate
+  run files move to session scratch. The permanent tests and implementation are
+  committed; experimental files are not. No reference gold changed; no push.

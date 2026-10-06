@@ -126,7 +126,9 @@ zeros and blanks are not enough to disambiguate a field.
 
 Confirmed key variations are cached immediately and reused by subsequent engines.
 If the judge needs the value to identify the field, cache the exact pair, not an
-unconditional key alias. Code still checks every returned value after matching;
+unconditional key alias. Repeated reference labels also stay pair-specific even
+if the judge proposes a wording alias. Replan later batches after each saved
+confirmation. Code still checks every returned value after matching;
 a confirmed synonym cannot make a future wrong value correct. Reference changes
 invalidate the page cache. One output pair can satisfy only one reference field.
 `100` is not `1000`, and `12.34` is not `1234`.
