@@ -698,7 +698,7 @@ def _judge_silver_document(
 ) -> float:
     """The document judge for a silver-GT page: the only text-quality figure
     those 11 pages get. Returns the judge cost in USD (0.0 on error)."""
-    from evaluation.judge import judge_document
+    from evaluation.judge import VERDICT_VERSION, judge_document
 
     try:
         JUDGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -719,6 +719,7 @@ def _judge_silver_document(
             "item_accuracy": getattr(verdict, "item_accuracy", None),
             "checklist_size": getattr(verdict, "checklist_size", len(items)),
             "items_checked": len(items),
+            "judge_verdict_version": VERDICT_VERSION,
         },
         # Per-item verdicts are kept, not just the total, so any judged
         # number can be traced back to the items behind it.

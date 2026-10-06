@@ -1372,3 +1372,23 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   reference modification, rescore or report regeneration. Check documentation
   diff/whitespace; existing implementation edits and review artifacts remain
   separate from this documentation update.
+
+## 2026-10-06 — geometry metric plan and silver substring fix
+
+- Record the user's geometry follow-up: located-unit precision/F1 to expose
+  extra boxes, plus CER/WER from box-associated text. Keep text fidelity distinct
+  from placement; record annotated scope, repeated predictions and line/word
+  units. This geometry scorer work remains pending.
+- Remove `_verify_locally` and its punctuation-stripped substring auto-credit
+  from the separate silver-document judge. Send every sampled item in one
+  contextual verdict batch, explicitly preserving decimal/sign/identifier
+  meaning and labeled-field association. No false-positive local shortcut
+  remains; model verdict accuracy still requires review.
+- Persist `silver-document-v2-no-substring-2026-10-06` in newly generated judge
+  rows. Old verdicts are not migrated or relabeled. Document that refreshing
+  estimates can increase judge tokens/calls and requires a costed execution plan.
+- Validation: `tests/test_judge.py` passes all 12 offline tests, including mocked
+  substring, decimal, sign, wrong-field, correct-value and mixed-batch cases.
+  No provider calls, benchmark commands, reference changes or rescoring. Update
+  the existing follow-up and changelog; keep unrelated pending reference/editor
+  changes out of this commit. No push.

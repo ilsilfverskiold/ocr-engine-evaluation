@@ -13,6 +13,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from evaluation.judge import MAX_CHECKLIST_ITEMS, ChecklistItem, _sample_checklist
@@ -49,3 +51,55 @@ def test_sampling_preserves_item_identity():
     sampled = _sample_checklist(_items(100))
     assert all(isinstance(item, ChecklistItem) for item in sampled)
     assert len({item.label for item in sampled}) == len(sampled)
+
+
+@pytest.mark.parametrize("expected,output,verdict", [
+    ("100", "Total: 1000", "present_wrong"),
+    ("12.34", "Total: 1234", "present_wrong"),
+    ("-100", "Total: 100", "present_wrong"),
+    ("100", "Subtotal: 100; Total: 900", "present_wrong"),
+    ("100", "Total: 100", "present_correct"),
+    ("12.34", "Total: 12.34", "present_correct"),
+])
+def test_silver_values_require_contextual_verdict(monkeypatch, expected, output, verdict):
+    """Wrong values cannot bypass the judge; this does not test model accuracy."""
+    from evaluation import judge
+
+    items = [ChecklistItem(label="Total", value=expected)]
+    monkeypatch.setattr(judge, "build_checklist", lambda *args, **kwargs: (items, 0.0))
+    calls = []
+
+    def fake_call(client, contents, schema, model):
+        calls.append(contents[0])
+        return {"verdicts": [{"n": 1, "verdict": verdict}]}, None
+
+    monkeypatch.setattr(judge, "_call", fake_call)
+    result = judge.judge_document(Path("unused.png"), output, client=object(), use_cache=False)
+    assert result.error is None
+    assert len(calls) == 1
+    assert f"1. Total: {expected}" in calls[0]
+    assert f"```\n{output}\n```" in calls[0]
+    assert result.items[0].verdict == verdict
+    assert result.item_accuracy == (1.0 if verdict == "present_correct" else 0.0)
+
+
+def test_silver_batches_all_items_without_renumbering_loss(monkeypatch):
+    from evaluation import judge
+
+    items = [ChecklistItem(label="Subtotal", value="100"),
+             ChecklistItem(label="Total", value="12.34")]
+    monkeypatch.setattr(judge, "build_checklist", lambda *args, **kwargs: (items, 0.0))
+    calls = []
+
+    def fake_call(client, contents, schema, model):
+        calls.append(contents[0])
+        return {"verdicts": [{"n": 2, "verdict": "present_wrong"},
+                             {"n": 1, "verdict": "present_correct"}]}, None
+
+    monkeypatch.setattr(judge, "_call", fake_call)
+    result = judge.judge_document(Path("unused.png"), "Subtotal: 100; Total: 1234",
+                                  client=object(), use_cache=False)
+    assert len(calls) == 1
+    assert "1. Subtotal: 100\n2. Total: 12.34" in calls[0]
+    assert [item.verdict for item in result.items] == ["present_correct", "present_wrong"]
+    assert result.item_accuracy == 0.5

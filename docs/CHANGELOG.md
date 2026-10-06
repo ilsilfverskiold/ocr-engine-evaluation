@@ -4,6 +4,16 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — remove silver-document substring auto-credit
+
+- Remove punctuation-stripped substring acceptance from the silver-document
+  judge. Every sampled item receives a contextual verdict; instructions preserve
+  numeric meaning and distinguish the intended field from unrelated values.
+- Version new judge-result metrics. Offline regression tests use a mocked judge;
+  no paid calls or historical score changes. Refreshing estimates remains pending.
+- Record agreed geometry precision/F1 and CER/WER on box-associated text as
+  follow-up work; no geometry scoring implementation or rerun in this change.
+
 ## 2026-10-03 — report the actual reason for N/A
 
 - Missing-reference rows now show their saved exclusion reason instead of a

@@ -51,12 +51,12 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
 DEFAULT_MODEL = "gemini-3.6-flash"
+VERDICT_VERSION = "silver-document-v2-no-substring-2026-10-06"
 
 PRICING = {
     "gemini-2.5-flash":      {"input": 0.30 / 1_000_000, "output": 2.50 / 1_000_000},
@@ -130,9 +130,13 @@ an OCR engine produced from that page. For each numbered value, decide:
 misspelling, a mangled code)
 - "absent"          — the value does not appear in the output at all
 
-Judge only whether the VALUE is there and correct. Ignore differences of \
-formatting, whitespace, casing, and where it appears in the output. A value \
-split across lines or surrounded by other text still counts as present.
+Check the complete value for the labeled item, not a substring inside another \
+value. Ignore harmless whitespace, casing and layout differences, but preserve \
+digits, decimal separators, signs, percentages and identifier punctuation when \
+they change meaning. 100 does not match 1000; 12.34 does not match 1234; -100 \
+does not match 100. A correct subtotal does not establish a correct total. \
+A value split across lines may match only if the complete value and its \
+association with the labeled item are preserved.
 
 VALUES TO CHECK:
 {items}
@@ -322,24 +326,6 @@ def build_checklist(
     return _sample_checklist(items), _cost(usage, model=model)
 
 
-def _verify_locally(item: ChecklistItem, engine_text: str) -> str | None:
-    """Settle the easy cases without a model call.
-
-    An exact (normalised) substring match is not a judgement call, and skipping
-    those keeps the model for the cases that genuinely need reading. Returns
-    None when the answer is not obvious and the model should decide.
-    """
-    def norm(s: str) -> str:
-        return re.sub(r"[^a-z0-9]", "", s.lower())
-
-    value, text = norm(item.value), norm(engine_text)
-    if not value:
-        return None
-    if value in text:
-        return "present_correct"
-    return None
-
-
 def judge_document(
     document_path: Path,
     engine_text: str,
@@ -362,31 +348,20 @@ def judge_document(
         if not items:
             return JudgeResult(item_accuracy=None, error="empty checklist")
 
-        # Cases an exact match settles need no model call.
-        verdicts: dict[int, str] = {}
-        undecided: list[tuple[int, ChecklistItem]] = []
-        for idx, item in enumerate(items):
-            local = _verify_locally(item, engine_text)
-            if local:
-                verdicts[idx] = local
-            else:
-                undecided.append((idx, item))
-
-        verdict_cost = 0.0
-        if undecided:
-            listing = "\n".join(
-                f"{n}. {item.label}: {item.value}" for n, (_, item) in enumerate(undecided, 1)
-            )
-            data, usage = _call(
-                client,
-                [_VERDICT_PROMPT.format(items=listing, engine_text=engine_text[:60_000])],
-                _VERDICT_SCHEMA,
-                model=model,
-            )
-            verdict_cost = _cost(usage, model=model)
-            returned = {v.get("n"): v.get("verdict") for v in data.get("verdicts", [])}
-            for n, (idx, _) in enumerate(undecided, 1):
-                verdicts[idx] = returned.get(n) or "absent"
+        # Every sampled item needs a contextual verdict. The old punctuation-
+        # stripped substring shortcut could accept 100 in 1000 or the wrong field.
+        listing = "\n".join(
+            f"{n}. {item.label}: {item.value}" for n, item in enumerate(items, 1)
+        )
+        data, usage = _call(
+            client,
+            [_VERDICT_PROMPT.format(items=listing, engine_text=engine_text[:60_000])],
+            _VERDICT_SCHEMA,
+            model=model,
+        )
+        verdict_cost = _cost(usage, model=model)
+        returned = {v.get("n"): v.get("verdict") for v in data.get("verdicts", [])}
+        verdicts = {idx: returned.get(idx + 1) or "absent" for idx in range(len(items))}
 
         results = [
             ItemVerdict(label=i.label, value=i.value,
