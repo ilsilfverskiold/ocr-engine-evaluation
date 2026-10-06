@@ -375,3 +375,41 @@ def test_kv_only_rescore_does_not_score_other_legs_or_copy_judge_rows(tmp_path, 
     saved, = run_benchmark.read_jsonl(tmp_path / 'new_inference.jsonl')
     assert saved['engine_name'] == 'test' and saved['legs'] == ['key_value']
     assert not (tmp_path / 'new_results.jsonl').exists()
+
+
+def test_dry_run_exports_only_eligible_schema_tasks_without_answers(tmp_path, monkeypatch):
+    from evaluation.ground_truth import GroundTruth, GroundTruthLoader
+    original_root = run_benchmark.ROOT
+    monkeypatch.setattr(run_benchmark, 'ROOT', tmp_path)
+    for name in ('runners/gemini_runner.py', 'engines.py', 'evaluation/legs.py'):
+        dest = tmp_path / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes((original_root / name).read_bytes())
+    docs = [tmp_path / 'documents/a.png', tmp_path / 'documents/b.png']
+    docs[0].parent.mkdir()
+    for path in docs: path.write_bytes(b'image fixture')
+    schema = {'type': 'object', 'properties': {'Total': {'type': 'string'}}}
+    gts = {str(path): GroundTruth(str(path), 'easy', 'invoice', '',
+            json_schema=schema if i == 0 else None,
+            true_json={'Total': 'PRIVATE EXPECTED ANSWER'} if i == 0 else None)
+           for i, path in enumerate(docs)}
+    monkeypatch.setattr(GroundTruthLoader, 'load', lambda self, path: gts[str(path)])
+    out = tmp_path / 'plan.json'
+    run_benchmark._print_dry_run(['gemini_flash'], ['schema'], docs,
+                                logging.getLogger('test'), True, out)
+    plan = json.loads(out.read_text())
+    assert plan['calls'] == 1 and plan['requests'][0]['document'] == 'documents/a.png'
+    assert 'Total' in plan['requests'][0]['prompt']
+    assert 'PRIVATE EXPECTED ANSWER' not in out.read_text()
+    assert plan['requests'][0]['configuration_sources_sha256']
+
+
+def test_plan_eligibility_matches_silver_collect_only_exception():
+    from types import SimpleNamespace
+    from evaluation.legs import plan_passes
+    no_reference = SimpleNamespace(has_gt_for=lambda leg: False)
+    text_plan, = plan_passes('glm_ocr', ['text'])
+    schema_plan, = plan_passes('glm_ocr', ['schema'])
+    assert not run_benchmark.pass_is_eligible(text_plan, no_reference)
+    assert run_benchmark.pass_is_eligible(text_plan, no_reference, collect_only=True)
+    assert not run_benchmark.pass_is_eligible(schema_plan, no_reference, collect_only=True)

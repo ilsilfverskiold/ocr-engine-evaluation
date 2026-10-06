@@ -347,7 +347,13 @@ orientation.
 python run_benchmark.py --estimate
 python run_benchmark.py --check      # verify keys and Modal deployments
 python run_benchmark.py --dry-run    # plan the passes without any inference
+python run_benchmark.py --dry-run --legs schema --plan-output /tmp/schema-plan.json
 ```
+
+`--plan-output` saves eligible page/pass requests, exact task prompts and schemas,
+image hashes and runner/configuration hashes without loading API credentials.
+It does not include expected answer values or authorize execution. Review model
+context/output limits and pricing before using the plan for a paid run.
 
 **Engine inference** is per page, per the table above: the two local engines
 are free; most Modal-hosted models land between $0.0006 and $0.004 per page;

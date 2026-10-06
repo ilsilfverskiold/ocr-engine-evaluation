@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — exact dry-run request plans
+
+- Export task prompts/schemas, source/configuration hashes and Modal settings
+  with --dry-run --plan-output. Count only eligible page/pass combinations using
+  the same rule as live inference; forbid combining dry-run with execution.
+- Schema rerun preparation is 455 calls, not authorization or completed inference.
+
 ## 2026-10-06 — reused 57 Markdown catalogues; added 35 missing
 
 - Existing cache and its 627 scores are unchanged. New image-only generation

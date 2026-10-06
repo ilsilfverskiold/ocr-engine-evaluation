@@ -2313,6 +2313,8 @@ def parse_args():
                    help="Verify API keys and Modal deployments, then exit")
     p.add_argument("--dry-run", action="store_true",
                    help="Discover documents, plan passes and validate — no inference")
+    p.add_argument("--plan-output", type=Path, default=None,
+                   help="With --dry-run, save exact task prompts/schemas and image/source hashes; no API calls")
     p.add_argument("--workers", type=int, default=0,
                    help="Parallel engine threads (default: number of engines)")
     p.add_argument("--max-docs", type=int, default=0,
@@ -2346,7 +2348,12 @@ def parse_args():
     p.add_argument("--extends", metavar="TIMESTAMP",
                    help="Record which baseline run this run adds engines to "
                         "(written to the run manifest; report both with --report A,B)")
-    return p.parse_args()
+    args = p.parse_args()
+    if args.plan_output and not args.dry_run:
+        p.error('--plan-output requires --dry-run')
+    if args.dry_run and (args.rescore or args.score or args.report or args.check or args.resume):
+        p.error('--dry-run cannot be combined with execution/reporting commands')
+    return args
 
 
 def _resolve_timestamp(value: str) -> str:
@@ -2369,8 +2376,16 @@ def validate_keys(engines: list[str], skip_judge: bool) -> list[str]:
     return missing
 
 
+def pass_is_eligible(plan, gt, collect_only=False):
+    """One eligibility rule for request planning and actual execution."""
+    return (not plan.leg_for_task or any(gt.has_gt_for(leg) for leg in plan.legs)
+            or (collect_only and 'text' in plan.legs
+                and not LEGS[plan.leg_for_task].needs_schema))
+
+
 def _print_dry_run(
-    engines: list[str], legs: list[str], documents: list[Path], log: logging.Logger
+    engines: list[str], legs: list[str], documents: list[Path], log: logging.Logger,
+    collect_only=False, plan_output=None,
 ) -> None:
     from evaluation.ground_truth import GroundTruthLoader
 
@@ -2405,16 +2420,48 @@ def _print_dry_run(
 
     log.info("\nInference passes per engine:")
     total_calls = 0
+    requests = []
     for engine in engines:
         plans = plan_passes(engine, legs)
-        calls = len(plans) * len(documents)
+        eligible = [(plan, gt) for plan in plans for gt in gts
+                    if pass_is_eligible(plan, gt, collect_only)]
+        calls = len(eligible)
         total_calls += calls
         detail = ", ".join(
             f"{p.name}[{'+'.join(p.legs)}]" for p in plans
         ) or "none — answers no selected leg"
-        log.info(f"  {engine:<24} {len(plans)} pass(es) x {len(documents)} docs "
-                 f"= {calls:>4} calls   {detail}")
+        log.info(f"  {engine:<24} {calls:>4} eligible document/pass calls   {detail}")
+        if plan_output is not None:
+            import hashlib
+            spec = ENGINES[engine]
+            source_paths = [Path(spec.runner.split(':')[0].replace('.', '/') + '.py'),
+                            Path('engines.py'), Path('evaluation/legs.py')]
+            if spec.modal_app_file:
+                source_paths.append(Path(spec.modal_app_file))
+            sources = {str(p): hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in source_paths}
+            for plan, gt in eligible:
+                path = Path(gt.document_path)
+                task = LEGS[plan.leg_for_task].task_for(gt.inference_schema, engine=engine) if plan.leg_for_task else None
+                requests.append({'engine': engine, 'kind': spec.kind,
+                    'document': str(path.relative_to(ROOT)),
+                    'image_sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                    'pass': plan.name, 'legs': list(plan.legs),
+                    'prompt': task.prompt if task else None,
+                    'json_schema': task.json_schema if task else None,
+                    'response_format': task.response_format if task else None,
+                    'configuration_sources_sha256': sources,
+                    'modal_app': spec.modal_app, 'gpu_type': spec.gpu_type,
+                    'outer_batch_size': spec.batch_size})
     log.info(f"\n  Total inference calls: {total_calls}")
+    if plan_output is not None:
+        if failed:
+            raise ValueError('Ground-truth loading failed; refusing an incomplete request plan')
+        plan_output.parent.mkdir(parents=True, exist_ok=True)
+        plan_output.write_text(json.dumps({'version': 'inference-request-plan-v1',
+            'collect_only': collect_only, 'calls': len(requests), 'requests': requests,
+            'status': 'preparation only; cost and context/output limits require review before execution'},
+            indent=2, ensure_ascii=False))
+        log.info(f"  Exact task plan: {plan_output}")
 
     skips = skipped_engines(legs, engines)
     if skips:
@@ -2561,8 +2608,10 @@ def main() -> None:
              f"engines: {len(engines)}  |  legs: {legs}")
 
     if args.dry_run:
-        _print_dry_run(engines, legs, documents, log)
+        _print_dry_run(engines, legs, documents, log, bool(args.collect_only), args.plan_output)
         return
+    if args.plan_output is not None:
+        raise ValueError('--plan-output requires --dry-run')
 
     collect_only = bool(args.collect_only)
     # A collect-only run makes no judge call, so it needs no judge key.
@@ -2636,13 +2685,7 @@ def main() -> None:
         it left deepseek/glm/qwen/marker with no output there in the baseline
         (so the document judge covered 10 of 14 engines, not all 14). A
         schema pass still needs the document's schema, so that gate holds."""
-        if not plan.leg_for_task:
-            return False
-        if any(gt.has_gt_for(l) for l in plan.legs):
-            return False
-        if collect_only and "text" in plan.legs and not LEGS[plan.leg_for_task].needs_schema:
-            return False
-        return True
+        return not pass_is_eligible(plan, gt, collect_only)
 
     def record_pass(
         engine: str, doc_path: Path, gt, plan, result, error: str | None,

@@ -1748,3 +1748,16 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Validation: 400 offline tests pass; the one updated corpus assertion now
   expects 92 Markdown reference pages. Verified all 57 prior cache hashes and
   all 627 prior scores unchanged. No new judge call during rescore.
+
+
+## 2026-10-06 — reviewable schema request planning
+
+- Add --dry-run --plan-output to save exact task contracts, source-image hashes,
+  runner/configuration hashes, GPU/app and batching settings without calls or
+  expected answer values. Dry and live execution share page/pass eligibility.
+- Prepared 455 schema tasks (seven existing engines, 65 accepted-reference pages)
+  in session scratch. Still preparation only: caps/context and spending require
+  review before paid execution. No schema inference or Modal deployment.
+- Prevent --dry-run from combining with execution commands; plan-output requires
+  dry-run. Added tests for eligible-only requests, no answer leakage, source
+  hashes and collect-only text parity. Included in the 400 passing tests.
