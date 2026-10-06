@@ -6,6 +6,12 @@ is given here.
 
 ## 2026-10-06 — reviewed-reference scoring implementation
 
+- Add an explicit offline-plan/paid-execute CLI for KV key-only synonym batches.
+  Validate all IDs, preserve ambiguous/no-match decisions, journal submitted
+  calls to prevent accidental paid retries, retain usage/full replies and freeze
+  caches for all engines together. Prepared 117 calls with a $1.55423 reserve;
+  execution awaits approval. No live judge decisions in this change.
+
 - Gold tables now use cell F1 with precision/recall, blanks, extras and disjoint
   matching. Shipping retains both gold/original comparisons and selects the
   higher whole-page F1. Spans remain in the supporting structure diagnostic.

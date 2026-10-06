@@ -123,10 +123,11 @@ whitespace normalization may accept equivalent presentations. `100` is not
 `1000`; `12.34` is not `1234`; a subtotal cannot satisfy the total.
 
 **KV:** match literal keys, unambiguous normalized keys/printed aliases, then
-versioned judge-approved synonyms. The pending synonym builder sends only
+versioned judge-approved synonyms. `scripts/build_kv_synonyms.py` sends only
 unresolved output keys and candidate reference keys, never expected/returned
-values. It must permit no-match/ambiguity and freeze the page-specific cache
-before rescoring all engines. Reference edits invalidate the cache. One returned
+values. It permits no-match/ambiguity and freezes the page-specific caches only
+after all requests validate, before rescoring all engines. Its live decisions
+are pending approval. Reference edits invalidate the cache. One returned
 pair cannot satisfy multiple target fields. Headline is `(correct + blank_ok) /
 selected fields`; extra KV pairs are shown, without a headline penalty while
 reference completeness varies. Native Textract evidence is FORMS, not prose.

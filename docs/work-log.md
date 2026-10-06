@@ -1425,3 +1425,29 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   expectations with the accepted flat gold while preserving isolated legacy
   repair coverage. No engine inference, paid judge call, published rescore or
   report regeneration. Gold packaging, fair-prompt controls and cleanup remain.
+
+## 2026-10-06 — prepare reproducible key-only synonym judging
+
+- Add evaluation/kv_synonyms.py and scripts/build_kv_synonyms.py. Offline
+  preparation reads saved structured KV answers, unions unresolved keys per
+  page, and writes exact prompts/configuration/response schema plus reference
+  fingerprints and source-call hashes. No values or engine identities enter
+  the model request. Distinct labels can remain ambiguous/no-match.
+- Paid execution is a separate command with an explicit allowance. Validate
+  complete unique output IDs and reference IDs, record every submission before
+  sending, disable SDK retries, preserve raw responses/usage, reject changed
+  references, resume completed calls and refuse unresolved paid retries. Freeze
+  all page caches after all batches validate; scoring remains offline.
+- Prepared baseline plan: 260 source calls, 65 pages, 5,272 unresolved keys,
+  117 batches at most 64 keys each. Gemini 2.5 Flash, temperature 0, thinking 0,
+  output cap 4,096. Official Google pricing checked 2026-10-06: $0.30/M input,
+  $2.50/M output; conservative reserve $1.55423, proposed allowance $2.
+- Plan saved outside the repository under
+  /private/tmp/ocr-eval-rebuild-20261006/kv-synonym-plan.json. The follow-up
+  records its hash, exact commands, costs and approval boundary. No paid call
+  made; no synonym cache or published scores changed.
+- Validation: 10 offline tests cover key-only prompts, deterministic batching,
+  malformed/incomplete/duplicate IDs, reference invalidation, atomic page
+  publication, failed-call journaling/no retry, budget checks and successful
+  resume with mocked provider responses. These verify mechanics, not model
+  mapping accuracy; inspect live mappings before final reporting.
