@@ -1504,3 +1504,33 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   Diff whitespace check clean. All new results are paid-run evidence; the
   temporary audit script/output remain outside the repository. No API credential
   appears in any saved JSON. Commit only in the nested OCR benchmark repo.
+
+## 2026-10-06 — prepare a bounded KV correction check
+
+- Continue from the held 117-call batch without spending again. Implement a
+  compact output-ID-to-reference-ID object, required properties and bounded
+  integer IDs, duplicate-property rejection, and explicit instructions against
+  inferring item identity from list order or an ambiguous repeated label.
+  Keep Gemini 2.5 Flash; proposed control configuration uses temperature 0,
+  4,096 maximum output tokens and 1,024 thinking tokens. Recheck official
+  structured-output/pricing documentation; record links in the follow-up.
+- Prepare six calls on bank_000, photo_000, chart_003, invoice_000,
+  shipping_002 and tax_000: 41 actual saved unresolved keys, 18 positive
+  mappings and 23 no-matches, with manually reviewed key-only expectations.
+  Expected answers remain outside prompts. Plan/cases live only in
+  /private/tmp/ocr-eval-rebuild-20261006/. Reserve $0.0772059, proposed allowance
+  $0.10; this new configuration has not been submitted or approved yet.
+- Grade controls for false associations, missed matches and missing replies.
+  Failed/missing replies cannot masquerade as correct no-matches. A passing
+  small control set is not whole-corpus validation. Prevent all automatic cache
+  activation on execute and reject control subsets in freeze_page.
+- Offline formatting recovery: fintab_002 contains all 54 requested IDs plus
+  an extra ID 0. Remove only the extraneous row into a separate scratch candidate
+  and validate completeness; do not approve its meanings, alter the original
+  paid journal, or activate a cache. The other 15 failed calls remain incomplete.
+- Validation: 35 offline synonym/shared-field tests pass, including SDK schema
+  construction, positive/negative controls, missing replies, duplicate properties,
+  no partial/control cache publication, mocked paid execution and reuse. No
+  paid call, benchmark run, schema extraction, rescore, reference edit or report
+  regeneration. Only the existing module, CLI, tests and three docs are changed;
+  all exploratory artifacts remain outside the repo. Commit in nested repo only.

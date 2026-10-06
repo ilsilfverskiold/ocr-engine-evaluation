@@ -4,6 +4,19 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — prepare compact KV correction controls
+
+- Add offline preparation and grading of key-only controls using saved output
+  keys, compact bounded-ID replies and explicit identity/ambiguity instructions.
+  Keep expected decisions outside provider requests. Reject duplicate JSON
+  properties, incomplete replies and attempts to publish control subsets.
+- Hold executed synonym batches for semantic review instead of activating them
+  merely because their JSON validates. Preserve request failures in journals.
+- Prepare six calls / 41 cases in scratch, reserve $0.0772059, unrun. Recover
+  one 54-decision formatting candidate offline without overwriting paid evidence
+  or approving its meanings. No scores, gold references or OCR outputs changed.
+- Validation: 35 offline synonym/shared-field tests pass. No paid calls.
+
 ## 2026-10-06 — execute approved KV synonym batch; hold faulty decisions
 
 - Attempt all 117 approved requests once. 101 replies validate, 13 truncate,
