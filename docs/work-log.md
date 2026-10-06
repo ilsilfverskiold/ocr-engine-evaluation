@@ -1761,3 +1761,21 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Prevent --dry-run from combining with execution commands; plan-output requires
   dry-run. Added tests for eligible-only requests, no answer leakage, source
   hashes and collect-only text parity. Included in the 400 passing tests.
+
+
+## 2026-10-06 — estimate schema caps without paid retries
+
+- Sized all 65 full references offline using three pinned tokenizers, including
+  JSON formatting and 25% headroom. 59 pages fit a 4,096 planning cap; six need
+  4,608–8,704. No sampled-away keys or changed scoring coverage.
+- Withdraw the unexecuted blanket 16K API-cap/small-document pilot proposal.
+  Project Sonnet at $2.32 expected / $2.94 at proposed per-page caps, Gemini
+  $0.21 / $0.27 excluding extra thinking; other engines are separate. Projections
+  use historical same-image input usage plus estimated new prompt deltas.
+- Record DeepSeek's oversized prompt/context conflict before any paid request.
+  Per-page caps and request batching remain preparation, not implemented runs.
+- Keep API caps unchanged pending budget integration; disable automatic SDK
+  retries for Claude/Gemini, persist settings, and include Gemini thinking in
+  recorded cost. Exact SDK behavior covered by local configuration inspection;
+  mocked runner tests verify caps, prompts and billed thinking. No live call,
+  Modal deployment, reference change, or push.

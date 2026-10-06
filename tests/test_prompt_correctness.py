@@ -336,3 +336,49 @@ def test_pass_counts_are_minimal():
     # deepseek's markdown and tables share the grounding call.
     plans = plan_passes("deepseek_ocr", ["markdown", "tables"])
     assert len(plans) == 1 and set(plans[0].legs) == {"markdown", "tables"}
+
+
+@pytest.mark.parametrize('engine', ['claude', 'gemini'])
+@pytest.mark.parametrize('leg', ['schema', 'markdown'])
+def test_api_existing_caps_and_billed_thinking(monkeypatch, tmp_path, engine, leg):
+    from types import SimpleNamespace as NS
+    from runners.base import OCRTask
+    from runners import claude_runner, gemini_runner
+    captured = {}
+    usage = NS(input_tokens=100, output_tokens=200, prompt_token_count=100,
+               candidates_token_count=200, thoughts_token_count=50)
+    response = NS(text='{}', content=[NS(text='{}')], usage=usage,
+                  usage_metadata=usage, stop_reason='end_turn')
+    def generate(**kwargs):
+        captured.update(kwargs)
+        return response
+    document = tmp_path / 'page.png'
+    document.write_bytes(b'mocked image')
+    task = OCRTask(leg=leg, prompt='Exact benchmark prompt',
+                   json_schema={'type': 'object'} if leg == 'schema' else None)
+    if engine == 'claude':
+        module = claude_runner
+        runner = module.ClaudeRunner.__new__(module.ClaudeRunner)
+        runner._client = NS(messages=NS(create=generate))
+        runner._model = 'claude-sonnet-4-6'
+    else:
+        module = gemini_runner
+        runner = module.GeminiRunner.__new__(module.GeminiRunner)
+        runner._client = NS(models=NS(generate_content=generate))
+        runner._model_name = 'gemini-3.1-flash-lite'
+        types = NS(Part=NS(from_bytes=lambda **kw: kw), GenerateContentConfig=lambda **kw: kw)
+        monkeypatch.setitem(sys.modules, 'google.genai', NS(types=types))
+    monkeypatch.setattr(module, 'provider_payload', lambda r: {})
+    result = runner.run(document, task)
+    if engine == 'claude':
+        assert captured['max_tokens'] == 4096
+        assert result.metadata['max_output_tokens'] == captured['max_tokens']
+    else:
+        if leg == 'schema':
+            assert 'max_output_tokens' not in captured['config']
+            assert captured['config']['response_mime_type'] == 'application/json'
+        else:
+            assert 'config' not in captured  # Preserve prior Markdown control settings.
+        assert result.metadata['thinking_tokens'] == 50
+        assert result.cost_per_page == pytest.approx(100 * .25e-6 + 250 * 1.5e-6)
+    assert result.metadata['prompt_used'] == task.prompt

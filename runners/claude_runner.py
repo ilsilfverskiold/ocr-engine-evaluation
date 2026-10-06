@@ -49,7 +49,7 @@ class ClaudeRunner(OCRRunner):
 
     def __init__(self, model: str = "claude-sonnet-4-6") -> None:
         import anthropic
-        self._client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        self._client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"], max_retries=0)
         self._model = model
 
     def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
@@ -59,12 +59,11 @@ class ClaudeRunner(OCRRunner):
 
         # task=None reproduces leg 1 byte for byte.
         prompt = task.prompt if task else self._PROMPT
+        output_cap = 4096
         kwargs: dict = {}
         if task and task.wants_json:
-            # Claude has no JSON mode, and current models reject assistant
-            # prefill (400: "does not support assistant message prefill").
-            # Temperature 0 plus the prompt's own JSON instruction is the
-            # available control; the scorers' parsers strip fences and prose.
+            # Preserve the benchmark's prompt-based JSON route. No assistant
+            # prefill: this model rejected it in the historical control.
             kwargs["temperature"] = 0
 
         content: list[dict] = [
@@ -82,7 +81,7 @@ class ClaudeRunner(OCRRunner):
 
         message = self._client.messages.create(
             model=self._model,
-            max_tokens=4096,
+            max_tokens=output_cap,
             messages=messages,
             **kwargs,
         )
@@ -109,6 +108,9 @@ class ClaudeRunner(OCRRunner):
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
                 "leg": task.leg if task else "default",
+                "max_output_tokens": output_cap,
+                "temperature": kwargs.get("temperature", "provider_default"),
+                "sdk_max_retries": 0,
                 # A reply cut off at max_tokens is invalid JSON that looks like
                 # the model failing the leg. stop_reason is the difference.
                 "stop_reason": getattr(message, "stop_reason", None),

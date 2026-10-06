@@ -26,7 +26,9 @@ class GeminiRunner(OCRRunner):
 
     def __init__(self, model: str = "gemini-3.1-flash-lite") -> None:
         from google import genai
-        self._client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+        from google.genai import types
+        self._client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"],
+            http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=1)))
         self._model_name = model
 
     def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
@@ -56,11 +58,12 @@ class GeminiRunner(OCRRunner):
         )
         elapsed = self._elapsed(t0)
         usage = getattr(response, "usage_metadata", None)
-        input_tokens = getattr(usage, "prompt_token_count", 0) if usage else 0
-        output_tokens = getattr(usage, "candidates_token_count", 0) if usage else 0
+        input_tokens = (getattr(usage, "prompt_token_count", 0) or 0) if usage else 0
+        output_tokens = (getattr(usage, "candidates_token_count", 0) or 0) if usage else 0
+        thinking_tokens = (getattr(usage, "thoughts_token_count", 0) or 0) if usage else 0
         cost = (
             input_tokens * INPUT_PRICE_PER_TOKEN
-            + output_tokens * OUTPUT_PRICE_PER_TOKEN
+            + (output_tokens + thinking_tokens) * OUTPUT_PRICE_PER_TOKEN
             if usage else ESTIMATED_COST_PER_PAGE
         )
 
@@ -77,7 +80,11 @@ class GeminiRunner(OCRRunner):
                 "prompt_used": prompt,
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
+                "thinking_tokens": thinking_tokens,
                 "leg": task.leg if task else "default",
+                "max_output_tokens": "provider_default",
+                "temperature": 0 if task and task.wants_json else "provider_default",
+                "sdk_attempts": 1,
             },
             # `response.text` is only the first text part; a truncated or
             # safety-blocked reply looks identical to an empty one without the

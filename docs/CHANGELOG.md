@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — API retry and usage accounting
+
+- Disable automatic Claude/Gemini SDK retries and persist generation settings.
+- Include reported Gemini thinking tokens in billed-output cost.
+- Keep existing generation caps; document full-corpus offline sizing before
+  changing caps or submitting schema calls.
+
 ## 2026-10-06 — exact dry-run request plans
 
 - Export task prompts/schemas, source/configuration hashes and Modal settings
