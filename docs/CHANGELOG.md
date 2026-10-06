@@ -4,6 +4,20 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — execute approved KV synonym batch; hold faulty decisions
+
+- Attempt all 117 approved requests once. 101 replies validate, 13 truncate,
+  2 contain invalid output IDs and 1 returns HTTP 503. Save exact plan,
+  provider replies, usage, execution summary and bounded semantic audit.
+  Recorded usage $0.6900703; retain $0.013288 reserve for the no-usage 503.
+- Keep the cache inactive after finding wrong/unsupported entity assignments.
+  No benchmark scores or schema/OCR outputs change. These are judge-pipeline
+  problems, not engine scores. No paid retry or other paid stage ran.
+- Continue independent approved requests after malformed replies, with four
+  workers, exclusive request journals, unchanged model/prompts/caps and a
+  prechecked total reserve. Tests cover continuing without retrying or
+  publishing incomplete decisions.
+
 ## 2026-10-06 — reviewed-reference scoring implementation
 
 - Add an explicit offline-plan/paid-execute CLI for KV key-only synonym batches.

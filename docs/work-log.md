@@ -1462,3 +1462,45 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - All 20 report tests pass after the fix, including old model verdicts, old code
   checklist scores, new gold-cell F1 and mixed-version descriptions. No report
   generation, inference or paid call. This closes the remaining suite failure.
+
+## 2026-10-06 — execute the approved first KV-synonym step
+
+- Authorization: user said “ok run the first then” after the 117 key-only
+  Gemini 2.5 Flash calls and $2 allowance were distinguished from the separate
+  455 schema extraction calls. Execute only that approved key-matching plan.
+- Initial startup found no key in the nested repo environment and made no API
+  call. Load the existing parent project .env without displaying credentials.
+- First four calls yielded three valid replies and one truncated response.
+  Preserve the charged truncated reply. Improve execution to continue the
+  remaining independent approved requests, at four concurrent calls, without
+  resubmitting completed/invalid requests. Keep exact model, prompt, output
+  cap, temperature, thinking configuration and total plan reserve unchanged.
+  Exclusive request journals prevent duplicate submissions; incomplete pages
+  cannot become active synonym caches.
+- All 117 planned requests attempted exactly once: 101 validated replies,
+  13 MAX_TOKENS/incomplete JSON responses, 2 invalid-ID replies and one 503.
+  Valid replies contain 4,421 decisions: 2,768 proposed matches and 1,653 null
+  matches. Exact plan, request journals and execution summary are preserved
+  under results/kv_synonyms/calls/cafc0f767f3fa5b1b9b717f2da153f92f23ac5541541d9b3c4c0ea67e76ca758/.
+- Recorded usage cost $0.6900703. The 503 supplied no usage: retain its
+  $0.013288 reserve, rather than claiming confirmed zero billing. Full plan
+  reserve $1.5542298, allowance $2. No paid retries, schema/OCR calls, Modal,
+  missing-reference builds or silver verdict refreshes.
+- Bounded audit: structurally validate every completed reply, generate 122
+  deterministic mapped-pair examples for review across represented pages, and screen
+  context/index conflicts (228 candidates, not an asserted error count).
+  Confirm photo_000 ASAM JAWA 1KG U.price was incorrectly assigned to Item 1
+  although the accepted gold identifies it as Item 3; Item 1 is taucu kisar.
+  Indexed ETF-to-name and unqualified chart-year mappings also lack key-only
+  identity evidence. Save examples and limitations in audit.json. Judge
+  prompts contained no values; reference values were consulted only in the
+  independent offline audit, not fed back into these calls.
+- No page cache activated, no score/report changes. The first batch is not
+  ready to score. Correction needs compact constrained replies and conservative
+  entity/section identity handling; record this in the existing follow-up.
+  Do not treat these failures as weaknesses of the OCR engines.
+- Validation: all 11 offline synonym tests pass, including invalid-response
+  continuation, preserved costs, no retry and no partial-cache publication.
+  Diff whitespace check clean. All new results are paid-run evidence; the
+  temporary audit script/output remain outside the repository. No API credential
+  appears in any saved JSON. Commit only in the nested OCR benchmark repo.

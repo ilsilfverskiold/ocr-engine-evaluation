@@ -7,6 +7,7 @@ The execute command costs money; obtain approval for the saved plan first.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import defaultdict
 import json
 import math
@@ -80,51 +81,90 @@ def execute(plan: dict, budget: float) -> None:
     run_dir = CACHE_ROOT / "calls" / plan["id"]
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "plan.json").write_text(json.dumps(plan, indent=2, ensure_ascii=False))
-    spent, replies = 0.0, {}
-    # Reserve before submission, including interrupted/failed calls. Rerunning
-    # cannot silently resubmit a paid call whose outcome was not saved.
-    for page in plan["pages"]:
-        for request in page["requests"]:
-            path = run_dir / (request["id"] + ".json")
-            if path.exists():
-                record = json.loads(path.read_text())
-                spent += max(float(record.get("reserved_usd", 0)), float(record.get("cost_usd", 0)))
-                if "reply" not in record:
-                    raise ValueError(f"Unfinished paid request needs review before retry: {path}")
-            else:
-                reserve = request["planning_reserve_usd"]
-                if spent + reserve > budget:
-                    raise ValueError("Budget exhausted before next request")
-                record = {"request_id": request["id"], "reserved_usd": reserve}
-                path.write_text(json.dumps(record))
-                spent += reserve
-                response = client.models.generate_content(
-                    model=request["model"], contents=request["prompt"],
-                    config=types.GenerateContentConfig(
-                        temperature=request["config"]["temperature"],
-                        max_output_tokens=request["config"]["max_output_tokens"],
-                        thinking_config=types.ThinkingConfig(thinking_budget=request["config"]["thinking_budget"]),
-                        response_mime_type="application/json", response_schema=request["response_schema"]))
-                usage = response.usage_metadata
-                record.update(raw_response=response.model_dump(mode="json"), raw_text=response.text,
-                              input_tokens=getattr(usage, "prompt_token_count", 0) or 0,
-                              output_tokens=(getattr(usage, "candidates_token_count", 0) or 0) +
-                                            (getattr(usage, "thoughts_token_count", 0) or 0))
-                record["cost_usd"] = (record["input_tokens"] * plan["pricing"]["input_per_million"] +
-                                      record["output_tokens"] * plan["pricing"]["output_per_million"]) / 1_000_000
-                spent += max(0, record["cost_usd"] - reserve)
-                path.write_text(json.dumps(record, indent=2, ensure_ascii=False))
-                record["reply"] = json.loads(response.text)
-                ks.validate_reply(request, record["reply"])
-                path.write_text(json.dumps(record, indent=2, ensure_ascii=False))
-            ks.validate_reply(request, record["reply"])
-            replies[request["id"]] = record
-            print(f"{page['page']}: key batch saved; reserved ${spent:.4f}", flush=True)
-    # Publish no partial union: all engines must see the same completed cache.
+    requests = [(page, r) for page in plan["pages"] for r in page["requests"]]
+    replies, failures, jobs = {}, {}, []
+    reserved = 0.0
+    for page, request in requests:
+        path = run_dir / (request["id"] + ".json")
+        if path.exists():
+            record = json.loads(path.read_text())
+            reserved += max(float(record.get("reserved_usd", 0)), float(record.get("cost_usd", 0)))
+            if "reply" not in record and "raw_response" not in record:
+                raise ValueError(f"Unfinished paid request needs review before retry: {path}")
+            try:
+                reply = record.get("reply") or json.loads(record.get("raw_text") or "")
+                ks.validate_reply(request, reply)
+                record["reply"] = reply
+                replies[request["id"]] = record
+            except (ValueError, TypeError, AttributeError) as exc:
+                record["validation_error"] = f"{type(exc).__name__}: {exc}"
+                failures[request["id"]] = record["validation_error"]
+            path.write_text(json.dumps(record, indent=2, ensure_ascii=False))
+        else:
+            reserved += request["planning_reserve_usd"]
+            jobs.append((page, request, path))
+    if reserved > budget:
+        raise ValueError("Budget exhausted before remaining requests")
+
+    def call_one(page, request, path):
+        # Exclusive creation also prevents a second executor paying for this
+        # request. A saved incomplete reply is never automatically resubmitted.
+        record = {"request_id": request["id"], "reserved_usd": request["planning_reserve_usd"]}
+        with path.open("x") as stream:
+            json.dump(record, stream)
+        response = client.models.generate_content(
+            model=request["model"], contents=request["prompt"],
+            config=types.GenerateContentConfig(
+                temperature=request["config"]["temperature"],
+                max_output_tokens=request["config"]["max_output_tokens"],
+                thinking_config=types.ThinkingConfig(thinking_budget=request["config"]["thinking_budget"]),
+                response_mime_type="application/json", response_schema=request["response_schema"]))
+        usage = response.usage_metadata
+        record.update(raw_response=response.model_dump(mode="json"), raw_text=response.text,
+                      input_tokens=getattr(usage, "prompt_token_count", 0) or 0,
+                      output_tokens=(getattr(usage, "candidates_token_count", 0) or 0) +
+                                    (getattr(usage, "thoughts_token_count", 0) or 0))
+        record["cost_usd"] = (record["input_tokens"] * plan["pricing"]["input_per_million"] +
+                              record["output_tokens"] * plan["pricing"]["output_per_million"]) / 1_000_000
+        path.write_text(json.dumps(record, indent=2, ensure_ascii=False))
+        try:
+            reply = json.loads(response.text)
+            ks.validate_reply(request, reply)
+            record["reply"] = reply
+        except (ValueError, TypeError, AttributeError) as exc:
+            record["validation_error"] = f"{type(exc).__name__}: {exc}"
+        path.write_text(json.dumps(record, indent=2, ensure_ascii=False))
+        return record
+
+    # Independent requests, unchanged prompts/caps/model. Bound API concurrency
+    # to four; preserve the same total approved requests and reserve.
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {pool.submit(call_one, *job): job for job in jobs}
+        for future in as_completed(futures):
+            page, request, path = futures[future]
+            try:
+                record = future.result()
+                if "reply" in record:
+                    replies[request["id"]] = record
+                else:
+                    failures[request["id"]] = record["validation_error"]
+            except Exception as exc:
+                failures[request["id"]] = f"{type(exc).__name__}: {exc}"
+            print(f"{page['page']}: {len(replies)} valid, {len(failures)} incomplete/failed; "
+                  f"{len(requests)} approved requests", flush=True)
+    summary = {"plan_id": plan["id"], "approved_requests": len(requests),
+               "valid_requests": len(replies), "failures": failures, "reserved_usd": reserved,
+               "actual_saved_cost_usd": sum(json.loads(path.read_text()).get("cost_usd", 0)
+                   for path in run_dir.glob("*.json") if path.name not in ("plan.json", "execution.json"))}
+    (run_dir / "execution.json").write_text(json.dumps(summary, indent=2))
+    if failures:
+        raise RuntimeError(f"{len(failures)} requests need review; saved cost "
+                           f"${summary['actual_saved_cost_usd']:.4f}; no synonym cache published")
     for page in plan["pages"]:
         ks.freeze_page(page, replies, CACHE_ROOT)
     print(f"Frozen {len(plan['pages'])} page synonym caches; actual saved cost "
-          f"${sum(r.get('cost_usd', 0) for r in replies.values()):.4f}")
+          f"${summary['actual_saved_cost_usd']:.4f}")
+
 
 
 def main():

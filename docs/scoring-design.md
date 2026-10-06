@@ -6,7 +6,7 @@ extraction and geometry. The silver-document judge is a separate estimate.
 **Implementation status, 2026-10-06:** the reviewed-reference scorers below are
 implemented and tested offline. The last published scores, run
 `20261002T162630Z`, predate these changes. A new rescore, paid schema reruns,
-key-synonym decisions, missing Markdown references and prompt controls are still
+validated key-synonym decisions, missing Markdown references and prompt controls are still
 required before a replacement report is final. The execution checklist is
 [follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 
@@ -126,8 +126,10 @@ whitespace normalization may accept equivalent presentations. `100` is not
 versioned judge-approved synonyms. `scripts/build_kv_synonyms.py` sends only
 unresolved output keys and candidate reference keys, never expected/returned
 values. It permits no-match/ambiguity and freezes the page-specific caches only
-after all requests validate, before rescoring all engines. Its live decisions
-are pending approval. Reference edits invalidate the cache. One returned
+after all requests validate, before rescoring all engines. The approved first
+batch was executed but is held out: 16 requests failed and a bounded audit also
+found incorrect entity associations. No live synonyms are active yet.
+Reference edits invalidate the cache. One returned
 pair cannot satisfy multiple target fields. Headline is `(correct + blank_ok) /
 selected fields`; extra KV pairs are shown, without a headline penalty while
 reference completeness varies. Native Textract evidence is FORMS, not prose.

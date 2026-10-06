@@ -111,3 +111,34 @@ def test_successful_execution_reuses_saved_reply(tmp_path, monkeypatch):
     record = json.loads((tmp_path / "x.json").read_text())
     assert record["matches"][0]["reference_key"] == "Total"
     assert "SECRET" not in attempts[0]["contents"]
+
+
+def test_invalid_reply_does_not_skip_other_approved_requests_or_get_retried(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from google import genai
+    from scripts import build_kv_synonyms as cli
+    from evaluation import kv_synonyms as ks
+    gt = reference()
+    page = prepare_page(gt, ["A bad", "B good"], chunk_size=1)
+    plan = {"version": ks.VERSION, "model": ks.MODEL, "pricing": ks.PRICES,
+            "pages": [page], "planning_reserve_usd": .10}
+    plan["id"] = ks.digest(plan)
+    monkeypatch.setattr(cli, "CACHE_ROOT", tmp_path)
+    monkeypatch.setattr(cli, "load_corpus", lambda: [gt])
+    monkeypatch.setenv("GOOGLE_API_KEY", "offline-test")
+    attempts = []
+    def response(**kwargs):
+        attempts.append(kwargs)
+        text = '{"matches":[' if '"key": "A bad"' in kwargs['contents'] else json.dumps({
+            "matches": [{"output_id": 1, "reference_id": 1, "reason": "same field"}]})
+        return SimpleNamespace(text=text, usage_metadata=SimpleNamespace(prompt_token_count=10, candidates_token_count=10),
+                               model_dump=lambda **kwargs: {"fixture": True})
+    monkeypatch.setattr(genai, "Client", lambda **kw: SimpleNamespace(models=SimpleNamespace(generate_content=response)))
+    for _ in range(2):
+        with pytest.raises(RuntimeError, match="1 requests need review"):
+            cli.execute(plan, 1)
+    assert len(attempts) == 2  # Both approved requests once, zero retries.
+    assert not (tmp_path / "x.json").exists()
+    summary = json.loads((tmp_path / "calls" / plan["id"] / "execution.json").read_text())
+    assert summary["valid_requests"] == 1 and len(summary["failures"]) == 1
+    assert summary["actual_saved_cost_usd"] == pytest.approx(.000056)
