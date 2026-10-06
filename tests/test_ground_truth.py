@@ -17,6 +17,43 @@ from evaluation.ground_truth import DOCUMENTS_ROOT, GroundTruthLoader, load_corp
 CORPUS = load_corpus()
 
 
+def test_download_preserves_image_bytes_and_resumes_missing_sidecars(tmp_path):
+    import hashlib
+    from scripts.download_data import write_row
+    data = b"original encoded image, not a PIL re-encoding"
+    row = {"stem": "sample", "image": {"bytes": data}, "gt_text": "printed text"}
+    manifest = {"sample": {"file": "documents/easy/receipt/sample.jpg",
+                            "sha256": hashlib.sha256(data).hexdigest()}}
+    write_row(row, manifest, tmp_path)
+    image = tmp_path / manifest["sample"]["file"]
+    assert image.read_bytes() == data
+    image.with_name("sample_gt.txt").unlink()
+    write_row(row, manifest, tmp_path)
+    assert image.with_name("sample_gt.txt").read_text() == "printed text"
+    image.with_name("sample_gt.txt").write_text("local human edit")
+    with pytest.raises(ValueError, match="Local file differs"):
+        write_row(row, manifest, tmp_path)
+    assert image.with_name("sample_gt.txt").read_text() == "local human edit"
+
+
+def test_download_rejects_different_image_before_writing(tmp_path):
+    from scripts.download_data import write_row
+    row = {"stem": "sample", "image": {"bytes": b"changed"}, "gt_text": "text"}
+    manifest = {"sample": {"file": "documents/easy/receipt/sample.jpg", "sha256": "wrong"}}
+    with pytest.raises(ValueError, match="pinned manifest"):
+        write_row(row, manifest, tmp_path)
+    assert not list(tmp_path.rglob("*"))
+
+
+def test_published_gold_and_shipping_alternates_load():
+    assert sum("table_gold_reference" in g.metadata for g in CORPUS) == 42
+    assert sum("structured_gold_reference" in g.metadata for g in CORPUS) == 65
+    from evaluation.table_references import load_original_table
+    shipping = [g for g in CORPUS if g.doc_type == "shipping"]
+    assert len(shipping) == 5
+    assert all(load_original_table(Path(g.document_path)) for g in shipping)
+
+
 def test_gold_table_overrides_only_tables_and_patch_is_not_fallback(tmp_path):
     import hashlib
     import json

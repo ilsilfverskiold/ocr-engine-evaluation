@@ -13,9 +13,10 @@ everything: documents, ground truth, raw outputs, and the scoring code.
 python run_benchmark.py --report 20261002T162630Z    # corrected saved results
 ```
 
-The corrected run compares the saved engine configurations across six legs. Confirmed
-scoring/reference defects are repaired; unrun configuration controls and remaining
-reference limitations are disclosed in [the handoff](docs/handoff-2026-10-01.md).
+That saved run predates the current evaluation changes. The new scorers and
+accepted references are implemented, but schema reruns, key matching and a
+replacement report remain in progress. See the current
+[execution checklist](docs/follow-up-2026-10-03.md) for what has actually run.
 
 With the document corpus installed, build the browser report (no API calls):
 
@@ -63,6 +64,13 @@ command rebuilds the corpus locally:
 ```bash
 python scripts/download_data.py
 ```
+
+Accepted references ship with this repository: 42 human-reviewed table files,
+65 shared KV/schema files and five original shipping-table alternatives.
+The downloader restores image bytes from Hugging Face, checks their manifest
+hashes and fills missing source sidecars. It refuses to overwrite differing
+local files. Review drafts and save history remain local. Both reference
+loaders verify that gold belongs to the downloaded source image.
 
 ### 3. Run locally for free
 

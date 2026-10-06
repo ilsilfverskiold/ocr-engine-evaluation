@@ -1563,3 +1563,20 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   this same miss. No new schema/OCR call, gold edit, active cache, rescore or
   report. No source-code changes, so no repeated unit suite; validate the actual
   saved responses and costs instead. Commit only these three docs in nested git.
+
+## 2026-10-06 — package accepted references for clean checkouts
+
+- Version the 42 accepted table gold files, 65 accepted shared structured gold
+  files and five frozen shipping original alternatives without editing their
+  contents. Keep images, proposals, history and browser exports ignored. This
+  makes the accepted reference layer available to other benchmark users.
+- Fix downloader to preserve underlying image bytes rather than recompressing
+  PIL images, check the pinned manifest hash, resume missing source files and
+  refuse to overwrite differing local sidecars. Gold is never a download target.
+  Verified Image(decode=False) against Hugging Face's image-loading docs.
+- All 93 local source-image hashes match the committed manifest. All accepted
+  references load with image identity checks; 24 ground-truth/download tests
+  pass, including exact bytes, partial download recovery and edit preservation.
+- Correct README's current-status claim: the saved October 2 report predates
+  these changes. No external publication, API/model call, rescore or change to
+  accepted field values. Commit only in the nested repository.

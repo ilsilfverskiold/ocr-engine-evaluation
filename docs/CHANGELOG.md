@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — ship accepted references and preserve downloaded source identity
+
+- Include 42 table gold, 65 shared structured gold and five original shipping
+  reference files. Preserve their accepted content; drafts/history stay local.
+- Download original encoded images with manifest checks and resumable sidecars,
+  refusing to overwrite local edits. Validate with 24 loader/download tests.
+
 ## 2026-10-06 — record approved KV control results
 
 - Six approved calls, no retries: all replies complete, 40/41 control decisions

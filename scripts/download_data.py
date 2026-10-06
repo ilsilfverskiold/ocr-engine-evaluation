@@ -23,6 +23,8 @@ from __future__ import annotations
 
 import os
 import sys
+import hashlib
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -30,46 +32,60 @@ REPO_ID = "ilsilfverskiold/ocr-benchmark"
 DOCS_DIR = ROOT / "documents"
 
 
+def write_row(row: dict, manifest: dict, root: Path = ROOT) -> None:
+    """Restore exact published image bytes; never re-encode a reviewed source.
+
+    Missing files are resumable. Existing local edits are refused rather than
+    overwritten. Gold, history and proposal folders are not download targets.
+    """
+    stem = row["stem"]
+    entry = manifest[stem]
+    relative = Path(entry["file"])
+    if relative.is_absolute() or ".." in relative.parts or relative.parts[0] != "documents":
+        raise ValueError(f"Invalid corpus path for {stem}")
+    image = row["image"]
+    data = image.get("bytes")
+    if data is None and image.get("path"):
+        data = Path(image["path"]).read_bytes()
+    if not isinstance(data, bytes):
+        raise ValueError(f"Dataset did not supply original image bytes: {stem}")
+    if hashlib.sha256(data).hexdigest() != entry["sha256"]:
+        raise ValueError(f"Published image differs from pinned manifest: {stem}")
+    target = root / relative
+    sidecars = {
+        f"{stem}_gt.txt": row.get("gt_text"),
+        f"{stem}_gt.json": row.get("gt_json"),
+        f"{stem}_structured_gt.json": row.get("structured_gt"),
+        f"{stem}_markdown_gt.md": row.get("markdown_gt"),
+        f"{stem}_geometry_gt.json": row.get("geometry_gt"),
+    }
+    files = {target: data, **{target.parent / name: value.encode("utf-8")
+                            for name, value in sidecars.items() if value is not None}}
+    for path, content in files.items():
+        if path.exists() and path.read_bytes() != content:
+            raise ValueError(f"Local file differs; preserve/review it before downloading: {path}")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    for path, content in files.items():
+        if not path.exists():
+            path.write_bytes(content)
+
+
 def main() -> None:
     try:
-        from datasets import load_dataset
+        from datasets import Image, load_dataset
     except ImportError:
         print("ERROR: the 'datasets' package is required. Install with:")
         print("  pip install datasets")
         sys.exit(1)
 
-    existing = list(DOCS_DIR.rglob("*.png")) + list(DOCS_DIR.rglob("*.jpg"))
-    if existing:
-        print(f"documents/ already holds {len(existing)} images — nothing to do.")
-        print(f"Delete the tier folders under {DOCS_DIR} and re-run to force a re-download.")
-        return
-
+    manifest = {Path(r["file"]).stem: r for r in json.loads((DOCS_DIR / "manifest.json").read_text())}
     token = os.environ.get("HF_TOKEN")
     print(f"Downloading {REPO_ID} ...")
-    ds = load_dataset(REPO_ID, split="train", token=token)
+    ds = load_dataset(REPO_ID, split="train", token=token).cast_column("image", Image(decode=False))
 
     n = 0
     for row in ds:
-        out_dir = DOCS_DIR / row["tier"] / row["doc_type"]
-        out_dir.mkdir(parents=True, exist_ok=True)
-        stem = row["stem"]
-
-        img = row["image"]
-        fmt = (img.format or "PNG").lower()
-        ext = ".jpg" if fmt in ("jpeg", "jpg") else ".png"
-        img.save(out_dir / f"{stem}{ext}")
-
-        sidecars = {
-            f"{stem}_gt.txt": row["gt_text"],
-            f"{stem}_gt.json": row["gt_json"],
-            f"{stem}_structured_gt.json": row["structured_gt"],
-            f"{stem}_markdown_gt.md": row["markdown_gt"],
-            f"{stem}_geometry_gt.json": row["geometry_gt"],
-        }
-        for name, content in sidecars.items():
-            if content is not None:
-                (out_dir / name).write_text(content, encoding="utf-8")
-
+        write_row(row, manifest)
         n += 1
 
     print(f"Rebuilt {n} documents under {DOCS_DIR}")
