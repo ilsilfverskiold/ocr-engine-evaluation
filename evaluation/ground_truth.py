@@ -249,6 +249,21 @@ class GroundTruthLoader:
         self._attach_structured(document_path, gt)
         self._attach_geometry(document_path, gt)
         self._apply_reviewed_reference_repairs(document_path, gt)
+        if gt.word_boxes:
+            # The datasets do not certify every printed mark on the page.
+            # Use a fixed reference-derived region, never the engine's output,
+            # for extra-box/text diagnostics. Keep the boundary inspectable.
+            boxes = [w['bbox'] for w in gt.word_boxes]
+            gt.metadata['geometry_scope'] = {
+                'version': 'annotation-envelope-v1',
+                'regions': [[min(b[0] for b in boxes), min(b[1] for b in boxes),
+                             max(b[2] for b in boxes), max(b[3] for b in boxes)]],
+                'excluded_regions': [r['bbox'] for r in
+                    gt.metadata.get('geometry_reference_repairs', {}).get('excluded_boxes', [])
+                    if 'unreadable' in r.get('reason', '')],
+                'basis': 'bounding envelope of retained dataset annotations; unreadable reviewed regions excluded',
+                'limitation': 'Annotations inside the envelope can still be incomplete. This is region-scoped precision, not certified full-page false-positive accuracy.',
+            }
         from evaluation.structured_references import load_gold_structured
         structured_gold = load_gold_structured(document_path)
         if structured_gold is not None:

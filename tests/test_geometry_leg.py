@@ -18,6 +18,41 @@ REFERENCE = [
 ]
 
 
+def test_partial_geometry_scope_ignores_unannotated_text_but_counts_in_scope_extras():
+    ref = [REFERENCE[0]]
+    scope = {"regions": [[.05, .05, .6, .3]], "excluded_regions": []}
+    outside = {"text": "unannotated footer", "bbox": [.1, .8, .7, .9]}
+    score = score_geometry(ref + [outside], reference=ref, scope=scope)
+    assert score.precision == score.f1 == 1
+    assert score.cer == score.wer == 0
+    assert len(score.excluded_predictions) == 1
+    assert score.excluded_predictions[0]["text"] == outside["text"]
+    assert list(score.excluded_predictions[0]["bbox"]) == outside["bbox"]
+    assert len(score.scored_boxes) == 2  # Overlay retains actual returned boxes.
+    extra = {"text": "invented", "bbox": [.3, .2, .5, .25]}
+    score = score_geometry(ref + [outside, extra], reference=ref, scope=scope)
+    assert score.precision == .5 and score.wer > 0
+
+
+def test_unreadable_scope_exclusion_and_invalid_out_of_frame_boxes():
+    scope = {"regions": [[0, 0, 1, 1]], "excluded_regions": [[.05, .75, .6, .95]]}
+    score = score_geometry(REFERENCE, reference=REFERENCE, scope=scope)
+    assert score.reference_words == score.predicted_words == 2
+    assert score.f1 == 1 and score.wer == 0
+    extra = {"text": "bad", "bbox": [2, 2, 3, 3]}
+    score = score_geometry(REFERENCE + [extra], reference=REFERENCE, scope=scope, infer_scale=False)
+    assert score.precision == .6667 and score.wer > 0
+
+
+def test_partial_scope_does_not_hide_missing_reference_or_invalid_box_text():
+    scope = {"regions": [[.05, .05, .6, .3]]}
+    moved = {"text": "Invoice", "bbox": [.7, .7, .9, .8]}
+    score = score_geometry([moved, {"text": "bad", "bbox": [1]}], reference=REFERENCE[:1], scope=scope)
+    assert score.geometry_score == score.f1 == 0
+    assert score.invalid_boxes == 1 and score.wer > 0
+    assert score.reference_words == 1
+
+
 def test_duplicate_boxes_reduce_precision_and_increase_text_error():
     result = score_geometry(REFERENCE + [dict(REFERENCE[0])], reference=REFERENCE)
     assert result.geometry_score == 1.0

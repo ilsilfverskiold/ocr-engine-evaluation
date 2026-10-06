@@ -167,8 +167,14 @@ precision but not text errors.
 
 Coordinate-frame conversions must be explicit and recorded. Keep source image,
 returned text/box associations, matched/misplaced/missing/extra overlays and
-invalid-box counts. Scope handling for incomplete annotations is still pending;
-unreviewed full-page extra-box precision must not be presented as certified.
+invalid-box counts. Corpus precision/F1 and box-text errors use the rectangular
+envelope of retained dataset annotations, with reviewed unreadable regions
+excluded. A prediction intersecting that envelope participates unless its centre
+falls in an excluded region. Outside-region boxes remain visible in the overlay
+and exclusion list; malformed and out-of-frame boxes still incur penalties.
+This fixed rule is independent of engine output. It measures annotated-region
+performance, not certified full-page precision: omissions inside the envelope
+can still affect comparisons. Explicit custom regions use the same mechanism.
 Sonnet prompt/crop controls require separate approved inference.
 
 ## Silver-document estimates
@@ -199,6 +205,6 @@ or GPU changes are implicit in a scorer update.
 `python run_benchmark.py --rescore <source-run> --skip-judge` replays saved calls
 without new inference or model judging. New schema calls use the current
 `gt.inference_schema`; record them before scoring. `--collect-only`, `--score`,
-`--docs`, `--engines` and `--legs` support separately approved batches. Gold must
-be packaged with the corpus before a clean checkout can reproduce this policy;
-local ignored annotations alone are insufficient.
+`--docs`, `--engines` and `--legs` support separately approved batches. The repo
+includes accepted table/structured gold and the five original shipping tables;
+the downloader restores manifest-verified source images and original sidecars.

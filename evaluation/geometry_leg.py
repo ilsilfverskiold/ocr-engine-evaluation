@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v5 (2026-10-06; extra predictions and box-text CER/WER)"
+SCORER_VERSION = "geometry-v6 (2026-10-06; annotation scope, extra predictions and box-text CER/WER)"
 
 
 @dataclass
@@ -71,6 +71,8 @@ class GeometryScore:
     reference_text: str = ""
     predicted_text: str = ""
     scoring_unit: str = "word"
+    scope: dict = field(default_factory=dict)
+    excluded_predictions: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def score(self) -> float | None:
@@ -101,16 +103,19 @@ class GeometryScore:
             "geometry_wer": self.wer,
             "geometry_invalid_boxes": self.invalid_boxes,
             "geometry_scoring_unit": self.scoring_unit,
+            "geometry_scope": self.scope,
+            "geometry_outside_scope_predictions": len(self.excluded_predictions),
         }
 
     def as_detail(self) -> dict[str, Any]:
         return {"worst_matches": self.worst_matches[:25], "matches": self.matches,
+                "scope": self.scope, "excluded_predictions": self.excluded_predictions,
                 "unmatched_predictions": self.unmatched_predictions,
                 "reference_text": self.reference_text, "predicted_text": self.predicted_text,
                 "text_order": "top-to-bottom visual lines, left-to-right within each line; invalid-box text appended in returned order",
                 "parsed_boxes": self.parsed_boxes, "scored_boxes": self.scored_boxes,
                 "parsed_box_coordinates": "xyxy after box-key decoding, before scale/axis correction; original keys remain in source call",
-                "scored_box_coordinates": "normalized xyxy after recorded scale/axis correction, before line merging; includes unmatched predictions",
+                "scored_box_coordinates": "normalized xyxy after recorded scale/axis correction, before scope filtering/line merging; includes unmatched and excluded predictions",
                 "match_box_coordinates": "normalized xyxy after recorded scale/axis conversion"}
 
 
@@ -313,6 +318,7 @@ def score_geometry(
     predicted: Any, gt: GroundTruth | None = None, reference: Any = None,
     granularity: str | None = None, *, infer_axis_order: bool = False,
     infer_scale: bool = True,
+    scope: dict | None = None,
 ) -> GeometryScore:
     """(engine output, ground truth) -> GeometryScore.
 
@@ -336,6 +342,22 @@ def score_geometry(
         reference = gt.word_boxes
     if granularity is None and gt is not None:
         granularity = gt.word_boxes_granularity
+    scope = scope if scope is not None else (gt.metadata.get("geometry_scope") if gt else None)
+    scope = scope or {"version": "full-reference-v1", "regions": [], "excluded_regions": [],
+                      "basis": "caller supplied full reference; no spatial scope exclusions"}
+
+    def in_scope(box):
+        x0, y0, x1, y1 = box
+        # Impossible/out-of-frame boxes remain errors, not free exclusions.
+        if x0 >= x1 or y0 >= y1 or any(c < 0 or c > 1 for c in box):
+            return True
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        if any(r[0] <= cx <= r[2] and r[1] <= cy <= r[3]
+               for r in scope.get("excluded_regions", [])):
+            return False
+        regions = scope.get("regions", [])
+        return not regions or any(x0 <= r[2] and x1 >= r[0] and y0 <= r[3] and y1 >= r[1]
+                                  for r in regions)
 
     ref_words = parse_word_boxes(reference)
     if ref_words:
@@ -343,6 +365,7 @@ def score_geometry(
         # an empty match key: text-first matching cannot locate it for ANY
         # engine, so it must not sit in anyone's denominator.
         ref_words = [w for w in ref_words if normalize_word(w["text"])]
+        ref_words = [w for w in ref_words if in_scope(w["bbox"])]
     if not ref_words:
         return GeometryScore(applicable=False, reason="word-box reference is empty")
 
@@ -374,6 +397,7 @@ def score_geometry(
             cer=cer, wer=wer, invalid_boxes=invalid,
             reference_text=reference_text, predicted_text=predicted_text,
             scoring_unit="line_segment" if granularity == "line" else "word",
+            scope=scope,
             reference_repairs=gt.metadata.get("geometry_reference_repairs", {}) if gt else {},
         )
     parsed_boxes = pred_words
@@ -405,6 +429,10 @@ def score_geometry(
                                      w["bbox"][3], w["bbox"][2])}
                       for w in pred_words]
         axes_swapped = True
+
+    all_scored_boxes = pred_words
+    excluded_predictions = [w for w in pred_words if not in_scope(w["bbox"])]
+    pred_words = [w for w in pred_words if in_scope(w["bbox"])]
 
     if granularity == "line":
         pred_units = merge_words_into_lines(pred_words)
@@ -463,7 +491,8 @@ def score_geometry(
         located_words=located,
         matches=matches,
         parsed_boxes=parsed_boxes,
-        scored_boxes=pred_words,
+        scored_boxes=all_scored_boxes,
+        scope=scope, excluded_predictions=excluded_predictions,
         parse_ok=True,
         rescaled_from_thousand=rescaled,
         axes_swapped=axes_swapped,

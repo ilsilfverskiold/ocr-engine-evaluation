@@ -4,6 +4,13 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — geometry diagnostics respect annotated scope
+
+- Add region and unreadable-area exclusions for extra-box precision/F1 and
+  box-text CER/WER, while retaining all returned boxes as evidence. Invalid and
+  out-of-frame predictions remain counted. Record geometry-v6 and scope limits.
+- Validate with 66 geometry/loader tests; no engine or judge calls.
+
 ## 2026-10-06 — ship accepted references and preserve downloaded source identity
 
 - Include 42 table gold, 65 shared structured gold and five original shipping

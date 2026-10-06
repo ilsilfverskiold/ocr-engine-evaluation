@@ -1580,3 +1580,17 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Correct README's current-status claim: the saved October 2 report predates
   these changes. No external publication, API/model call, rescore or change to
   accepted field values. Commit only in the nested repository.
+
+## 2026-10-06 — scope geometry extra-box and text diagnostics
+
+- Add fixed annotation-region handling before matching, precision/F1 and
+  box-text CER/WER. Corpus region is the retained reference-box envelope,
+  excluding reviewed unreadable regions. It is derived without engine outputs
+  and does not certify every printed mark within that region.
+- Preserve every parsed/converted returned box for the overlay, with excluded
+  predictions and scope metadata separately inspectable. Out-of-frame/invalid
+  predictions remain penalized; a displaced excluded prediction cannot satisfy
+  the missing reference. A duplicate annotation repair is not a spatial exclusion.
+- Version geometry-v6 and document the region rule and residual annotation
+  omissions. All 66 geometry/loader tests pass after correcting the fixture's
+  list-versus-tuple comparison. No inference or paid call, no reference edits.
