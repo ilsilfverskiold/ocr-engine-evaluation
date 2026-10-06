@@ -96,11 +96,12 @@ def test_kv_waits_for_key_decisions_and_accepts_explicit_no_match(tmp_path, monk
     ref = gt({"Total": "100"})
     pending = score_key_value('{"Amount due":"100"}', ref, 'x')
     assert not pending.applicable and pending.score is None
-    assert pending.pending_key_review == ['Amount due']
+    assert pending.pending_key_review == ['Total']
     record = {'reference_id': reference_id(ref), 'matches': [{'output_key': 'Amount due', 'reference_key': None}]}
     (tmp_path / 'x.json').write_text(json.dumps(record))
     done = score_key_value('{"Amount due":"100"}', ref, 'x')
-    assert done.applicable and done.score == 0 and not done.pending_key_review
+    # A historical key-only rejection cannot settle a changed value/context review.
+    assert not done.applicable and done.score is None and done.pending_key_review == ['Total']
     record['matches'][0]['reference_key'] = 'Total'
     (tmp_path / 'x.json').write_text(json.dumps(record))
     assert score_key_value('{"Amount due":"100"}', ref, 'x').score == 1

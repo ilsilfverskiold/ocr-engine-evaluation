@@ -1291,8 +1291,9 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     """Describe saved scores, without relabelling historical judge runs as code."""
     spec = LEGS[leg]
     methods = set()
+    from evaluation.shared_fields import KV_VERSION
     current_versions = {"markdown": "markdown-structure-v1", "tables": "gold-table-cells-v1",
-                        "key_value": "shared-fields-v2-value-assisted", "schema": "shared-fields-v1"}
+                        "key_value": KV_VERSION, "schema": "shared-fields-v1"}
     current_only = True
     for record in records:
         if not record.get("applicable") or record.get("score") is None:

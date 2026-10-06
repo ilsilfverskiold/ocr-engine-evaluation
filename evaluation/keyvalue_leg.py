@@ -40,6 +40,7 @@ class KeyValueScore:
     pending_key_review: list[str] = field(default_factory=list)
     provisional_accuracy: float | None = None
     judge_errors: list[str] = field(default_factory=list)
+    judge_reviews: list[dict] = field(default_factory=list)
 
     @property
     def score(self) -> float | None:
@@ -74,6 +75,7 @@ class KeyValueScore:
             "synonym_reference_id": self.synonym_reference_id,
             "pending_key_review": self.pending_key_review,
             "judge_errors": self.judge_errors,
+            "judge_reviews": self.judge_reviews,
             "verdicts": [
                 {
                     "path": v.path,
@@ -102,30 +104,22 @@ def score_key_value(
         return KeyValueScore(applicable=False, reason=gt.missing_gt_reason("key_value"))
     from evaluation.kv_schema_code import engine_pairs
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
-    from evaluation.shared_fields import KV_VERSION, reference_id, score_shared, load_synonym_decisions
-    from evaluation.kv_value_judge import resolve, pair_identity
+    from evaluation.shared_fields import KV_VERSION, reference_id, score_shared, reference_fields
+    from evaluation.kv_value_groups import resolve, relation
     resolution = resolve(gt, pairs, use_judge=use_judge)
-    res = score_shared(gt, pairs, "key_value", resolution.synonyms)
-    decisions = load_synonym_decisions(gt)
-    pending = sorted({r['key'] for r in res.unresolved if r['key'] not in decisions
-                      and pair_identity(*pairs[r['index']]) not in resolution.decided})
+    res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups)
+    pending = resolution.pending
     for item in res.unresolved:
         key, value = pairs[item['index']]
-        decision = resolution.pair_decisions.get(pair_identity(key, value))
         item['value'] = value
-        if decision:
-            item['decision'] = (decision.get('reason') or
-                                ('cached judge rejected proposed field: value mismatch'
-                                 if decision.get('rejected_value_proposal') else
-                                 'cached judge returned no match (incorrect or ambiguous)'))
-            item['request_id'] = decision.get('request_id')
-        elif str(key) in decisions and decisions[str(key)] is None:
-            item['decision'] = 'cached key-only no-match decision'
-        else:
-            item['decision'] = 'matching-value candidate awaits judgment; no paid call made'
+        candidates = [f.path for f in reference_fields(gt) if relation(f.value, value, f.path)]
+        item['candidate_reference_fields'] = candidates
+        item['decision'] = ('contextual value review pending' if any(p in candidates for p in pending)
+                            else 'see cached contextual field reviews; no automatic value credit' if candidates
+                            else 'no whole-value or complete-token containment candidate')
     return KeyValueScore(
         applicable=res.total > 0 and not pending,
-        reason=("KV pair judgment pending; provisional calculation is not a benchmark score" if pending
+        reason=("KV value-group judgment pending; provisional calculation is not a benchmark score" if pending
                 else None if res.total else "all shared reference fields excluded"),
         field_accuracy=res.accuracy if res.total and not pending else None,
         provisional_accuracy=res.accuracy if pending else None, pending_key_review=pending,
@@ -136,4 +130,5 @@ def score_key_value(
         scorer=KV_VERSION, verdicts=res.verdicts, unresolved_keys=res.unresolved,
         synonym_reference_id=reference_id(gt),
         judge_cost_usd=resolution.cost_usd, judge_errors=resolution.errors,
+        judge_reviews=resolution.decisions,
     )

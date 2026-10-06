@@ -224,19 +224,24 @@ the ask was the best one available to it.
 ## How each leg is scored
 
 The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). The saved run uses older scorers. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
-The current KV-only rescore is **`20261006T214928Z`**: 260 scored outputs,
-65 accepted pages, four engines, zero pending decisions/errors. Its 342 judge
-calls in the earlier run cost **$1.4756**, including all responses. The current
-offline replay reuses them, fixes complete split-value matching and displays
-cached rejections; it made no new calls.
-See [the follow-up](docs/follow-up-2026-10-03.md#latest-kv-decision--inline-value-assisted-evaluation)
-and `results/runs/20261006T195826Z_kv_judge_audit.json`. The table below describes current scoring. Historical full-run scores still
-need replacement through offline rescoring and integration; no more paid runs
-are authorized for this delivery.
-Rebuild the KV viewer with:
+The previous KV run **`20261006T195826Z`** preserves 342 paid judge calls
+($1.4756). Current evaluation reuses valid matches and prepares contextual
+value-group reviews for partial values and repeated amounts. Those new reviews
+are pending; the intermediate automatic split-credit scores are withdrawn.
+See [the current correction and request plan](docs/follow-up-2026-10-03.md#kv-value-containment-and-contextual-judge-correction--2026-10-07).
+
+Prepare the required reviews without spending:
 
 ```bash
-python scripts/build_evidence_report.py 20261006T214928Z --output results/reports/ocr-benchmark-kv.html --status 'KV offline correction; cached decisions reused; no new paid calls.'
+python scripts/build_kv_synonyms.py prepare-values --source 20261006T195826Z --output /tmp/kv-context-review-plan.json
+```
+
+The cached-only correction preview is `20261006T221058Z`: 59 settled scores,
+201 pending reviews and 28 no-reference N/A rows. It is not a completed KV
+comparison. Rebuild the local viewer without paid calls:
+
+```bash
+python scripts/build_evidence_report.py 20261006T221058Z --output results/reports/ocr-benchmark-kv.html --status 'KV correction pending contextual judge reviews; no new paid calls.'
 ```
 
 KV can call a judge during evaluation for unmatched pairs, caching confirmations.

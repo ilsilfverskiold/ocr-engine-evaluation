@@ -10,8 +10,9 @@ implemented and tested offline. The last published scores, run
 catalogues now cover 92 pages; newspaper_000 remains missing. The remaining
 prompt controls are deferred: the user requested no more paid runs. The combined
 all-leg report is still pending. The inline KV rescore
-`20261006T214928Z` covers all 65 accepted structured-reference pages, reusing the
-paid decisions from `20261006T195826Z` with corrected split-value handling. The execution checklist is
+from `20261006T195826Z` supplies reusable paid decisions. The new contextual
+value-group reviews are prepared and pending; deterministic split-credit runs
+are withdrawn. The execution checklist is
 [follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 
 ## Prompts and provenance
@@ -131,41 +132,34 @@ edits invalidate the sample. There is no three-field minimum. The corpus has 65
 structured pages; uncertain readings remain explicitly excluded from both legs.
 The old nested references remain available as provenance, not the active target.
 
-**KV now resolves wording during evaluation.** Match literal keys, unambiguous
-printed aliases and cached confirmations first. For an unmatched key, compare
-its complete value against the reference values. No value candidate means
-incorrect/unmatched without a judge call. A plausible candidate is not credit:
-Gemini 2.5 Flash sees the returned pair and the page's accepted reference fields
-and must confirm the field's identity. Equal totals/subtotals, repeated dates,
-zeros and blanks are not enough to disambiguate a field.
+**KV resolves wording and split values during evaluation.** Match literal keys,
+unambiguous printed aliases and cached positive confirmations first. For other
+fields, compare whole values and check complete-token containment in either
+direction. A returned fragment inside a reference value (or a reference inside
+a longer output) nominates a candidate; it never earns credit without judgment.
+Leading/trailing currency glyphs are ignored in numeric comparison, with signs,
+decimals and identifier digits preserved. `100` does not match inside `1000`.
 
-Confirmed key variations are cached immediately and reused by subsequent engines.
-If the judge needs the value to identify the field, cache the exact pair, not an
-unconditional key alias. Repeated reference labels also stay pair-specific even
-if the judge proposes a wording alias. Replan later batches after each saved
-confirmation. Code still checks every returned value after matching;
-a confirmed synonym cannot make a future wrong value correct. Reference changes
-invalidate the page cache. One output pair can satisfy only one reference field.
-`100` is not `1000`, and `12.34` is not `1234`.
+The judge receives reference-centered items plus all returned keys/values for
+context. It may select multiple output components for one complete value, even
+when a parent field is empty. Code validates complete coverage and one-use output
+allocation after judgment. There is no special Seller/Client rule, component-name
+whitelist or automatic key-prefix credit. Repeated amounts are judged with their
+surrounding fields, not arbitrarily allocated by occurrence.
 
-KV also accepts a complete value split into explicitly owner-prefixed components,
-such as Seller Name / Seller Address / Seller City. Components must cover the
-whole reference as non-overlapping contiguous token sequences; incomplete,
-wrong-owner, duplicate or extra components do not receive full credit. This can
-replace an empty parent but cannot bypass a nonempty contradictory answer or
-reuse a pair already assigned to another field. Verdicts retain the contributing
-keys. This is deterministic and does not apply to supplied-schema scoring.
-Numeric comparison ignores leading/trailing currency glyphs while preserving
-signs and decimals. Repeated equal amounts still require field identity.
-The report distinguishes cached no-match decisions from pending judgments;
-neither is evidence that value lookup was skipped.
+Existing valid positive cache entries are reused. Old negative decisions do not
+suppress new partial-value/context requests. Group decisions bind to the entire
+returned-pair context and reference identity. Only an explicitly judge-approved
+single-key synonym with a complete matching value can become reusable across
+contexts. The stored reason and request ID remain visible. Reference/context
+edits invalidate affected decisions; incorrect numeric substring matches cannot
+become credit through a cached synonym.
 
-The shared path is `evaluation/keyvalue_leg.py` → `kv_value_judge.py`; live runs,
-saved-run scoring, rescoring and future engines all use it. `--skip-judge` reads
-existing confirmations but makes no new call; unresolved plausible pairs stay
-pending. Failed/invalid paid replies remain journaled and are not automatically
-retried. Explicit no-match decisions are cached. No separate synonym batch is
-needed; the old key-only batch remains archived and is not active.
+The shared path is `evaluation/keyvalue_leg.py` → `kv_value_groups.py`, using
+`kv_value_judge.py` for legacy-cache compatibility, budget control and journaling.
+Live runs, saved scoring and rescoring use the same path. `--skip-judge` makes no
+new calls; required uncached reviews stay pending and scores remain provisional.
+Failed/invalid paid replies are saved and never automatically retried.
 
 KV headline remains `(correct + blank_ok) / selected fields`. Extra pairs are
 visible but do not directly penalize incomplete-reference pages. Native Textract

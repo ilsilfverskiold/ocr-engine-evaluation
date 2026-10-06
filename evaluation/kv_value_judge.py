@@ -1,7 +1,7 @@
-"""Value-assisted KV matching during evaluation, with incremental page caches.
+"""Legacy KV cache compatibility plus shared budget and request journaling.
 
-Exact/known keys win first. Equal complete values only nominate candidates;
-the judge must confirm field identity. This module never changes schema scoring.
+Current production evaluation uses kv_value_groups for partial values and full
+returned context. Legacy requests/replies remain decodable and recoverable.
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from threading import RLock
 
 from evaluation.kv_schema_code import is_blank_value, value_equal
 from evaluation.kv_synonyms import digest, decode_reply, MODEL, CONTROL_CONFIG, PRICES
-from evaluation.shared_fields import reference_fields, reference_id, match_keys, load_synonyms, split_value_matches
+from evaluation.shared_fields import reference_fields, reference_id, match_keys, load_synonyms
 from evaluation.structured_metrics import normalize_label
 
 VERSION = "kv-value-assisted-v1"
@@ -124,14 +124,10 @@ def requests_for(gt, pairs):
     decisions, synonyms = _cache_maps(record)
     synonyms = {**load_synonyms(gt), **synonyms}
     assigned, unresolved, used = match_keys(gt, pairs, "key_value", synonyms)
-    split = split_value_matches(gt, pairs, assigned, used)
-    split_indices = {i for indices, _ in split.values() for i in indices}
     refs = [{"id": i, "key": f.path, "value": f.value}
             for i, f in enumerate(reference_fields(gt), 1)]
     pending, local, seen = [], [], set()
     for item in unresolved:
-        if item['index'] in split_indices:
-            continue
         key, value = pairs[item["index"]]
         identity = pair_identity(key, value)
         if identity in seen or identity in decisions:
@@ -167,6 +163,9 @@ def requests_for(gt, pairs):
 
 
 def validate(request, reply):
+    if request.get('version') == 'kv-context-groups-v2':
+        from evaluation.kv_value_groups import validate
+        return validate(request, reply)
     pairs = request["output_pairs"]
     if set(reply) != {str(p["id"]) for p in pairs}:
         raise ValueError("Missing or invented pair IDs")
@@ -292,33 +291,7 @@ def _save(gt, record):
 
 
 def estimate_saved(sources):
-    """No calls/writes: upper planning bound before incremental alias reuse."""
-    import run_benchmark as rb
-    from evaluation.ground_truth import GroundTruthLoader
-    from evaluation.kv_schema_code import engine_pairs
-    loader = GroundTruthLoader()
-    requests, candidates, rejected, calls, pages = {}, 0, 0, 0, set()
-    for source in sources:
-        for rec in rb.read_jsonl(rb.RUNS_DIR / f"{source}_inference.jsonl"):
-            if rec.get('error') or 'key_value' not in rec.get('legs', []):
-                continue
-            gt = loader.load(Path(rec['document_path']))
-            if not gt.has_gt_for('key_value'):
-                continue
-            call = rb._read_stored_call(rec.get('source_timestamp') or source, rec['engine_name'],
-                                       Path(gt.document_path), gt, rec.get('pass_name') or 'default')
-            if call is None:
-                raise ValueError(f"Missing saved KV call: {rec['document_path']}")
-            pairs, _ = engine_pairs(rec['engine_name'], call.get('raw_text') or '', call.get('structured_output') or {})
-            _, planned, local = requests_for(gt, pairs)
-            calls += 1
-            pages.add(gt.document_path)
-            candidates += sum(len(r['output_pairs']) for r in planned)
-            rejected += len(local)
-            requests.update({r['id']: r for r in planned if not (CACHE_ROOT / 'calls' / (r['id'] + '.json')).exists()})
-    return {'version': VERSION, 'source_calls': calls, 'pages': len(pages),
-            'uncached_candidate_pairs_before_incremental_reuse': candidates,
-            'no_value_match_pairs': rejected, 'maximum_requests_before_incremental_reuse': len(requests),
-            'planning_reserve_usd': sum(r['planning_reserve_usd'] for r in requests.values()),
-            'model': MODEL, 'config': CONTROL_CONFIG, 'batch_size': BATCH_SIZE,
-            'prompt': PROMPT, 'pricing': PRICES}
+    """Estimate the current contextual evaluator, not the legacy pair-only plan."""
+    from evaluation.kv_value_groups import plan_saved
+    plan = plan_saved(sources)
+    return {key: value for key, value in plan.items() if key != 'requests'}

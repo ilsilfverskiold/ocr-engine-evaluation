@@ -1865,3 +1865,37 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   further paid runs: remaining prompt/pipeline/geometry/silver proposals are
   deferred. Offline combined report, evidence audit and whole-folder cleanup
   remain. No model/API/Modal request, new inference, or push was made.
+
+
+## 2026-10-07 — implement the requested value-containment judge correction
+
+The user rejected both the component-name whitelist and the subsequent generic
+key-prefix auto-credit approach. Removed automatic split-value credit entirely,
+and withdrew their generated score sets (214928Z/215537Z) into disposable
+session scratch. Original inference and paid journals remain intact.
+
+- Common KV evaluator now nominates full-value and complete-token containment
+  candidates in both directions, independent of field/engine names. Currency
+  formatting normalizes before comparison; numeric boundaries remain intact.
+- Reference-centered judge items include ALL returned keys/values, so fragments,
+  empty parents and context around repeated amounts are visible together. The
+  judge selects components and records a reason; code checks coverage and reuse
+  afterward. No containment or prefix earns automatic credit.
+- Valid positive caches remain active. Rebuild failed decisions under the new
+  context-bound request identity; both approval and rejection are reusable only
+  for the unchanged context/reference. Explicitly safe single-key synonyms can
+  still be reused across engines. Request journals, hard budget and one-attempt
+  behavior are shared with the existing provider path.
+- Added read-only prepare-values mode and updated the standard rescore estimate
+  to use the same builder as live/scored KV, rather than the obsolete protocol.
+  Prepared 3,812 items across 201 affected outputs, at most 285 initial calls,
+  conservative $5.561136 reservation. Exact requests are in session scratch.
+  Explicit corrective-run approval is pending (final reservation $5.5610565, proposed cap $5.60) because the user previously
+  prohibited further paid runs. No API/model/Modal call was made.
+- 421 offline tests passed, including no auto-credit, split/contained values,
+  wrong owners, numeric/currency boundaries, old-negative invalidation, reuse,
+  output conflicts, malformed replies, concurrency and crash-journal recovery.
+- Cached-only replay 20261006T221058Z: 59 settled, 201 pending, 28 no-reference
+  N/A, zero errors/cost. Sonnet invoice_001 has eight prepared review items and
+  remains pending rather than receiving speculative full credit. Updated the
+  report generator and existing docs to expose this state. No push performed.

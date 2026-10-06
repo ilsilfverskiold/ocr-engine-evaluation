@@ -1,6 +1,8 @@
 """Historical key-only preparation/control utilities; superseded for benchmark KV.
 
-Current evaluation resolves key/value candidates inline in evaluation/kv_value_judge.py.
+Current evaluation resolves value groups inline in evaluation/kv_value_groups.py.
+Prepare current partial-value/context reviews without making calls:
+python scripts/build_kv_synonyms.py prepare-values --source RUN --output /tmp/kv-values.json
 
 python scripts/build_kv_synonyms.py prepare --source RUN --output /tmp/kv-plan.json
 python scripts/build_kv_synonyms.py prepare-controls PLAN --cases CASES --output /tmp/kv-controls.json
@@ -190,6 +192,9 @@ def main():
     prep = commands.add_parser("prepare")
     prep.add_argument("--source", required=True, help="Comma-separated inference run IDs")
     prep.add_argument("--output", type=Path, required=True)
+    values = commands.add_parser('prepare-values', help='Prepare current value/group review items; no calls')
+    values.add_argument('--source', required=True)
+    values.add_argument('--output', type=Path, required=True)
     controls = commands.add_parser("prepare-controls")
     controls.add_argument("plan", type=Path, help="Previously saved source plan")
     controls.add_argument("--cases", type=Path, required=True, help="Page → output key → expected reference key or null")
@@ -198,7 +203,15 @@ def main():
     run.add_argument("plan", type=Path)
     run.add_argument("--budget-usd", type=float, required=True)
     args = parser.parse_args()
-    if args.command in ("prepare", "prepare-controls"):
+    if args.command == 'prepare-values':
+        from evaluation.kv_value_groups import plan_saved
+        plan = plan_saved(args.source.split(','))
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(plan, indent=2, ensure_ascii=False))
+        print(f"{len(plan['affected_outputs'])} affected outputs; at most {plan['request_count']} calls; "
+              f"{plan['review_items']} review items; planning reserve ${plan['planning_reserve_usd']:.4f}. "
+              f"No API calls made.\n{args.output.resolve()}")
+    elif args.command in ("prepare", "prepare-controls"):
         plan = (prepare(args.source.split(",")) if args.command == "prepare" else
                 ks.prepare_controls(json.loads(args.plan.read_text()), json.loads(args.cases.read_text())))
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -16,7 +16,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
-KV_VERSION = "shared-fields-v3-split-values"
+KV_VERSION = "shared-fields-v5-judged-value-groups"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -112,62 +112,6 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
     return assigned, unresolved, used
 
 
-def split_value_matches(gt, pairs, assigned, used):
-    """Join explicitly named components only when they cover the whole value.
-
-    This is a KV representation conversion, never a page-wide bag-of-words
-    search. Nonempty contradictory parent answers and already assigned child
-    fields cannot be bypassed. Components must partition the complete reference
-    into non-overlapping contiguous token sequences, each used once.
-    """
-    def tokens(value):
-        import unicodedata
-        return re.findall(r"[+-]?\d+(?:[.,]\d+)*|\w+", unicodedata.normalize("NFKC", str(value)).casefold())
-
-    component_names = {"name", "address", "city", "state", "zip", "zip code",
-                       "postal code", "postcode", "country", "street", "street address",
-                       "address line 1", "address line 2", "address line 3"}
-    matches = {}
-    claimed = set(used)
-    for f in reference_fields(gt):
-        hit = assigned.get(f.path)
-        if hit is not None and not is_blank_value(pairs[hit[0]][1]):
-            continue
-        expected = tokens(f.value)
-        if len(expected) < 2 or not any(c.isalpha() for c in str(f.value)):
-            continue
-        owner = normalize_label(f.path)
-        parts = []
-        for i, (key, value) in enumerate(pairs):
-            label = normalize_label(str(key))
-            if i in claimed or is_blank_value(value) or not label.startswith(owner + " "):
-                continue
-            if label[len(owner) + 1:] not in component_names:
-                continue
-            part = tokens(value)
-            starts = [s for s in range(len(expected) - len(part) + 1)
-                      if part and expected[s:s + len(part)] == part]
-            if len(starts) != 1:
-                # Do not choose a convenient subset or silently omit wrong parts.
-                parts = []
-                break
-            parts.append((starts[0], i, part))
-        if len(parts) < 2:
-            continue
-        parts.sort()
-        cursor = 0
-        for start, _, part in parts:
-            if start != cursor:
-                break
-            cursor += len(part)
-        else:
-            if cursor == len(expected):
-                indices = [i for _, i, _ in parts]
-                matches[f.path] = (indices, " ".join(str(pairs[i][1]).strip() for i in indices))
-                claimed.update(indices)
-    return matches
-
-
 @dataclass
 class Result:
     accuracy: float
@@ -184,26 +128,27 @@ class Result:
     verdicts: list[FieldVerdict] = field(default_factory=list)
 
 
-def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None) -> Result:
+def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None) -> Result:
     fields = reference_fields(gt)
     synonyms = load_synonyms(gt) if leg == "key_value" else {}
     if leg == "key_value":
         synonyms.update(confirmed_synonyms or {})
     assigned, unresolved, used = match_keys(gt, pairs, leg, synonyms)
-    split = split_value_matches(gt, pairs, assigned, used) if leg == "key_value" else {}
-    split_indices = {i for indices, _ in split.values() for i in indices}
-    unresolved = [item for item in unresolved if item["index"] not in split_indices]
+    groups = {g['reference_key']: g for g in (confirmed_groups or [])} if leg == "key_value" else {}
+    group_indices = {i for g in groups.values() for i in g['indices']}
+    unresolved = [item for item in unresolved if item['index'] not in group_indices]
     verdicts = []
     for f in fields:
         blank = is_blank_value(f.value)
         hit = assigned.get(f.path)
         key, value, how = "", "", ("no confirmed key match after value-assisted resolution; see unmatched-pair decisions"
                                     if leg == "key_value" else "no matching supplied schema key")
-        if f.path in split:
-            indices, value = split[f.path]
-            key = " + ".join(str(pairs[i][0]) for i in indices)
-            how = "explicitly named split components cover the complete reference value"
-            verdict = "correct"
+        if f.path in groups:
+            group = groups[f.path]
+            key = " + ".join(str(pairs[i][0]) for i in group['indices'])
+            value = " | ".join(str(pairs[i][1]) for i in group['indices'])
+            how = "judge-confirmed value group; request " + group['request_id']
+            verdict = "blank_ok" if blank else "correct"
         elif hit is None:
             verdict = "missing"
         else:

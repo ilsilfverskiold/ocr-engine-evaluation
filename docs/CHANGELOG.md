@@ -4,15 +4,17 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
-## 2026-10-06 — KV split values and cached-decision evidence
+## 2026-10-07 — judge partial values with returned-field context
 
-- Credit complete owner-prefixed Name/Address/City components in KV, including
-  when the parent field is empty; retain each contributing key in the verdict.
-- Show actual cached no-match/pending decisions instead of claiming no value
-  search. Handle trailing currency glyphs as well as existing leading glyphs.
-- Offline rescore `20261006T214928Z`: Sonnet invoice_001 improves 14/22 to 16/22;
-  the other 259 scored results stay unchanged. No new paid calls. Further paid
-  prompt controls and silver refresh are deferred by user instruction.
+- Withdraw deterministic split-credit fixes and their intermediate score sets.
+- Propose whole-value/partial-value candidates in either direction; a judge
+  selects complete groups using all returned keys/values, including empty
+  parents and surrounding fields for repeated amounts. Code never auto-credits
+  containment or key prefixes. Currency glyphs normalize before matching.
+- Reuse valid paid confirmations; rebuild affected negatives under a context-
+  bound cache. Preserve every reason, selected output ID and paid request.
+- Add read-only `prepare-values` to the existing preparation CLI. No new paid
+  run has executed; corrective execution awaits the requested budget approval.
 
 ## 2026-10-06 — sampled schema results
 

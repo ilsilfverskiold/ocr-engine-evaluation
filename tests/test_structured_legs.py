@@ -320,7 +320,7 @@ def test_key_value_value_candidate_needs_a_decision():
     )
     result = score_key_value(json.dumps({"Some Label": "12,00"}), gt, "gemini_flash", use_judge=False)
     assert result.applicable is False and result.pairs_total == 2
-    assert result.pending_key_review == ["Some Label"]
+    assert result.pending_key_review == ["header.a"]
     assert result.pairs_correct == 0
 
 
