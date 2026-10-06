@@ -81,6 +81,9 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
     proposals, unresolved = [], []
     for i, (key, value) in enumerate(pairs):
         key = str(key)
+        if key in gold.get("excluded_fields", []):
+            # Human-excluded fields do not need a synonym decision in either leg.
+            continue
         if key in by_path:
             proposals.append((0, i, key, "exact key"))
         elif leg == "schema":

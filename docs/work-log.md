@@ -1609,3 +1609,10 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - 109 shared-field, synonym and structured-leg tests pass. No model call,
   active cache, reference mutation or score publication. This closes the one
   known control miss without another paid experiment.
+
+## 2026-10-06 — respect reviewed exclusions during KV matching
+
+- The full offline suite caught an excluded array field incorrectly leaving KV
+  pending. Exact excluded keys now bypass synonym review in both legs, while
+  selected fields and expected values remain unchanged. The existing shared
+  array/exclusion regression passes; all 369 tests pass. No paid calls.

@@ -4,6 +4,11 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — excluded fields do not block KV completion
+
+- Respect explicit human field exclusions before requesting key synonyms.
+  Shared schema/KV exclusion regression and the full offline suite pass.
+
 ## 2026-10-06 — keep unfinished KV mapping out of published scores
 
 - Mark results with unreviewed keys pending instead of scoring missing synonyms
