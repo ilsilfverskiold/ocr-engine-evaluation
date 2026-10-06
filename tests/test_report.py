@@ -33,6 +33,15 @@ def test_gold_table_diagnosis_uses_cells_including_blanks_and_extras():
     assert '1/1 blanks correct' in diagnosis
 
 
+def test_dispatch_forwards_skip_judge_to_kv(monkeypatch):
+    from evaluation import keyvalue_leg
+    seen = []
+    monkeypatch.setattr(keyvalue_leg, 'score_key_value', lambda *args, **kw: seen.append(kw['use_judge']))
+    run_benchmark.score_leg('key_value', 'gemini_flash', '{}', None, {}, use_judge=False)
+    run_benchmark.score_leg('key_value', 'gemini_flash', '{}', None, {}, use_judge=True)
+    assert seen == [False, True]
+
+
 def test_rescore_uses_original_calls_when_source_is_itself_a_rescore(tmp_path, monkeypatch):
     from types import SimpleNamespace
     from evaluation.ground_truth import GroundTruthLoader
@@ -345,3 +354,24 @@ def test_unscored_results_show_the_recorded_exclusion_not_a_failure_diagnosis():
         "leg": "markdown", "applicable": False, "reason": "no reference",
         "error": "timeout", "metrics": {},
     }) == "call/scoring error: timeout"
+
+
+def test_kv_only_rescore_does_not_score_other_legs_or_copy_judge_rows(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from evaluation.ground_truth import GroundTruthLoader
+    monkeypatch.setattr(run_benchmark, 'RUNS_DIR', tmp_path)
+    records = [
+        {'engine_name': 'test', 'document_path': '/x.png', 'legs': ['key_value', 'text']},
+        {'engine_name': 'other', 'document_path': '/x.png', 'legs': ['text']},
+    ]
+    (tmp_path / 'source_inference.jsonl').write_text('\n'.join(map(json.dumps, records)))
+    (tmp_path / 'source_results.jsonl').write_text(json.dumps({'leg': 'judge', 'score': 1}))
+    monkeypatch.setattr(GroundTruthLoader, 'load', lambda *args: SimpleNamespace(tier='easy', doc_type='sample', gt_source='human'))
+    monkeypatch.setattr(run_benchmark, '_read_stored_call', lambda *args: {'raw_text': '{}'})
+    scored = []
+    monkeypatch.setattr(run_benchmark, '_score_pass_legs', lambda *args, **kw: scored.append(args[5]) or [])
+    run_benchmark.rescore_runs(['source'], 'new', logging.getLogger('test'), True, ['key_value'])
+    assert scored == [['key_value']]
+    saved, = run_benchmark.read_jsonl(tmp_path / 'new_inference.jsonl')
+    assert saved['engine_name'] == 'test' and saved['legs'] == ['key_value']
+    assert not (tmp_path / 'new_results.jsonl').exists()

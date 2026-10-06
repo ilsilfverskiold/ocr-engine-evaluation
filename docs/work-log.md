@@ -1659,3 +1659,26 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
 - Keep the full replacement on hold and review reuse before requesting a
   smaller completion batch. Paid schema, prompt controls and catalogue work
   remain separate unfinished parts of the user goal. No new engine removed.
+
+
+## 2026-10-06 — inline value-assisted KV evaluation
+
+- User superseded the separate key-only batches and explicitly authorized rewriting
+  the shared evaluator and running saved KV outputs. Known keys/cached variations
+  stay local; only unmatched keys with complete-value candidates reach Gemini.
+  Cache negatives and exact-pair decisions as well as reusable aliases. Values
+  are always checked again. Repeated reference labels cannot become unconditional
+  aliases. The same route handles live, stored and rescored calls for every engine.
+- Remove the old scalar/printed-pair/minimum-three eligibility gates: KV and
+  schema use all selected reference fields. Add KV-only rescore filtering,
+  four workers with page locks, per-call journals, one SDK attempt, a $2 cap,
+  recovery of saved replies without repaying, and replanning between batches.
+  Retire the old separate key-only execution CLI. No schema or OCR calls.
+- Validation: 386 offline tests passed; the added selected-leg rescore regression
+  also passed with the report tests (25 passed). Tests scrub paid credentials.
+- First paid pass 20261006T194648Z: 319 responses, $1.3890981. Thirty-eight
+  batches contained a proposed reference with a nonmatching value. The original
+  validator rejected the batch; corrected validation rejects only that pair,
+  preserves the proposal as audit evidence, and recovers valid entries from the
+  same saved reply. No repeated calls required for that recovery. Free replay
+  20261006T195502Z applies the fixes. Final completion/results to be recorded below.

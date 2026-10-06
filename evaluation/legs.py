@@ -154,7 +154,7 @@ LEGS: dict[str, LegSpec] = {
             "printed. Use null where a printed field is blank. Output only JSON."
         ),
         scored_on="shared-reference field accuracy",
-        method="key matching with cached synonyms, then code value checks",
+        method="known keys first; judge confirms unmatched value candidates and caches variations; code checks values",
         pass_name="key_value",
     ),
     SCHEMA: LegSpec(

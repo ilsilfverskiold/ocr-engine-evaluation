@@ -239,21 +239,22 @@ def test_fenced_json_is_parsed():
 
 
 def _all_pairs(monkeypatch, paths=("header.invoice_no", "header.invoice_date", "header.po_number", "summary.total_gross_worth")):
-    """Stage 1 for the fixture: every scalar field printed as a label+value pair."""
-    import evaluation.kv_schema_code as kv
-    monkeypatch.setattr(kv, "load_aliases", lambda stem, model=kv.ALIAS_MODEL: {
-        p: {"printed_labels": [], "is_printed_pair": True} for p in paths})
+    """Reviewed printed aliases do not remove other shared reference fields."""
+    import sys
+    original = _gt
+    def reviewed(*args, **kwargs):
+        gt = original(*args, **kwargs)
+        gt.metadata['structured_gold_reference'] = {'shared_field_selection': True,
+            'kv_aliases': {p: {'printed_labels': [p.split('.')[-1]], 'is_printed_pair': True} for p in paths}}
+        return gt
+    monkeypatch.setattr(sys.modules[__name__], '_gt', reviewed)
 
 
-def test_key_value_excludes_array_contents(monkeypatch):
-    # Without stage 1 the denominator is undefined: not applicable, never 0.
-    result = score_key_value("{}", _gt(), "gemini_flash")
-    assert result.applicable is False and "stage 1" in result.reason
-    # The key-value leg scores the reference's scalar fields only: 3 header
-    # + 1 summary here. Array items belong to the schema leg.
-    assert result.fields_all == 4
-    _all_pairs(monkeypatch)
-    assert score_key_value("{}", _gt(), "gemini_flash").pairs_total == 4
+def test_key_value_includes_all_schema_fields_without_stage_one():
+    import json
+    result = score_key_value('{}', _gt(), 'gemini_flash', use_judge=False)
+    assert result.applicable and result.pairs_total == 6 and result.score == 0
+    assert score_key_value(json.dumps(TRUE_JSON), _gt(), 'gemini_flash', use_judge=False).score == 1
 
 
 def test_key_value_matches_the_printed_label_spelling(monkeypatch):
@@ -270,45 +271,27 @@ def test_key_value_matches_the_printed_label_spelling(monkeypatch):
         }
     )
     result = score_key_value(printed, _gt(), "gemini_flash")
-    assert result.field_accuracy == 1.0
+    assert result.field_accuracy == 4 / 6
 
 
-def test_key_value_credits_the_pages_own_label_vocabulary(monkeypatch):
-    # The prompt says "use the label exactly as printed"; the reference's
-    # labels are the dataset's schema keys. Stage 1 (evaluation/alias_pass.py)
-    # records, per field, the label the page prints; stage 2 accepts a pair
-    # whose key is the field name OR that printed label. Without stage 1 only
-    # the field-name matches count and the denominator is every scalar field.
+def test_key_value_credits_the_pages_own_label_vocabulary():
     import json
-
-    printed = json.dumps(
-        {
-            "Invoice no:": "97159829",
-            "Date of issue:": "09/18/2015",
-            "PO Number": None,
-            "Total": "$ 978,12",
-        }
-    )
-    without = score_key_value(printed, _gt(), "gemini_flash")
-    assert without.applicable is False and "stage 1" in without.reason
-
-    import evaluation.kv_schema_code as kv
-    monkeypatch.setattr(kv, "load_aliases", lambda stem, model=kv.ALIAS_MODEL: {
-        "header.invoice_no": {"printed_labels": ["Invoice no:"], "is_printed_pair": True},
-        "header.invoice_date": {"printed_labels": ["Date of issue:"], "is_printed_pair": True},
-        "header.po_number": {"printed_labels": ["PO Number"], "is_printed_pair": False},
-        "summary.total_gross_worth": {"printed_labels": ["Total"], "is_printed_pair": True},
-    })
-    with_labels = score_key_value(printed, _gt(), "gemini_flash")
-    assert with_labels.alias_missing is False
-    assert with_labels.pairs_total == 3           # the fields printed as pairs
-    assert with_labels.field_accuracy == 1.0
+    printed = json.dumps({'Invoice no:': '97159829', 'Date of issue:': '09/18/2015',
+                          'PO Number': None, 'Total': '$ 978,12'})
+    gt = _gt()
+    without = score_key_value(printed, gt, 'gemini_flash', use_judge=False)
+    assert not without.applicable and without.pending_key_review
+    gt.metadata['structured_gold_reference'] = {'shared_field_selection': True, 'kv_aliases': {
+        'header.invoice_no': {'printed_labels': ['Invoice no:']},
+        'header.invoice_date': {'printed_labels': ['Date of issue:']},
+        'header.po_number': {'printed_labels': ['PO Number']},
+        'summary.total_gross_worth': {'printed_labels': ['Total']}}}
+    result = score_key_value(printed, gt, 'gemini_flash', use_judge=False)
+    assert result.pairs_total == 6 and result.field_accuracy == 4 / 6
 
 
 def test_key_value_keeps_a_repeated_printed_label():
-    # An invoice prints "Tax Id:" twice — seller and client. The test's GT
-    # has only 2 scalar fields, which is below the scorer's minimum of 3 for
-    # key-value evaluation (too few fields to meaningfully assess extraction).
+    # Repeated labels need a contextual decision, even on a two-field page.
     import json
 
     gt = _gt(
@@ -320,14 +303,13 @@ def test_key_value_keeps_a_repeated_printed_label():
                 "client_tax_id": {"type": "string"}}}}},
     )
     printed = json.dumps({"Tax Id:": "985-73-8194", "Tax Id: ": "994-72-1270"})
-    result = score_key_value(printed, gt, "gemini_flash")
-    assert result.applicable is False
-    assert "too few scalar fields" in result.reason
+    result = score_key_value(printed, gt, "gemini_flash", use_judge=False)
+    assert result.applicable is False and result.pairs_total == 2
+    assert result.pending_key_review
 
 
-def test_key_value_value_match_does_not_reuse_one_engine_pair_twice():
-    # The test's GT has only 2 scalar fields (a, b), which is below the
-    # scorer's minimum of 3 for key-value evaluation.
+def test_key_value_value_candidate_needs_a_decision():
+    # Value equality nominates a candidate but cannot award credit by itself.
     import json
 
     gt = _gt(
@@ -336,9 +318,10 @@ def test_key_value_value_match_does_not_reuse_one_engine_pair_twice():
             "type": "object",
             "properties": {"a": {"type": "string"}, "b": {"type": "string"}}}}},
     )
-    result = score_key_value(json.dumps({"Some Label": "12,00"}), gt, "gemini_flash")
-    assert result.applicable is False
-    assert "too few scalar fields" in result.reason
+    result = score_key_value(json.dumps({"Some Label": "12,00"}), gt, "gemini_flash", use_judge=False)
+    assert result.applicable is False and result.pairs_total == 2
+    assert result.pending_key_review == ["Some Label"]
+    assert result.pairs_correct == 0
 
 
 def test_key_value_matches_nested_engine_output(monkeypatch):
@@ -363,7 +346,7 @@ def test_key_value_blank_field_must_come_back_null(monkeypatch):
     assert result.blank_total == 1
     assert result.pairs_invented_value == 1
     assert result.pairs_correct == 1
-    assert result.pairs_total == 4
+    assert result.pairs_total == 6
 
 
 def test_key_value_reads_textract_forms_natively(monkeypatch):
@@ -378,11 +361,11 @@ def test_key_value_reads_textract_forms_natively(monkeypatch):
     result = score_key_value("", _gt(), "textract_structured", structured)
     # Textract has no JSON interface: its FORMS pairs are the answer. Keys
     # match the field names ("Invoice No.:" ~ invoice_no), values exactly
-    # ("$ 978,12" == "$ 978,12"); the blank po_number is not returned, which
-    # is right, so 3 values + 1 blank of 4 scalar fields.
-    assert result.pairs_correct == 4
-    assert result.pairs_total == 4
-    assert result.field_accuracy == 1.0
+    # ("$ 978,12" == "$ 978,12"). Three fields are correct. The missing blank
+    # and two missing array fields receive no credit.
+    assert result.pairs_correct == 3
+    assert result.pairs_total == 6 and result.blank_correct == 0
+    assert result.field_accuracy == .5
 
 
 def test_key_value_unparseable_output_gets_no_credit_for_blank_fields(monkeypatch):
@@ -763,19 +746,11 @@ def test_blank_array_cell_is_judged_in_its_own_row():
     assert res.verdicts[1].verdict == "invented"
 
 
-def test_key_value_needs_stage_one_and_printed_pairs(monkeypatch):
-    import json
-
-    # no stage-1 file for this page: not applicable, never "0 for every engine" (chart_003)
-    result = score_key_value(json.dumps({"x": "y"}), _gt(), "gemini_flash")
-    assert result.applicable is False and "stage 1" in result.reason
-    # stage 1 says none of the scalar fields is printed as a pair
+def test_key_value_does_not_drop_fields_using_old_stage_one_flags(monkeypatch):
     import evaluation.kv_schema_code as kv
-    monkeypatch.setattr(kv, "load_aliases", lambda stem, model=kv.ALIAS_MODEL: {
-        p: {"printed_labels": [], "is_printed_pair": False}
-        for p in ("header.invoice_no", "header.invoice_date", "header.po_number", "summary.total_gross_worth")})
-    result = score_key_value(json.dumps({"x": "y"}), _gt(), "gemini_flash")
-    assert result.applicable is False and "printed" in result.reason
+    monkeypatch.setattr(kv, 'load_aliases', lambda *args: {})
+    result = score_key_value('{"x":"unmatched value"}', _gt(), 'gemini_flash', use_judge=False)
+    assert result.applicable and result.pairs_total == 6 and result.score == 0
 
 
 def test_every_fenced_json_block_is_read():

@@ -96,11 +96,7 @@ class GroundTruth:
         if leg == "schema":
             return self.true_json is not None
         if leg == "key_value":
-            if self.metadata.get('structured_gold_reference') is not None:
-                return self.true_json is not None
-            # Same page set as the reference run's scorer: at least 3 scalar
-            # (non-array) reference fields. One rule for runner and scorer.
-            return self.true_json is not None and self.scalar_field_count() >= 3
+            return self.true_json is not None
         if leg == "geometry":
             return bool(self.word_boxes)
         raise ValueError(f"Unknown leg: {leg!r}")

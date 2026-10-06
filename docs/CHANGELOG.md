@@ -4,6 +4,18 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — value-assisted KV evaluation during scoring
+
+- Replace separate key-only synonym generation with a shared, incremental KV
+  evaluator: match known keys, nominate unmatched pairs by complete value, judge
+  field identity only when needed, and cache confirmations/rejections.
+- Keep contextual/repeated-label confirmations tied to their key/value pair.
+  Check every value locally after key matching; all selected shared reference
+  fields participate. Schema evaluation is unchanged.
+- Add bounded spending, journal recovery, concurrent page-safe caching,
+  cached-only replay and KV-only rescore filtering. Historical key-only calls
+  remain archived and inactive.
+
 ## 2026-10-06 — bounded compact key-only preparation
 
 - Share the tested compact JSON request builder between controls and corpus

@@ -116,23 +116,33 @@ No sampling or three-field minimum applies to shared gold. The corpus has 65
 structured pages; uncertain readings remain explicitly excluded from both legs.
 The old nested references remain available as provenance, not the active target.
 
-Keys are matched before values; there is no global search for a matching value.
-Code then compares the associated complete value, preserving numeric meaning,
-signs, identifiers and field ownership. Documented date, amount, checkbox and
-whitespace normalization may accept equivalent presentations. `100` is not
-`1000`; `12.34` is not `1234`; a subtotal cannot satisfy the total.
+**KV now resolves wording during evaluation.** Match literal keys, unambiguous
+printed aliases and cached confirmations first. For an unmatched key, compare
+its complete value against the reference values. No value candidate means
+incorrect/unmatched without a judge call. A plausible candidate is not credit:
+Gemini 2.5 Flash sees the returned pair and the page's accepted reference fields
+and must confirm the field's identity. Equal totals/subtotals, repeated dates,
+zeros and blanks are not enough to disambiguate a field.
 
-**KV:** match literal keys, unambiguous normalized keys/printed aliases, then
-versioned judge-approved synonyms. `scripts/build_kv_synonyms.py` sends only
-unresolved output keys and candidate reference keys, never expected/returned
-values. It permits no-match/ambiguity and freezes the page-specific caches only
-after all requests validate, before rescoring all engines. The approved first
-batch was executed but is held out: 16 requests failed and a bounded audit also
-found incorrect entity associations. No live synonyms are active yet.
-Reference edits invalidate the cache. One returned
-pair cannot satisfy multiple target fields. Headline is `(correct + blank_ok) /
-selected fields`; extra KV pairs are shown, without a headline penalty while
-reference completeness varies. Native Textract evidence is FORMS, not prose.
+Confirmed key variations are cached immediately and reused by subsequent engines.
+If the judge needs the value to identify the field, cache the exact pair, not an
+unconditional key alias. Code still checks every returned value after matching;
+a confirmed synonym cannot make a future wrong value correct. Reference changes
+invalidate the page cache. One output pair can satisfy only one reference field.
+`100` is not `1000`, and `12.34` is not `1234`.
+
+The shared path is `evaluation/keyvalue_leg.py` → `kv_value_judge.py`; live runs,
+saved-run scoring, rescoring and future engines all use it. `--skip-judge` reads
+existing confirmations but makes no new call; unresolved plausible pairs stay
+pending. Failed/invalid paid replies remain journaled and are not automatically
+retried. Explicit no-match decisions are cached. No separate synonym batch is
+needed; the old key-only batch remains archived and is not active.
+
+KV headline remains `(correct + blank_ok) / selected fields`. Extra pairs are
+visible but do not directly penalize incomplete-reference pages. Native Textract
+uses FORMS. All structured reference fields participate (including array leaves);
+old printed-pair flags no longer remove fields. The same explicit human field
+exclusions apply to KV and schema.
 
 **Schema:** supply the current answer-free schema and require its literal keys.
 Changed or unrecorded saved request contracts require a new extraction; they are

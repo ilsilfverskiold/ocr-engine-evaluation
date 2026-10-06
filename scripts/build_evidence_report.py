@@ -72,7 +72,7 @@ for r in rows:
  if r['leg']=='geometry':
   item['method']='One-to-one text/box matching and mutual centre containment. Recall is the headline; precision/F1 and box-text CER/WER are separate. Scope and line/word units are recorded below.'
  if r['leg']=='key_value' and str((r.get('metrics') or {}).get('kv_scorer','')).startswith('shared-fields-'):
-  item['method']='Shared accepted KV/schema fields. Match keys first, then compare their complete values. Unreviewed keys remain pending; no value search across unrelated fields.'
+  item['method']='Shared accepted KV/schema fields. Known keys first; unmatched complete-value candidates require judge confirmation. Key variations or contextual pairs are cached, then associated values checked. Unfinished decisions stay pending.'
  if r['leg']=='schema' and (r.get('metrics') or {}).get('schema_rerun_required'):
   item['method']='Rerun required: the saved call did not receive the current accepted schema. Its old answer is retained as evidence, not scored against new keys.'
  before=old.get((e,d,r['leg']))

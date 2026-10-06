@@ -318,7 +318,12 @@ def print_estimate(
             f"{judged_doc_count} silver-GT docs; checklists built once and reused"
         )
 
-    if judge_grand > 0:
+    kv_judge_enabled = not skip_judge and 'key_value' in legs
+    if kv_judge_enabled:
+        print("KV judge: only unresolved pairs with matching reference values; cached decisions are free.")
+        print(f"Additional KV spending cap: ${float(os.environ.get('OCR_KV_JUDGE_BUDGET_USD', '2')):.2f}; "
+              "actual cost depends on returned keys and cache reuse, excluded from subtotal below.")
+    if judge_grand > 0 or kv_judge_enabled:
         print(f"{'Grand total':<{col_e}} | {'':>6} | {'':>{col_p}} | {'':>7} | "
               f"~${subtotal + judge_grand:>8.2f}")
     else:
@@ -528,8 +533,8 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
               use_judge: bool | None = None):
     """Dispatch to the leg's scorer. Every scorer takes (output, ground truth).
 
-    All six leg scorers use code. ``use_judge`` remains a compatibility
-    argument; the separate silver-document judge is controlled by the caller.
+    KV may judge/cache unmatched pairs during scoring. ``use_judge=False``
+    prohibits new calls while still using saved confirmations.
     """
     if leg == "text":
         from evaluation.text_leg import score_text
@@ -551,7 +556,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
                             use_judge=use_judge)
     if leg == "key_value":
         from evaluation.keyvalue_leg import score_key_value
-        return score_key_value(text, gt, engine, structured_output)
+        return score_key_value(text, gt, engine, structured_output, use_judge=use_judge)
     if leg == "schema":
         from evaluation.schema_leg import score_schema
         return score_schema(text, gt, engine, structured_output)
@@ -879,7 +884,7 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
 
 
 def rescore_runs(sources: list[str], target: str, log: logging.Logger,
-                 skip_judge: bool) -> None:
+                 skip_judge: bool, selected_legs: list[str] | None = None) -> None:
     """Score every stored output of one or more runs into ONE new run.
 
     Nothing in the source runs is touched: their `.call.json` files are read,
@@ -890,7 +895,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     The manifest records `rescore_of` and the scorer versions.
     """
     from evaluation.ground_truth import GroundTruthLoader
-    from evaluation.shared_fields import VERSION as KV_VERSION
+    from evaluation.shared_fields import VERSION as SCHEMA_VERSION, KV_VERSION
     from evaluation.table_cells import VERSION as TABLE_VERSION
     from evaluation.geometry_leg import SCORER_VERSION as GEOMETRY_VERSION
     from runners.textract_structured_runner import TABLE_ADAPTER_VERSION
@@ -907,6 +912,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     scored = failed = missing = 0
     judge_spend = 0.0
     copied_judge = 0
+    kv_pool = ThreadPoolExecutor(max_workers=4) if selected_legs == ["key_value"] else None
+    kv_futures = {}
     # A leg that has its own successful pass somewhere in the sources (the
     # markdown and tables passes collected for an engine whose earlier run
     # served them from its transcription pass) is scored from that pass only:
@@ -926,7 +933,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         # The document judge's per-item verdicts live in the source run's
         # judge rows (detail.items); they are copied, never re-asked.
         for r in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
-            if r.get("leg") == "judge" and not r.get("error"):
+            if selected_legs is None and r.get("leg") == "judge" and not r.get("error"):
                 log_record({**r, "timestamp": target, "source_timestamp": src,
                             "metrics": {**r.get("metrics", {}), "historical_verdicts": True}}, results_jsonl)
                 copied_judge += 1
@@ -940,8 +947,6 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         for rec in inference:
             engine = rec["engine_name"]
             call_source = rec.get("source_timestamp") or src
-            if engine not in engines:
-                engines.append(engine)
             doc_path = Path(rec["document_path"])
             pass_name = rec.get("pass_name") or DEFAULT_PASS
             # The legs a pass serves are re-read from the CURRENT registry: an
@@ -952,10 +957,16 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                     if spec is None or spec.answers(l) is not None]
             if pass_name == DEFAULT_PASS:
                 legs = [l for l in legs if l not in dedicated.get((engine, rec["document_path"]), set())]
+            if selected_legs is not None:
+                legs = [l for l in legs if l in selected_legs]
+                if not legs:
+                    continue
+            if engine not in engines:
+                engines.append(engine)
             for l in legs:
                 if l not in legs_seen:
                     legs_seen.append(l)
-            log_record({**rec, "timestamp": target, "source_timestamp": call_source}, inference_jsonl)
+            log_record({**rec, "legs": legs, "timestamp": target, "source_timestamp": call_source}, inference_jsonl)
             try:
                 gt = loader.load(doc_path)
             except Exception as exc:
@@ -996,6 +1007,16 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                 continue
             text = call.get("raw_text") or ""
             structured_output = call.get("structured_output") or {}
+            if kv_pool is not None:
+                future = kv_pool.submit(_score_pass_legs,
+                    engine, doc_path, gt, base, pass_name, legs, text, structured_output,
+                    float(rec.get("steady_latency_seconds") or 0.0),
+                    float(rec.get("steady_cost_per_page") or 0.0),
+                    rec.get("model_version") or "unknown", use_judge, results_jsonl,
+                    supplied_schema=call.get("json_schema"))
+                kv_futures[future] = (engine, doc_path, pass_name)
+                scored += len(legs)
+                continue
             parts = []
             # marker's line boxes live in its conversion pass (PdfConverter
             # JSON text_regions, 50-200 per page); its OCR pass captured 1-30
@@ -1024,13 +1045,19 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                 log.info(f"  [{engine}/{pass_name}] {doc_path.name}  " + "  ".join(parts))
             if (not skip_judge and "text" in legs and gt.gt_source == "silver_tesseract"):
                 judge_spend += _judge_silver_document(engine, doc_path, text, base, results_jsonl, log)
+    if kv_pool is not None:
+        for future in as_completed(kv_futures):
+            engine, doc_path, pass_name = kv_futures[future]
+            parts = future.result()
+            log.info(f"  [{engine}/{pass_name}] {doc_path.name}  " + "  ".join(parts))
+        kv_pool.shutdown()
     manifest = {
         "timestamp": target, "engines": engines, "legs": legs_seen,
         "rescore_of": sources, "collect_only": False, "scored": True,
         "scored_with_judge": not skip_judge,
         "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
         "scorers": {"markdown": "markdown-structure-v1", "tables": TABLE_VERSION,
-                    "key_value/schema": KV_VERSION,
+                    "key_value": KV_VERSION, "schema": SCHEMA_VERSION,
                     "geometry": GEOMETRY_VERSION,
                     "text": "gt coverage (unchanged)"},
         "scored_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
@@ -1265,7 +1292,7 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     spec = LEGS[leg]
     methods = set()
     current_versions = {"markdown": "markdown-structure-v1", "tables": "gold-table-cells-v1",
-                        "key_value": "shared-fields-v1", "schema": "shared-fields-v1"}
+                        "key_value": "shared-fields-v2-value-assisted", "schema": "shared-fields-v1"}
     current_only = True
     for record in records:
         if not record.get("applicable") or record.get("score") is None:
@@ -2274,10 +2301,10 @@ def parse_args():
                    help=f"Comma-separated legs to run (default: all). "
                         f"Known: {', '.join(ALL_LEGS)}")
     p.add_argument("--skip-judge", action="store_true",
-                   help="Skip the LLM judge on silver-GT documents")
+                   help="Skip new silver-document and KV judge calls; reuse saved KV confirmations")
     p.add_argument("--judge-model", default=None, metavar="MODEL",
                    help="Override the Gemini model used for judge verdicts "
-                        "(all judges). Supported: gemini-2.5-flash, "
+                        "(silver-document judge; KV uses gemini-2.5-flash). Supported: gemini-2.5-flash, "
                         "gemini-2.5-pro, gemini-3.5-flash, "
                         "gemini-3.5-flash-lite, gemini-3.6-flash")
     p.add_argument("--estimate", action="store_true",
@@ -2436,14 +2463,21 @@ def main() -> None:
 
     if args.rescore:
         sources = [_resolve_timestamp(s.strip()) for s in args.rescore.split(",") if s.strip()]
+        if args.estimate:
+            if parse_legs(args.legs) != ["key_value"]:
+                raise ValueError("Stored-run cost estimation currently requires --legs key_value")
+            from evaluation.kv_value_judge import estimate_saved
+            print(json.dumps(estimate_saved(sources), indent=2, ensure_ascii=False))
+            return
         run_ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         log = setup_logging(run_ts)
         if not args.skip_judge and not os.environ.get("GOOGLE_API_KEY"):
             log.error("GOOGLE_API_KEY is needed for the document judge — set it, or use --skip-judge")
             sys.exit(1)
         log.info(f"Rescoring {', '.join(sources)} into new run {run_ts} "
-                 f"({'no document judge' if args.skip_judge else 'document judge enabled'})")
-        rescore_runs(sources, run_ts, log, skip_judge=args.skip_judge)
+                 f"({'cached judgments only' if args.skip_judge else 'judging enabled where required'})")
+        rescore_runs(sources, run_ts, log, skip_judge=args.skip_judge,
+                     selected_legs=None if args.legs == "all" else parse_legs(args.legs))
         report(run_ts, log)
         return
 

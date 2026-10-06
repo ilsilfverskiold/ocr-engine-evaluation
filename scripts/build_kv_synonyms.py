@@ -1,4 +1,6 @@
-"""Prepare or execute the explicit key-only synonym plan. Preparation is offline.
+"""Historical key-only preparation/control utilities; superseded for benchmark KV.
+
+Current evaluation resolves key/value candidates inline in evaluation/kv_value_judge.py.
 
 python scripts/build_kv_synonyms.py prepare --source RUN --output /tmp/kv-plan.json
 python scripts/build_kv_synonyms.py prepare-controls PLAN --cases CASES --output /tmp/kv-controls.json
@@ -204,7 +206,7 @@ def main():
         print(f"{len(plan['pages'])} pages; {plan['request_count']} calls; "
               f"planning reserve ${plan['planning_reserve_usd']:.4f}; no API calls made.\n{args.output.resolve()}")
     else:
-        execute(json.loads(args.plan.read_text()), args.budget_usd)
+        parser.error("Separate key-only execution is superseded. Use run_benchmark.py --rescore RUN --legs key_value; confirmations are cached during evaluation.")
 
 
 if __name__ == "__main__":

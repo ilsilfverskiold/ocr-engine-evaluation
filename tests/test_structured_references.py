@@ -56,8 +56,8 @@ def test_gold_reaches_schema_and_kv_without_changing_table_gold(reference, monke
     assert gt.printed_pair_count() == 2
     assert score_schema(json.dumps(record['true_json']), gt, 'fixture').field_accuracy == 1
     kv = score_key_value('{"Customer":"Reviewed","Amount":"20"}', gt, 'fixture')
-    assert kv.field_accuracy == 1
-    assert kv.pairs_total == 2
+    assert kv.field_accuracy == 2 / 3
+    assert kv.pairs_total == 3
     (versions / 'gold/page.json').unlink()
     assert GroundTruthLoader().load(doc).true_json['name'] == 'Original'
 
@@ -97,8 +97,8 @@ def test_gold_exclusions_apply_to_both_legs(reference):
     gt = GroundTruthLoader().load(doc)
     assert score_schema('{"name":"Reviewed","total":"wrong"}', gt, 'fixture').field_accuracy == 1
     kv = score_key_value('{"Customer":"Reviewed","Amount":"wrong"}', gt, 'fixture')
-    assert kv.pairs_total == 1
-    assert kv.field_accuracy == 1
+    assert kv.pairs_total == 2
+    assert kv.field_accuracy == .5
 
 
 def test_unreviewed_gold_aliases_do_not_reuse_stale_cache(reference, monkeypatch):
@@ -108,7 +108,7 @@ def test_unreviewed_gold_aliases_do_not_reuse_stale_cache(reference, monkeypatch
     monkeypatch.setattr('evaluation.kv_schema_code.load_aliases', lambda *_: pytest.fail('Do not reuse stale aliases'))
     gt = GroundTruthLoader().load(doc)
     assert gt.printed_pair_count() is None
-    assert not score_key_value('{}', gt, 'fixture').applicable
+    assert score_key_value('{}', gt, 'fixture', use_judge=False).score == 0
 
 
 def test_nullable_parent_keeps_declared_fields_and_aliases(reference):
@@ -148,7 +148,7 @@ def test_schema_scope_compares_columns_not_row_indices():
     assert field_patterns(expanded) - field_patterns(original) == {'items[*].unit'}
 
 
-def test_human_kv_can_select_array_field_and_untick_without_losing_schema(reference):
+def test_legacy_kv_flags_do_not_remove_shared_array_fields(reference):
     doc, versions, record = reference
     record['true_json'] = {'contacts': [{'phone': '123456', 'extension': None}]}
     record['json_schema'] = {'type': 'object', 'properties': {'contacts': {
@@ -174,12 +174,12 @@ def test_human_kv_can_select_array_field_and_untick_without_losing_schema(refere
     gt = GroundTruthLoader().load(doc)
     assert gt.true_json['contacts'][0]['phone'] == '123456'
     assert gt.printed_pair_count() == 1
-    assert score_key_value('{"Extension":null}', gt, 'fixture').field_accuracy == 1
+    assert score_key_value('{"Extension":null}', gt, 'fixture').field_accuracy == .5
     record['kv_aliases']['contacts[0].extension']['is_printed_pair'] = False
     store.save('page', record, saved['revision'])
     gt = GroundTruthLoader().load(doc)
     assert gt.printed_pair_count() == 0
-    assert not score_key_value('{"Extension":null}', gt, 'fixture').applicable
+    assert score_key_value('{"Extension":null}', gt, 'fixture').field_accuracy == .5
 
 
 def test_human_selected_fields_are_not_sampled_out(reference):

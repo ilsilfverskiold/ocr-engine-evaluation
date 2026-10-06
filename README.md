@@ -164,14 +164,28 @@ counts describe that run, not every integration available in the registry.
 | `text` | Did it read the words? | 82 | 14 |
 | `markdown` | Did it preserve structure and reading order? | 57 | 11 |
 | `tables` | Did it recover the table, not just the cell text? | 42 | 12 |
-| `key_value` | Did it pull out label → value pairs? | 55¹ | 4 |
+| `key_value` | Did it pull out label → value pairs? | 65 | 4 |
 | `schema` | Given *your* JSON schema, did it fill it correctly? | 65 | 7 |
 | `geometry` | Does it know *where* on the page each word is? | 17 | 9 |
 
-¹ key_value uses scalar structured GT fields, requires at least three scalar
-fields, and scores only cached aliases marked as printed pairs. The current
-page set is smaller than the schema page set. Geometry includes two later
-geometry-only engines; Marker has fewer successful pages.
+KV and schema use the same 65 accepted structured references and selected fields.
+KV resolves unmatched wording during evaluation: complete-value candidates go
+to a judge only when needed; confirmed variations are cached for later engines.
+Geometry includes two later geometry-only engines; Marker has fewer successful pages.
+
+Re-evaluate stored KV answers without rerunning extraction:
+
+```bash
+python run_benchmark.py --rescore 20260810T130609Z --legs key_value --estimate
+OCR_KV_JUDGE_BUDGET_USD=2 python run_benchmark.py --rescore 20260810T130609Z --legs key_value
+# Cache-only replay (no paid calls): add --skip-judge.
+```
+
+The budget caps recorded spend plus reservations for in-flight requests. The
+estimate assumes no incremental alias reuse and reserves maximum token output;
+actual calls/cost are saved in `results/kv_synonyms/value_assisted/calls/`.
+Missing or invalid responses stay pending. Existing confirmations are shared
+across engines; each response value is still checked separately.
 
 Default is all six. Underscore matters: it is `--legs key_value`, not
 `key-value` — an unknown token fails immediately and lists the valid ones.
@@ -205,16 +219,16 @@ the ask was the best one available to it.
 
 ## How each leg is scored
 
-The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). Current field code is v5; the saved run still records v4. All six legs now use
-code for per-engine verdicts. Some reference material was created earlier by
-models; scoring an answer does not call those models again.
+The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). Current field code is v5; the saved run still records v4. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
+KV can call a judge during evaluation for unmatched pairs, caching confirmations.
+The other deterministic legs do not make per-answer judge calls.
 
 | Leg | Headline | Reference / supporting metrics |
 |---|---|---|
 | `text` | Unique GT-word coverage | 82 pages; CER, WER, word F1 support it |
 | `markdown` | `(correct + 0.5 × partial) / elements` | Cached image checklist, up to 40 elements per page; block F1 and reading order support it |
 | `tables` | Correct / nonempty sampled cells | Cached image checklist, table selection against human HTML where present, then up to 60 entries before empty cells are excluded; TEDS supports/falls back |
-| `key_value` | `(correct + blank_ok) / printed fields` | Scalar GT fields plus cached, engine-blind printed-label aliases; no cache or no printed pairs means N/A |
+| `key_value` | `(correct + blank_ok) / selected fields` | Shared accepted references; known keys first, complete-value candidates judged when needed, confirmed variations cached |
 | `schema` | `(correct + blank_ok) / sampled fields` | GT JSON/schema, up to 80 fields, with array-row alignment |
 | `geometry` | Located / reference words | Matching text and mutually containing box centers; line/block diagnostics are separate |
 

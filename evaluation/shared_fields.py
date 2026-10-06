@@ -1,4 +1,4 @@
-"""One reviewed reference set for KV/schema; key matching never uses values.
+"""One reviewed reference set for KV/schema; cached KV decisions precede value scoring.
 
 KV may consume versioned judge-approved synonyms. Scoring itself is offline.
 Schema uses supplied key identities and penalizes unexpected output fields.
@@ -16,6 +16,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
+KV_VERSION = "shared-fields-v2-value-assisted"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -71,7 +72,7 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
     for f in fields:
         candidates[normalize_label(f.path)].add(f.path)
         if leg == "key_value":
-            for alias in gold.get("kv_aliases", {}).get(f.path, {}).get("printed_labels", []):
+            for alias in (gold.get("kv_aliases") or {}).get(f.path, {}).get("printed_labels", []):
                 candidates[normalize_label(alias)].add(f.path)
     by_path = {f.path: f for f in fields}
     numbered = defaultdict(set)
@@ -96,10 +97,13 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
             elif len(numbered.get(_numbered_line_key(key), set())) == 1:
                 proposals.append((1, i, next(iter(numbered[_numbered_line_key(key)])),
                                   "same explicit line number and complete normalized label"))
-            elif (synonyms or {}).get(key) in by_path:
-                proposals.append((2, i, synonyms[key], "cached judge key synonym"))
             else:
-                unresolved.append({"index": i, "key": key})
+                from evaluation.kv_value_judge import pair_identity
+                target = (synonyms or {}).get(pair_identity(key, value), (synonyms or {}).get(key))
+                if target in by_path:
+                    proposals.append((2, i, target, "cached judge-confirmed KV mapping"))
+                else:
+                    unresolved.append({"index": i, "key": key})
     assigned, used = {}, set()
     for _, i, key, how in sorted(proposals):
         if key not in assigned:
@@ -124,9 +128,11 @@ class Result:
     verdicts: list[FieldVerdict] = field(default_factory=list)
 
 
-def score_shared(gt, pairs: list, leg: str) -> Result:
+def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None) -> Result:
     fields = reference_fields(gt)
     synonyms = load_synonyms(gt) if leg == "key_value" else {}
+    if leg == "key_value":
+        synonyms.update(confirmed_synonyms or {})
     assigned, unresolved, used = match_keys(gt, pairs, leg, synonyms)
     verdicts = []
     for f in fields:
