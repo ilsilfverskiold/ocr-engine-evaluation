@@ -1015,3 +1015,360 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   no generated pilot artifacts inside the repo. Parser fixtures pass for bold,
   ATX/Setext/HTML headings and list items. No official result/scorer change,
   engine call, reference-building/judge call or push. No new spend.
+
+## 2026-10-03 — record Markdown prompt fairness audit and controls
+
+- Add the complete 11-engine prompt/route audit to the existing next-session
+  checklist: 915 saved calls, 627 scored results, exact prompts, provenance
+  limits, native converter routes and the three recorded truncated answers.
+- Record dedicated Claude/Gemini Markdown controls, the GLM SDK pipeline
+  control, and Qwen's overlooked author Markdown recipe with its table-format
+  compatibility requirement. Include bounded pages and proposed instructions;
+  no reruns are authorized by this documentation update.
+- Keep audit scripts, raw evidence inventories and trial outputs in the
+  disposable folder. Production code, scores and report unchanged. Check the
+  documentation diff and whitespace; no inference, judge calls, tests or push.
+- Leave these provisional notes uncommitted pending the clean final change.
+
+## 2026-10-03 — inspect Docling bank_000 table repetition
+
+- Trace displayed repetition to native HTML colspans, the Markdown export,
+  and two identical candidate grids from those representations. Distinguish
+  merged-cell expansion from independently generated repeated cells.
+- Confirm merged-label overcredit in saved verdicts and the absence of an
+  extra-output penalty in the headline. Record concrete follow-up checks.
+- Offline diagnostics stay outside the repository; no inference, production
+  scorer/report changes, commits or push.
+- Reproduce 0.4483 offline: native HTML alone, duplicated HTML and doubled
+  Markdown all retain the same verdict totals. Extra copies are unpenalized.
+
+## 2026-10-03 — inventory table references and clarify judge usage
+
+- Verify 42 HTML-reference pages against the 42 scored pages; record exact
+  identifiers/provenance and distinguish current code verdicts from the old
+  per-engine judge and retained model-authored checklists.
+- Inspect bank_000 source image and both reference representations; confirm
+  two incorrect checklist amounts and account-row association differences.
+  Record pending repairs without claiming all references have been audited.
+- Inventory JSON stays in scratch. Only follow-up/log documentation changed;
+  no reference edits, rescore, model calls, commits or push.
+
+## 2026-10-03 — review all table-reference source images
+
+- Visually inspect all 42 source pages against loaded HTML reference rows.
+  Record 16 usable represented-table pages, 18 partial/simplified references,
+  and 8 material structure mismatches. Document review limits for dense shipping
+  text and financial section spans; this does not certify separate judge caches.
+- Confirm all bank references agree with reviewed source cells, unlike the
+  erroneous bank_000 model checklist. Record omitted invoice summaries,
+  shipping multiline-cell fragmentation, form-boundary mistakes and inconsistent
+  empty-row/header treatment. Recommend deterministic targets from one reviewed
+  reference, without a model rewriting known values.
+- Complete the requested table-interface matrix for existing engines, including
+  dedicated VLM controls, already separate Marker/GLM routes, native pipelines,
+  Mistral table-format options and LlamaParse custom instructions.
+- Page-by-page audit JSON remains outside the repository in the disposable
+  experiment folder. Only notes/log changed; no production repairs, inference,
+  judge calls, rescore, commits or push. Leave provisional notes uncommitted.
+
+## 2026-10-04 — provisional table patches and requested comparison
+
+- User authorized type-specific subagents to repair original table references.
+  Five agents patched 24 gitignored local sidecars: invoice (6), receipt (5),
+  shipping (5), form (3), tax_form (5). Each retained original backups and
+  source hashes; only table HTML and table review/provenance fields changed.
+- User then questioned the patches and requested exact differences. Paused
+  further types; built an offline comparison for all 24 pages with embedded
+  original images, rendered old/new tables, cell differences, exact JSON
+  differences, uncertainty notes and hash-verified backup provenance.
+- Independently verified all 24 original backup hashes, image hashes, current
+  HTML against recorded patches, and non-table-field preservation. Inspected
+  key source examples; flagged possible KENT II/III transcription error in
+  funsd_004 and consequential grouping/scope choices. Integrity checks do not
+  establish annotation correctness; patches remain provisional, not approved.
+- Comparison and backups are in /private/tmp/ocr-table-gold-repairs-20261003.
+  Updated follow-up to record planned gold-derived table evaluation and required
+  uniform rescore after accepted repairs. Scorer, scores and report unchanged;
+  no inference, judge, benchmark run, commits or push.
+
+## 2026-10-04 — make the reference comparison browsable
+
+- Add a plain-language explanation of the intended gold-reference evaluation
+  and the purpose of each type's patches to the disposable comparison page.
+  Show original image, original rendered tables and patched rendered tables;
+  provide page navigation, source-image toggle and full-resolution image view.
+- Verify all 24 comparison panels and explanations, regenerate from checked
+  backups/current references, and syntax-check the page JavaScript. Serve the
+  page locally on 127.0.0.1:8767 for browser review. No additional reference
+  edits, scoring changes, inference, commits or push.
+
+## 2026-10-05 — offline human annotation editor and gold selection
+
+- Preserve 42 original table snapshots and 24 proposed patches in separate
+  local documents/table_references folders; restore all 24 corpus sidecars
+  byte-for-byte from their backups. Gold starts empty. Old editor snapshots
+  include pre-existing loader repairs, with raw HTML retained for provenance.
+- Build an offline editor embedding all 42 images and 504 saved engine results.
+  Show flagged issues, original/proposed tables, native engine tables with
+  actual spans and explicitly separate parsed-text alternatives. Add Markdown
+  and HTML editing, live preview, table/row/column controls, notes and flags.
+- Accept old/patched or Save gold writes gold/PAGE.json through the browser's
+  granted folder access. Verify saved bytes, retain previous gold in history,
+  reject stale conflicting saves. Browser drafts/export remain distinct from
+  saved gold. Provide a standard-library local launcher for offline reopening.
+- Add gold-slot selection to GroundTruthLoader, requiring page/image identity;
+  no gold means original, never proposed patch. Override only table HTML/source
+  and metadata. Empty gold explicitly removes table eligibility.
+- Validation: 21 ground-truth tests pass; all 42 fallbacks match original loaded
+  references; all 24 raw originals restored exactly. Browser checks with network
+  disabled pass 66 old/patch round trips, accept/save/history/conflict checks,
+  native span display and input rejection. Browser filesystem tests use a
+  temporary profile's private storage, never the real gold folder. Visually
+  inspect the rendered editor. No real gold files created by validation.
+- Source deliverables: evaluation/table_references.py, loader integration,
+  existing loader tests and follow-up/changelog/work-log. Offline page, launcher,
+  version snapshots and README are gitignored corpus artifacts. Build scripts,
+  screenshots and browser test fixtures remain in /private/tmp. No inference,
+  judge, benchmark run, rescore, commit or push.
+
+## 2026-10-05 — remove browser folder connection requirement
+
+- Replace the browser filesystem picker with a standard-library local save
+  server. Save/Accept now write directly to the existing
+  documents/table_references/gold folder; no browser selection or permission.
+  This supersedes the granted-folder workflow described above. The unnecessary
+  empty root gold-references directory was removed. Other legs are unchanged.
+- Keep atomic writes, source identity checks, revision conflict protection and
+  backups in gold/history. Launch in the default browser; no internet required.
+  Existing review URLs on port 8767 serve the rebuilt editor.
+- Verify 26 filesystem-save and loader tests, rebuild all 42 pages / 504 engine
+  results, check the running API reports the existing gold path, and confirm
+  the generated page contains no folder-picker API or obsolete instructions.
+  No real gold annotations created in validation. No inference or rescore.
+  Provisional work remains uncommitted; no push.
+
+## 2026-10-06 — explain current table scoring after human review
+
+- Confirm all 42 editor manifest pages have saved nonempty gold versions.
+  Read the current scoring path: gold overrides table_html, but headline
+  cell targets still come from cached model-authored checklists (up to 60
+  sampled items, excluding empty cells). Code assigns verdicts; no live
+  table judge is called. Gold feeds table scope filtering and supporting TEDS.
+- Explain current limits: tolerant text matching, no one-to-one cell assignment
+  or direct extra-cell penalty in the headline, excluded blanks, and spans
+  discarded by supporting TEDS. The agreed gold-target migration remains
+  pending. No reference edits, evaluation, model calls or report regeneration.
+
+## 2026-10-06 — record agreed gold table cell-F1 design
+
+- Update follow-up status to the user's completed human review of 42 pages.
+- Record gold-derived cell F1 with precision/recall, one-to-one table/row/cell
+  matching, blank-cell credit and invented-value penalties, missing/extra and
+  duplicate output penalties, merged-cell and parser-padding exclusions,
+  examples, supporting span-aware structure evaluation and verification tasks.
+- Keep implementation and uniform rescore explicitly pending. Documentation
+  only: no scorer changes, gold edits, tests, inference, rescore or report build.
+
+## 2026-10-06 — clarify schema key/reference checks
+
+- Inspect schema_leg, schema_judge, schema_contract and kv_schema_code.
+  Schema targets are built without a model from true_json/json_schema, capped
+  at 80 fields. Key matching allows normalized paths/leaf names and fuzzy
+  naming; current accuracy is not strict JSON Schema compliance. Omitted blank
+  keys may earn blank_ok; unrelated extra keys have no direct headline penalty.
+- Distinguish existing targeted schema-reference repairs from the completed
+  human table review, which does not certify or replace schema references.
+  No scoring, reference changes, engine calls or implementation performed.
+
+## 2026-10-06 — record schema extra-key penalty and clarify KV references
+
+- Add the requested direct penalty for unexpected schema keys to the follow-up
+  work list; formula/implementation remain pending. Record full supplied-schema
+  checks so sampled-out or contract-permitted keys are not mislabeled extras.
+- Confirm KV derives scalar targets from the same structured references, then
+  uses cached printed-label aliases and printed-pair eligibility. Values remain
+  reference-derived. Table gold does not replace these references.
+- Documentation only; no scorer/reference changes, tests, inference or rescore.
+
+## 2026-10-06 — separate schema/KV reference audit and human review editor
+
+- Delegate one bounded source-image audit of all 65 structured-reference pages,
+  independent of table gold. Preserve effective old values, raw sidecars, source
+  hashes, KV aliases and prior repairs. Proposed patches affect 29 pages: 30
+  value changes, 48 alias changes and 69 nullable-schema type changes. Five
+  dense shipping pages explicitly retain partial field review status.
+- Independently reproduce counts, apply all 147 operations, validate resulting
+  records against schemas and verify originals still match saved source hashes.
+  Spot-check source images for invoice suffix, receipt total, tax blanks and
+  unprinted milk price. Proposals await the user's final review.
+- Build local documents/structured_references review workspace: all 65 images,
+  old/proposed field views, exact changes, field/JSON/schema/KV-label editors,
+  exclusions, notes, 675 saved engine answers, accept/save, browser drafts and
+  export. Launch on port 8768; save directly to its own gold folder, with
+  backups and stale-revision rejection. No folder picker or internet needed.
+- Add evaluation/structured_references.py, scripts/structured_reference_editor.py
+  and tests/test_structured_references.py. Reuse the existing save protocol via
+  a validation hook. Wire structured gold into the shared loader and KV labels/
+  exclusions; preserve nullable object child fields in walk_fields. Table gold
+  is never used to build structured targets, and its files are untouched.
+- Validation: 90 tests passed, 3 corpus-wide schema-contract tests blocked by an
+  existing tax_000 table-gold image identity mismatch. Stored table-editor image
+  matches its gold hash; current PNG has different pixels at the same dimensions.
+  Record for later resolution without rewriting table annotations or weakening
+  identity checks. All 15 dedicated structured/save tests pass. Browser checks
+  verify live 65-page display plus actual save/edit/reload/history, old/patched
+  acceptance, invalid JSON and conflict handling in temporary fixture folders.
+- Generated pages, versions and launchers stay gitignored under documents;
+  audit/build/browser scripts and screenshots stay in /private/tmp/ocr-structured-
+  review-20261006. No real structured gold created in tests, no original reference
+  edits, inference, judge, benchmark rescore, report regeneration, commit or push.
+
+## 2026-10-06 — investigate sparse KV eligibility on the first review pages
+
+- Reinspect source images bank_000–004 and trace reference fields/aliases.
+  Current KV counts are 1/4/2/3/5. Most displayed fields are excluded array
+  entries, but selective schemas also omit real printed pairs entirely.
+  Record bank_000 missing consultant name/ID/phone/partial-share preference,
+  corresponding omissions on bank_001–003, and a bank_001 alias-sampling gap.
+- Correct the audit scope claim: initial review checked existing targets, not
+  full-page KV completeness. Add explicit coverage flags for the first four
+  pages and visible counts distinguishing arrays, scalars, KV and unmapped.
+  Record the need for per-leg target scope before extending KV without silently
+  changing the historical requested schema. No new target values added.
+- Preserve the user's saved bank_000 structured gold byte-for-byte. Old corpus,
+  table gold and scorer unchanged. No inference, judge or rescore; documentation
+  and local review evidence/UI updated, with script/data checks only.
+
+## 2026-10-06 — expand structured proposals and expose KV eligibility controls
+
+- Expand proposals across the 65-page structured workspace following the user's
+  decision to include missing fields in schema too. Parent handles bank pages;
+  the existing audit agent handles the other 60. Independently apply and validate
+  all final records: 54 pages have proposed changes, 48 have new schema targets,
+  with 532 added field patterns across pages. Array indices are normalized for
+  target counting. Bank KV proposals rise from 1/4/2/3/5 to 6/9/6/12/6.
+- Preserve partial coverage flags for shipping_000–004 and photo_002. Source
+  ambiguity/omissions remain in page notes for human review; no claim of fully
+  certified coverage. Original structured sidecars and table gold are unchanged.
+- Show scalar fields/KV checkboxes first, with all-field/KV/new-target filters
+  and a direct navigation button. Unticking KV preserves the schema value.
+  Unsaved pages open proposals; saved pages retain gold and can add missing
+  proposals to a draft without replacing existing values or eligibility flags.
+  Merge array columns only against a unique unchanged baseline row; otherwise
+  report manual review. Only a user save promotes the draft to gold.
+- Save original schema and old/new field patterns server-side as provenance.
+  This does not implement historical scope filtering: compare actual requests
+  before scoring; expanded schema targets need new requests. No scores changed.
+- Validation: 89 offline tests pass, including authoritative scope metadata and
+  array-column scope checks. Browser checks in temporary fixture folders verify
+  additions preserve human corrections and unchecked fields, a new field can be
+  unticked then saved/reloaded, history/conflicts/invalid JSON work, and original
+  acceptance remains available. Inspect screenshot of the live checkbox editor.
+  Validate all 65 proposed/original records against their schemas and original
+  sidecar hashes. All 45 real structured/table gold/history files remain byte-
+  identical. Restart local editor on port 8768 with updated save handling.
+- Generated workspace remains ignored under documents/structured_references;
+  build/audit/browser evidence remains in /private/tmp/ocr-structured-review-
+  20261006. No inference, judges, benchmark commands, rescore, commit or push.
+
+## 2026-10-06 — correct shared schema/KV field selection
+
+- User rejected the separate scalar-only KV interpretation and further UI
+  complexity. Replace that workflow with a shared reference: source image,
+  editable keys/values, change from original, Include in both, Save. Original
+  and patched choices are available at the editor; detailed version/audit
+  views are collapsed. All fields, including array leaves, are included by
+  default. Existing explicit exclusions apply to both legs.
+- New saves record shared_field_selection=true and consistent aliases for
+  every field. Server validation rejects divergent schema/KV selection. Both
+  scorers use identical selected paths/expected values without sampling; KV
+  no longer applies array or three-scalar eligibility restrictions to reviewed
+  references. KV matches discovered pairs without requiring array-shaped
+  outputs. Legacy references retain their old route and scores are unchanged.
+- 92 offline tests pass. New regressions verify same fields and expected values
+  in both legs, selected array leaves, wrong and invented values, exclusions,
+  rejection of inconsistent selection, and all 85 selected fields retained.
+  Fresh-browser fixture check verifies every field has a selected checkbox,
+  array exclusion and value edits survive save/reload, and the served editor
+  displays the source alongside the simple shared field table. A prior browser
+  session stalled; restart with a fresh test profile completed the check.
+- Saved annotations, originals and table gold are not rewritten. Changes stay
+  provisional until user saves; this does not certify the proposed values as
+  human gold. No engine/judge calls, benchmark run, rescore, commit or push.
+
+## 2026-10-06 — fresh per-document JSON extraction for human approval
+
+- User explicitly requests extraction with a subagent per document. Launch 65
+  independent document tasks, three concurrently, each reading only its source
+  image. Prohibit reading old references, proposals, gold and engine outputs.
+  Extract flat readable key/value JSON, preserve printed formatting and blank/
+  checkbox states, qualify repeated fields by source context, and flag uncertain
+  readings rather than infer values. No benchmark engine, external OCR API,
+  judge or Modal calls.
+- Receive and integrate all 65 proposals: 4,344 fields, 93 uncertainty entries
+  across 27 pages, with 14 pages marked partial by their agents. These are
+  unapproved machine proposals, not a claim of human-verified correctness or
+  exhaustive coverage. Uncertain fields are visibly flagged and unchecked in
+  both legs pending human resolution.
+- Replace the previous patched slot in documents/structured_references with
+  these fresh extractions, retaining source image, original snapshot and saved
+  gold. Fresh proposals open by default until a fresh version is approved;
+  subsequent visits open the user's saved version. Display readable flat keys
+  rather than tableData array paths. Track fresh approvals separately from old
+  gold. JSON edits automatically regenerate matching schemas and shared field
+  mappings, and saved records retain extraction provenance.
+- Validate all files with duplicate-key detection, scalar-only values, source
+  image identity, JSON Schema validation, uncertainty paths, and exact agreement
+  between page data, proposals, schema fields and aliases. Verify original
+  sidecar hashes and all 45 pre-existing structured/table gold/history files.
+  Browser checks save only to temporary fixtures: edit value, exclude field,
+  save/reload, add/delete keys in JSON, regenerate schema and preserve proposal
+  provenance. No real gold created or overwritten by these checks.
+- Raw agent outputs, instructions, build/integration and browser evidence live
+  in /private/tmp/ocr-structured-extraction-20261006. Persistent review proposals
+  and HTML stay in the existing gitignored documents/structured_references
+  workspace. Docs updated in place; git diff --check clean. No new scores,
+  engine reruns, commit or push. Human vetting and confirmation remain pending.
+
+## 2026-10-06 — activate user-approved shared references
+
+- User accepts the fresh extractions as KV/schema references. Preflight all 65
+  against image identities, structured-record validation and their prepared
+  inference schemas, then save through StructuredGoldStore with explicit batch
+  approval provenance. All 65 now load as fresh shared gold. 4,344 fields total;
+  93 flagged readings remain excluded from both. Preserve any already-saved
+  fresh edits (none found); back up the earlier bank_000 gold before replacing
+  it. All 44 table-gold/history files remain byte-identical.
+- Fix request-schema preparation: legacy named-field overrides apply only to
+  schemas containing open dictionaries, so accepted explicit flat schemas are
+  not forced into old nested paths or rejected. Six focused offline tests pass;
+  all 65 actual accepted reference answers validate against prepared schemas.
+- Inspect saved schema request evidence and applicable schema outputs: seven
+  engines have 65 schema results each, from schema passes. These require new
+  extraction calls because the supplied schema changed. KV's prompt supplies
+  no reference schema; saved pair answers can be rescored first. No inference,
+  judge calls, benchmark commands, rescore, commit or push performed.
+- Activation evidence stays in /private/tmp/ocr-structured-extraction-20261006/
+  activation.json; accepted files remain in the existing structured gold folder.
+  The pre-existing tax_000 table-image identity issue remains separately logged
+  and must be resolved before a corpus-wide run; this work does not alter it.
+
+## 2026-10-06 — consolidate scoring decisions and geometry follow-up
+
+- Update the existing follow-up checklist with the accepted shared KV/schema
+  references and a current remaining-work summary. Mark the earlier scalar-only
+  KV workflow as historical; preserve uncertain-field and partial-coverage flags.
+- Record gold-driven table cell F1 and the user's shipping exception: score
+  complete gold and original references separately, keep the higher F1, retain
+  both results and winning-reference provenance, and apply the rule uniformly.
+- Specify batched judge mapping for unresolved KV keys, reusable context-scoped
+  synonyms and subsequent code-based value checks. Mapping does not judge values
+  or silently grant credit to ambiguous keys. No judge calls made.
+- Research official Anthropic coordinate/vision guidance and compare it with
+  the already completed geometry controls. Record a bounded tighter-word-box
+  prompt plus a separate crop configuration, preserving Sonnet 4.6 and requiring
+  actual box inspection. Pixels/resizing alone are not a newly discovered fix.
+- Documentation only this turn. No implementation, inference, benchmark command,
+  reference modification, rescore or report regeneration. Check documentation
+  diff/whitespace; existing implementation edits and review artifacts remain
+  separate from this documentation update.
