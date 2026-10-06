@@ -85,7 +85,7 @@ class GroundTruth:
         if leg == "text":
             return bool(self.plain_text) and self.gt_source != "silver_tesseract"
         if leg == "markdown":
-            return bool(self.markdown)
+            return bool(self.markdown or self.metadata.get('reviewed_markdown_catalogue'))
         if leg == "tables":
             # A table page is one a HUMAN marked as such (table_html sidecar);
             # the image checklist is the reference the verdicts are scored
@@ -606,6 +606,10 @@ class GroundTruthLoader:
         )
 
     def _attach_markdown(self, doc_path: Path, gt: GroundTruth) -> None:
+        from evaluation.markdown_catalogue import reviewed_items
+        catalogue = reviewed_items(doc_path)
+        if catalogue:
+            gt.metadata['reviewed_markdown_catalogue'] = catalogue
         sidecar = doc_path.parent / (doc_path.stem + "_markdown_gt.md")
         if sidecar.exists():
             gt.markdown = sidecar.read_text(encoding="utf-8")

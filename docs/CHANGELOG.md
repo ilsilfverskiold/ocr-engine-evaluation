@@ -4,6 +4,15 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-06 — reviewed catalogues for missing Markdown pages
+
+- Prepare exact image-only catalogue requests and keep generated proposals
+  inactive until source-image review. Preserve source hashes and paid journals.
+- Allow reviewed structural catalogues without a full Markdown sidecar; do not
+  derive CER/WER or full-page block statistics from a sampled catalogue.
+- Remove obsolete KV execution plans from the current follow-up and align
+  README scoring formulas with the implemented scorers. No paid generation yet.
+
 ## 2026-10-06 — completed KV rescore
 
 - `20261006T195826Z`: 260 scored results / 65 pages, four engines, no pending

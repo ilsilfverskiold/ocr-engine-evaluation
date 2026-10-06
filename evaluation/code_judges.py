@@ -119,10 +119,13 @@ def load_markdown_checklist(document_stem: str) -> list[dict] | None:
     if not path.exists():
         return None
     try:
-        items = json.loads(path.read_text(encoding="utf-8")).get("items") or []
+        record = json.loads(path.read_text(encoding="utf-8"))
+        if record.get('version') == 'markdown-image-catalogue-v1' and record.get('review_status') != 'accepted':
+            return None
+        items = record.get("items") or []
     except Exception:
         return None
-    items = [i for i in items if isinstance(i, dict)]
+    items = [i for i in items if isinstance(i, dict) and i.get('confident', True)]
     if document_stem == "invoice_004":
         for item in items:
             if "Picturebook ☐☐☐☐☐☐☐☐" in item.get("content", ""):

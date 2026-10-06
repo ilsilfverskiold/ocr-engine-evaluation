@@ -1700,3 +1700,26 @@ correct, gemini/mistral wrong_type). Nothing run; read-only on the caches.
   results, and retain only final JSONL/CSV in the repository; intermediate
   run files move to session scratch. The permanent tests and implementation are
   committed; experimental files are not. No reference gold changed; no push.
+
+
+## 2026-10-06 — missing Markdown catalogue workflow
+
+- Added reproducible image-only request preparation, one-attempt journaled
+  generation and explicit source-image review/activation. Existing 57 catalogues
+  remain intact; 36 missing pages are planned (six each: receipt, handwritten,
+  scanned legacy, legal, report, newspaper). Source hashes prevent image drift.
+- Reviewed catalogues establish Markdown structure eligibility without inventing
+  a full Markdown sidecar. Block F1/order remain unavailable without a full
+  reference; CER/WER use independent trusted text and remain unavailable on
+  silver pages. Pending proposals and uncertain items cannot earn score credit.
+- 395 offline tests passed, including image drift, approval-budget guard, single
+  SDK attempt/cache reuse, activation, uncertain elements, bold versus heading,
+  catalogue-only structure, and independent text-reference behavior.
+- Prepared exact 36-call Gemini 2.5 Pro plan in session scratch. Configuration:
+  temperature 0, thinking 1024, output 8192, four workers, one attempt; reserve
+  $4.03074, proposed allowance $5. Asked user; no paid call without their answer.
+- Removed superseded key-only KV planning instructions from the active follow-up
+  document (historical records remain in git/call archives). Updated README
+  formulas to current scoring. Schema contracts now reach 200 selected fields;
+  fixed context/output limits require sizing before a paid full-schema rerun.
+  No schema/Modal call or model/GPU change. All-leg cache-only rescore underway.

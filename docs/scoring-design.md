@@ -6,8 +6,9 @@ extraction and geometry. The silver-document judge is a separate estimate.
 **Implementation status, 2026-10-06:** the reviewed-reference scorers below are
 implemented and tested offline. The last published scores, run
 `20261002T162630Z`, predate these changes. A new rescore, paid schema reruns,
-validated key-synonym decisions, missing Markdown references and prompt controls are still
-required before a replacement report is final. The execution checklist is
+missing Markdown references and prompt controls are still
+required before a replacement report is final. The inline KV rescore
+`20261006T195826Z` is complete across all 65 accepted structured-reference pages. The execution checklist is
 [follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 
 ## Prompts and provenance
@@ -48,6 +49,12 @@ The headline is `(correct + 0.5 × partial) / checklist elements`, with determin
 verdicts against a shared, cached image-authored structural catalogue. It is not
 a per-engine model judgment. Existing catalogues are sampled to 40 elements.
 Missing catalogues remain N/A; receipt coverage must be completed explicitly.
+Image-only catalogue generation is a separate, cost-approved action through
+`scripts/build_markdown_catalogues.py`. Proposals stay inactive until source-image
+review is recorded; uncertain elements are excluded and source hashes checked.
+A reviewed catalogue can establish structure eligibility without a Markdown
+sidecar. It is not substituted for a full transcript: full-page block F1/order
+remain N/A without one, and CER/WER need an independent trusted text reference.
 
 Actual Markdown/HTML structure determines type. ATX/Setext headings and HTML
 heading tags count; `**bold**` is emphasis, not a heading. A cell containing a

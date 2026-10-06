@@ -219,13 +219,13 @@ the ask was the best one available to it.
 
 ## How each leg is scored
 
-The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). Current field code is v5; the saved run still records v4. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
+The saved-output rescore is `20261002T095730Z`, **provisional and not cleared for publication**. The causal audit found scorer defects and schema/GT conflicts; see the [audit handoff](docs/handoff-2026-10-01.md#causal-audit-after-the-report-was-challenged-2026-10-02). The saved run uses older scorers. Current scoring differs from that saved run; see [scoring design](docs/scoring-design.md).
 The completed KV-only rescore is **`20261006T195826Z`**: 260 scored outputs,
 65 accepted pages, four engines, zero pending decisions/errors. Its 342 judge
 calls cost **$1.4756**, including all responses; final replay made no new calls.
 See [the follow-up](docs/follow-up-2026-10-03.md#latest-kv-decision--inline-value-assisted-evaluation)
-and `results/runs/20261006T195826Z_kv_judge_audit.json`. The other rows below
-describe the historical full run; its remaining repairs are tracked separately.
+and `results/runs/20261006T195826Z_kv_judge_audit.json`. The table below describes current scoring. Historical full-run scores still
+need replacement after the remaining approved reference/inference work.
 Rebuild the KV viewer with:
 
 ```bash
@@ -238,11 +238,11 @@ The other deterministic legs do not make per-answer judge calls.
 | Leg | Headline | Reference / supporting metrics |
 |---|---|---|
 | `text` | Unique GT-word coverage | 82 pages; CER, WER, word F1 support it |
-| `markdown` | `(correct + 0.5 × partial) / elements` | Cached image checklist, up to 40 elements per page; block F1 and reading order support it |
-| `tables` | Correct / nonempty sampled cells | Cached image checklist, table selection against human HTML where present, then up to 60 entries before empty cells are excluded; TEDS supports/falls back |
+| `markdown` | `(correct + 0.5 × partial) / elements` | Actual syntax, disjoint structural matches; image catalogue shared across engines; CER/WER separate |
+| `tables` | Cell F1 | Human gold; one-to-one cells including blanks/extras; precision, recall and span-aware structure diagnostic; shipping takes the better whole-page gold/original comparison |
 | `key_value` | `(correct + blank_ok) / selected fields` | Shared accepted references; known keys first, complete-value candidates judged when needed, confirmed variations cached |
-| `schema` | `(correct + blank_ok) / sampled fields` | GT JSON/schema, up to 80 fields, with array-row alignment |
-| `geometry` | Located / reference words | Matching text and mutually containing box centers; line/block diagnostics are separate |
+| `schema` | `(correct + blank_ok) / (selected fields + extra fields)` | Same accepted fields as KV; exact supplied keys; JSON/schema compliance separate; stale contracts require new inference |
+| `geometry` | Located / reference units | One-to-one word/line matches; precision/F1, invalid boxes and box-text CER/WER; annotation scope and overlays recorded |
 
 The saved run covers 82 text, 57 Markdown, 42 table, 55 key-value, 65 schema
 and 17 geometry pages. Coverage also varies by engine: Marker has only nine
@@ -253,6 +253,17 @@ means. Headlines are means of document-type means, not pooled page averages.
 confirmations and leaves genuinely unresolved candidates pending. It does **not**
 disable a selected Gemini OCR engine. Markdown needs a cached image checklist;
 KV learns needed variations during evaluation when judging is enabled.
+
+Missing Markdown references are prepared separately from scoring:
+
+```bash
+python scripts/build_markdown_catalogues.py prepare --output /tmp/markdown-catalogue-plan.json
+```
+
+This command is free and records exact image hashes, prompt, configuration and
+cost reserve. Generation is a separate paid command requiring approval. Review
+proposals against source images before `accept`; scoring never activates them
+automatically. A sampled catalogue does not become a full-page text reference.
 
 The document judge is an estimate, not a seventh leg. The saved rescore
 copies 110 previously saved judge rows unchanged and makes no new judge call.

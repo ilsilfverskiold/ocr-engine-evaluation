@@ -347,6 +347,16 @@ def score_markdown(
     hypothesis = parse_blocks(output_markdown)
 
     if not reference:
+        if gt.metadata.get('reviewed_markdown_catalogue'):
+            # A sampled catalogue establishes structure, not a full transcript.
+            # Do not invent a Markdown sidecar or report full-page block recall.
+            from evaluation.metrics import compute_cer, compute_wer
+            trusted_text = gt.plain_text if gt.has_gt_for('text') else None
+            return _score_catalogue(output_markdown, gt, dict(
+                output_blocks=len(hypothesis),
+                cer=round(compute_cer(output_markdown, trusted_text), 4) if trusted_text else None,
+                wer=round(compute_wer(output_markdown, trusted_text), 4) if trusted_text else None,
+                text_reference_source='plain_text' if trusted_text else None))
         return MarkdownScore(
             applicable=False, reason="markdown reference parsed to no blocks"
         )
@@ -402,6 +412,11 @@ def score_markdown(
         text_reference_source="plain_text" if gt.has_gt_for("text") else "markdown" if gt.markdown else None,
     )
 
+    return _score_catalogue(output_markdown, gt, det_kwargs)
+
+
+def _score_catalogue(output_markdown, gt, det_kwargs):
+
     # --- headline: code verdicts against the image checklist ---------------
     # The checklist (stage 1) is the cached catalogue Gemini 2.5 Pro built
     # from the page image; stage 2 is evaluation/code_judges.py, not a model.
@@ -413,7 +428,7 @@ def score_markdown(
     )
     from evaluation.markdown_structure import VERSION
 
-    items = load_markdown_checklist(Path(gt.document_path).stem)
+    items = gt.metadata.get('reviewed_markdown_catalogue') or load_markdown_checklist(Path(gt.document_path).stem)
     if items is None:
         return MarkdownScore(
             applicable=False,
