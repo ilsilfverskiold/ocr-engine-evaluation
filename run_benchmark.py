@@ -2487,6 +2487,20 @@ def _print_dry_run(
                     'configuration_sources_sha256': sources,
                     'modal_app': spec.modal_app, 'gpu_type': spec.gpu_type,
                     'outer_batch_size': spec.batch_size})
+                if engine == 'claude_sonnet_4_6':
+                    import base64
+                    from runners.claude_runner import ClaudeRunner
+                    prepared, frame = ClaudeRunner.prepare_request(path, task)
+                    content = prepared['messages'][0]['content']
+                    requests[-1].update({
+                        'prompt': content[1]['text'], 'model': prepared['model'],
+                        'max_output_tokens': prepared['max_tokens'],
+                        'temperature': prepared.get('temperature', 'provider_default'),
+                        'transport': 'stream' if frame else 'create',
+                        'sdk_max_retries': 0, 'geometry_frame': frame,
+                        'sent_image_sha256': hashlib.sha256(base64.b64decode(content[0]['source']['data'])).hexdigest(),
+                        'sent_image_media_type': content[0]['source']['media_type'],
+                    })
     log.info(f"\n  Total inference calls: {total_calls}")
     if plan_output is not None:
         if failed:

@@ -67,3 +67,55 @@ aggregate matches the published comparison. Verified tier splitting, tied ranks,
 N/A placement, failed-only engines and Sonnet's actual geometry-pass cost.
 Ran default all-leg, CER-sorted text, latency-sorted geometry, outlier-sorted
 tables and detailed tables CLI reports. Temporary checks and CSV exports removed.
+
+## Sonnet geometry rerun remains outstanding — 2026-10-07
+
+Audited every published Sonnet geometry call: all 17 still use the original
+normalized 0–1 prompt. Three ended at max_tokens (sroie_001, funsd_001,
+funsd_003). Their total recorded cost was $0.928926. The pixel recipe in the
+runner was prepared, not executed; the published geometry score is historical.
+
+[Anthropic coordinate guidance](https://platform.claude.com/docs/en/build-with-claude/vision-coordinates)
+recommends asking for absolute pixels, pre-resizing to a known frame, and
+normalizing in code. The replacement already does this; its prompt is:
+
+> Locate every visible word in this {width} by {height} pixel image. Return only
+> a JSON array of {"text":"printed word","bbox":[left,top,right,bottom]}.
+> Use absolute pixel coordinates in this supplied image, with (0,0) at the top
+> left, x increasing rightward and y downward. Give one tight rectangle per word
+> at its actual printed location. Keep punctuation attached. Do not combine
+> words into lines, reconstruct a cleaner layout, or infer positions from
+> reading order. Include headers, footers and table text.
+
+Fixed an execution blocker before spending: the installed Anthropic SDK rejects
+non-streaming requests at the prepared 32,768-token cap. Geometry now streams
+and saves the complete final message and usage. All text blocks are retained.
+The offline planner and execution now share Claude request preparation, so the
+plan records the actual prompt, sent-image hash/frame, cap, temperature and
+transport rather than the generic normalized-coordinate task prompt.
+
+Ready scope: same 17 pages, claude-sonnet-4-6, temperature 0, 32,768 maximum
+output tokens, no SDK retries, no judge. Generate the exact plan with:
+
+```sh
+.venv/bin/python run_benchmark.py --engines claude_sonnet_4_6 --legs geometry --dry-run --plan-output /private/tmp/sonnet-geometry-17-plan.json
+```
+
+At [current Sonnet 4.6 prices](https://platform.claude.com/docs/en/about-claude/pricing)
+($3/M input, $15/M output), all 17 calls reaching their output cap would cost
+$8.35584 for output; a $9 total allowance leaves $0.64416 for input, comfortably
+above the prepared images and short prompts. This is a worst-case planning
+allowance, not a prediction of actual spend. The old $0.93 batch was shorter
+and included truncations, so it is not a reliable complete-output estimate.
+Paid execution remains pending approval under the user's no-more-paid-runs
+instruction. After approval: collect these geometry calls once with
+--skip-judge --stop-on-error, rescore locally, compare boxes and completeness,
+and update the canonical results/reports with explicit new provenance. Do not
+claim the prompt change guarantees better localization.
+
+Offline validation passed for all 17 requests: exact same historical page set,
+image byte/edge/visual-token limits, matching plan/execution prompts and hashes,
+streaming transport, normalized-box conversion, cost accounting, stop reason
+and raw-message preservation. Default transcription retains its original
+request cap/prompt. No paid calls or published-score changes. Temporary
+verification code was not committed.

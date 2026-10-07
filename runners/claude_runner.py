@@ -83,18 +83,19 @@ class ClaudeRunner(OCRRunner):
         self._client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"], max_retries=0)
         self._model = model
 
-    def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
-        t0 = self._timer()
-        raw_bytes, media_type = _prepare_image(document_path)
-
-        # task=None reproduces leg 1 byte for byte.
-        prompt = task.prompt if task else self._PROMPT
+    @classmethod
+    def prepare_request(cls, document_path: Path, task: OCRTask | None = None,
+                        model: str = "claude-sonnet-4-6") -> tuple[dict, dict | None]:
+        """Build the same request for offline planning and paid execution."""
+        prompt = task.prompt if task else cls._PROMPT
         output_cap = 4096
         geometry_frame = None
         if task and task.leg == 'geometry':
             raw_bytes, prompt, geometry_frame = _geometry_input(document_path)
             media_type = 'image/png'
             output_cap = 32768
+        else:
+            raw_bytes, media_type = _prepare_image(document_path)
         b64 = base64.standard_b64encode(raw_bytes).decode()
         kwargs: dict = {}
         if task and task.wants_json:
@@ -115,15 +116,22 @@ class ClaudeRunner(OCRRunner):
         ]
         messages: list[dict] = [{"role": "user", "content": content}]
 
-        message = self._client.messages.create(
-            model=self._model,
-            max_tokens=output_cap,
-            messages=messages,
-            **kwargs,
-        )
+        return {"model": model, "max_tokens": output_cap,
+                "messages": messages, **kwargs}, geometry_frame
+
+    def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
+        t0 = self._timer()
+        request, geometry_frame = self.prepare_request(document_path, task, self._model)
+        if geometry_frame:
+            # The SDK refuses non-streaming calls with this output allowance.
+            # Accumulate the final Message so usage and every block are saved.
+            with self._client.messages.stream(**request) as stream:
+                message = stream.get_final_message()
+        else:
+            message = self._client.messages.create(**request)
         elapsed = self._elapsed(t0)
 
-        text = message.content[0].text if message.content else ""
+        text = "".join(block.text for block in message.content if getattr(block, "type", None) == "text")
         structured = {}
         if geometry_frame:
             from evaluation.geometry_leg import _box_items, _extract_box
@@ -153,19 +161,19 @@ class ClaudeRunner(OCRRunner):
             page_count=1,
             model_version=self._model,
             metadata={
-                "prompt_used": prompt,
+                "prompt_used": request["messages"][0]["content"][1]["text"],
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
                 "leg": task.leg if task else "default",
-                "max_output_tokens": output_cap,
-                "temperature": kwargs.get("temperature", "provider_default"),
+                "max_output_tokens": request["max_tokens"],
+                "temperature": request.get("temperature", "provider_default"),
+                "transport": "stream" if geometry_frame else "create",
                 "sdk_max_retries": 0,
                 "geometry_frame": geometry_frame,
                 # A reply cut off at max_tokens is invalid JSON that looks like
                 # the model failing the leg. stop_reason is the difference.
                 "stop_reason": getattr(message, "stop_reason", None),
             },
-            # raw_text above is content[0] only; this is every block that came
-            # back, with the stop_reason and usage that explain a short reply.
+            # Preserve every provider block, stop reason and token usage.
             raw_response=provider_payload(message),
         )
