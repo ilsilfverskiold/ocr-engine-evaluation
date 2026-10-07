@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v3-items"
+VERSION = "gold-table-values-v4-sections"
 
 
 def normalize_cell(text: str) -> str:
@@ -249,6 +249,101 @@ def _header_overlap(a, b):
     return len(a & b) / max(1, len(a))
 
 
+def _unit_rows(table):
+    """Repeated unit headers, not numeric data, establish ordered value columns."""
+    rows = {}
+    for row in range(table.rows):
+        cells = sorted((c for c in table.cells if c.row == row and c.normalized), key=lambda c: c.col)
+        cells = [c for c in cells if c.col > 0]
+        if len(cells) >= 2 and all(re.fullmatch(
+                r"(?:[$£€¥]|usd|gbp|eur|jpy)(?:\s*['’]?\s*(?:0{3}|m|bn|million|thousand))?", c.normalized)
+                for c in cells):
+            rows[row] = cells
+    return rows
+
+
+def _sections(table):
+    """Split at repeated header bands; retain each source cell exactly once.
+
+    A section title immediately preceding a repeated units/header row travels
+    with that section. Never split through a rowspan. This applies equally to
+    references and predictions, irrespective of their physical table count.
+    """
+    units = _unit_rows(table)
+    signatures = {}
+    for row in range(table.rows):
+        cells = sorted((c for c in table.cells if c.row == row), key=lambda c: c.col)
+        signature = tuple(c.normalized for c in cells)
+        if row in units or (signature == tuple(_header(table))
+                            and len([x for x in signature if x]) >= 2
+                            and all(not x or re.search(r"[^\W\d_]", x) for x in signature)):
+            signatures[row] = signature
+    counts = Counter(signatures.values())
+    repeated = [row for row, sig in signatures.items() if counts[sig] > 1]
+    # Currency rows may have different leading blank spans, but identical units.
+    if len(units) > 1:
+        repeated = sorted(set(repeated) | set(units))
+    boundaries = [0]
+    for row in repeated[1:]:
+        start = row
+        previous = [c for c in table.cells if c.row == row - 1 and c.normalized]
+        if len(previous) == 1 and previous[0].col == 0 and re.search(r"[^\W\d_]", previous[0].normalized):
+            start -= 1
+        if start > boundaries[-1] and not any(c.row < start < c.row + c.rowspan for c in table.cells):
+            boundaries.append(start)
+    sections = []
+    for start, end in zip(boundaries, boundaries[1:] + [table.rows]):
+        cells = [Cell(c.row-start, c.col, c.text, c.rowspan, c.colspan)
+                 for c in table.cells if start <= c.row < end]
+        origins = {(c.row-start, c.col): table.origins[(c.row, c.col)]
+                   for c in table.cells if start <= c.row < end}
+        sections.append(Table(cells, end-start, table.cols, table.html, origins))
+    return sections
+
+
+def _split_by_labels(table, references):
+    """Find section transitions from unique row labels when headers are omitted.
+
+    Only label ownership determines boundaries; amounts never select a section.
+    Ambiguous labels and crossing rowspans leave the table unsplit.
+    """
+    labels = [(i, c.normalized) for i, ref in enumerate(references) for c in ref.cells
+              if c.col == 0 and re.search(r"[^\W\d_]", c.normalized)]
+    owners = []
+    for row in range(table.rows):
+        label = next((c.normalized for c in table.cells if c.row == row and c.col == 0), '')
+        if not label:
+            continue
+        best = {}
+        for owner, expected in labels:
+            strength = _anchor_strength(expected, label)
+            if len(expected) >= 4 and label.startswith(expected + ' '):
+                strength = max(strength, .9 + .05 * len(expected) / len(label))
+            best[owner] = max(best.get(owner, 0), strength)
+        ranked = sorted(((score, owner) for owner, score in best.items()), reverse=True)
+        if ranked and ranked[0][0] >= .75 and (len(ranked) == 1 or ranked[0][0] - ranked[1][0] >= .15):
+            owners.append((row, ranked[0][1]))
+    if not owners:
+        return [table]
+    boundaries = [0]
+    previous_row, previous_owner = owners[0]
+    for row, owner in owners[1:]:
+        if owner != previous_owner:
+            # Include intervening units/title rows with the following section.
+            start = previous_row + 1
+            if not any(c.row < start < c.row + c.rowspan for c in table.cells):
+                boundaries.append(start)
+        previous_row, previous_owner = row, owner
+    sections = []
+    for start, end in zip(boundaries, boundaries[1:] + [table.rows]):
+        cells = [Cell(c.row-start, c.col, c.text, c.rowspan, c.colspan)
+                 for c in table.cells if start <= c.row < end]
+        origins = {(c.row-start, c.col): table.origins[(c.row, c.col)]
+                   for c in table.cells if start <= c.row < end}
+        sections.append(Table(cells, end-start, table.cols, table.html, origins))
+    return sections
+
+
 def _views(reference, predicted):
     refs = [_view(t, i) for i, t in enumerate(reference)]
     preds = [_view(t, i) for i, t in enumerate(predicted)]
@@ -259,15 +354,28 @@ def _views(reference, predicted):
         # Orientation is established by labels, never by finding graded values.
         if flipped >= .75 and flipped > straight and len(_header(transposed)) >= 2:
             preds[i] = transposed
+    refs = [section for table in refs for section in _sections(table)]
+    preds = [section for table in preds for section in _sections(table)]
+    preds = [section for table in preds for section in _split_by_labels(table, refs)]
     # A single reference table may be returned in consecutive chunks with the
     # same headers. Duplicate data rows remain separate output cells.
     grouped = {}
     for table in preds:
         key = tuple(_header(table))
+        # Identical year headers do not make different named sections the same
+        # table. Keep chunks separate when their row labels belong elsewhere.
+        owner_scores = [sum(max((_anchor_strength(rc.normalized, c.normalized)
+                                for rc in ref.cells if rc.col == 0), default=0)
+                            for c in table.cells if c.col == 0 and c.normalized)
+                        for ref in refs]
+        ranked = sorted(enumerate(owner_scores), key=lambda item: item[1], reverse=True)
+        owner = ranked[0][0] if ranked and ranked[0][1] > 0 and (len(ranked) == 1 or ranked[0][1] > ranked[1][1] + .5) else None
         can_join = (len(key) >= 2 and len(set(key)) == len(key)
                     and sum(tuple(_header(r)) == key for r in refs) == 1)
-        if can_join and key in grouped:
-            dest = grouped[key]
+        can_join = can_join and (len(refs) == 1 or owner is not None)
+        group_key = (owner, key)
+        if can_join and group_key in grouped:
+            dest = grouped[group_key]
             offset = dest.rows - 1
             for c in table.cells:
                 if c.row == 0:
@@ -277,7 +385,7 @@ def _views(reference, predicted):
                     dest.origins[(c.row + offset, c.col)] = table.origins[(c.row, c.col)]
             dest.rows += table.rows - 1
         else:
-            grouped[key if can_join else ('unique', len(grouped))] = Table(
+            grouped[group_key if can_join else ('unique', len(grouped))] = Table(
                 list(table.cells), table.rows, table.cols, table.html, dict(table.origins))
     return refs, list(grouped.values())
 
@@ -321,6 +429,17 @@ def _item_rows(ref, pred, columns):
     or ambiguous labels never justify guessing which item owns an amount.
     """
     fallback = _row_map(ref, pred, columns)
+    # Align units with units, never with years or an absent section title.
+    ru, pu = _unit_rows(ref), _unit_rows(pred)
+    forced = {}
+    for rr, cells in ru.items():
+        signature = [c.normalized for c in cells]
+        hits = [pr for pr, other in pu.items() if [c.normalized for c in other] == signature]
+        if len(hits) == 1 and sum([c.normalized for c in other] == signature for other in ru.values()) == 1:
+            forced[rr] = hits[0]
+    fallback = {rr: pr for rr, pr in fallback.items()
+                if rr not in forced and pr not in forced.values()}
+    fallback.update(forced)
     groups = {r: [p] for r, p in fallback.items()}
     def identifier(c):
         return bool(re.search(r"[^\W\d_]", c.normalized) or
@@ -331,14 +450,14 @@ def _item_rows(ref, pred, columns):
         -col), default=0)
     if label_col not in columns:
         return groups
-    labels = {c.row: c.normalized for c in ref.cells if c.col == label_col and c.row > 0
-              and identifier(c)}
+    labels = {c.row: c.normalized for c in ref.cells if c.col == label_col and identifier(c)}
     counts = Counter(labels.values())
-    plabels = {c.row: c.normalized for c in pred.cells if c.col == columns[label_col] and c.row > 0}
+    plabels = {c.row: c.normalized for c in pred.cells if c.col == columns[label_col]}
     candidates = {}
     for pr, label in plabels.items():
-        ranked = sorted(((_anchor_strength(text, label), rr) for rr, text in labels.items()
-                         if counts[text] == 1), reverse=True)
+        ranked = sorted(((max(_anchor_strength(text, label),
+                         .9 if ru and len(text) >= 4 and label.startswith(text + ' ') else 0), rr)
+                         for rr, text in labels.items() if counts[text] == 1), reverse=True)
         if ranked and ranked[0][0] >= .35 and (len(ranked) == 1 or ranked[0][0] - ranked[1][0] >= .15):
             candidates[pr] = ranked[0]
     starts = {}
@@ -351,9 +470,16 @@ def _item_rows(ref, pred, columns):
         if len(best_rows) == 1:
             starts[rr] = best_rows[0]
     header_row = fallback.get(0)
-    occupied = {header_row} if header_row is not None else set()
+    if header_row in starts.values() and starts.get(0) != header_row:
+        fallback.pop(0, None)
+        header_row = None
+    occupied = set(forced.values()) | ({header_row} if header_row is not None else set())
     anchored = {}
     for rr, start in sorted(starts.items(), key=lambda x: x[1]):
+        if rr == 0 and header_row == start:
+            anchored[rr] = [start]
+            occupied.add(start)
+            continue
         rows = [start]
         # A printed item code may precede its description on the row above.
         previous = plabels.get(start - 1, '')
@@ -397,10 +523,12 @@ def _item_rows(ref, pred, columns):
             rows.append(pr)
         anchored[rr] = rows
         occupied.update(rows)
-    groups = {0: [header_row]} if 0 in fallback else {}
+    groups = {r: [p] for r, p in forced.items()}
+    if 0 in fallback:
+        groups[0] = [header_row]
     groups.update(anchored)
     for rr, pr in fallback.items():
-        if rr == 0 or rr in anchored:
+        if rr == 0 or rr in anchored or rr in forced:
             continue
         if pr not in occupied:
             groups[rr] = [pr]
@@ -411,6 +539,17 @@ def _item_rows(ref, pred, columns):
 def _column_groups(ref, pred):
     """Match complete header phrases, allowing adjacent headers to combine."""
     columns = _flex_columns(ref, pred)
+    # Units retain their left-to-right meaning when an intervening Notes-like
+    # column is folded into the label. Do not infer a permutation from amounts.
+    ru, pu = _unit_rows(ref), _unit_rows(pred)
+    if ref.cols != pred.cols and len(ru) == len(pu) == 1:
+        a, b = next(iter(ru.values())), next(iter(pu.values()))
+        if [c.normalized for c in a] == [c.normalized for c in b] and a[0].col > 0 and b[0].col > 0:
+            columns = {0: 0, **{x.col: y.col for x, y in zip(a, b)}}
+            if a[0].col == b[0].col:
+                columns.update({i: i for i in range(1, a[0].col)})
+            elif b[0].col == 1:
+                columns.update({i: 0 for i in range(1, a[0].col)})
     groups = {r: [p] for r, p in columns.items()}
     rh, ph = _header(ref), _header(pred)
     if len(rh) != ref.cols or len(ph) != pred.cols:
@@ -485,6 +624,9 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
         # Build candidate content from the item's rows and identified columns.
         # A shared physical cell is partitioned in reference-column order.
         bundles = {}
+        unit_rows = _unit_rows(ref)
+        reserved_units = {(pr, col) for rr, cs in unit_rows.items() for pr in rows.get(rr, [])
+                          for c in cs for col in columns.get(c.col, [])}
         for cell in ref.cells:
             def label_span(c):
                 return c.colspan > 1 and any(
@@ -492,7 +634,9 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                     and _anchor_strength(rc.normalized, c.normalized) >= .35
                     for rc in ref.cells)
             matches = [c for c in pred.cells if c.row in rows.get(cell.row, [])
-                       and any(c.col == col or (c.col < col < c.col + c.colspan and not label_span(c))
+                       and (cell.row in unit_rows or (c.row, c.col) not in reserved_units)
+                       and any(c.col == col or (c.col < col < c.col + c.colspan
+                               and (not label_span(c) or not cell.normalized))
                                for col in columns.get(cell.col, []))] if pred else []
             matches.sort(key=lambda c: (c.row, c.col))
             signature = (cell.row, tuple((c.row, c.col) for c in matches))
@@ -525,6 +669,12 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                     for ti, original in pred.origins[(output.row, output.col)]:
                         sources.append({"table": ti, **asdict(original), "start": lo-left,
                                         "end": hi-left, "matched_text": output.normalized[lo-left:hi-left]})
+                if start == end and len(cells) > 1 and len(matches) == 1 and not cell.normalized:
+                    # A header/span-confirmed combined field has an empty
+                    # component. This is structural evidence, not free padding.
+                    sources = [{"table": ti, **asdict(original), "start": start,
+                                "end": end, "matched_text": "", "implicit_blank": True}
+                               for output in matches for ti, original in pred.origins[(output.row, output.col)]]
                 if not joined and len(cells) == 1:
                     sources = [{"table": ti, **asdict(original), "start": 0, "end": 0,
                                 "matched_text": ""} for output in matches
@@ -535,10 +685,13 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
             collision = any(any((a < src['end'] and src['start'] < b) or
                                 (a == b == src['start'] == src['end'] == 0)
                                 for a, b in used.get((src['table'], src['row'], src['col']), []))
-                            for src in sources)
+                            for src in sources if not src.get("implicit_blank"))
             if collision:
                 text, sources = '', []
             for src in sources:
+                if src.get("implicit_blank"):
+                    used.setdefault((src['table'], src['row'], src['col']), [])
+                    continue
                 used.setdefault((src['table'], src['row'], src['col']), []).append((src['start'], src['end']))
             value = _value_credit(cell.text, text) if sources else 0.0
             credit += value
@@ -567,7 +720,8 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
             "reference_blank_cells": sum(not c.normalized for t in refs for c in t.cells),
             "correct_blank_cells": blanks_correct,
             "extra_cells": len(extra), "extra_cell_rate": len(extra)/pc if pc else 0.0,
-            "extra_tables": max(0, len(predicted) - len(reference)),
+            "extra_tables": sum(not any(i == ti for i, _, _ in used) for ti in range(len(predicted))),
+            "physical_table_count_difference": len(predicted) - len(reference),
             "unmatched_tables": sum(not any(i == ti for i, _, _ in used) for ti in range(len(predicted))),
             "verdicts": verdicts + extra, "alignment_table_matches": table_map,
-            "normalization": "label-associated adjacent item rows; ordered cell spans; repeated columns, transpose and table chunks; source positions retained"}
+            "normalization": "label-associated adjacent item rows; ordered cell spans; repeated columns, transpose and header-defined sections/chunks; source positions retained"}

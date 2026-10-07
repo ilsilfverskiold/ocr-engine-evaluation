@@ -2,7 +2,7 @@
 
 Logical cells, including blanks, count once; extras reduce diagnostic precision only.
 Native tables take precedence over another rendering of the same answer.
-Every table/row/cell matches at most once. Shipping alone accepts the better
+Logical sections may cross physical table boundaries; content spans match at most once. Shipping alone accepts the better
 whole-page comparison against the original or human-gold reference.
 """
 from __future__ import annotations
@@ -422,7 +422,7 @@ def score_tables(
     ref = parsed_refs[selected]
     counts = {key: winner[key] for key in ("correct", "reference_cells", "output_cells",
               "reference_blank_cells", "output_blank_cells", "correct_blank_cells",
-              "partial", "value_credit", "extra_cells", "extra_cell_rate", "extra_tables", "reference_physical_cells")}
+              "partial", "value_credit", "extra_cells", "extra_cell_rate", "extra_tables", "physical_table_count_difference", "reference_physical_cells")}
     return TableScore(
         applicable=True, value_accuracy=winner["score"], cell_f1=winner["f1"], cell_precision=winner["precision"],
         cell_recall=winner["recall"], structure_similarity=winner["structure_similarity"],

@@ -4,7 +4,7 @@ Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
 The published bundle records exact scorer versions, source calls and coverage.
-Current table scoring is `gold-table-values-v3-items`; Markdown uses
+Current table scoring is `gold-table-values-v4-sections`; Markdown uses
 `markdown-structure-v3-spans-reflow`. Offline reporting never changes scores.
 See the [README](../README.md) for commands, current limitations and coverage.
 
@@ -124,7 +124,7 @@ Human gold at `documents/table_references/gold/` takes precedence over original
 references; a proposal is never selected automatically. All 42 reviewed pages
 have gold. Schema/KV gold is a separate reference collection.
 
-**Headline: reference value score (`gold-table-values-v3-items`).** Sum per-cell
+**Headline: reference value score (`gold-table-values-v4-sections`).** Sum per-cell
 value credit and divide by reference logical cells. Exact normalized text and
 numerically equivalent amounts receive 1; nonnumeric text with character
 similarity at least 0.5 receives that fractional credit; lower similarity and
@@ -133,7 +133,7 @@ units and leading-zero identifiers remain significant. Actual blank cells count;
 parser padding does not. A merged cell counts once.
 
 Extra cells, rows and tables do **not** reduce this headline. Report extra-cell
-count/rate, extra-table count and the old strict cell precision/recall/F1 as
+count/rate, unmatched returned-table count, physical table-count difference and the old strict cell precision/recall/F1 as
 separate diagnostics. Empty output against nonempty gold scores zero.
 
 Keep logical item/column associations and use each returned content span at
@@ -147,14 +147,14 @@ inventing missing structure.
 Adjacent columns may combine when complete headers establish their identity;
 HTML colspan also establishes which columns a cell covers. Values in one merged
 cell partition into ordered, disjoint word spans. Never reorder those values
-or borrow from another item. Blank cells still need an actual returned blank.
+or borrow from another item. Blank cells need a returned blank or an empty component established by a combined field’s header/column span; missing whole rows never receive blank credit.
 Every verdict records the combined content, original component cells and their
 normalized-text offsets; the report keeps the original returned table visible.
 A physically different row layout alone does not lose content credit.
 Unique headers permit added, missing or reordered columns. Unique descriptive
 row labels or ISO dates identify rows; otherwise positions govern. Repeated
-side-by-side header groups may reflow into a narrow table. Identical-header
-chunks may combine when there is one unambiguous reference table; repeated data
+side-by-side header groups may reflow into a narrow table. Repeated header/unit bands define logical sections on both sides; unique row labels locate section boundaries when returned headers are omitted. Match sections independently of physical table boundaries. Repeated units preserve column order and can establish a Notes-like column combined into the label. Actual units rows cannot be consumed by year headers or section-label blank cells. Identical-header
+chunks may combine when they belong to the same reference section; repeated data
 rows remain extras. A transpose is accepted only when header matching supports
 it, not because it maximizes matching values. Preserve original coordinates and
 component cells in every verdict. Arbitrarily collapsed grids, unrelated values

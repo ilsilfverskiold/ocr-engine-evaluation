@@ -119,3 +119,46 @@ streaming transport, normalized-box conversion, cost accounting, stop reason
 and raw-message preservation. Default transcription retains its original
 request cap/prompt. No paid calls or published-score changes. Temporary
 verification code was not committed.
+
+## Table section alignment correction — 2026-10-07
+
+The reported Textract fintab_000 score of 0.241071 was reproduced from the saved
+provider blocks. One reference table was paired with only one of four returned
+tables. Later sections were marked missing/extra despite correct row labels and
+amounts. Header fallback also paired years with currency units, and folded blank
+Notes cells were treated as absent.
+
+Implemented `gold-table-values-v4-sections` in the shared table scorer. Repeated
+header/unit bands define logical sections on both sides. Unique row labels can
+locate section boundaries when returned headers are absent or misrecognized.
+Identical headers do not recombine chunks belonging to different sections.
+Unit rows match unit rows, independently of section titles and year headers.
+Ordered unit columns establish when an intervening field is combined with the
+label. Ordered, disjoint spans recover its printed value or establish an empty
+component; whole missing rows receive no blank credit. Standalone description
+spans are not appended to numeric values. Source cells and offsets remain in
+every verdict, with inferred blank components explicitly marked in the viewer.
+Ambiguous labels or rowspans that cross a proposed boundary do not justify a
+split. Physical layout diagnostics retain their stricter interpretation.
+
+Textract fintab_000 now receives 100/112 = **0.892857**: all 19 item labels, 38
+amounts, five note values, eight units, two section headings and 28 logical blanks.
+The 12 missing reference cells belong to three absent header/section rows
+(Notes/1979/1978, Debtors, Provisions), including seven blanks. They are not
+borrowed from the provider's separate text/FORMS output. There are no unmatched
+returned cells/tables; the physical table-count difference is +3, shown as a
+separate diagnostic rather than calling correctly matched sections extra tables.
+
+Validation: compared all 504 scored table outputs before/after; 62 headline
+scores changed across 12 engines and 18 pages. Checked synthetic split, joined,
+reordered sections and folded blank/nonblank fields. Altered numbers, swapped
+amounts and incorrect note values still lose credit; duplicate output does not
+increase credit and empty output scores zero. Strict F1 remains unchanged.
+Checks/experiments stayed outside Git. No provider or judge calls.
+
+Published run `20261007T110822Z` rescored tables locally and inherited other legs
+unchanged from `20261007T094758Z`. It retains all 4,505 result records and 2,375
+inference ledger entries. The manifest explicitly distinguishes rescored and
+inherited legs. The canonical bundle and HTML evidence report were rebuilt;
+working replay files/logs were removed after verification. Sonnet geometry's
+paid rerun remains separately pending approval.
