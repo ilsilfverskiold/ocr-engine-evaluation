@@ -13,7 +13,7 @@ the on-disk layout the harness expects:
   documents/<tier>/<doc_type>/<stem>_geometry_gt.json
 
 The reference run results ship with the git repo (results/), so this is only
-needed when you want to rerun engines against the documents.
+needed for inference, offline rescoring and source images in the HTML report.
 
 Usage:
   python scripts/download_data.py
@@ -71,6 +71,8 @@ def write_row(row: dict, manifest: dict, root: Path = ROOT) -> None:
 
 
 def main() -> None:
+    import argparse
+    argparse.ArgumentParser(description=__doc__).parse_args()
     try:
         from datasets import Image, load_dataset
     except ImportError:

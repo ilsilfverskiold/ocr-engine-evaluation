@@ -30,6 +30,12 @@
   checks then passed. Five tests of the removed historical CLI were retired.
   Archive-only lookup of every file, cohort threshold/pending/empty-result cases,
   aggregate equivalence and physical-call cost deduplication also passed.
-  Full offline replay and final HTML checks are in progress.
+  Full archive-only replay reproduced all 4,505 score/eligibility/error records
+  exactly, with no added/removed records and no pending KV decisions. Report
+  JavaScript rendered all 4,505 records and passed 246 ascending/descending
+  sorting actions. The replay output and local verification files were removed.
+- Detailed reports now use saved coverage rather than requiring images or
+  reinterpreting references at report time. Downloader --help exits offline.
+  These changes keep terminal reporting usable directly from a clean checkout.
 - No paid inference, judge calls, deployments or push. Historical implementation
   logs and removed development files remain available through Git history.

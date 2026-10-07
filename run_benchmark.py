@@ -1367,27 +1367,6 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     return spec.scored_on, method
 
 
-def _reference_counts(records: list[dict], legs: list[str]) -> dict[str, int]:
-    """How many of the run's documents have a reference for each leg.
-
-    Read through GroundTruthLoader, not by probing sidecar paths, so the count
-    printed is the count scoring saw.
-    """
-    from evaluation.ground_truth import GroundTruthLoader
-
-    loader = GroundTruthLoader()
-    counts = {leg: 0 for leg in legs}
-    for path in sorted({r["document_path"] for r in records}):
-        try:
-            gt = loader.load(Path(path))
-        except Exception:
-            continue
-        for leg in legs:
-            if gt.has_gt_for(leg):
-                counts[leg] += 1
-    return counts
-
-
 def _print_leg_results(
     agg: dict, records: list[dict], legs: list[str], engines: list[str],
     operational: dict, log: logging.Logger,
@@ -1398,7 +1377,6 @@ def _print_leg_results(
     same table as the score rather than in a separate one.
     """
     skips = skipped_engines(legs, engines)
-    references = _reference_counts(records, legs)
 
     for leg in legs:
         spec = LEGS[leg]
@@ -1408,7 +1386,6 @@ def _print_leg_results(
             r["document_path"] for r in leg_records
             if r.get("applicable") and r.get("score") is not None
         }
-        n_reference = references.get(leg, 0)
 
         div = "=" * 100
         log.info(div)
@@ -1419,29 +1396,18 @@ def _print_leg_results(
         log.info(div)
 
         if not scored_docs:
-            # Say which of the two causes it is: nothing to compare against, or
-            # nobody able to answer. They call for different work.
-            if n_reference == 0:
-                log.info("  UNAVAILABLE — no document in this run has a reference for "
-                         "this leg,")
-                log.info("  so nothing can be measured. This is a missing-ground-truth "
-                         "result, not an engine result.")
-            else:
-                log.info(f"  UNAVAILABLE — {n_reference} document(s) have a reference, "
-                         f"but no engine produced a score.")
-                reason = next(
-                    (r.get("reason") for r in leg_records if r.get("reason")), None
-                )
-                if reason:
-                    log.info(f"  Reason: {reason}")
+            log.info("  No saved scores for this leg. Inspect error and N/A reasons below.")
+            for reason in sorted({str(r.get("reason") or r.get("error")) for r in leg_records
+                                  if r.get("reason") or r.get("error")}):
+                log.info(f"    {reason}")
             for engine, note in skips.get(leg, []):
                 log.info(f"    not competing: {engine:<22} {note}")
             log.info("")
             continue
 
         eligible = sorted({v["engine"] for v in leg_rows if v["score"] is not None})
-        log.info(f"  {len(scored_docs)} of {n_reference} documents with a reference "
-                 f"produced a score; {len(eligible)} of {len(engines)} engines competed.")
+        log.info(f"  {len(scored_docs)} distinct documents produced a saved score; "
+                 f"{len(eligible)} of {len(engines)} engines competed.")
 
         for engine, note in skips.get(leg, []):
             log.info(f"    not competing: {engine:<22} {note}")
