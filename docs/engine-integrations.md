@@ -86,7 +86,7 @@ source, not observed.
 - **Every Modal app**: image build resolves (pins chosen from each project's
   lock or CI file, but never installed together here); server starts and
   warm-up passes on the declared GPU; peak memory at the declared concurrency
-  on the largest corpus page (2480×3508).
+  on the largest intended input, not only the smoke-test page.
 - **ovisocr2**: the nested `images_kwargs` pixel bounds are honoured by vLLM
   0.22.1 (check `generation.prompt_tokens` ≈ 8,152 on a 2480×3508 page);
   `gdn_prefill_backend=triton` on an A10; whether `schema_render` should be
