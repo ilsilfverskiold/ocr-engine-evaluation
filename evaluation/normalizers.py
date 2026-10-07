@@ -170,6 +170,16 @@ def markdown_text(raw_text: str, engine: str) -> str | None:
     return raw_text
 
 
+def markdown_for_scoring(raw_text: str, engine: str, structured_output=None) -> str | None:
+    """Select the same emitted Markdown for scoring and evidence display."""
+    rendered = (structured_output or {}).get("markdown")
+    if rendered:
+        return rendered
+    if _ENGINES[engine].answers("markdown") == "prompted":
+        return raw_text
+    return markdown_text(raw_text, engine)
+
+
 # ---------------------------------------------------------------------------
 # Schema-JSON engines → fields
 # ---------------------------------------------------------------------------

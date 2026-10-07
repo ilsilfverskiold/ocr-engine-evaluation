@@ -541,14 +541,8 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         return score_text(text, gt)
     if leg == "markdown":
         from evaluation.markdown_leg import score_markdown
-        from evaluation.normalizers import markdown_text
-        spec = ENGINES[engine]
-        rendered = (structured_output or {}).get("markdown")
-        if rendered:
-            emitted = rendered
-        else:
-            emitted = (text if spec.answers(leg) == "prompted"
-                       else markdown_text(text, engine))
+        from evaluation.normalizers import markdown_for_scoring
+        emitted = markdown_for_scoring(text, engine, structured_output)
         return score_markdown(emitted, gt, engine, use_judge=use_judge)
     if leg == "tables":
         from evaluation.table_leg import score_tables
@@ -883,6 +877,32 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
         log.info(f"Document-judge spend: ${judge_spend:.4f}")
 
 
+def _rescore_selection(source_records):
+    """One saved call per engine/page/leg; later supplied runs take precedence.
+
+    Within a run, prefer a dedicated pass, then its successful attempt. A newer
+    run's failed call remains an error; an older successful answer cannot hide
+    it. The complete attempt history remains in the source ledgers.
+    """
+    chosen = {}
+    for source_index, records in enumerate(source_records):
+        for record_index, record in enumerate(records):
+            engine, document = record['engine_name'], record['document_path']
+            spec = ENGINES.get(engine)
+            priority = (source_index, (record.get('pass_name') or DEFAULT_PASS) != DEFAULT_PASS,
+                        not bool(record.get('error')), record_index)
+            for leg in record.get('legs') or []:
+                if spec is not None and spec.answers(leg) is None:
+                    continue
+                key = engine, document, leg
+                if key not in chosen or priority > chosen[key][0]:
+                    chosen[key] = priority, (source_index, record_index)
+    selected = {}
+    for (_, _, leg), (_, identity) in chosen.items():
+        selected.setdefault(identity, []).append(leg)
+    return selected
+
+
 def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                  skip_judge: bool, selected_legs: list[str] | None = None) -> None:
     """Score every stored output of one or more runs into ONE new run.
@@ -914,29 +934,24 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     copied_judge = 0
     kv_pool = ThreadPoolExecutor(max_workers=4) if selected_legs == ["key_value"] else None
     kv_futures = {}
-    # A leg that has its own successful pass somewhere in the sources (the
-    # markdown and tables passes collected for an engine whose earlier run
-    # served them from its transcription pass) is scored from that pass only:
-    # the default pass drops it, so the leg has one row per document.
-    dedicated: dict[tuple[str, str], set[str]] = {}
-    for src in sources:
-        for rec in read_jsonl(RUNS_DIR / f"{src}_inference.jsonl"):
-            if rec.get("error") or (rec.get("pass_name") or DEFAULT_PASS) == DEFAULT_PASS:
-                continue
-            dedicated.setdefault((rec["engine_name"], rec["document_path"]), set()).update(rec.get("legs") or [])
-    for src in sources:
-        inference = read_jsonl(RUNS_DIR / f"{src}_inference.jsonl")
+    source_records = [read_jsonl(RUNS_DIR / f"{src}_inference.jsonl") for src in sources]
+    selected = _rescore_selection(source_records)
+    historical_judge = {}
+    if selected_legs is None:
+        for src in sources:
+            for row in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
+                if row.get('leg') == 'judge' and not row.get('error'):
+                    historical_judge[(row['engine_name'], row['document_path'])] = (src, row)
+        for src, row in historical_judge.values():
+            log_record({**row, 'timestamp': target, 'source_timestamp': src,
+                        'metrics': {**row.get('metrics', {}), 'historical_verdicts': True}}, results_jsonl)
+        copied_judge = len(historical_judge)
+    for source_index, src in enumerate(sources):
+        inference = source_records[source_index]
         if not inference:
             log.error(f"No inference records for run {src}")
             sys.exit(1)
         log.info(f"Rescoring {src}: {len(inference)} inference records")
-        # The document judge's per-item verdicts live in the source run's
-        # judge rows (detail.items); they are copied, never re-asked.
-        for r in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
-            if selected_legs is None and r.get("leg") == "judge" and not r.get("error"):
-                log_record({**r, "timestamp": target, "source_timestamp": src,
-                            "metrics": {**r.get("metrics", {}), "historical_verdicts": True}}, results_jsonl)
-                copied_judge += 1
         # A call that failed and was then retried successfully is not a
         # failure of the run: only (engine, document, pass) triples with NO
         # successful record become error rows, and once each, not once per
@@ -944,7 +959,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         succeeded = {(r["engine_name"], r["document_path"], r.get("pass_name") or DEFAULT_PASS)
                      for r in inference if not r.get("error")}
         error_rows_written: set[tuple] = set()
-        for rec in inference:
+        for record_index, rec in enumerate(inference):
             engine = rec["engine_name"]
             call_source = rec.get("source_timestamp") or src
             doc_path = Path(rec["document_path"])
@@ -952,15 +967,11 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
             # The legs a pass serves are re-read from the CURRENT registry: an
             # engine taken out of a leg since the run (textract_structured has
             # no schema interface) is not rescored on it.
-            spec = ENGINES.get(engine)
-            legs = [l for l in (rec.get("legs") or [])
-                    if spec is None or spec.answers(l) is not None]
-            if pass_name == DEFAULT_PASS:
-                legs = [l for l in legs if l not in dedicated.get((engine, rec["document_path"]), set())]
+            legs = selected.get((source_index, record_index), [])
             if selected_legs is not None:
                 legs = [l for l in legs if l in selected_legs]
-                if not legs:
-                    continue
+            if not legs:
+                continue
             if engine not in engines:
                 engines.append(engine)
             for l in legs:
@@ -1054,6 +1065,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     manifest = {
         "timestamp": target, "engines": engines, "legs": legs_seen,
         "rescore_of": sources, "collect_only": False, "scored": True,
+        "source_selection": "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run",
         "scored_with_judge": not skip_judge,
         "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
         "scorers": {"markdown": "markdown-structure-v1", "tables": TABLE_VERSION,

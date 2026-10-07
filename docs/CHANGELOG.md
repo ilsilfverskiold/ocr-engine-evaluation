@@ -446,3 +446,13 @@ is given here.
   values; geometry repeated-value pairing fix, line-level number, block
   engines not applicable; `--rescore` command; retried calls are not error
   rows. Why: `docs/rescoring-plan.md`, `docs/handoff-2026-10-01.md`.
+
+## 2026-10-07 — current combined evidence report
+
+- Combine baseline outputs and the completed common-schema run without duplicate
+  engine/page/leg entries or fallback from newer failures to older successes.
+- Show selected Markdown, actual parsed field pairs, returned boxes and supporting
+  CER/WER in the evidence report. Omit historical silver estimates by default.
+- Keep revised contextual KV reviews pending until approved; no automatic split
+  credit or new paid calls. Archive superseded publication files and document the
+  current terminal/browser workflow. 424 tests pass.

@@ -108,7 +108,7 @@ decide where each is tested. No runs, deploys or judge calls were requested.
   types raise; judged-documents section now prints; T4 default removed.
 - Tests: `tests/conftest.py` strips paid credentials; membership test split
   into baseline/expansion; cache-identity defect marked `xfail(strict)`.
-- Audit written up in [benchmark-audit-2026-09-30.md](benchmark-audit-2026-09-30.md):
+- Audit written up in `benchmark-audit-2026-09-30.md` (historical audit retained in Git; current rules: [scoring design](scoring-design.md)):
   local-verifier incidence and bounds, 155 stale verdict sets, geometry
   adapter artefacts (deepseek/paddle 0.0), mineru markdown input change,
   silver judge on 10/14 engines, report/bookkeeping defects. A first draft
@@ -1899,3 +1899,29 @@ session scratch. Original inference and paid journals remain intact.
   N/A, zero errors/cost. Sonnet invoice_001 has eight prepared review items and
   remains pending rather than receiving speculative full credit. Updated the
   report generator and existing docs to expose this state. No push performed.
+
+## 2026-10-07 — shared correction integrated into the combined report
+
+- Continued the generalized KV correction from `910ad2b`: revised items cover
+  split/partial values, repeated amounts and leading/trailing currency forms
+  across engines. No new paid review was run; the $5.60 approval is pending.
+- Combined replay `20261006T221526Z` selects one source per engine/page/leg;
+  later sources override earlier ones, including failures. Current schema calls
+  replace old-schema answers. Source attempt ledgers remain intact.
+- Browser comparison contains 4,505 six-leg rows, 93 pages and 2,282 saved calls.
+  KV has 59 settled scores, 201 pending outputs and 28 no-reference rows. The
+  110 historical silver estimates remain in the ledger but are omitted from
+  the current browser report by default.
+- Report now uses the same Markdown payload selector as scoring, displays the
+  actual parsed field pairs without extra cleanup, gives leg-specific context,
+  and puts CER/WER and supporting metrics in filtered engine overviews.
+- Replaced stale README instructions with current reproducible commands and
+  trimmed superseded proposals from the follow-up. Archived old audit docs,
+  redundant score exports/CSVs and previous HTML reports to session scratch;
+  Git history retains tracked originals. Preserved source calls/ledgers, paid
+  audits, accepted gold, active caches, local review editors and unrun engines.
+- Validation: 424 tests passed; all 2,282 displayed call hashes matched source;
+  no duplicate result keys; pending KV scores excluded; JavaScript syntax passed.
+  Headless browser checked seven cases across all six legs without exceptions;
+  inspected KV and geometry screenshots. Terminal Modal timing/cost audit passes.
+  Reproducible audit: `results/runs/20261006T221526Z_audit.json`.

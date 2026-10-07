@@ -95,13 +95,13 @@ judgement calls, with the reasoning recorded beside each registry entry:
 
 - **`--collect-only`**: runs inference and persists every output, scores
   nothing and calls no judge. Keeps key_value/schema passes (plain
-  `--skip-judge` drops them) and keeps all 93 pages (leg-based GT filtering
+  `--skip-judge` also keeps them) and keeps all 93 pages (leg-based GT filtering
   was removing the 11 silver-text pages). Needs no `GOOGLE_API_KEY`.
 - **`--score TS`**: scores a stored run from its `.call.json` files, then
   prints the report. Appends only rows not already in `TS_results.jsonl`, so a
   rescore requires moving the old results aside first — earlier verdicts are
-  never overwritten. `--score TS --skip-judge` gives the deterministic subset
-  (KV/schema unscored, markdown F1, TEDS).
+  never overwritten. `--score TS --skip-judge` uses current code scorers and existing caches;
+  unresolved KV judgments remain pending. Use `--rescore` for a new score ledger.
 - **`--extends TS`**: writes the baseline run ID into the new run's manifest.
 - **`--report A,B`**: one report over an extension run and its baseline.
   Rows keep their own `timestamp`; the same (engine, leg) in two runs is
@@ -182,15 +182,12 @@ venv) → `paddleocr_vl_1_6`, `opendoc`, `mineru_4_standard`, `teleocr`
 - Cost per page is comparable across GPUs because each batch is billed at the
   rate of the GPU it actually reports. Seconds per page are not: A10/L4 rows
   cannot be read as slower models than the A100 baseline rows.
-- Deterministic scores from `--score --skip-judge` (markdown block F1, TEDS)
-  are different metrics from the baseline's judged headlines. The combined
-  report prints each run's manifest (`scored_with_judge`) first; do not put a
-  deterministic column beside a judged one under the same name.
-- The judged KV/schema path has open correctness questions (see
-  [benchmark-audit-2026-09-30.md](benchmark-audit-2026-09-30.md)). Scoring
-  new engines through it inherits those; scoring them
-  through a fixed scorer makes them incomparable with the baseline until the
-  baseline is rescored. That choice is yours and is not made here.
+- Use the same fixed scorers and accepted references as the current baseline
+  replay `20261006T221526Z`; see [scoring design](scoring-design.md). KV uses
+  contextual value-assisted review only when needed; schema uses the frozen
+  common field sample. `--skip-judge` reuses cached decisions without spending.
+- Record current provider model IDs. Historical aliases are not proof that a
+  new call uses the same build as the original baseline.
 - `mistral_ocr_4`'s model id (`mistral-ocr-4-0`) retires on 2026-09-30 per
   Mistral's changelog, and the saved baseline recorded `mistral-ocr-latest`.
   The baseline row stays as a historical record; it cannot be re-run as what
@@ -285,8 +282,8 @@ Research documents (not edited; corrections recorded here):
 - The matrix lists RapidOCR and Apple as $0 local engines; RapidOCR is on
   metered Modal CPU here.
 
-Existing code (not edited unless stated; these affect the saved baseline and
-are quantified in [benchmark-audit-2026-09-30.md](benchmark-audit-2026-09-30.md)):
+Historical pre-fix code findings (not a current defect inventory; originally
+quantified in `benchmark-audit-2026-09-30.md` (historical audit retained in Git; current rules: [scoring design](scoring-design.md))):
 
 - `modal_apps/deepseek_ocr_app.py` (v1) stores each grounding box's **label**
   (`title`, `text`, `table`…) as its text — the `<|ref|>` group is the layout
@@ -331,7 +328,7 @@ document as expected behaviour — the judge grades against Gemini's reading of
 the page image, not against the human sidecar — and only as a reminder that
 judged and deterministic markdown numbers are different metrics.
 
-## 9. Decisions this leaves with you
+## 9. Expansion decisions (historical scoring choices superseded)
 
 1. Apple Vision: run it on this Mac, or leave it opt-in and unrun.
 2. Mathpix: skip the three >5 MB pages, or add a disclosed re-encode
@@ -339,8 +336,8 @@ judged and deterministic markdown numbers are different metrics.
 3. `deepseek_ocr_2` key_value: enabled by the interface rule; say if you want
    v1's exclusion carried forward instead.
 4. `datalab_ocr`: Balanced only, or also an Accurate row (separate engine id).
-5. Scoring path for the extension run: judged (inherits the open KV/schema
-   audit questions), deterministic only, or wait for a scorer fix and rescore
-   the baseline alongside.
-6. Whether to fix the v1 DeepSeek/Paddle/MinerU geometry adapters and rescore
-   those baseline legs, or leave the baseline as published and note it.
+5. Scoring is settled: run the same fixed six-leg evaluation and accepted
+   references as the current baseline replay. Further paid runs need approval.
+6. The old adapter/scorer defects listed above are historical findings. Current
+   eligibility, conversions and remaining unmeasured pipeline controls are
+   documented in the scoring design and follow-up, not inferred from that list.

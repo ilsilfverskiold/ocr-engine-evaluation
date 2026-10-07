@@ -9,7 +9,8 @@ implemented and tested offline. The last published scores, run
 `20261006T214240Z` has 453 scored results and two server errors. Markdown
 catalogues now cover 92 pages; newspaper_000 remains missing. The remaining
 prompt controls are deferred: the user requested no more paid runs. The combined
-all-leg report is still pending. The inline KV rescore
+all-leg replay is `20261006T221526Z`; its browser report leaves unresolved KV
+reviews pending and omits historical silver estimates. The inline KV rescore
 from `20261006T195826Z` supplies reusable paid decisions. The new contextual
 value-group reviews are prepared and pending; deterministic split-credit runs
 are withdrawn. The execution checklist is
@@ -52,7 +53,7 @@ can increase error rates without being recognition errors; disclose them.
 The headline is `(correct + 0.5 × partial) / checklist elements`, with deterministic
 verdicts against a shared, cached image-authored structural catalogue. It is not
 a per-engine model judgment. Existing catalogues are sampled to 40 elements.
-Missing catalogues remain N/A; receipt coverage must be completed explicitly.
+Missing catalogues remain N/A; receipt coverage is now included in the 92 cached catalogues.
 Image-only catalogue generation is a separate, cost-approved action through
 `scripts/build_markdown_catalogues.py`. Proposals stay inactive until source-image
 review is recorded; uncertain elements are excluded and source hashes checked.
@@ -115,8 +116,9 @@ This policy applies to every engine.
 
 Promptable engines receive an explicit table-only request allowing Markdown for
 simple grids and HTML for spans. Native pipelines retain their documented table
-interface. Table scope, ambiguous glyphs and equivalent shipment representations
-still require the reference metadata checks listed in the follow-up.
+interface. The accepted human references retain review notes for table scope and ambiguous
+glyphs. Historical default answers are still scored from their saved table output;
+dedicated table-only controls have not been run.
 
 ## Shared KV/schema references
 

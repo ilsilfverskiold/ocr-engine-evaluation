@@ -42,6 +42,22 @@ def test_dispatch_forwards_skip_judge_to_kv(monkeypatch):
     assert seen == [False, True]
 
 
+def test_markdown_evidence_selects_the_same_payload_as_dispatch(monkeypatch):
+    from evaluation import markdown_leg
+    from evaluation.normalizers import markdown_for_scoring
+    seen = []
+    monkeypatch.setattr(markdown_leg, 'score_markdown', lambda text, *a, **kw: seen.append(text))
+    for engine, raw, structured, expected in [
+        ('mineru', 'plain transcription', {'markdown': '# Native heading'}, '# Native heading'),
+        ('claude_sonnet_4_6', '## Prompted heading', {}, '## Prompted heading'),
+        ('docling', '## Native heading', {'markdown': ''}, '## Native heading'),
+        ('tesseract', 'flat text', {}, None),
+    ]:
+        assert markdown_for_scoring(raw, engine, structured) == expected
+        run_benchmark.score_leg('markdown', engine, raw, None, structured, use_judge=False)
+        assert seen[-1] == expected
+
+
 def test_rescore_uses_original_calls_when_source_is_itself_a_rescore(tmp_path, monkeypatch):
     from types import SimpleNamespace
     from evaluation.ground_truth import GroundTruthLoader
@@ -61,6 +77,26 @@ def test_rescore_uses_original_calls_when_source_is_itself_a_rescore(tmp_path, m
     assert seen == ['original']
     saved, = run_benchmark.read_jsonl(tmp_path / 'new_inference.jsonl')
     assert saved['source_timestamp'] == 'original'
+
+
+def test_combined_rescore_replaces_only_the_new_leg_and_preserves_new_errors():
+    def record(legs, name='default', error=None):
+        return {'engine_name':'test', 'document_path':'/x.png', 'legs':legs, 'pass_name':name, 'error':error}
+    old = [record(['text','tables']), record(['schema'],'schema')]
+    new = [record(['schema'],'schema','provider error')]
+    selected = run_benchmark._rescore_selection([old,new])
+    assert selected == {(0,0):['text','tables'],(1,0):['schema']}
+    # A repeat of the same source doesn't duplicate the comparison.
+    assert run_benchmark._rescore_selection([old,old]) == {(1,0):['text','tables'],(1,1):['schema']}
+
+
+def test_rescore_selects_dedicated_pass_and_successful_resume_within_run():
+    base = {'engine_name':'test', 'document_path':'/x.png'}
+    records = [{**base,'pass_name':'default','legs':['text','markdown']},
+               {**base,'pass_name':'markdown','legs':['markdown'],'error':'credits'},
+               {**base,'pass_name':'markdown','legs':['markdown']}]
+    assert run_benchmark._rescore_selection([records]) == {(0,0):['text'],(0,2):['markdown']}
+    assert run_benchmark._rescore_selection([records[:2]]) == {(0,0):['text'],(0,1):['markdown']}
 
 
 def _leg(engine, tier, doc_type, doc, leg, score, applicable=True):
