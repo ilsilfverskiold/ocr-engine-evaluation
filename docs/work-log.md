@@ -1987,3 +1987,10 @@ session scratch. Original inference and paid journals remain intact.
   two tests that depended on retired on-disk data: explicit unit-label fixture
   retains matching checks; blank-header test now exercises the active table
   parser. Both updated tests pass. No production scoring logic changed.
+
+## 2026-10-07 — keep the completed follow-up document closed
+
+Removed the newly appended outstanding-work section and restored the completed
+follow-up document to its delivered version, as requested. No replacement
+document was created. This does not fix or dismiss the newly identified Markdown
+matching issue or execute the outstanding geometry work. No scoring changes.
