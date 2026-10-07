@@ -138,6 +138,12 @@ excluded. Reading order, punctuation and incomplete references can raise CER/WER
 without proving a recognition error. Historical silver-document judge estimates
 are a separate optional facility and are not part of the six published legs.
 
+All 11 participating Markdown engines now score the same 92 cached-reference
+pages, after filling 104 missing outputs (run `20261007T121019Z`). `newspaper_000`
+has no usable Markdown reference and is excluded for every engine. Four added
+GLM/Qwen responses hit their existing output caps; saved stop reasons remain
+visible. Equal coverage does not remove output-limit or prompt limitations.
+
 Historical default prompts were not uniformly dedicated Markdown/table requests.
 Gemini's old default did not explicitly request Markdown; Sonnet requested structure
 but not a dedicated Markdown-only control. These fairness limits remain disclosed.

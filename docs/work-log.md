@@ -326,3 +326,47 @@ batch timings imply about $0.154 warm GPU inference for these pages; cold start,
 idle, CPU/RAM are additional. Planning reserve: $5. Report measured batch GPU
 cost separately from an actual provider invoice. Completion and measured costs
 will be recorded below.
+
+## Markdown coverage patch — 2026-10-07 (completed)
+
+Published **20261007T121019Z**. Collected and scored all **104** missing outputs with the
+existing four runners and deployments, unchanged prompts and settings. There
+were no inference-error rows or empty outputs. All **11** participating Markdown
+engines now score the same **92** cached-reference pages. No judge calls, runner
+changes or deployments were needed. Every previously published result is retained
+unchanged; the canonical bundle now contains **4,609 results**, **2,479 inference
+records**, and **2,386 physical source calls**.
+
+| Engine | Added outputs | Scored pages before → after | Mean before | Mean after |
+| --- | ---: | --- | ---: | ---: |
+| deepseek_ocr | 29 | 63 → 92 | 0.6362 | 0.6391 |
+| marker | 10 | 82 → 92 | 0.6313 | 0.6398 |
+| glm_ocr | 35 | 57 → 92 | 0.4820 | 0.5173 |
+| qwen3_vl | 30 | 62 → 92 | 0.7639 | 0.7566 |
+
+Before/after means use different page coverage; they measure correction of the
+comparison cohort, not an inference improvement on identical pages.
+
+Measured warm GPU cost: **$0.131041**. Deduplicated recorded startup GPU cost:
+**$0.477215**. Combined measured GPU cost: **$0.608257**, excluding CPU/RAM, idle
+and other provider billing. Seven batch intervals were counted once each.
+Marker's existing 11-worker startup encountered a shared-cache download conflict
+and recovered through the library's existing downloader handling. Its 328.581
+startup seconds are included above; there was no new model-call retry or code
+change to hide that cost.
+
+Four new responses explicitly stopped at their existing output cap:
+GLM `newspaper_003`, `report_001`; Qwen `newspaper_003`, `report_002`.
+Those saved partial outputs remain scored and their provider stop reasons are
+shown in the evidence. The deployed DeepSeek response does not retain a stop
+reason, so completion cannot be certified from that field. Marker is a document
+pipeline, not a token-generation response. No larger-cap reruns were silently
+added. Existing Gemini/Sonnet prompt-fairness limitations remain disclosed.
+
+Validation checked all 104 exact prompts against their prepared requests, model
+identities, real GPU/batch intervals, nonempty outputs and the common 92-page
+cohort. Reused existing reference checklists. Prior results (including Sonnet's
+new geometry pass) were unchanged. Regenerated both reports and verified the
+canonical bundle hashes. The manifest preserves the exact per-engine plans,
+source-run IDs, output audit and before/after coverage. Intermediate calls,
+runs and temporary audit scripts were removed after publication.
