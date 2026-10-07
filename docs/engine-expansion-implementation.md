@@ -183,7 +183,7 @@ venv) → `paddleocr_vl_1_6`, `opendoc`, `mineru_4_standard`, `teleocr`
   rate of the GPU it actually reports. Seconds per page are not: A10/L4 rows
   cannot be read as slower models than the A100 baseline rows.
 - Use the same fixed scorers and accepted references as the current baseline
-  replay `20261006T221526Z`; see [scoring design](scoring-design.md). KV uses
+  replay `20261007T073234Z`; see [scoring design](scoring-design.md). KV uses
   contextual value-assisted review only when needed; schema uses the frozen
   common field sample. `--skip-judge` reuses cached decisions without spending.
 - Record current provider model IDs. Historical aliases are not proof that a

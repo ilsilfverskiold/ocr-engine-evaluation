@@ -3,18 +3,13 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-06:** the reviewed-reference scorers below are
-implemented and tested offline. The last published scores, run
-`20261002T162630Z`, predate these changes. The sampled schema run
-`20261006T214240Z` has 453 scored results and two server errors. Markdown
-catalogues now cover 92 pages; newspaper_000 remains missing. The remaining
-prompt controls are deferred: the user requested no more paid runs. The combined
-all-leg replay is `20261006T221526Z`; its browser report leaves unresolved KV
-reviews pending and omits historical silver estimates. The inline KV rescore
-from `20261006T195826Z` supplies reusable paid decisions. The new contextual
-value-group reviews are prepared and pending; deterministic split-credit runs
-are withdrawn. The execution checklist is
-[follow-up-2026-10-03.md](follow-up-2026-10-03.md).
+**Implementation status, 2026-10-07:** the six-leg replay `20261007T073234Z`
+uses accepted references and the corrected scorers. KV contextual review is
+complete: 260 scored results, zero pending, 276 judge calls and $1.7346 recorded
+usage. The common sampled-schema run has 453 scored results and two server
+errors. Markdown catalogues cover 92/93 pages. Further paid prompt/pipeline
+controls and retries are deferred; historical silver estimates are excluded.
+See [follow-up-2026-10-03.md](follow-up-2026-10-03.md) for completion details.
 
 ## Prompts and provenance
 
@@ -161,7 +156,11 @@ The shared path is `evaluation/keyvalue_leg.py` → `kv_value_groups.py`, using
 `kv_value_judge.py` for legacy-cache compatibility, budget control and journaling.
 Live runs, saved scoring and rescoring use the same path. `--skip-judge` makes no
 new calls; required uncached reviews stay pending and scores remain provisional.
-Failed/invalid paid replies are saved and never automatically retried.
+Paid replies are saved and never automatically retried. Existing but ineligible
+selected components, incomplete coverage and output reuse reject the proposed
+field match while retaining other valid batch decisions. Invented IDs or malformed
+reply shapes remain errors. Validated journal decisions can be recovered even
+when later aliases change batch composition, avoiding duplicate payment.
 
 KV headline remains `(correct + blank_ok) / selected fields`. Extra pairs are
 visible but do not directly penalize incomplete-reference pages. Native Textract

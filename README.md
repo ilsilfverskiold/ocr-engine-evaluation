@@ -11,7 +11,7 @@ two geometry-only extensions. Additional integrations remain available but unrun
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python run_benchmark.py --report 20261006T221526Z
+python run_benchmark.py --report 20261007T073234Z
 ```
 
 This prints saved results without inference or API calls. For the browser report,
@@ -19,8 +19,8 @@ first download the source pages, then build the self-contained HTML:
 
 ```bash
 python scripts/download_data.py
-python scripts/build_evidence_report.py 20261006T221526Z \
-  --status "Current rescore; 201 KV outputs await contextual review. Further paid controls deferred."
+python scripts/build_evidence_report.py 20261007T073234Z \
+  --status "Completed six-leg rescore; all 260 eligible KV results settled. Further paid controls deferred."
 ```
 
 Open **`results/reports/ocr-benchmark-final.html`**. Filter by engine, document
@@ -30,13 +30,11 @@ to see its supporting metrics in the engine overview, including CER/WER.
 Generated HTML is local and ignored by Git; source records and the builder ship
 with the repository.
 
-**Current status:** 4,505 six-leg results, including N/A, pending and failed rows.
+**Current status:** 4,505 six-leg results, including N/A and failed rows.
 Schema has 453 scored results and two server errors. Markdown uses 92/93 cached
-reference catalogues. KV has 59 settled scores, 201 outputs pending the revised
-contextual judge and 28 pages without structured references. Pending results
-are excluded from means, so the current KV averages are incomplete. Historical
-silver-document estimates are retained in the source ledger but omitted from
-the browser comparison unless `--include-historical-judge` is requested.
+reference catalogues. KV has 260 settled scores across four engines and 65 pages, plus 28
+no-reference rows. No contextual reviews remain pending. Historical silver-document
+estimates remain in older source ledgers and are excluded from this comparison.
 
 ## Data and accepted references
 
@@ -105,7 +103,7 @@ python scripts/build_evidence_report.py NEW_TIMESTAMP
 
 # Prepare exact unresolved KV requests and a cost reserve without sending them.
 python scripts/build_kv_synonyms.py prepare-values \
-  --source 20261006T221526Z --output /tmp/kv-review-plan.json
+  --source 20261007T073234Z --output /tmp/kv-review-plan.json
 ```
 
 Later supplied runs replace earlier answers for the same engine/page/leg. A
@@ -177,10 +175,10 @@ audits when accounting for all attempts rather than just selected answers.
 
 The completed shared-schema extraction recorded approximately $4.7279. Earlier
 value-assisted KV judging recorded $1.4756; the missing-only Markdown catalogue
-run recorded $0.6434. The new KV contextual correction is prepared but **not
-executed**; its $5.56 planning reserve is not spend. Existing raw calls, active
-caches and audit files are retained. No new OCR inference is needed to apply
-that correction to the saved answers.
+run recorded $0.6434. The approved contextual KV correction completed with 276 calls and about
+$1.7346 in recorded usage, below the $5.60 allowance; ten split-field groups
+were accepted and cached. Existing raw calls, active
+caches and audit files are retained. The correction used saved OCR answers and made no new OCR calls.
 
 Cached model-authored catalogues are not human gold and can contain errors.
 A reference shared by all engines does not guarantee neutral ranking effects.

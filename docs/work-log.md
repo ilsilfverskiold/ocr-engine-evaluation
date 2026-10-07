@@ -1940,3 +1940,29 @@ session scratch. Original inference and paid journals remain intact.
   even if later learned aliases change batch composition. This prevents paying
   again for fields already judged. Targeted tests cover both cases; final run
   counts, usage and report verification will be recorded after completion.
+
+### Approved correction completed
+
+- Canonical KV completion `20261007T073055Z`: 276 paid requests, all returned
+  normally (STOP), 3,659 field reviews, $1.7345974 recorded usage against the
+  $5.60 allowance. No OCR calls or repeated paid replies. Ten split groups using
+  23 components accepted. All 260 eligible scores settled; zero pending.
+- Sonnet invoice_001 now scores 19/22, with Seller and Client each assembled by
+  the judge from Name, Address and City. Item/summary amounts are contextual;
+  a single output field is never credited twice. Paid review audit preserves
+  every request ID, accepted group and validation rejection.
+- Final six-leg replay `20261007T073234Z` has 4,505 unique engine/page/leg rows.
+  All five non-KV legs match the preceding combined scores and details exactly;
+  KV reproduces the completed paid run with $0 additional judge cost. Ownership
+  audit of all 260 structured outputs found no cross-field output reuse.
+- Browser report rebuilt at `results/reports/ocr-benchmark-final.html` and checked
+  on seven cases across six legs: filters, split-field evidence, schema error,
+  table cells, native Markdown, text metrics and actual geometry boxes. No browser
+  exceptions. All 2,282 source-call hashes match. JavaScript syntax passes.
+- 426 tests pass. Modal timing/cost audit passes. README, scoring design and
+  follow-up now describe completion and reproduction. Superseded provisional
+  scores and intermediate CSV exports were archived outside the worktree;
+  source calls/ledgers, paid results, audits, gold and unrun engines remain.
+- Final audit: `results/runs/20261007T073234Z_audit.json`. No further paid work
+  is required or planned under the current scope; deferred controls and existing
+  provider/reference limitations are disclosed. No GitHub push performed.

@@ -456,3 +456,11 @@ is given here.
 - Keep revised contextual KV reviews pending until approved; no automatic split
   credit or new paid calls. Archive superseded publication files and document the
   current terminal/browser workflow. 424 tests pass.
+
+### Contextual KV review completed
+
+- 276 approved judge calls, $1.7346 recorded usage (allowance $5.60), zero new
+  OCR calls. All 260 eligible KV results settled; ten split-field groups cached.
+- Final combined run `20261007T073234Z` and browsable report replace provisional
+  exports. Other five legs are unchanged. 426 tests and browser evidence checks
+  pass; all accepted references, source evidence and unrun engines retained.
