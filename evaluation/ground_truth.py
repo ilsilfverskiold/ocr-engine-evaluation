@@ -267,6 +267,10 @@ class GroundTruthLoader:
             gt.json_schema = structured_gold['json_schema']
             gt.structured_note = 'Human-reviewed structured reference (schema and KV gold slot)'
             gt.metadata['structured_gold_reference'] = structured_gold
+            from evaluation.structured_references import load_kv_label_review
+            label_review = load_kv_label_review(document_path, structured_gold)
+            if label_review:
+                gt.metadata['kv_label_review'] = label_review
             previous_repairs = gt.metadata.get('structured_reference_repairs', {})
             gt.metadata['structured_reference_repairs'] = {
                 'version': 'human-structured-gold-v1',

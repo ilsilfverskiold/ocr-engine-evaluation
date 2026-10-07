@@ -4,7 +4,7 @@ from html import escape
 import pytest
 
 from evaluation.ground_truth import GroundTruth
-from evaluation.table_cells import parse_tables
+from evaluation.table_cells import parse_tables, compare_cells
 from evaluation.table_leg import score_tables
 
 
@@ -64,6 +64,35 @@ def test_duplicate_rows_and_tables_reduce_precision():
     assert row.cell_recall == 1 and row.cell_precision == .75
     assert tables.cell_recall == 1 and tables.cell_precision == .5
     assert tables.structure_similarity < 1
+    assert row.score == tables.score == 1
+
+
+def test_extra_columns_do_not_shift_labelled_values_or_reduce_headline():
+    result = score(html(ROWS), html([["Item", "Extra", "2024", "2025"],
+                                  ["Apples", "x", "900", "100"], ["Pears", "y", "800", "200"]]))
+    assert result.score == 1 and result.cell_counts['extra_cells'] == 3
+
+
+def test_transpose_and_table_chunks_keep_label_value_associations():
+    transposed = [list(row) for row in zip(*ROWS)]
+    assert score(html(ROWS), html(transposed)).score == 1
+    assert score(html(ROWS), html(ROWS[:2]) + html([ROWS[0], ROWS[2]])).score == 1
+
+
+def test_repeated_columns_may_reflow_but_not_swap_amounts():
+    ref = [["Date", "Amount", "Date", "Amount"], ["2023-12-29", "$100", "2023-12-21", "$200"]]
+    pred = [["Date", "Amount"], ["2023-12-21", "200"], ["2023-12-29", "100"]]
+    assert score(html(ref), html(pred)).score == 1
+    pred[1][1], pred[2][1] = '100', '200'
+    assert score(html(ref), html(pred)).score < 1
+
+
+def test_partial_text_is_fractional_and_wrong_numbers_do_not_get_substring_credit():
+    result = score(html([["Description", "Price"], ["Red ceramic coffee cup", "$12.34"]]),
+                   html([["Description", "Price"], ["Red ceramic cup", "1234"]]))
+    assert result.cell_counts['partial'] == 1
+    assert .5 < result.score < .75
+    assert result.code_verdicts[-1]['credit'] == 0
 
 
 def test_two_reference_tables_cannot_reuse_one_output_table():
@@ -116,3 +145,11 @@ def test_tsv_keeps_all_tables_and_all_explicit_cells():
     tables = extract_all_tables_html("Name\tValue\nA\t\n\nAnother\tHeader\nB\t2\textra", "mineru")
     assert len(tables) == 2
     assert [len(t.cells) for markup in tables for t in parse_tables(markup)] == [4, 5]
+
+
+def test_blank_header_column_is_not_discarded_by_label_alignment():
+    html = "<table><tr><td></td><td>Net</td><td>VAT</td></tr><tr><td>Total</td><td>10</td><td>2</td></tr></table>"
+    tables = parse_tables(html)
+    result = compare_cells(tables, tables)
+    assert result["score"] == 1
+    assert result["extra_cells"] == 0

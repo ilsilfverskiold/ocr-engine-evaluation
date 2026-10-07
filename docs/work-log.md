@@ -2092,3 +2092,47 @@ rows. Added evidence to the new follow-up; no scorer changes or paid calls.
   CSVs outside Git, keep raw call evidence. No paid inference/judge calls or push.
 - Record remaining genuine engine errors and limitations in the current
   October 7 follow-up and report; do not alter the completed October 3 document.
+
+
+## 2026-10-07 — seven-item scorer, reference and report audit
+
+- Replace the table headline with reference value credit, partial text matching,
+  guarded numeric equivalence, and label-supported layout alternatives. Record
+  extras separately; retain strict F1 and structure diagnostics. Fix blank-header
+  columns found during result inspection. All 47 reference self-comparisons pass.
+- Delegate visual KV review across 65 pages. Version exhaustive per-field
+  decisions and image/gold hashes: 3,902 eligible, 246 newly removed and 103
+  uncertain withheld, preserving 93 prior exclusions. Schema/gold values stay.
+- Include 51 actual layout-box geometry scores. Research official DeepSeek and
+  Sonnet interfaces using the local Modal skill and primary documentation.
+  Fix DeepSeek future region content/provenance and prepare Sonnet pixel/frame
+  handling. Neither deployment nor new paid inference was performed.
+- Replay saved results in 20261007T090753Z: 337 table and 213 KV score changes,
+  51 added geometry scores. Text, Markdown, schema and other geometry unchanged.
+  Assert table credit arithmetic and non-reused physical cells for every result.
+- Add per-document text CER/WER and sortable metrics to the HTML. Full suite:
+  476 passed; final blank-header fix covered by all 20 table tests. Further report
+  checks recorded in the run audit. No new inference/judge calls, spending or push.
+- Temporary files remain outside Git. Disk exhaustion required compressing prior
+  scratch replay copies and removing disposable browser component caches, while
+  preserving source calls, gold, annotations and all unrun engine integrations.
+
+- Compress embedded report data to keep a single offline HTML within available disk space; scores/evidence unchanged.
+
+## 2026-10-07 — remove superseded work, not another archive
+
+- Delete obsolete scored exports and duplicate rescore inference ledgers, old
+  summary CSVs, completed scratch experiments and temporary browser profiles.
+  Preserve the current run, source calls/paid audit evidence, accepted gold and
+  reference editors, active dependencies and all engine integrations.
+- Remove duplicate serialization of selected table verdicts; keep one complete
+  copy and an explicit pointer from its comparison. Current result JSONL is
+  below GitHub's 100 MiB limit; no evidence or score is removed.
+- Canonical report uses compressed embedded data and remains self-contained
+  offline. Browser checks cover 14 cases and 48 ascending/descending sorts,
+  including CER/WER and all three added geometry engines, without exceptions.
+- No push, paid calls, model execution or deployments. Cleanup byte counts and
+  verification are recorded in the current run audit; old scratch copies are
+  deleted rather than relocated.
+
+- Final cleanup removed 1,085,793,190 bytes of superseded files and scratch work. Both October 6/7 audit workspaces are deleted.

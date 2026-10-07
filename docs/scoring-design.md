@@ -3,16 +3,13 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-07:** current run `20261007T084348Z` rescored
-all 915 saved Markdown results with `markdown-structure-v3-spans-reflow`; the other
-five legs are unchanged from `20261007T073234Z`. KV contextual review is
-complete: 260 scored results, zero pending, 276 judge calls and $1.7346 recorded
-usage. The common sampled-schema run has 453 scored results and two server
-errors. Markdown catalogues cover 92/93 pages. Further paid prompt/pipeline
-controls and retries are deferred; historical silver estimates are excluded.
-See [follow-up-2026-10-07.md](follow-up-2026-10-07.md) for the Markdown correction
-and outstanding prompt controls. Earlier KV/schema completion is recorded in
-[follow-up-2026-10-03.md](follow-up-2026-10-03.md).
+**Implementation status, 2026-10-07:** current run `20261007T090753Z` replays
+tables, KV printed-label selection and layout-box geometry from saved calls.
+Text, Markdown, schema and other geometry results remain unchanged from
+`20261007T084348Z`. No new inference or judge calls. KV has 260 settled scores;
+schema has 453 scored results and two server errors. Markdown catalogues cover
+92/93 pages. Further paid controls are deferred. See
+[follow-up-2026-10-07.md](follow-up-2026-10-07.md) for this audit and limitations.
 
 ## Prompts and provenance
 
@@ -130,22 +127,28 @@ Human gold at `documents/table_references/gold/` takes precedence over original
 references; a proposal is never selected automatically. All 42 reviewed pages
 have gold. Schema/KV gold is a separate reference collection.
 
-**Headline: cell F1.** A logical reference/output cell can match only once.
-Cells must retain their row and column association; finding the value elsewhere
-is insufficient. Explicit blank cells participate. Missing cells lose recall;
-wrong or extra cells lose precision; duplicate rows/tables are extra predictions.
-Parser padding is never a real blank cell. A merged cell counts once.
+**Headline: reference value score (`gold-table-values-v2`).** Sum per-cell
+value credit and divide by reference logical cells. Exact normalized text and
+numerically equivalent amounts receive 1; nonnumeric text with character
+similarity at least 0.5 receives that fractional credit; lower similarity and
+incorrect numeric amounts receive 0. Currency formatting may differ; percentage
+units and leading-zero identifiers remain significant. Actual blank cells count;
+parser padding does not. A merged cell counts once.
 
-`precision = correct cells / output cells`, `recall = correct cells / reference
-cells`, and F1 is their harmonic mean. Empty output against nonempty gold scores
-zero. Cell text uses NFKC, case folding and collapsed whitespace while preserving
-punctuation and digits. This is currently stricter than field amount normalization.
+Extra cells, rows and tables do **not** reduce this headline. Report extra-cell
+count/rate, extra-table count and the old strict cell precision/recall/F1 as
+separate diagnostics. Empty output against nonempty gold scores zero.
 
-Tables are assigned one-to-one. Unique first-row headers can identify column
-permutations. Unique descriptive row labels anchor row alignment; otherwise
-positions govern. Every cell verdict retains the association used. Native HTML
-is preferred over a second Markdown export of the same answer; duplicate tables
-within the native result still count as duplicates.
+Keep row/column associations and use each physical output cell at most once.
+Unique headers permit added, missing or reordered columns. Unique descriptive
+row labels or ISO dates identify rows; otherwise positions govern. Repeated
+side-by-side header groups may reflow into a narrow table. Identical-header
+chunks may combine when there is one unambiguous reference table; repeated data
+rows remain extras. A transpose is accepted only when header matching supports
+it, not because it maximizes matching values. Preserve original coordinates and
+component cells in every verdict. Arbitrarily collapsed grids, unrelated values
+elsewhere, and wrong row/value associations are not repaired into perfect scores.
+Native HTML is preferred over a second Markdown export of the same answer.
 
 Supporting structure similarity preserves `rowspan`/`colspan`, ignores decorative
 HTML wrappers/attributes and penalizes unmatched tables. The current `teds` metric
@@ -154,7 +157,7 @@ uses a custom ordered row/cell edit-distance diagnostic with cell-text costs;
 PubTabNet APTED implementation. Table pairing and normalization are recorded.
 
 **Shipping exception:** evaluate the whole page against gold and the frozen
-original separately. Select the higher cell F1, preferring gold on ties, and
+original separately. Select the higher reference value score, preferring gold on ties, and
 retain both comparisons. Never choose individual cells from different references.
 This policy applies to every engine.
 
@@ -168,12 +171,19 @@ dedicated table-only controls have not been run.
 
 The accepted fresh, flat key/value extractions at
 `documents/structured_references/gold/` supply the same accepted keys and expected values for both legs. Storage shape
-does not disqualify a KV field. KV uses the full eligible set. For the current
+does not disqualify a KV field. KV additionally applies the image-reviewed
+`documents/structured_references/kv_label_review.json`: 3,902 fields remain
+eligible, 246 invented-label fields are removed, and 103 uncertain fields are
+withheld, on top of 93 prior exclusions. Printed section/row/column labels may
+supply context; an unlabeled company name does not establish a “Company” key.
+This is a separate agent review, not a new human approval of gold. Gold values
+and schema selection stay unchanged. The overlay records per-field reasons and
+source/gold hashes and refuses stale references. For the current
 schema run, the user requested one shared field sample sized to fit every engine:
 `documents/schema_sample.json` selects 3,316 of 4,251 fields, identically for all
 seven engines. Forty-five pages keep every field; twenty are sampled. Schema
 requests and scoring both use that frozen selection; unexpected keys still
-incur the extra-key penalty. Full gold and KV coverage are unchanged. Reference
+incur the extra-key penalty. Full gold is unchanged; KV selection is recorded separately. Reference
 edits invalidate the sample. There is no three-field minimum. The corpus has 65
 structured pages; uncertain readings remain explicitly excluded from both legs.
 The old nested references remain available as provenance, not the active target.
@@ -238,7 +248,11 @@ Matching is one-to-one. Recall remains the headline; **precision and F1** expose
 extra, duplicated and misplaced predictions. Invalid predictions are counted.
 Line pages use disjoint matched word fragments plus remaining line segments as
 the prediction units; this conversion is explicitly labeled `line_segment`.
-Coarse layout blocks have separate diagnostics, not word scores.
+DeepSeek-OCR, MinerU and PaddleOCR-VL now enter this headline with their actual
+returned layout boxes, explicitly marked `layout_block`. Do not invent word
+boxes by splitting their regions. Coarse-block diagnostics remain separate;
+poor location scores are displayed. Box text uses the region content, with known
+Markdown/HTML rendered to plain text, not the model's region type label.
 
 **Geometry CER/WER use text from the returned boxes**, including unmatched,
 duplicate and invalid-coordinate items. Both sides use deterministic visual

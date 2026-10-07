@@ -41,6 +41,7 @@ class KeyValueScore:
     provisional_accuracy: float | None = None
     judge_errors: list[str] = field(default_factory=list)
     judge_reviews: list[dict] = field(default_factory=list)
+    label_review: dict = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -71,6 +72,7 @@ class KeyValueScore:
     def as_detail(self) -> dict[str, Any]:
         return {
             "cleanup": self.cleanup_log,
+            "label_review": self.label_review,
             "unresolved_keys": self.unresolved_keys,
             "synonym_reference_id": self.synonym_reference_id,
             "pending_key_review": self.pending_key_review,
@@ -112,7 +114,7 @@ def score_key_value(
     for item in res.unresolved:
         key, value = pairs[item['index']]
         item['value'] = value
-        candidates = [f.path for f in reference_fields(gt) if relation(f.value, value, f.path)]
+        candidates = [f.path for f in reference_fields(gt, "key_value") if relation(f.value, value, f.path)]
         item['candidate_reference_fields'] = candidates
         item['decision'] = ('contextual value review pending' if any(p in candidates for p in pending)
                             else 'see cached contextual field reviews; no automatic value credit' if candidates
@@ -131,4 +133,5 @@ def score_key_value(
         synonym_reference_id=reference_id(gt),
         judge_cost_usd=resolution.cost_usd, judge_errors=resolution.errors,
         judge_reviews=resolution.decisions,
+        label_review=gt.metadata.get("kv_label_review", {}),
     )

@@ -814,3 +814,25 @@ def test_explicit_blank_field_cannot_borrow_another_fields_blank():
     result = score_fields(items, [[pairs[0][0], ""], [pairs[1][0], "O'Conner"]],
                           "key_value", aliases)
     assert result.verdicts[0].verdict == "blank_ok"
+
+
+def test_kv_printed_label_selection_does_not_change_schema_or_cache_identity():
+    from evaluation.shared_fields import reference_fields, reference_id, score_shared
+    gt = _gt({'Company':'Acme', 'Total':'100'}, {'type':'object','properties':{'Company':{'type':'string'},'Total':{'type':'string'}}})
+    old_id = reference_id(gt)
+    gt.metadata['kv_label_review'] = {'fields': {'Company': {'decision':'remove'}, 'Total':{'decision':'keep'}}}
+    assert reference_id(gt) == old_id
+    assert len(reference_fields(gt)) == 2
+    assert [f.path for f in reference_fields(gt, 'key_value')] == ['Total']
+    assert score_shared(gt, [('Total','100')], 'key_value').accuracy == 1
+    assert score_shared(gt, [('Total','100')], 'schema').accuracy == .5
+
+
+def test_kv_label_selection_does_not_request_judgment_for_invented_key(monkeypatch, tmp_path):
+    from evaluation import kv_value_judge as legacy
+    from evaluation.kv_value_groups import prepare
+    monkeypatch.setattr(legacy, 'CACHE_ROOT', tmp_path)
+    gt = _gt({'Company':'Acme', 'Total':'100'}, {'type':'object','properties':{'Company':{'type':'string'},'Total':{'type':'string'}}})
+    gt.metadata['kv_label_review'] = {'fields': {'Company':{'decision':'remove'}, 'Total':{'decision':'keep'}}}
+    _, _, _, _, requests = prepare(gt, [('Business','Acme'), ('Total','100')])
+    assert requests == []

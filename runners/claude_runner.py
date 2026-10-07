@@ -10,6 +10,37 @@ from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 _MAX_BYTES = 4_900_000  # Claude API hard limit is 5MB; stay under with margin
 
 
+def _geometry_input(path: Path):
+    """Known standard-tier frame; no implicit provider coordinate resizing.
+
+    https://platform.claude.com/docs/en/build-with-claude/vision-coordinates
+    """
+    import math
+    from PIL import Image, ImageOps
+    image = ImageOps.exif_transpose(Image.open(path)).convert('RGB')
+    original = image.size
+    scale = min(1.0, 1568 / max(original))
+    while True:
+        width, height = [max(1, int(v * scale)) for v in original]
+        if math.ceil(width / 28) * math.ceil(height / 28) <= 1568:
+            break
+        scale *= .995
+    if image.size != (width, height):
+        image = image.resize((width, height), Image.Resampling.LANCZOS)
+    buf = io.BytesIO()
+    image.save(buf, format='PNG')
+    prompt = (
+        f"Locate every visible word in this {width} by {height} pixel image. "
+        'Return only a JSON array of {"text":"printed word","bbox":[left,top,right,bottom]}. '
+        'Use absolute pixel coordinates in this supplied image, with (0,0) at the top left, '
+        'x increasing rightward and y downward. Give one tight rectangle per word at its actual '
+        'printed location. Keep punctuation attached. Do not combine words into lines, reconstruct '
+        'a cleaner layout, or infer positions from reading order. Include headers, footers and table text.'
+    )
+    return buf.getvalue(), prompt, {'source_size': list(original), 'sent_size': [width, height],
+                                    'recipe': 'sonnet-geometry-pixels-v2', 'coordinates': 'absolute pixels in sent image'}
+
+
 def _prepare_image(path: Path) -> tuple[bytes, str]:
     """Return (bytes, media_type), compressing if the image exceeds Claude's 5MB limit."""
     raw = path.read_bytes()
@@ -55,11 +86,16 @@ class ClaudeRunner(OCRRunner):
     def run(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
         t0 = self._timer()
         raw_bytes, media_type = _prepare_image(document_path)
-        b64 = base64.standard_b64encode(raw_bytes).decode()
 
         # task=None reproduces leg 1 byte for byte.
         prompt = task.prompt if task else self._PROMPT
         output_cap = 4096
+        geometry_frame = None
+        if task and task.leg == 'geometry':
+            raw_bytes, prompt, geometry_frame = _geometry_input(document_path)
+            media_type = 'image/png'
+            output_cap = 32768
+        b64 = base64.standard_b64encode(raw_bytes).decode()
         kwargs: dict = {}
         if task and task.wants_json:
             # Preserve the benchmark's prompt-based JSON route. No assistant
@@ -88,6 +124,19 @@ class ClaudeRunner(OCRRunner):
         elapsed = self._elapsed(t0)
 
         text = message.content[0].text if message.content else ""
+        structured = {}
+        if geometry_frame:
+            from evaluation.geometry_leg import _box_items, _extract_box
+            width, height = geometry_frame['sent_size']
+            items = _box_items(text) or []
+            words = []
+            for item in items:
+                box = _extract_box(item) if isinstance(item, dict) else None
+                words.append({**item, 'pixel_bbox': list(box),
+                              'bbox': [box[0]/width, box[1]/height, box[2]/width, box[3]/height]}
+                             if box else item)
+            structured = {'words': words, 'geometry_coordinates': 'normalized_from_recorded_pixel_frame',
+                          'geometry_frame': geometry_frame}
         usage = message.usage
         cost = (
             usage.input_tokens * INPUT_PRICE_PER_TOKEN
@@ -98,7 +147,7 @@ class ClaudeRunner(OCRRunner):
             engine_name=self.name,
             document_path=str(document_path),
             raw_text=text,
-            structured_output={},
+            structured_output=structured,
             latency_seconds=elapsed,
             cost_per_page=cost,
             page_count=1,
@@ -111,6 +160,7 @@ class ClaudeRunner(OCRRunner):
                 "max_output_tokens": output_cap,
                 "temperature": kwargs.get("temperature", "provider_default"),
                 "sdk_max_retries": 0,
+                "geometry_frame": geometry_frame,
                 # A reply cut off at max_tokens is invalid JSON that looks like
                 # the model failing the leg. stop_reason is the difference.
                 "stop_reason": getattr(message, "stop_reason", None),

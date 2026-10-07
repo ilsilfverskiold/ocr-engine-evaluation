@@ -101,15 +101,18 @@ def prepare(gt, pairs):
     _, synonyms = legacy._cache_maps(record)
     synonyms = {**load_synonyms(gt), **synonyms}
     assigned, unresolved, used = match_keys(gt, pairs, 'key_value', synonyms)
+    eligible = {f.path for f in reference_fields(gt, 'key_value')}
     refs = [{'id': i, 'key': f.path, 'value': f.value}
             for i, f in enumerate(reference_fields(gt), 1)]
     context_id = digest({'version': VERSION, 'reference_id': reference_id(gt), 'pairs': pairs})
-    reviews = record.get('context_reviews', {}).get(context_id, [])
+    reviews = [r for r in record.get('context_reviews', {}).get(context_id, []) if r['reference_key'] in eligible]
     completed = {r['reference_key'] for r in reviews}
     approved = [r for r in reviews if r['indices']]
     used = used | {i for r in approved for i in r['indices']}
     items = []
     for ref in refs:
+        if ref['key'] not in eligible:
+            continue
         hit = assigned.get(ref['key'])
         repair_id = None
         if ref['key'] in completed:

@@ -82,3 +82,23 @@ def load_gold_structured(document_path: Path) -> dict | None:
     validate_structured_record(record)
     record['path'] = str(path)
     return record
+
+
+def load_kv_label_review(document_path: Path, gold: dict) -> dict | None:
+    """Versioned KV-only selection; never rewrite the supplied-schema contract."""
+    from evaluation.structured_metrics import walk_fields
+    path = document_path.parents[2] / 'structured_references' / 'kv_label_review.json'
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding='utf-8'))
+    page = data.get('pages', {}).get(document_path.stem)
+    if page is None:
+        return None
+    if page['gold_sha256'] != hashlib.sha256(Path(gold['path']).read_bytes()).hexdigest():
+        raise ValueError(f'KV label review needs refresh after gold edit: {document_path.stem}')
+    if page['image_sha256'] != gold['image_sha256']:
+        raise ValueError(f'KV label review source image changed: {document_path.stem}')
+    paths = {f.path for f in walk_fields(gold['true_json'], gold['json_schema'])}
+    if set(page['fields']) != paths or any(v['decision'] not in ('keep', 'remove', 'uncertain') for v in page['fields'].values()):
+        raise ValueError(f'Incomplete or invalid KV label selection: {document_path.stem}')
+    return {**page, 'version': data['version'], 'reviewer': data['reviewer'], 'path': str(path)}

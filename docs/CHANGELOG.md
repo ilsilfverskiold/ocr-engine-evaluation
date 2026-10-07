@@ -4,6 +4,16 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-07 — table values, printed KV labels, geometry and report audit
+
+- Table headline becomes reference value credit with partial text matching and
+  supported layout normalization. Extras, strict F1 and structure stay separate.
+- Apply a hash-checked printed-label review to KV only; schema/gold values stay.
+- Include 51 actual layout-box geometry results. Prepare Sonnet pixel prompting
+  without running it; fix DeepSeek region content/type and future call metadata.
+- Add per-document text CER/WER and sortable overview/document metrics.
+- Replay saved outputs in `20261007T090753Z`; no new inference or judge calls.
+
 ## 2026-10-07 — preserve repeated-column relationships in Markdown reflow
 
 - Recognize repeated column groups rendered as one narrow table, with matching

@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v6 (2026-10-06; annotation scope, extra predictions and box-text CER/WER)"
+SCORER_VERSION = "geometry-v7 (2026-10-07; include returned layout boxes without inventing words)"
 
 
 @dataclass
@@ -71,6 +71,7 @@ class GeometryScore:
     reference_text: str = ""
     predicted_text: str = ""
     scoring_unit: str = "word"
+    prediction_granularity: str = "word_or_line"
     scope: dict = field(default_factory=dict)
     excluded_predictions: list[dict[str, Any]] = field(default_factory=list)
 
@@ -103,6 +104,7 @@ class GeometryScore:
             "geometry_wer": self.wer,
             "geometry_invalid_boxes": self.invalid_boxes,
             "geometry_scoring_unit": self.scoring_unit,
+            "geometry_prediction_granularity": self.prediction_granularity,
             "geometry_scope": self.scope,
             "geometry_outside_scope_predictions": len(self.excluded_predictions),
         }

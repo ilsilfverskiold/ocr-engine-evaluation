@@ -16,7 +16,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
-KV_VERSION = "shared-fields-v5-judged-value-groups"
+KV_VERSION = "shared-fields-v6-printed-label-selection"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -28,8 +28,11 @@ def reference_id(gt) -> str:
     return hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
-def reference_fields(gt):
+def reference_fields(gt, leg=None):
     excluded = set((gt.metadata.get("structured_gold_reference") or {}).get("excluded_fields", []))
+    if leg == 'key_value':
+        excluded.update(path for path, item in gt.metadata.get('kv_label_review', {}).get('fields', {}).items()
+                        if item['decision'] != 'keep')
     return [f for f in walk_fields(gt.true_json, None) if f.path and f.path not in excluded]
 
 
@@ -66,7 +69,7 @@ def _numbered_line_key(key: str) -> tuple[str, str] | None:
 
 
 def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
-    fields = reference_fields(gt)
+    fields = reference_fields(gt, leg)
     candidates = defaultdict(set)
     gold = gt.metadata.get("structured_gold_reference") or {}
     for f in fields:
@@ -129,7 +132,7 @@ class Result:
 
 
 def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None) -> Result:
-    fields = reference_fields(gt)
+    fields = reference_fields(gt, leg)
     synonyms = load_synonyms(gt) if leg == "key_value" else {}
     if leg == "key_value":
         synonyms.update(confirmed_synonyms or {})

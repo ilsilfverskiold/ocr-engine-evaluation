@@ -1,6 +1,6 @@
-"""Gold-reference table evaluation: cell precision/recall/F1 and structure.
+"""Gold-reference table value credit, with precision/recall/F1 and structure diagnostics.
 
-Logical cells, including blanks, count once; output extras reduce precision.
+Logical cells, including blanks, count once; extras reduce diagnostic precision only.
 Native tables take precedence over another rendering of the same answer.
 Every table/row/cell matches at most once. Shipping alone accepts the better
 whole-page comparison against the original or human-gold reference.
@@ -65,6 +65,7 @@ class TableScore:
     code_verdicts: list[dict] = field(default_factory=list)
     scorer: str | None = None
     cell_f1: float | None = None
+    value_accuracy: float | None = None
     cell_precision: float | None = None
     cell_recall: float | None = None
     structure_similarity: float | None = None
@@ -75,6 +76,8 @@ class TableScore:
 
     @property
     def score(self) -> float | None:
+        if self.value_accuracy is not None:
+            return self.value_accuracy
         if self.cell_f1 is not None:
             return self.cell_f1
         if self.cell_accuracy is not None:
@@ -84,7 +87,7 @@ class TableScore:
     def as_metrics(self) -> dict[str, Any]:
         d: dict[str, Any] = {}
         if self.cell_f1 is not None:
-            d.update(cell_f1=self.cell_f1, cell_precision=self.cell_precision,
+            d.update(table_value_accuracy=self.value_accuracy, cell_f1=self.cell_f1, cell_precision=self.cell_precision,
                      cell_recall=self.cell_recall, structure_similarity=self.structure_similarity,
                      scorer=self.scorer, selected_reference=self.selected_reference,
                      **self.cell_counts)
@@ -121,7 +124,14 @@ class TableScore:
         }
         if self.code_verdicts:
             d["verdicts"] = self.code_verdicts
-        d["reference_comparisons"] = self.reference_comparisons
+        # Selected verdicts already live at detail.verdicts; avoid serializing
+        # the same large evidence array twice. Keep alternative verdicts.
+        d["reference_comparisons"] = {
+            name: ({**{k: v for k, v in result.items() if k != "verdicts"},
+                    "verdicts_location": "detail.verdicts"}
+                   if name == self.selected_reference else result)
+            for name, result in self.reference_comparisons.items()
+        }
         d["selected_reference"] = self.selected_reference
         d["output_tables"] = self.output_tables
         return d
@@ -407,13 +417,14 @@ def score_tables(
     if not comparisons:
         return TableScore(applicable=False, reason="table reference parsed to no logical cells")
     # In a tie, prefer gold. Dict insertion order above makes this deterministic.
-    selected = max(comparisons, key=lambda name: comparisons[name]["f1"])
+    selected = max(comparisons, key=lambda name: comparisons[name]["score"])
     winner = comparisons[selected]
     ref = parsed_refs[selected]
     counts = {key: winner[key] for key in ("correct", "reference_cells", "output_cells",
-              "reference_blank_cells", "output_blank_cells", "correct_blank_cells")}
+              "reference_blank_cells", "output_blank_cells", "correct_blank_cells",
+              "partial", "value_credit", "extra_cells", "extra_cell_rate", "extra_tables", "reference_physical_cells")}
     return TableScore(
-        applicable=True, cell_f1=winner["f1"], cell_precision=winner["precision"],
+        applicable=True, value_accuracy=winner["score"], cell_f1=winner["f1"], cell_precision=winner["precision"],
         cell_recall=winner["recall"], structure_similarity=winner["structure_similarity"],
         teds=winner["teds"], reference_cells=winner["reference_cells"],
         output_cells=winner["output_cells"], reference_rows=sum(t.rows for t in ref),

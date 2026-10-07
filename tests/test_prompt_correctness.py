@@ -415,3 +415,51 @@ def test_llama_schema_submits_once_and_polls_existing_job(monkeypatch, tmp_path)
     result = runner._run_extract(path, schema)
     assert len(calls) == 2  # One submission each; failed polling did not resubmit.
     assert 'saved-job' in result.error and result.raw_response['job']['id'] == 'saved-job'
+
+
+def test_deepseek_grounding_labels_are_not_recognized_words():
+    import ast
+    path = Path(__file__).parent.parent / 'modal_apps/deepseek_ocr_app.py'
+    tree = ast.parse(path.read_text())
+    nodes = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in ('_clean_deepseek_output', '_html_table_to_text')]
+    ns = {}
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), 'exec'), ns)
+    raw = '<|ref|>title<|/ref|><|det|>[[0, 0, 999, 99]]<|/det|>\n# Actual title'
+    text, so = ns['_clean_deepseek_output'](raw, preserve_markdown=True)
+    assert text == '# Actual title'
+    assert 'words' not in so
+    assert so['layout_blocks'][0]['content'] == '# Actual title'
+    assert so['regions'][0]['label'] == 'title'
+
+
+def test_sonnet_geometry_records_sent_frame_and_normalizes_pixels(monkeypatch, tmp_path):
+    import math
+    from types import SimpleNamespace
+    from PIL import Image
+    from runners.base import OCRTask
+    from runners import claude_runner as module
+    path = tmp_path / 'page.png'
+    Image.new('RGB', (2400, 3200), 'white').save(path)
+    sent = {}
+    def generate(**kw):
+        sent.update(kw)
+        return SimpleNamespace(content=[SimpleNamespace(text='[{"text":"Word","bbox":[100,200,300,240]}]')],
+                               usage=SimpleNamespace(input_tokens=1, output_tokens=1), stop_reason='end_turn')
+    runner = module.ClaudeRunner.__new__(module.ClaudeRunner)
+    runner._client = SimpleNamespace(messages=SimpleNamespace(create=generate))
+    runner._model = 'claude-sonnet-4-6'
+    monkeypatch.setattr(module, 'provider_payload', lambda _: {})
+    result = runner.run(path, OCRTask(leg='geometry', prompt='old normalized prompt'))
+    w, h = result.metadata['geometry_frame']['sent_size']
+    assert max(w,h) <= 1568 and math.ceil(w/28)*math.ceil(h/28) <= 1568
+    assert 'absolute pixel' in result.metadata['prompt_used']
+    assert result.structured_output['words'][0]['bbox'] == [100/w,200/h,300/w,240/h]
+    assert sent['max_tokens'] == 32768
+    import json
+    import run_benchmark as rb
+    monkeypatch.setattr(rb, 'OCR_OUTPUTS_DIR', tmp_path / 'saved')
+    rb._write_ocr_output(runner.name, path, SimpleNamespace(tier='hard', doc_type='form'), result.raw_text,
+                         'test', 'geometry', result=result,
+                         task=OCRTask(leg='geometry', prompt='old normalized prompt'), legs=('geometry',))
+    saved = json.loads(next((tmp_path / 'saved').rglob('*.call.json')).read_text())
+    assert saved['prompt_sent'] == result.metadata['prompt_used']

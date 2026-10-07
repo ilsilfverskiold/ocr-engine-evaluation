@@ -140,7 +140,7 @@ LEGS: dict[str, LegSpec] = {
             "multiline cell text into unrelated rows, or turn unrelated prose/form "
             "fields into table rows."
         ),
-        scored_on="cell F1, precision/recall and span-aware structure similarity",
+        scored_on="reference value credit; extras, strict cell F1 and structure reported separately",
         method="one-to-one cell matching against reviewed table references",
         pass_name="tables",
     ),

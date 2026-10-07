@@ -11,7 +11,7 @@ two geometry-only extensions. Additional integrations remain available but unrun
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python run_benchmark.py --report 20261007T084348Z
+python run_benchmark.py --report 20261007T090753Z
 ```
 
 This prints saved results without inference or API calls. For the browser report,
@@ -19,18 +19,23 @@ first download the source pages, then build the self-contained HTML:
 
 ```bash
 python scripts/download_data.py
-python scripts/build_evidence_report.py 20261007T084348Z \
-  --status "Markdown scorer rebuilt; all saved outputs replayed. Other legs unchanged; paid controls deferred."
+python scripts/build_evidence_report.py 20261007T090753Z \
+  --status "Tables and KV selection rescored; layout geometry included. Saved outputs only; Sonnet pixel recipe unrun."
 ```
 
 Open **`results/reports/ocr-benchmark-final.html`**. Filter by engine, document
 type, leg and page. It shows source images, exact prompts, returned field pairs,
 logical table cells, actual returned boxes and per-item verdicts. Select a leg
 to see its supporting metrics in the engine overview, including CER/WER.
-Generated HTML is local and ignored by Git; source records and the builder ship
+Click metric headings to sort highest/lowest; document rows include text CER/WER.
+The self-contained report compresses its embedded data and opens offline in a
+current browser. Generated HTML is local and ignored by Git; source records and the builder ship
 with the repository.
 
 **Current status:** 4,505 six-leg results, including N/A and failed rows.
+Tables use partial reference value credit; extras and strict F1 are separate.
+Geometry has 196 scored results, including 51 layout-box results for DeepSeek-OCR,
+MinerU and PaddleOCR-VL. Sonnet's pixel recipe is prepared but unrun.
 Markdown matching was rebuilt and replayed across all 915 saved results; its
 matched spans are inspectable in the report. Schema has 453 scored results and two server errors. Markdown uses 92/93 cached
 reference catalogues. KV has 260 settled scores across four engines and 65 pages, plus 28
@@ -48,8 +53,14 @@ Accepted references are versioned here:
 - `documents/structured_references/gold/`: 65 accepted shared KV/schema references.
 - `documents/table_references/old/shipping_*.json`: five shipping alternatives.
 - `documents/schema_sample.json`: the same 3,316 of 4,251 eligible fields for
-  every schema engine; KV retains the full set. Forty-five pages keep all fields,
+  every schema engine. Forty-five pages keep all fields,
   twenty are sampled to fit the inference limits.
+- `documents/structured_references/kv_label_review.json`: image-reviewed KV
+  selection retaining 3,902 printed-label fields, removing 246 invented labels
+  and withholding 103 uncertain cases. Schema gold is unchanged.
+
+Superseded result exports and scratch copies were removed; historical tracked
+versions remain in Git history. Only current CSV exports remain.
 
 Local review editors, proposals and save history remain available in this
 checkout but are not required by the scorer and are not published with Git.
@@ -104,7 +115,7 @@ python scripts/build_evidence_report.py NEW_TIMESTAMP
 
 # Prepare exact unresolved KV requests and a cost reserve without sending them.
 python scripts/build_kv_synonyms.py prepare-values \
-  --source 20261007T084348Z --output /tmp/kv-review-plan.json
+  --source 20261007T090753Z --output /tmp/kv-review-plan.json
 ```
 
 Later supplied runs replace earlier answers for the same engine/page/leg. A

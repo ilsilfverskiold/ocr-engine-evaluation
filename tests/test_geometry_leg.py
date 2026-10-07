@@ -417,3 +417,16 @@ def test_fuzzy_line_evidence_keeps_the_engines_actual_spelling():
     assert result.located_words == 1
     assert result.matches[0]["text"] == "193.00"
     assert result.matches[0]["predicted_text"] == "1193.00"
+
+
+def test_layout_engines_enter_geometry_with_actual_boxes():
+    import run_benchmark as rb
+    from evaluation.ground_truth import GroundTruth
+    gt = GroundTruth('documents/hard/form/x.png', 'hard', 'form', 'One Two',
+                     word_boxes=[{'text':'One','bbox':[0,.1,.2,.2]}, {'text':'Two','bbox':[.2,.1,.4,.2]}])
+    so = {'layout_blocks':[{'content':'One Two','bbox':[0,.1,.4,.2]}]}
+    result = rb.score_leg('geometry', 'mineru', '', gt, so, use_judge=False)
+    assert result.applicable and result.score == 0
+    assert result.prediction_granularity == 'layout_block'
+    assert len(result.scored_boxes) == 1
+    assert result.cer == result.wer == 0

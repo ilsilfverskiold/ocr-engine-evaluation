@@ -164,13 +164,16 @@ def _clean_deepseek_output(raw_text: str, preserve_markdown: bool = False) -> tu
     # Boxes are region-level, not word-level — a ref can hold a whole line or
     # heading — so the geometry scorer's line-merging path is the right
     # comparison, not one box per word.
-    words: list[dict] = []
+    layout_blocks: list[dict] = []
     regions: list[dict] = []
-    for match in re.finditer(
+    matches = list(re.finditer(
         r"<\|ref\|>(.*?)<\|/ref\|>\s*<\|det\|>\s*(\[\[.*?\]\])\s*<\|/det\|>",
         raw_text, flags=re.S,
-    ):
+    ))
+    for index, match in enumerate(matches):
         label = re.sub(r"<[^>]+>", " ", match.group(1)).strip()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(raw_text)
+        content = raw_text[match.end():end].strip()
         try:
             boxes = json.loads(match.group(2))
         except Exception:
@@ -183,7 +186,7 @@ def _clean_deepseek_output(raw_text: str, preserve_markdown: bool = False) -> tu
             except (TypeError, ValueError):
                 continue
             if label:
-                words.append({"text": label, "bbox": [x0, y0, x1, y1]})
+                layout_blocks.append({"content": content, "bbox": [x0, y0, x1, y1], "label": label})
                 # Kept whole, labels included, so the figure detector below can
                 # be checked against what the model really emits.
                 regions.append({"label": label, "bbox": [x0, y0, x1, y1]})
@@ -203,10 +206,9 @@ def _clean_deepseek_output(raw_text: str, preserve_markdown: bool = False) -> tu
     text = "\n".join(line.rstrip() for line in text.splitlines()).strip()
 
     structured_output: dict = {"tables": tables} if tables else {}
-    if words:
-        # The geometry scorer reads structured_output["words"] before falling
-        # back to the text, so this is all that is needed to enter that leg.
-        structured_output["words"] = words
+    if layout_blocks:
+        # ref contains a region TYPE (text/title/table), not recognized words.
+        structured_output["layout_blocks"] = layout_blocks
     if regions:
         structured_output["regions"] = regions
     # Keep what the model actually said. This cleaner deletes every
@@ -546,4 +548,10 @@ class DeepSeekOCRInference:
             "gpu_seconds": gpu_seconds,
             "gpu_type": GPU_TYPE,
             "model_version": f"{MODEL_ID} via vllm-server",
+            "finish_reason": data["choices"][0].get("finish_reason"),
+            "usage": data.get("usage", {}),
+            "inference_config": {"model_revision": MODEL_REVISION, "vllm_version": VLLM_VERSION,
+                                 "max_model_len": 8192, "max_tokens": payload["max_tokens"],
+                                 "prompt": payload["messages"][0]["content"][1]["text"],
+                                 "temperature": 0, "vllm_xargs": payload["vllm_xargs"]},
         }

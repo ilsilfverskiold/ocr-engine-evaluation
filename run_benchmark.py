@@ -498,9 +498,9 @@ def _write_ocr_output(
             # the prompt it actually used, because a stored `null` becomes
             # unreadable as soon as that default changes.
             "prompt_sent": (
-                getattr(task, "prompt", None)
-                or ((getattr(result, "raw_response", None) or {}).get("prompt_used"))
+                ((getattr(result, "raw_response", None) or {}).get("prompt_used"))
                 or ((getattr(result, "metadata", None) or {}).get("prompt_used"))
+                or getattr(task, "prompt", None)
             ),
             "response_format": getattr(task, "response_format", None),
             "json_schema_sent": getattr(task, "json_schema", None) is not None,
@@ -558,8 +558,8 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         from evaluation.geometry_leg import score_geometry, score_blocks
         so = structured_output or {}
         spec = ENGINES[engine]
-        # Layout parsers return one box per paragraph/title/table, never per
-        # word: not applicable on the word leg, scored as blocks instead.
+        # Score the actual returned boxes even when their granularity is coarse.
+        # Do not manufacture word boxes by dividing layout regions.
         # Each adapter reads what the engine actually stored (the run's own
         # adapters lost DeepSeek's text — region labels were stored as the
         # box text — and passed nothing for Paddle).
@@ -567,8 +567,12 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         if blocks is not None:
             if not gt.has_gt_for("geometry"):
                 return score_geometry(None, gt)
-            result = score_blocks(blocks, gt.word_boxes, gt.word_boxes_granularity)
-            result.reference_repairs = gt.metadata.get("geometry_reference_repairs", {})
+            diagnostic = score_blocks(blocks, gt.word_boxes, gt.word_boxes_granularity)
+            result = score_geometry(blocks, gt, infer_scale=False)
+            result.block_score = diagnostic.block_score
+            result.words_per_box = diagnostic.words_per_box
+            result.prediction_granularity = "layout_block"
+            result.reason = "actual layout boxes scored against reference units; no synthetic word boxes"
             return result
         if engine == "marker":
             # marker's regions are lines/spans; the run left HTML tags in
@@ -587,7 +591,8 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             # pipeline failure, never a 0.0 (paddle, run 20260810).
             raise RuntimeError("native geometry engine returned no boxes to score "
                                "(adapter/pipeline failure, not an engine score)")
-        return score_geometry(predicted, gt, infer_axis_order=(engine == "gemini_flash"))
+        return score_geometry(predicted, gt, infer_axis_order=(engine == "gemini_flash"),
+                              infer_scale=not bool(so.get("geometry_coordinates")))
     raise ValueError(f"No scorer for leg {leg!r}")
 
 
@@ -605,6 +610,7 @@ def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
     """Layout blocks (text + bbox 0-1) for the block-level engines, from what
     the run stored; None for every other engine."""
     import re as _re
+    from evaluation.metrics import _markdown_to_plain
     if engine not in BLOCK_GEOMETRY_ENGINES:
         return None
     if engine == "deepseek_ocr":
@@ -615,14 +621,14 @@ def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
                 boxes = json.loads(m.group(2))
             except Exception:
                 continue
-            text = m.group(3).strip()
+            text = _markdown_to_plain(m.group(3)).strip()
             for b in boxes:
                 if isinstance(b, (list, tuple)) and len(b) == 4:
                     # DeepSeek's 0-999 grid, divided as the run's adapter did
                     out.append({"text": text, "bbox": [float(v) / 999.0 for v in b]})
         return out
     # mineru and paddleocr_vl: layout_blocks with bbox (0-1) and content
-    return [{"text": b.get("content") or b.get("text") or "", "bbox": b["bbox"]}
+    return [{"text": _markdown_to_plain(b.get("content") or b.get("text") or "").strip(), "bbox": b["bbox"]}
             for b in (so.get("layout_blocks") or []) if b.get("bbox")]
 
 
@@ -1306,7 +1312,8 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     methods = set()
     from evaluation.shared_fields import KV_VERSION
     from evaluation.markdown_structure import VERSION as MARKDOWN_VERSION
-    current_versions = {"markdown": MARKDOWN_VERSION, "tables": "gold-table-cells-v1",
+    from evaluation.table_cells import VERSION as TABLE_VERSION
+    current_versions = {"markdown": MARKDOWN_VERSION, "tables": TABLE_VERSION,
                         "key_value": KV_VERSION, "schema": "shared-fields-v1"}
     current_only = True
     for record in records:
@@ -1338,6 +1345,9 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
                         else "deterministic")
     method = "; ".join(sorted(methods)) if methods else "no scored rows"
     current_only = bool(methods) and current_only
+    if leg == 'tables' and records and all((r.get('metrics') or {}).get('scorer') == 'gold-table-cells-v1'
+                                           for r in records if r.get('applicable') and r.get('score') is not None):
+        return 'cell F1, precision/recall and span-aware structure similarity', method
     if leg in ("markdown", "tables", "key_value", "schema") and not current_only:
         return "saved headline score (see per-row metrics)", method
     return spec.scored_on, method
@@ -1685,11 +1695,11 @@ def _diagnose(record: dict) -> str:
     if leg == "tables":
         if reason:
             return reason
-        if m.get("scorer", "").startswith("gold-table-cells-"):
+        if m.get("scorer", "").startswith("gold-table-"):
             counts = Counter(v["verdict"] for v in (record.get("detail") or {}).get("verdicts", []))
             return (f"{m.get('correct', 0)}/{m.get('reference_cells', 0)} reference cells correct; "
                     f"{m.get('output_cells', 0)} returned cells; "
-                    f"{counts['wrong']} wrong, {counts['missing']} missing, {counts['extra']} extra; "
+                    f"{counts['partial']} partial, {counts['wrong']} wrong, {counts['missing']} missing, {counts['extra']} extra (separate diagnostic); "
                     f"{m.get('correct_blank_cells', 0)}/{m.get('reference_blank_cells', 0)} blanks correct")
         if "verdict_grids" in m:
             return (f"{m['verdict_grids']} parsed table grid(s); checklist: "
