@@ -4,6 +4,17 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-07 — preserve repeated-column relationships in Markdown reflow
+
+- Recognize repeated column groups rendered as one narrow table, with matching
+  headers, unique row anchors and ordered value checks. Never borrow across tables.
+- Correct three bank_000 catalogue transcription errors against the image and
+  accepted human gold; retain original text and provenance. Gold is unchanged.
+- Reserve full-row evidence for complete ordered-cell matches, including rows
+  containing blank padding cells. Keep CER/WER separate and unchanged.
+- Run `20261007T084348Z` replays all 915 Markdown results; other five legs unchanged.
+  LlamaParse bank_000 changes 0.3500 → 0.4750. No new paid calls.
+
 ## 2026-10-07 — locate Markdown content before checking structure
 
 - Rebuild the shared Markdown matcher around exact/partial content spans,

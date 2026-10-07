@@ -90,8 +90,12 @@ for r in rows:
  item['method']=rb._recorded_scoring_method(r['leg'],[r])[1] if r['leg'] in rb.ALL_LEGS else 'Separate model-judged estimate; check saved version and historical status.'
  if r['leg']=='markdown' and str((r.get('metrics') or {}).get('scorer','')).startswith('markdown-structure-'):
   item['method']='Actual Markdown/HTML types and one-to-one block matching. Full-string content similarity: ≥0.85 correct; 0.50–0.85 partial; wrong type scores zero. Bold is not a heading. CER/WER measure text separately.'
- if r['leg']=='markdown' and (r.get('metrics') or {}).get('scorer')=='markdown-structure-v2-spans':
-  item['method']='Locate full/partial content first, then check actual Markdown/HTML structure. Distinct spans may share a paragraph; credited text cannot be reused. Table rows compare ordered nonempty cells; empty padding is ignored here (the table leg scores blanks). Correct + half partial, divided by reference items. CER/WER remain separate.'
+ if r['leg']=='markdown' and (r.get('metrics') or {}).get('scorer')in ('markdown-structure-v2-spans','markdown-structure-v3-spans-reflow'):
+  item['method']='Locate full/partial content first, then check actual Markdown/HTML structure. Distinct spans may share a paragraph; credited text cannot be reused. Table rows compare ordered nonempty cells. Empty padding is ignored here (the table leg scores blanks). Correct + half partial, divided by reference items. CER/WER remain separate.'
+  if r['metrics']['scorer']=='markdown-structure-v3-spans-reflow':
+   item['method']+=' Repeated column groups can reflow under matching headers with unique row anchors.'
+   if e=='llamaparse' and Path(d).stem=='bank_000':
+    item['case_note']='Source-image review: the returned Account Transfers Out row contains the opening balances, and ETF numeric values shift onto the following funds. Consultant/address/preference text is omitted. Daily Date/Amount pairs may legitimately reflow into a narrow table; this score now accepts that layout while checking each date’s own amount. Three cached reference typos were corrected against the image and accepted gold. See docs/follow-up-2026-10-07.md for exact comparisons.'
  if r['leg']=='geometry':
   item['method']='One-to-one text/box matching and mutual centre containment. Recall is the headline; precision/F1 and box-text CER/WER are separate. Scope and line/word units are recorded below.'
  if r['leg']=='key_value' and (r.get('metrics') or {}).get('kv_scorer')=='shared-fields-v5-judged-value-groups':

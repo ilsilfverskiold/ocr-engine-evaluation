@@ -3,8 +3,8 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-07:** current run `20261007T082525Z` rescored
-all 915 saved Markdown results with `markdown-structure-v2-spans`; the other
+**Implementation status, 2026-10-07:** current run `20261007T084348Z` rescored
+all 915 saved Markdown results with `markdown-structure-v3-spans-reflow`; the other
 five legs are unchanged from `20261007T073234Z`. KV contextual review is
 complete: 260 scored results, zero pending, 276 judge calls and $1.7346 recorded
 usage. The common sampled-schema run has 453 scored results and two server
@@ -66,7 +66,7 @@ Tables require a valid Markdown separator or HTML table; plain TSV is not
 Markdown table formatting. One outer Markdown code fence may be unwrapped as
 transport packaging; JSON/Python code fences remain code.
 
-The active scorer is `markdown-structure-v2-spans`. Locate the expected content
+The active scorer is `markdown-structure-v3-spans-reflow`. Locate the expected content
 first, then inspect its actual rendered block type. Search exact occurrences
 and boundary-aligned partial spans; compare the **whole expected content** with
 the candidate span. A partial-search similarity is never itself the score.
@@ -100,6 +100,13 @@ Empty padding cells are ignored for this Markdown comparison; the separate
 gold-table leg scores blanks and grid shape. Split item rows are not silently
 merged and cannot receive full row credit. Partial verdicts retain content and
 ordered-cell similarities so a description alone is not evidence for prices.
+
+Repeated side-by-side column groups may reflow into one narrow table. This
+requires an explicit repeating reference header, matching output headers, and a
+unique first-cell anchor for each group in that same output table. Each date or
+item stays paired with its own values. Duplicate anchors, different tables and
+changed amounts cannot earn full credit. Fully credited rows consume and show
+all their tokens, including content around blank padding cells.
 
 New catalogue text is literal. Legacy catalogue inline emphasis is decoded
 without interpreting numbered cell text as a Markdown list. Saved verdicts

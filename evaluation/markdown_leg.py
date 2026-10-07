@@ -268,7 +268,7 @@ def _similarity(a: str, b: str) -> float:
 
 
 def _match_blocks(
-    reference: list[Block], hypothesis: list[Block]
+    reference: list[Block], hypothesis: list[Block], output_markdown: str | None = None
 ) -> tuple[list[tuple[Block, Block]], int]:
     """Use the same content/structure contract as the catalogue headline.
 
@@ -288,7 +288,7 @@ def _match_blocks(
             return "<table><tr>" + "".join(f"<{cell}>{html.escape(v)}</{cell}>" for v in block.text.split("|")) + "</tr></table>"
         name = tag.get(block.kind, "p")
         return f"<{name}>{html.escape(block.text)}</{name}>"
-    text = "\n".join(markup(b) for b in hypothesis)
+    text = output_markdown if output_markdown is not None else "\n".join(markup(b) for b in hypothesis)
     matches, _ = match_items(text, [{"type": b.kind, "content": b.text} for b in reference])
     covered: dict[int, set[int]] = {}
     pairs = []
@@ -364,7 +364,7 @@ def score_markdown(
             applicable=False, reason="markdown reference parsed to no blocks"
         )
 
-    pairs, consumed = _match_blocks(reference, hypothesis)
+    pairs, consumed = _match_blocks(reference, hypothesis, output_markdown)
     matched = len(pairs)
     # Precision counts every output block that fed a matched reference — an
     # engine that split one annotated block into five is not four blocks wrong.
@@ -447,7 +447,9 @@ def _score_catalogue(output_markdown, gt, det_kwargs):
                      "wrong_type": res.wrong_type, "absent": res.absent,
                      "engine_blocks": res.blocks},
         code_verdicts=[{"n": v.index, "type": v.type, "content": v.content,
-                        "verdict": v.verdict, "how": v.how, "evidence": v.evidence} for v in res.verdicts],
+                        "verdict": v.verdict, "how": v.how, "evidence": v.evidence,
+                        **({"reference_review": items[v.index-1]["reference_review"]}
+                           if items[v.index-1].get("reference_review") else {})} for v in res.verdicts],
         scorer=VERSION,
         **det_kwargs,
     )

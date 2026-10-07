@@ -2072,3 +2072,23 @@ rows. Added evidence to the new follow-up; no scorer changes or paid calls.
   design, README and changelog describe the implemented contract and current run.
   Cached image-authored catalogue text/types remain annotation limitations; this
   replay is not a claim that all catalogue annotations were human-certified.
+
+
+## 2026-10-07 — investigate LlamaParse bank_000 and accept valid column reflow
+
+- Verify account-row and ETF value shifts, omitted text and daily-balance reflow
+  against the image and accepted gold. Fix three cached catalogue typos while
+  preserving old text, reasons and hashes; human gold and sidecars stay unchanged.
+- Add general repeated-column matching: require matching headers, a unique row
+  anchor and that row’s own values in the same table. Reject duplicate anchors,
+  swapped values and cross-table borrowing. Complete row matches reserve all
+  their content, including around empty cells.
+- Replay all 915 Markdown rows in `20261007T084348Z`: 10 headline
+  changes; 908 scored and seven missing-catalogue N/A. Other legs and CER/WER
+  unchanged. Audit all verdicts: no overlapping credited spans or unexplained
+  exact-content/absent contradictions. LlamaParse bank_000: 0.3500 → 0.4750.
+- Validation: 467 offline tests; 11 browser cases across all six legs,
+  no JavaScript exceptions. Rebuild canonical HTML and CSVs, archive superseded
+  CSVs outside Git, keep raw call evidence. No paid inference/judge calls or push.
+- Record remaining genuine engine errors and limitations in the current
+  October 7 follow-up and report; do not alter the completed October 3 document.

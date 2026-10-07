@@ -11,7 +11,7 @@ two geometry-only extensions. Additional integrations remain available but unrun
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python run_benchmark.py --report 20261007T082525Z
+python run_benchmark.py --report 20261007T084348Z
 ```
 
 This prints saved results without inference or API calls. For the browser report,
@@ -19,7 +19,7 @@ first download the source pages, then build the self-contained HTML:
 
 ```bash
 python scripts/download_data.py
-python scripts/build_evidence_report.py 20261007T082525Z \
+python scripts/build_evidence_report.py 20261007T084348Z \
   --status "Markdown scorer rebuilt; all saved outputs replayed. Other legs unchanged; paid controls deferred."
 ```
 
@@ -104,7 +104,7 @@ python scripts/build_evidence_report.py NEW_TIMESTAMP
 
 # Prepare exact unresolved KV requests and a cost reserve without sending them.
 python scripts/build_kv_synonyms.py prepare-values \
-  --source 20261007T082525Z --output /tmp/kv-review-plan.json
+  --source 20261007T084348Z --output /tmp/kv-review-plan.json
 ```
 
 Later supplied runs replace earlier answers for the same engine/page/leg. A

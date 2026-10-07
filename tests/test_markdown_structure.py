@@ -228,3 +228,36 @@ def test_single_record_table_preserves_column_label_value_relationships():
 def test_numeric_signs_and_leading_decimal_are_not_lost(returned):
     m, _ = match_items("Total: " + returned, [{"type": "key_value", "content": "Total: 100"}])
     assert m[0].verdict != "correct"
+
+
+def test_repeated_date_amount_columns_can_reflow_without_losing_associations():
+    items = [{"type": "table_row", "content": "Date | Amount | Date | Amount"},
+             {"type": "table_row", "content": "2023-12-29 | $707,431.00 | 2023-12-21 | $706,832.00"}]
+    text = "| Date | Amount |\n|---|---|\n| 2023-12-29 | $707,431.00 |\n| 2023-12-21 | $706,832.00 |"
+    m, _ = match_items(text, items)
+    assert [v.verdict for v in m] == ["correct", "correct"]
+    assert "reflowed repeated-column groups" in m[1].how
+    swapped = text.replace('$707,431.00', '$TEMP').replace('$706,832.00', '$707,431.00').replace('$TEMP', '$706,832.00')
+    m, _ = match_items(swapped, items)
+    assert m[1].verdict != "correct"
+
+
+def test_reflow_does_not_borrow_from_separate_or_duplicate_date_rows():
+    items = [{"type": "table_row", "content": "Date | Amount | Date | Amount"},
+             {"type": "table_row", "content": "2023-12-29 | $100 | 2023-12-21 | $200"}]
+    text = "| Date | Amount |\n|---|---|\n| 2023-12-29 | $100 |\n\n| Date | Amount |\n|---|---|\n| 2023-12-21 | $200 |"
+    m, _ = match_items(text, items)
+    assert m[1].verdict != "correct"
+
+    duplicate = "| Date | Amount |\n|---|---|\n| 2023-12-29 | $100 |\n| 2023-12-29 | $900 |\n| 2023-12-21 | $200 |"
+    m, _ = match_items(duplicate, items)
+    assert m[1].verdict != "correct"
+
+
+def test_complete_row_with_blank_cell_owns_all_credited_content():
+    text = "| Account | Volume | Stores |\n|---|---|---|\n| Kroger | | 21 |"
+    m, _ = match_items(text, [{"type": "table_row", "content": "Kroger | | 21"},
+                              {"type": "paragraph", "content": "Kroger"}])
+    assert m[0].verdict == "correct"
+    assert m[0].evidence[0]["text"] == "kroger | | 21"
+    assert m[1].verdict != "correct"

@@ -14,14 +14,14 @@ from bs4 import BeautifulSoup, NavigableString
 import markdown
 from rapidfuzz.fuzz import ratio, partial_ratio_alignment
 
-VERSION = "markdown-structure-v2-spans"
+VERSION = "markdown-structure-v3-spans-reflow"
 
 
 def normalized(text: str) -> str:
     return " ".join(unicodedata.normalize("NFKC", text).casefold().split()).rstrip(" .:;,-")
 
 
-def blocks(text: str, *, field_tables: list | None = None) -> list[tuple[str, str, int]]:
+def blocks(text: str, *, field_tables: list | None = None, tables: list | None = None) -> list[tuple[str, str, int]]:
     from evaluation.markdown_leg import strip_wrapping_fence
     html = markdown.markdown(strip_wrapping_fence(text or ""), extensions=["tables", "fenced_code", "sane_lists"])
     soup = BeautifulSoup(html, "html.parser")
@@ -53,6 +53,9 @@ def blocks(text: str, *, field_tables: list | None = None) -> list[tuple[str, st
                         c.get_text(" ", strip=True) for c in cells))
                     if len(result) > before:
                         table_rows.append((before, header, cells))
+            if tables is not None and table_rows and all(
+                str(c.get(a, "1")) == "1" for row in table_rows for c in row[2] for a in ("rowspan", "colspan")):
+                tables.append([row[0] for row in table_rows])
             # A single-record table explicitly associates column labels with
             # values directly below. Multi-row/merged grids need more context;
             # do not invent a field association across them.
@@ -201,9 +204,71 @@ def _compatible(expected: str, actual: str) -> bool:
             or (expected == "key_value" and actual in ("paragraph", "heading", "list_item")))
 
 
+def _reflow_proposals(items, parsed, tables):
+    """Repeated column groups may reflow into one narrow table.
+
+    Requires an explicit repeating header in the reference and matching actual
+    table headers. Each group's first cell anchors a unique output row, so
+    amounts cannot be borrowed from a different date/item or a different table.
+    This is not arbitrary joining of table-row fragments.
+    """
+    active = None
+    for i, item in enumerate(items):
+        kind = item.get("type")
+        if kind not in ("table_header", "table_row"):
+            active = None
+            continue
+        text = _reference_text(item.get("content", ""), item.get("content_format", "plain"))
+        cells = _cells(text)
+        pattern = None
+        for width in range(1, len(cells)//2+1):
+            if (len(cells) % width == 0 and cells == cells[:width] * (len(cells)//width)
+                and all(any(c.isalpha() for c in cell) for cell in cells[:width])):
+                pattern = cells[:width]
+                break
+        if pattern:
+            active = pattern
+        if not active or len(cells) % len(active):
+            continue
+        for table in tables:
+            header = table[0]
+            if parsed[header][0] != "table_header":
+                continue
+            actual_header = [c for c in _cells(parsed[header][1]) if tokens(c)]
+            if [tokens(c) for c in active] != [tokens(c) for c in actual_header]:
+                continue
+            chosen, scores, complete = [], [], True
+            if pattern:
+                chosen, scores = [header], [1.0]
+                total = 1
+            else:
+                groups = [cells[j:j+len(active)] for j in range(0, len(cells), len(active))]
+                total = len(groups)
+                for group in groups:
+                    anchored = [j for j in table[1:] if len(_cells(parsed[j][1])) == len(active)
+                                and tokens(_cells(parsed[j][1])[0]) == tokens(group[0])]
+                    if len(anchored) != 1 or anchored[0] in chosen:
+                        scores.append(0.0)
+                        complete = False
+                        continue
+                    j = anchored[0]
+                    similarity, intact = _row_similarity(group, _cells(parsed[j][1]))
+                    chosen.append(j)
+                    scores.append(similarity)
+                    complete &= intact
+            sim = sum(scores)/max(1,total)
+            if not chosen or sim < .5:
+                continue
+            locations = tuple((j,k) for j in chosen for k in range(len(tokens(parsed[j][1]))))
+            verdict = "correct" if complete and sim >= .85 else "partial"
+            yield (2 if sim >= .85 else 1, sim, verdict == "correct", len(tokens(text)),
+                   -len(locations), -i, locations, verdict, "table_header" if pattern else "table_row",
+                   sim, f"reflowed repeated-column groups; {len(chosen)}/{total} groups located under matching headers")
+
+
 def match_items(text: str, items: list[dict]) -> tuple[list[Match], list[tuple[str, str, int]]]:
-    field_tables = []
-    parsed = blocks(text, field_tables=field_tables)
+    field_tables, tables = [], []
+    parsed = blocks(text, field_tables=field_tables, tables=tables)
     candidates = []
     for i, (kind, content, _) in enumerate(parsed):
         words = tokens(content)
@@ -260,6 +325,10 @@ def match_items(text: str, items: list[dict]) -> tuple[list[Match], list[tuple[s
                 cell_similarity = sim
                 spans = [(a, b, max(sim, _similarity(expected, candidate.words[a:b])), complete)
                          for a, b in _windows(expected, candidate.words)]
+                if complete and sim >= .85:
+                    # Full ordered-cell credit consumes and displays the full
+                    # row, including content around empty padding cells.
+                    spans = [(0, len(candidate.words), sim, True)]
             else:
                 spans = [(a, b, _similarity(expected, candidate.words[a:b]),
                           _numbers(expected) == _numbers(candidate.words[a:b]))
@@ -290,11 +359,12 @@ def match_items(text: str, items: list[dict]) -> tuple[list[Match], list[tuple[s
                 # paragraph resemblance must not hide exact text in a table.
                 priority = 2 if sim >= .85 else 1
                 proposals.append((priority, sim, verdict == "correct", len(expected), -len(locations), -item_index,
-                                  locations, verdict, candidate.kind, cell_similarity))
+                                  locations, verdict, candidate.kind, cell_similarity, ""))
+    proposals.extend(_reflow_proposals(items, parsed, tables))
     used = set()
     conflicts = set()
     matches = [Match("absent", "no matching content span", [], 0.0) for _ in items]
-    for priority, sim, _, _, _, negative_index, locations, verdict, kind, cell_similarity in sorted(proposals, key=lambda p: p[:6], reverse=True):
+    for priority, sim, _, _, _, negative_index, locations, verdict, kind, cell_similarity, note in sorted(proposals, key=lambda p: p[:6], reverse=True):
         i = -negative_index
         if matches[i].verdict != "absent":
             continue
@@ -314,6 +384,8 @@ def match_items(text: str, items: list[dict]) -> tuple[list[Match], list[tuple[s
                f"content similarity {sim:.3f}")
         if cell_similarity is not None:
             how += f"; ordered-cell similarity {cell_similarity:.3f}"
+        if note:
+            how += "; " + note
         if verdict == "partial":
             how += "; incomplete/different content or cell structure"
         matches[i] = Match(verdict, how, indices, sim, evidence)
