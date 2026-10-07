@@ -1925,3 +1925,18 @@ session scratch. Original inference and paid journals remain intact.
   Headless browser checked seven cases across all six legs without exceptions;
   inspected KV and geometry screenshots. Terminal Modal timing/cost audit passes.
   Reproducible audit: `results/runs/20261006T221526Z_audit.json`.
+
+## 2026-10-07 — approved contextual KV correction
+
+- User approved the prepared corrective batch with the existing $5.60 allowance.
+  Rechecked the plan identity unchanged before execution. Run `20261007T072107Z`
+  reuses saved OCR calls and only requests unresolved contextual KV decisions.
+- Live replies exposed a local validation issue: selecting an existing but
+  ineligible component rejected an entire batch. Such a selection now rejects
+  only that proposed field match, like incomplete coverage or output reuse.
+  Invented IDs still leave malformed responses pending. No candidate rule was
+  relaxed and no invalid group receives credit.
+- Added recovery of validated context decisions from the paid-response journal
+  even if later learned aliases change batch composition. This prevents paying
+  again for fields already judged. Targeted tests cover both cases; final run
+  counts, usage and report verification will be recorded after completion.

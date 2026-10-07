@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
+from functools import lru_cache
 import json
 import os
 import re
@@ -171,20 +172,26 @@ def validate(request, reply):
             raise ValueError('Invalid value-group verdict')
         ids = row['output_ids']
         allowed = {p['output_id'] for p in item['candidates']}
-        if (not isinstance(ids, list) or any(type(i) is not int or i not in allowed for i in ids)
+        if (not isinstance(ids, list) or any(type(i) is not int or i not in outputs for i in ids)
                 or len(set(ids)) != len(ids) or type(row['synonym']) is not bool
                 or not isinstance(row['reason'], str)):
             raise ValueError('Invalid output IDs or synonym flag')
+        # An existing but ineligible output is a failed proposed match, just
+        # like incomplete coverage. Reject that field without discarding other
+        # valid decisions in the already-paid batch. Invented IDs remain a
+        # malformed response above. Never widen candidates to accept the reply.
+        ineligible = bool(set(ids) - allowed)
         conflict = bool((used - {item.get('repair_output_id')}) & set(ids))
         covered = not ids or complete_coverage(item['expected'], [outputs[i]['value'] for i in ids], item['reference_key'])
-        accepted = ids if not conflict and covered else []
+        accepted = ids if not ineligible and not conflict and covered else []
         used.update(accepted)
         # A substring-dependent approval must never turn into a free key alias.
         reusable = (len(accepted) == 1 and row['synonym']
                     and value_equal(item['expected'], outputs[accepted[0]]['value'], [item['reference_key']]))
         entries.append({'reference_key': item['reference_key'], 'indices': [i - 1 for i in accepted],
                         'synonym': bool(reusable), 'reason': row['reason'],
-                        'validation_error': ('output reused' if conflict else 'incomplete value coverage' if not covered else None),
+                        'validation_error': ('selected output is not a value candidate' if ineligible else
+                                             'output reused' if conflict else 'incomplete value coverage' if not covered else None),
                         'proposed_output_ids': ids, 'request_id': request['id']})
     return entries
 
@@ -199,11 +206,60 @@ class Resolution:
     errors: list = field(default_factory=list)
 
 
+@lru_cache(maxsize=4)
+def _journal_reviews(root):
+    """Recover paid context decisions even when later aliases regroup batches."""
+    from evaluation.kv_synonyms import decode_reply
+    indexed = {}
+    for path in sorted((root / 'calls').glob('*.json')):
+        saved = json.loads(path.read_text())
+        request = saved.get('request', {})
+        if request.get('version') != VERSION or not saved.get('raw_text'):
+            continue
+        try:
+            entries = validate(request, decode_reply(saved['raw_text']))
+        except (ValueError, TypeError, KeyError):
+            continue  # Keep malformed responses pending; never silently retry.
+        indexed.setdefault((request['reference_id'], request['context_id']), []).extend(entries)
+    return indexed
+
+
+def _recover_context(gt, pairs):
+    from evaluation import kv_value_judge as legacy
+    rid = reference_id(gt)
+    context = digest({'version': VERSION, 'reference_id': rid, 'pairs': pairs})
+    entries = _journal_reviews(legacy.CACHE_ROOT).get((rid, context), [])
+    if not entries:
+        return
+    record = legacy._read(gt)
+    reviews = record.setdefault('context_reviews', {}).setdefault(context, [])
+    known = {r['reference_key'] for r in reviews}
+    used = {i for r in reviews for i in r['indices']}
+    added = False
+    for entry in entries:
+        if entry['reference_key'] in known or used.intersection(entry['indices']):
+            continue
+        reviews.append(entry)
+        known.add(entry['reference_key'])
+        used.update(entry['indices'])
+        added = True
+        if entry['synonym']:
+            key, value = pairs[entry['indices'][0]]
+            alias = {'key': str(key), 'value': value, 'reference_key': entry['reference_key'],
+                     'synonym': True, 'request_id': entry['request_id']}
+            legacy._limit_repeated_aliases([alias], [f.path for f in reference_fields(gt)])
+            if alias['synonym']:
+                record['decisions'].append(alias)
+    if added:
+        legacy._save(gt, record)
+
+
 def resolve(gt, pairs, use_judge=None):
     from evaluation import kv_value_judge as legacy
     result = Resolution()
     with legacy._locks[str(legacy._path(gt))]:
         legacy._recover_saved(gt)
+        _recover_context(gt, pairs)
         record, context, synonyms, groups, requests = prepare(gt, pairs)
         enabled = use_judge is not False and bool(os.environ.get('GOOGLE_API_KEY'))
         while requests:

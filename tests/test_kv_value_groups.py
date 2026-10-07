@@ -193,6 +193,39 @@ def test_malformed_response_stays_pending_without_retry(monkeypatch):
     assert result.score is None and result.judge_errors and len(calls) == 1
 
 
+def test_ineligible_existing_component_rejects_only_its_field(monkeypatch):
+    # Native OCR sometimes puts address text in a key with an empty value.
+    # The judge cannot use that empty value as a component, but its unrelated
+    # valid verdict must survive and must not require another paid request.
+    calls = fake_judge(monkeypatch, lambda r: {'1': verdict([1,2]), '2': verdict([3])})
+    ref = gt({'Address':'Main Street London', 'Amount due':'8.50'})
+    text = '{"Address line":"Main Street","London":"","Total":"8.50"}'
+    result = score_key_value(text,ref,'x')
+    assert result.score == .5
+    assert result.judge_reviews[0]['validation_error'] == 'selected output is not a value candidate'
+    assert result.judge_reviews[1]['indices'] == [2]
+    assert score_key_value(text,ref,'x',use_judge=False).score == .5
+    assert len(calls) == 1
+
+
+def test_journal_recovery_reuses_paid_fields_when_aliases_change_batch(monkeypatch):
+    ref = gt({'Party':'Example Ltd Main Street', 'Total':'8.50'})
+    pairs = [('Name','Example Ltd'),('Address','Main Street'),('Amount due','8.50')]
+    request = groups.prepare(ref,pairs)[-1][0]
+    saved = {'request':request,'raw_text':json.dumps({'1':verdict([1,2]),'2':verdict([3],True)})}
+    calls_dir=legacy.CACHE_ROOT/'calls';calls_dir.mkdir()
+    (calls_dir/(request['id']+'.json')).write_text(json.dumps(saved))
+    # A later alias changes batching but must not cause another paid call.
+    record=legacy._read(ref)
+    record['decisions'].append({'key':'Amount due','value':'8.50','reference_key':'Total',
+                                'synonym':True,'request_id':'earlier-valid-alias'})
+    legacy._save(ref,record)
+    assert len(groups.prepare(ref,pairs)[-1][0]['review_items'])==1
+    monkeypatch.setattr(legacy,'_ask',lambda r: pytest.fail('must reuse journal without calling'))
+    result=score_key_value(json.dumps(dict(pairs)),ref,'x',use_judge=False)
+    assert result.score==1 and not result.pending_key_review
+
+
 def test_gold_edit_invalidates_context_review(monkeypatch):
     fake_judge(monkeypatch,lambda r:{'1':verdict([1,2])})
     ref = gt({'Party':'Example Ltd Main Street'})
