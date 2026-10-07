@@ -241,3 +241,17 @@ Chrome. Temporary checks and intermediate run artifacts removed after publishing
 Still outstanding: the separately prepared 17-call Sonnet pixel-coordinate
 geometry rerun remains **unrun and unapproved** under the no-further-paid-runs
 constraint. This commit does not claim that prompt control is complete.
+
+## Approved Sonnet geometry rerun — 2026-10-07 (running)
+
+The user explicitly approved execution of the prepared geometry recipe. Started
+run `20261007T113310Z`: the same 17 reference pages, Claude Sonnet 4.6, known-frame
+absolute pixel coordinates, temperature 0, 32,768 output cap, streaming, no SDK
+retries, no judge, stop on provider error. The documented total allowance is $9.
+The exact offline plan was checked against the historical page set before launch.
+
+The inference ledger now records the runner's actual prompt, matching the saved
+call payload instead of the task's generic normalized-coordinate prompt. The
+HTML comparison's geometry notice derives from the saved requests, so it cannot
+continue saying the pixel prompt is unrun after publication. Other legs and
+engines will be inherited unchanged. Completion and spend are recorded below.

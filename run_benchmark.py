@@ -2804,7 +2804,7 @@ def main() -> None:
             "legs": list(plan.legs),
             # docs/scoring-design.md rule 2: a result whose prompt cannot be
             # reproduced is not a result. None = the engine's own default ask.
-            "prompt_used": task.prompt if task is not None else None,
+            "prompt_used": metadata.get("prompt_used") or (task.prompt if task is not None else None),
             "latency_seconds": latency if is_batch else round(latency, 3),
             "cost_per_page": cost if is_batch else round(cost, 6),
             "startup_seconds": round(startup, 3),

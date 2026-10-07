@@ -45,6 +45,17 @@ def build(rows, inference, run, output, evidence_name='ocr-benchmark-evidence.ht
                     **ops[engine]))
             result[leg] = engines
         data[scope] = result
+    sonnet_geometry = [r for r in inference if r['engine_name'] == 'claude_sonnet_4_6'
+                       and r.get('pass_name') == 'geometry' and not r.get('error')]
+    pixel_calls = sum('absolute pixel coordinates in this supplied image' in (r.get('prompt_used') or '')
+                      for r in sonnet_geometry)
+    if pixel_calls:
+        geometry_note = (f"Sonnet geometry uses the pixel-coordinate prompt on {pixel_calls}/{len(sonnet_geometry)} "
+                         "successful saved calls. Coordinates are normalized using each recorded sent-image frame. "
+                         "Prompt improvements do not guarantee correct boxes; inspect the overlays and stop reasons.")
+    else:
+        geometry_note = ("Sonnet geometry still uses the saved normalized-coordinate requests; "
+                         "the prepared pixel-coordinate rerun is not represented in these results.")
     payload = dict(scopes=data, legs=LEGS, labels=LABELS, metrics=metrics, methods=METHOD,
                    evidence=evidence_name, cases=analysis['cases'])
     encoded = json.dumps(payload, allow_nan=False, separators=(',', ':')).replace('<', '\\u003c')
@@ -66,7 +77,7 @@ def build(rows, inference, run, output, evidence_name='ocr-benchmark-evidence.ht
 <div class="controls"><label>Difficulty <select id="tier"><option value="">All difficulties</option><option>easy</option><option>medium</option><option>hard</option></select></label><label>Document family <select id="family"><option value="">All document families</option></select></label><button id="reset">Reset filters</button></div>
 <section><h2>Scores by engine and leg</h2><p class="muted">Full scores; higher is better. Best values are highlighted. Click any column to rank engines; click a score for its evidence. Scores from different legs are not blended.</p><div id="overview" class="scroll">__INITIAL__</div></section>
 <section><div id="tabs" class="tabs" role="tablist" aria-label="Evaluation leg"></div><h2 id="leg-title"></h2><p id="method"></p><p id="scope-note" class="muted"></p><div id="ranking" class="scroll"></div><p class="muted">Full = all scored pages. Without outliers = the same scores with the common low-page exclusions below. Pages shows Full → retained. Supporting metrics use Full pages; parentheses show fewer available metric pages. Click any metric to sort; click again to reverse. N/A stays last.</p><details><summary>Other metrics for this leg</summary><div id="extra" class="scroll"></div></details><h2>Cost and latency</h2><div id="operations" class="scroll"></div><p class="muted">Actual saved pass serving each scored page; steady-state where recorded. Lowest cost first initially. Shared calls are paid once: do not sum costs across legs. Excludes judge, startup and failed-call spend. Local $0 excludes machine expense.</p><details><summary>Outlier exclusions for this leg</summary><p>At least three engines scored the page, all ≤0.25, with no failed or pending participant. Every engine uses the same excluded page/leg cases. This is a sensitivity comparison, not proof the references are wrong.</p><div id="exclusions"></div></details><p><a id="leg-evidence" href="__EVIDENCE__">Inspect this leg’s document results and evidence →</a></p></section>
-<details><summary>Aggregation and current limitations</summary><p>Scores average pages within each difficulty/document-family group, then weight those groups equally, matching the terminal report. Errors and N/A are excluded from means and shown separately. Different page coverage can affect rankings. Removing a whole group can change the average in either direction.</p><p>Difficulty filters also work for small legs, but the default compares all their pages together. Cost and latency are arithmetic page means and include their own coverage counts.</p><p class="note">Sonnet geometry still uses the saved normalized-coordinate requests; the prepared pixel-coordinate rerun has not been run. Historical general-model default answers do not establish a dedicated Markdown/table prompt comparison. Exact prompts and stop reasons are in the evidence.</p></details><noscript><p>JavaScript enables filters, metric tables and sorting. The overall scores above remain visible.</p></noscript></main>
+<details><summary>Aggregation and current limitations</summary><p>Scores average pages within each difficulty/document-family group, then weight those groups equally, matching the terminal report. Errors and N/A are excluded from means and shown separately. Different page coverage can affect rankings. Removing a whole group can change the average in either direction.</p><p>Difficulty filters also work for small legs, but the default compares all their pages together. Cost and latency are arithmetic page means and include their own coverage counts.</p><p class="note">__GEOMETRY_NOTE__ Historical general-model default answers do not establish a dedicated Markdown/table prompt comparison. Exact prompts and stop reasons are in the evidence.</p></details><noscript><p>JavaScript enables filters, metric tables and sorting. The overall scores above remain visible.</p></noscript></main>
 <script id="comparison-data" type="application/json">__DATA__</script><script>
 const D=JSON.parse(document.getElementById('comparison-data').textContent),$=id=>document.getElementById(id);let leg='text';const sort={};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -90,7 +101,8 @@ $('tabs').innerHTML=D.legs.map(l=>'<button role="tab" data-leg="'+l+'">'+D.label
 </script></html>'''
     replacements = {'__RUN__': esc(run), '__ENGINES__': str(len(all_engines)),
                     '__PAGES__': str(len({r['document_path'] for r in rows})),
-                    '__EVIDENCE__': esc(evidence_name), '__INITIAL__': initial, '__DATA__': encoded}
+                    '__EVIDENCE__': esc(evidence_name), '__INITIAL__': initial, '__DATA__': encoded,
+                    '__GEOMETRY_NOTE__': esc(geometry_note)}
     for key, value in replacements.items():
         template = template.replace(key, value)
     output = Path(output)
