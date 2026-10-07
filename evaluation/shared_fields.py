@@ -17,7 +17,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
-KV_VERSION = "shared-fields-v6-printed-label-selection"
+KV_VERSION = "shared-fields-v7-native-row-context"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -69,7 +69,7 @@ def _numbered_line_key(key: str) -> tuple[str, str] | None:
     return None
 
 
-def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
+def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None, native_matches: dict | None = None):
     fields = reference_fields(gt, leg)
     candidates = defaultdict(set)
     gold = gt.metadata.get("structured_gold_reference") or {}
@@ -83,7 +83,9 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
     for f in fields:
         if re.match(r"^\d{1,2}[a-z]?\s*[—–-]", f.path, re.I):
             numbered[_numbered_line_key(f.path)].add(f.path)
-    proposals, unresolved = [], []
+    proposals = [(-1, hit['index'], path, hit['how']) for path, hit in (native_matches or {}).items()
+                 if path in by_path]
+    unresolved = []
     for i, (key, value) in enumerate(pairs):
         key = str(key)
         if key in gold.get("excluded_fields", []):
@@ -110,9 +112,10 @@ def match_keys(gt, pairs, leg: str, synonyms: dict[str, str] | None = None):
                     unresolved.append({"index": i, "key": key})
     assigned, used = {}, set()
     for _, i, key, how in sorted(proposals):
-        if key not in assigned:
+        if key not in assigned and i not in used:
             assigned[key] = (i, how)
             used.add(i)
+    unresolved = [item for item in unresolved if item['index'] not in used]
     return assigned, unresolved, used
 
 
@@ -132,13 +135,15 @@ class Result:
     verdicts: list[FieldVerdict] = field(default_factory=list)
 
 
-def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None) -> Result:
+def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None, native_matches: dict | None = None) -> Result:
     fields = reference_fields(gt, leg)
     synonyms = load_synonyms(gt) if leg == "key_value" else {}
     if leg == "key_value":
         synonyms.update(confirmed_synonyms or {})
-    assigned, unresolved, used = match_keys(gt, pairs, leg, synonyms)
-    groups = {g['reference_key']: g for g in (confirmed_groups or [])} if leg == "key_value" else {}
+    assigned, unresolved, used = match_keys(gt, pairs, leg, synonyms, native_matches)
+    protected = {v['index'] for v in (native_matches or {}).values()}
+    groups = {g['reference_key']: g for g in (confirmed_groups or [])
+              if g['reference_key'] not in (native_matches or {}) and not protected.intersection(g['indices'])} if leg == "key_value" else {}
     group_indices = {i for g in groups.values() for i in g['indices']}
     unresolved = [item for item in unresolved if item['index'] not in group_indices]
     verdicts = []

@@ -194,3 +194,50 @@ with explicit blank-field instructions and cache identities reflecting the full
 context. Update the report observation and rescore affected saved outputs.
 This turn only audited the result: no scorer/cache changes, paid calls, score
 replacement or report layout changes.
+
+## KV native context and comparison report — 2026-10-07 (completed)
+
+Resolved the preceding payslip audit with a shared evaluator change, not a
+page-specific exception. Native table pairs now retain row identity, printed
+column header and physical cell coordinates. Unique row/header matches establish
+field identity before normal value checking; they do not earn credit for wrong
+values or incorrectly filled blanks. Duplicate row identities and conflicting
+views remain ambiguous. Headerless grids whose first row is itself a known
+record stay on the existing matching path.
+
+Live evaluation, offline rescores and request planning use the same implementation
+(`shared-fields-v7-native-row-context`). For remaining judge items, requests now
+include native context and explicitly distinguish an empty returned value from
+an empty output-ID selection. No new judge calls were made. Previously paid
+context decisions remain reusable for unchanged fields; native matches supersede
+reviews only for fields they resolve. Report observations count both populated
+values and correct blanks, and the evidence shows each pair's native context.
+
+Published run: **20261007T112808Z**, replacing 20261007T110822Z. The final offline
+comparison has exactly two changed scores among 288 KV records:
+
+- Textract `payslip_002`: 119/143 (0.832168) → 143/143 (1.0). The 24 restored
+  fields are explicit empty cells in the correct named rows and columns.
+- Textract `bank_001`: 163/168 (0.970238) → 164/168 (0.976190). The previously
+  missing `VIG — One Day Change` is returned as `-0.0125` in that row/header.
+
+All other KV scores and all other legs' result payloads are unchanged (apart
+from the run timestamp). No pending KV reviews. The bundle preserves all 4,505
+result rows, 2,375 inference records and 2,282 source calls; file hashes verified.
+
+The HTML entry point is now a small **comparison report**, with an engine × leg
+matrix, difficulty/document-family filters, sortable per-leg metrics, Full versus
+without-outlier scores and actual serving-pass cost/latency. Full outputs,
+images, prompts, individual-document CER/WER and verdicts live in a separate
+linked `ocr-benchmark-evidence.html`. One build command generates both pages;
+they work offline together. Both HTML files remain ignored by Git.
+
+Verification: corrected payslip plus wrong-number, filled-blank, duplicate-owner,
+headerless-grid and cache-context checks; full offline KV rescore; original-bundle
+comparison; every HTML aggregation scope matches the terminal's shared reporting
+functions; JavaScript syntax and sorting/filter/leg-switch checks; rendered comparison inspected in headless
+Chrome. Temporary checks and intermediate run artifacts removed after publishing.
+
+Still outstanding: the separately prepared 17-call Sonnet pixel-coordinate
+geometry rerun remains **unrun and unapproved** under the no-further-paid-runs
+constraint. This commit does not claim that prompt control is complete.

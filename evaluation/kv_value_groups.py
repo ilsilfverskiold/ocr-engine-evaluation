@@ -41,8 +41,11 @@ signs, decimals, percentage units and identifiers; currency glyphs may differ.
 Each output ID can be selected for at most one reference field. IDs already
 assigned are unavailable except an item's repair_output_id: that is a partial
 value already under this field's key and may join its other fragments.
-Return [] if no complete, contextually correct group
-exists or identity remains ambiguous. Explain that decision briefly.
+For an expected blank/null, select the output ID of the existing empty field
+when its key and owner match; an empty VALUE is not an empty output_ids list.
+Native table/row/column source context, when supplied, establishes grouping.
+Return [] only if no complete, contextually correct group exists or identity
+remains ambiguous. Explain that decision briefly.
 
 Set synonym true only for a SINGLE selected pair whose key alone identifies
 this reference, independently of its value and surrounding output. Otherwise
@@ -97,23 +100,35 @@ def complete_coverage(expected, selected, key):
             and sum((Counter(tokens(v)) for v in selected), Counter()) == Counter(want))
 
 
-def prepare(gt, pairs):
+def prepare(gt, pairs, pair_context=None, native_matches=None):
     from evaluation import kv_value_judge as legacy
     record = legacy._read(gt)
     _, synonyms = legacy._cache_maps(record)
     synonyms = {**load_synonyms(gt), **synonyms}
-    assigned, unresolved, used = match_keys(gt, pairs, 'key_value', synonyms)
+    assigned, unresolved, used = match_keys(gt, pairs, 'key_value', synonyms, native_matches)
     eligible = {f.path for f in reference_fields(gt, 'key_value')}
     refs = [{'id': i, 'key': f.path, 'value': f.value}
             for i, f in enumerate(reference_fields(gt), 1)]
-    context_id = digest({'version': VERSION, 'reference_id': reference_id(gt), 'pairs': pairs})
+    old_context = digest({'version': VERSION, 'reference_id': reference_id(gt), 'pairs': pairs})
+    context_id = _context_id(gt, pairs, pair_context)
     reviews = [r for r in record.get('context_reviews', {}).get(context_id, []) if r['reference_key'] in eligible]
+    if pair_context:
+        # Reuse paid decisions for unchanged pairs. Native identity matches
+        # supersede old reviews only for the fields they actually resolve.
+        protected = {v['index'] for v in (native_matches or {}).values()}
+        inherited = record.get('context_reviews', {}).get(old_context, [])
+        known = {r['reference_key'] for r in reviews}
+        reviews += [r for r in inherited if r['reference_key'] in eligible and r['reference_key'] not in known
+                    and r['reference_key'] not in (native_matches or {})
+                    and not protected.intersection(r['indices'])]
+    reviews = [r for r in reviews if r['reference_key'] not in (native_matches or {})
+               and not {v['index'] for v in (native_matches or {}).values()}.intersection(r['indices'])]
     completed = {r['reference_key'] for r in reviews}
     approved = [r for r in reviews if r['indices']]
     used = used | {i for r in approved for i in r['indices']}
     items = []
     for ref in refs:
-        if ref['key'] not in eligible:
+        if ref['key'] not in eligible or ref['key'] in (native_matches or {}):
             continue
         hit = assigned.get(ref['key'])
         repair_id = None
@@ -143,6 +158,10 @@ def prepare(gt, pairs):
                           'repair_output_id': repair_id})
     requests = []
     output = [{'id': i + 1, 'key': str(k), 'value': v} for i, (k, v) in enumerate(pairs)]
+    if pair_context:
+        for item, ctx in zip(output, pair_context):
+            if ctx:
+                item['source'] = ctx
     for start in range(0, len(items), BATCH_SIZE):
         batch = items[start:start + BATCH_SIZE]
         ids = [str(i['id']) for i in batch]
@@ -229,10 +248,17 @@ def _journal_reviews(root):
     return indexed
 
 
-def _recover_context(gt, pairs):
+def _context_id(gt, pairs, pair_context=None):
+    payload = {'version': VERSION, 'reference_id': reference_id(gt), 'pairs': pairs}
+    if pair_context:
+        payload['native_pair_context_v1'] = pair_context
+    return digest(payload)
+
+
+def _recover_context(gt, pairs, pair_context=None):
     from evaluation import kv_value_judge as legacy
     rid = reference_id(gt)
-    context = digest({'version': VERSION, 'reference_id': rid, 'pairs': pairs})
+    context = _context_id(gt, pairs, pair_context)
     entries = _journal_reviews(legacy.CACHE_ROOT).get((rid, context), [])
     if not entries:
         return
@@ -259,13 +285,15 @@ def _recover_context(gt, pairs):
         legacy._save(gt, record)
 
 
-def resolve(gt, pairs, use_judge=None):
+def resolve(gt, pairs, use_judge=None, pair_context=None, native_matches=None):
     from evaluation import kv_value_judge as legacy
     result = Resolution()
     with legacy._locks[str(legacy._path(gt))]:
         legacy._recover_saved(gt)
         _recover_context(gt, pairs)
-        record, context, synonyms, groups, requests = prepare(gt, pairs)
+        if pair_context:
+            _recover_context(gt, pairs, pair_context)
+        record, context, synonyms, groups, requests = prepare(gt, pairs, pair_context, native_matches)
         enabled = use_judge is not False and bool(os.environ.get('GOOGLE_API_KEY'))
         while requests:
             request = requests[0]
@@ -286,13 +314,18 @@ def resolve(gt, pairs, use_judge=None):
                 legacy._save(gt, record)
                 # Rebuild after each batch so no output can be assigned again
                 # by a later batch, and no newly known synonym is re-judged.
-                record, context, synonyms, groups, requests = prepare(gt, pairs)
+                record, context, synonyms, groups, requests = prepare(gt, pairs, pair_context, native_matches)
             except Exception as exc:
                 result.errors.append(f'{type(exc).__name__}: {exc}')
                 break
         result.synonyms, result.groups = synonyms, groups
         result.pending = [i['reference_key'] for r in requests for i in r['review_items']]
-        result.decisions = record.get('context_reviews', {}).get(context, [])
+        current = record.get('context_reviews', {}).get(context, [])
+        inherited = record.get('context_reviews', {}).get(_context_id(gt, pairs), []) if pair_context else []
+        known = {r['reference_key'] for r in current}
+        result.decisions = current + [r for r in inherited if r['reference_key'] not in known
+                                      and r['reference_key'] not in (native_matches or {})]
+        result.decisions += [r for r in groups if r not in result.decisions]
     return result
 
 
@@ -323,8 +356,12 @@ def plan_saved(sources):
             call = rb._read_stored_call(timestamp, rec['engine_name'], Path(gt.document_path), gt, name)
             if call is None:
                 raise ValueError(f'Missing saved call: {identity}')
-            pairs, _ = engine_pairs(rec['engine_name'], call.get('raw_text') or '', call.get('structured_output') or {})
-            planned = prepare(gt, pairs)[-1]
+            pair_context = []
+            pairs, _ = engine_pairs(rec['engine_name'], call.get('raw_text') or '', call.get('structured_output') or {}, pair_context)
+            pair_context = pair_context if any(pair_context) else None
+            from evaluation.kv_native_context import native_field_matches
+            native_matches = native_field_matches(gt, pairs, pair_context or [])
+            planned = prepare(gt, pairs, pair_context, native_matches)[-1]
             if planned:
                 affected.append({'engine': rec['engine_name'], 'page': Path(gt.document_path).stem,
                                  'source': timestamp, 'call_sha256': digest(call),

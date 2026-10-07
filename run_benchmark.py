@@ -1696,10 +1696,13 @@ def _diagnose(record: dict) -> str:
     if leg in ("key_value", "schema"):
         prefix = "kv_pairs" if leg == "key_value" else "schema_fields"
         if f"{prefix}_total" in m:
-            return (f"field checker: {m.get(prefix + '_correct', 0)}/{m[prefix + '_total']} credited, "
+            correct = m.get(prefix + '_correct', 0)
+            blanks = m.get(('kv' if leg == 'key_value' else 'schema') + '_blank_correct', 0)
+            return (f"field checker: {correct + blanks}/{m[prefix + '_total']} credited "
+                    f"({correct} populated values + {blanks} blanks), "
                     f"{m.get(prefix + '_missing', 0)} missing, "
-                    f"{m.get(prefix + '_wrong_value', 0)} wrong "
-                    f"(including {m.get(prefix + '_invented_value', 0)} filled blanks)")
+                    f"{m.get(prefix + '_wrong_value', 0)} wrong values, "
+                    f"{m.get(prefix + '_invented_value', 0)} incorrectly filled blanks")
         invented = m.get(prefix + "_invented_value") or 0
         if invented:
             return f"checker marked {invented} blank field(s) as filled with invented values"

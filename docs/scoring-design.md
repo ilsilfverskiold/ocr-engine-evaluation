@@ -207,8 +207,19 @@ a longer output) nominates a candidate; it never earns credit without judgment.
 Leading/trailing currency glyphs are ignored in numeric comparison, with signs,
 decimals and identifier digits preserved. `100` does not match inside `1000`.
 
+Native record tables retain printed row identities, column headers and cell
+coordinates alongside the returned pairs. An unambiguous row identity + header
+can establish the reference key without a judge; the ordinary value checker
+then checks the value, including blanks. Duplicate row identities, conflicting
+renderings and headerless grids whose first row is a known record do not use
+this shortcut. Values never select the row. This is shared by live evaluation,
+rescores and saved-request planning. Native matches supersede cached reviews
+for those fields; unrelated paid decisions remain reusable.
+
 The judge receives reference-centered items plus all returned keys/values for
-context. It may select multiple output components for one complete value, even
+context, including native source context where available. A matching empty cell
+must be identified by its output ID; an empty value is not an empty selection.
+ It may select multiple output components for one complete value, even
 when a parent field is empty. Code validates complete coverage and one-use output
 allocation after judgment. There is no special Seller/Client rule, component-name
 whitelist or automatic key-prefix credit. Repeated amounts are judged with their
@@ -234,7 +245,7 @@ when later aliases change batch composition, avoiding duplicate payment.
 
 KV headline remains `(correct + blank_ok) / selected fields`. Extra pairs are
 visible but do not directly penalize incomplete-reference pages. Native Textract
-uses FORMS. All structured reference fields participate (including array leaves);
+uses FORMS and native table fields. All structured reference fields participate (including array leaves);
 old printed-pair flags no longer remove fields. The same explicit human field
 exclusions apply to KV and schema.
 

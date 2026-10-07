@@ -230,13 +230,15 @@ def textract_forms(blocks: list[dict]) -> list[dict[str, str]]:
     return pairs
 
 
-def engine_pairs(engine: str, text: str, structured_output: dict | None) -> tuple[list[list[str]], str]:
+def engine_pairs(engine: str, text: str, structured_output: dict | None, pair_context: list | None = None) -> tuple[list[list[str]], str]:
     """(label, value) pairs from what the engine returned, and how."""
     if engine == "textract_structured":
         so = structured_output or {}
         pairs = [[str(p.get("key", "")), str(p.get("value", ""))] for p in so.get("forms", [])]
+        if pair_context is not None:
+            pair_context.extend([None] * len(pairs))
         from evaluation.code_judges import _html_grid
-        for t in so.get("tables", []):
+        for ti, t in enumerate(so.get("tables", [])):
             if not isinstance(t, dict):
                 continue
             for html in dict.fromkeys(t.get(key) for key in ("cell_html", "html")):
@@ -245,9 +247,17 @@ def engine_pairs(engine: str, text: str, structured_output: dict | None) -> tupl
                 grid = _html_grid(html)
                 if grid and all(len(r) == 2 for r in grid):
                     pairs += [[r[0], r[1]] for r in grid]
+                    if pair_context is not None:
+                        pair_context.extend([None] * len(grid))
                 elif len(grid) > 1:
                     hdr = grid[0]
-                    pairs += [[hdr[j] if j < len(hdr) else f"col{j+1}", cell] for r in grid[1:] for j, cell in enumerate(r)]
+                    for ri, row in enumerate(grid[1:], 1):
+                        for j, cell in enumerate(row):
+                            pairs.append([hdr[j] if j < len(hdr) else f"col{j+1}", cell])
+                            if pair_context is not None:
+                                pair_context.append({'kind': 'native_table', 'table': ti, 'row': ri,
+                                    'column': j, 'row_key': row[0] if row else '',
+                                    'row_header': hdr[0], 'column_header': hdr[j] if j < len(hdr) else ''})
         return pairs, "Textract FORMS pairs + table cells (no JSON interface)"
     obj, how = parse_json_answer(text or "")
     return (flatten(obj) if obj is not None else []), how

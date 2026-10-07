@@ -55,12 +55,14 @@ python scripts/download_data.py
 python scripts/build_evidence_report.py
 ```
 
-Open **`results/reports/ocr-benchmark-final.html`**. It includes source images,
-exact returned outputs, saved prompts, box overlays, reference tables and
-field/cell verdicts. Filter by engine, document type, leg and page. Click metric
-headings to sort highest/lowest. Individual text and Markdown results show
-CER/WER. The self-contained HTML opens offline and is **ignored by Git**.
-Building it makes no model calls. Downloading pages requires network access.
+Open **`results/reports/ocr-benchmark-final.html`** for the engine comparison.
+It shows scores by leg, difficulty and document family, full and outlier-excluded
+scores, sortable supporting metrics, cost and latency. The linked
+**`ocr-benchmark-evidence.html`** contains individual document results, source
+images, exact returned outputs, prompts, box overlays and field/cell verdicts.
+Both pages open offline; keep them together. Individual text and Markdown results
+show CER/WER. HTML files are **ignored by Git**. Building makes no model calls;
+downloading source pages requires network access.
 
 ## What each leg measures
 

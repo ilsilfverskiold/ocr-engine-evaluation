@@ -42,6 +42,8 @@ class KeyValueScore:
     judge_errors: list[str] = field(default_factory=list)
     judge_reviews: list[dict] = field(default_factory=list)
     label_review: dict = field(default_factory=dict)
+    pair_context: list = field(default_factory=list)
+    native_matches: dict = field(default_factory=dict)
 
     @property
     def score(self) -> float | None:
@@ -72,6 +74,8 @@ class KeyValueScore:
     def as_detail(self) -> dict[str, Any]:
         return {
             "cleanup": self.cleanup_log,
+            "pair_context": self.pair_context,
+            "native_matches": self.native_matches,
             "label_review": self.label_review,
             "unresolved_keys": self.unresolved_keys,
             "synonym_reference_id": self.synonym_reference_id,
@@ -105,11 +109,15 @@ def score_key_value(
     if not gt.has_gt_for("key_value"):
         return KeyValueScore(applicable=False, reason=gt.missing_gt_reason("key_value"))
     from evaluation.kv_schema_code import engine_pairs
-    pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
+    pair_context = []
+    pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output, pair_context)
+    pair_context = pair_context if any(pair_context) else None
+    from evaluation.kv_native_context import native_field_matches
+    native_matches = native_field_matches(gt, pairs, pair_context or [])
     from evaluation.shared_fields import KV_VERSION, reference_id, score_shared, reference_fields
     from evaluation.kv_value_groups import resolve, relation
-    resolution = resolve(gt, pairs, use_judge=use_judge)
-    res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups)
+    resolution = resolve(gt, pairs, use_judge=use_judge, pair_context=pair_context, native_matches=native_matches)
+    res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups, native_matches)
     pending = resolution.pending
     for item in res.unresolved:
         key, value = pairs[item['index']]
@@ -134,4 +142,5 @@ def score_key_value(
         judge_cost_usd=resolution.cost_usd, judge_errors=resolution.errors,
         judge_reviews=resolution.decisions,
         label_review=gt.metadata.get("kv_label_review", {}),
+        pair_context=pair_context or [], native_matches=native_matches,
     )
