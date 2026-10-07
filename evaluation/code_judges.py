@@ -1,61 +1,11 @@
-"""Code verdicts for the markdown and tables legs — the stage-2 that used to be
-an LLM judge.
+"""Deterministic verdicts against cached reference checklists.
 
-Stage 1 is unchanged: a checklist built once per document from the page image
-(``results/markdown_judge_cache/<stem>.json`` — typed structural elements;
-``results/table_judge_cache/<stem>.json`` — table cells with row/col). Those
-files are read here and never rebuilt; a document without one is not scored
-on that leg (``None``), it is never sent to a model.
-
-Stage 2, per engine, is deterministic and applies the judge rubric literally:
-
-markdown — the engine's markdown is split into typed blocks (heading,
-table_row, list_item, key_value, paragraph; a ``` block is plain text; a line
-of only bold labels is one heading per label; HTML <tr> rows are table rows).
-For each checklist element the most similar block wins (normalised text;
-substring or in-order subsequence counts; table rows compare cells and a
-transposed table is accepted). ratio >= 0.85 and same type -> correct; same
-ratio, other type -> wrong_type; 0.5-0.85 -> partial; else absent. key_value
-elements are correct when label and value both occur anywhere (the rubric's
-own exception). Score = (correct + 0.5 * partial) / elements.
-
-tables — the engine's tables are parsed into grids with table_extractor plus
-any structured_output.tables HTML. The checklist tables scored are those
-that correspond to a table the human marked in the reference HTML (at least
-half of a checklist table's non-empty cells appear in it, ``TABLE_POLICY``):
-Gemini's image catalogue also lists a 1040's income lines (103 cells, 14% in
-the reference) or a receipt's totals block as tables, and on the tax pages
-those dominated the 60-cell sample while the page was eligible only for its
-dependents grid. Each checklist cell is looked up in every
-grid (numbers as numbers, strings normalised, a header with the same words in
-another order counts). Unique named rows and column headers constrain where
-values belong; their full checklist context is retained before sampling.
-Split rows may continue across blank or reference continuation labels, and
-HTML spans retain their covered positions. Within those constraints a cell
-needs matching row/column mates or its exact expected position. Mere proximity
-to the expected position no longer establishes correctness. Found elsewhere, inside a
-larger cell, or only in plain text -> misplaced; the anchored cell holds a
-different value -> wrong; nowhere -> absent. Empty checklist cells are
-excluded. Score = correct / non-empty cells.
-
-Policy decisions applied uniformly (docs/rescoring-plan.md §3), audited on
-the rescored reference run 2026-10-01:
-  accepted as correct —
-    * a checkbox line ("☐ Chills", "Blurred Vision ☑", "- [x] item") is a
-      list item: the glyph is the bullet of a check-list; several items on
-      one line, each ending (or each starting) with its glyph ("Allergies ☑
-      Black Outs ☐", "Blurred Vision ☑ | Calf Pain ☑"), are that many list
-      items — the glyphs mark the boundaries;
-    * a heading written as a table row whose only non-empty cell is the
-      heading (section labels inside a financial table);
-    * a list item written as one whole cell of a table (a checkbox grid laid
-      out as a table).
-  still wrong_type / misplaced —
-    * a line whose glyphs sit mid-sentence ("medication ☐NEW or a
-      ☑CONTINUATION of THERAPY?");
-    * a heading left as plain text, a receipt left in a code block, a form
-      the checklist calls a table rendered as lines, numbered section
-      headings written as "1. TITLE" without #.
+The active Markdown scorer delegates to markdown_structure: locate full or
+partial content spans, validate their Markdown/HTML type, and allocate output
+content once. Header semantics and ordered table cells are retained. The
+headline is (correct + 0.5 * partial) / reference items. Missing catalogues do
+not trigger model calls. Legacy table helpers below are not the gold-table
+scorer; current tables use table_cells through table_leg.
 """
 
 from __future__ import annotations
@@ -70,20 +20,10 @@ from pathlib import Path
 from typing import Any
 
 SCORER_VERSION = "code-v5 (2026-10-02)"
-# The three markdown policy choices of the 2026-10-01 audit. Each is one
-# switch; the owner can turn any of them off and rescore (free).
-MARKDOWN_POLICY = {
-    "checkbox_line_is_list_item": True,     # "☐ Chills" / "Blurred Vision ☑" is a list item
-    "heading_as_single_cell_row": True,     # "| Turnover |  |  |" satisfies the heading "Turnover"
-    "list_item_as_table_cell": True,        # "<td>Chills</td>" satisfies the list item "Chills"
-}
 # Tables: which checklist tables are scored on a human-eligible page.
 TABLE_POLICY = {
     "human_marked_tables_only": True,       # only checklist tables that correspond to the human table reference
 }
-# one checkbox glyph (or a [ ]/[x] box) at the start or end of a line
-_CHECK = r"(?:[☐☑☒□■✓✔✗✘]|\[\s?[xX✓]?\s?\])"
-_CHECK_LINE = re.compile(rf"^(?:{_CHECK}\s*(.+?)|(.+?)\s*{_CHECK})$")
 MARKDOWN_CACHE_DIR = Path(__file__).parent.parent / "results" / "markdown_judge_cache"
 TABLE_CACHE_DIR = Path(__file__).parent.parent / "results" / "table_judge_cache"
 # The judges of the reference run scored a capped, evenly spaced sample of
@@ -125,7 +65,8 @@ def load_markdown_checklist(document_stem: str) -> list[dict] | None:
         items = record.get("items") or []
     except Exception:
         return None
-    items = [i for i in items if isinstance(i, dict) and i.get('confident', True)]
+    items = [{**i, "content_format": "plain" if record.get("version") == "markdown-image-catalogue-v1" else "markdown"}
+             for i in items if isinstance(i, dict) and i.get("confident", True)]
     if document_stem == "invoice_004":
         for item in items:
             if "Picturebook ☐☐☐☐☐☐☐☐" in item.get("content", ""):
@@ -202,23 +143,6 @@ def load_table_checklist(document_stem: str, reference_html: str | None = None,
 
 
 # ---------------------------------------------------------------- markdown
-def mnorm(s: Any) -> str:
-    s = unicodedata.normalize("NFKC", _html.unescape(str(s or ""))).lower()
-    s = re.sub(r"[*_`#>|\\]", " ", s)
-    return re.sub(r"[^a-z0-9]+", " ", s).strip()
-
-
-def _subseq(a: str, b: str) -> bool:
-    ta, tb = a.split(), b.split()
-    if len(ta) < 3:
-        return False
-    k = 0
-    for t in tb:
-        if k < len(ta) and t == ta[k]:
-            k += 1
-    return k == len(ta)
-
-
 def unfence(text: str) -> str:
     """An answer wrapped whole in ```markdown ... ``` is markdown, not code;
     so is one that opens with an explicit ```markdown fence and carries a
@@ -232,109 +156,10 @@ def unfence(text: str) -> str:
     return strip_wrapping_fence(text or "")
 
 
-_SEP = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$")
-
-
-# checkbox marks only: the plain squares (□ ■) also serve as legend swatches
-# and bullets ("■ Executive & Senior Management ■ Management"), so a line of
-# several of them is not read as a check-list
-_CHECK_MARK = r"(?:[☐☑☒✓✔✗✘]|\[\s?[xX✓]?\s?\])"
-
-
-def _checklist_items(line: str) -> list[str]:
-    """The labels of a line made of check-list items, or [] when the line
-    is not one. Items are "label glyph" throughout or "glyph label"
-    throughout; a "|" between items is ignored."""
-    parts = [p.strip(" |") for p in re.split(rf"({_CHECK_MARK})", line)]
-    parts = [p for p in parts if p != ""]
-    glyph = lambda p: re.fullmatch(_CHECK_MARK, p) is not None
-    if len(parts) < 4 or len(parts) % 2:
-        return []
-    labels_first = not glyph(parts[0])
-    for k, p in enumerate(parts):
-        want_glyph = (k % 2 == 1) if labels_first else (k % 2 == 0)
-        if glyph(p) != want_glyph:
-            return []
-    labels = [p for p in parts if not glyph(p)]
-    return labels if all(len(l) <= 80 and len(l.split()) <= 10 for l in labels) else []
-
-
 def markdown_blocks(text: str) -> list[tuple[str, str, int]]:
     """Actual rendered structure, with block positions rather than guessed lines."""
     from evaluation.markdown_structure import blocks
     return blocks(text)
-
-
-def _sim(a: str, b: str) -> float:
-    na, nb = mnorm(a), mnorm(b)
-    if not na or not nb:
-        return 0.0
-    r = SequenceMatcher(None, na, nb).ratio()
-    if len(na) >= 6 and (na in nb or f" {na} " in f" {nb} "):
-        r = max(r, 0.9 if len(nb) <= 4 * len(na) else 0.86)
-    elif len(na) >= 12 and _subseq(na, nb) and len(nb) <= 4 * len(na):
-        r = max(r, 0.86)
-    elif len(na) >= 40 and len(nb) >= 40:
-        m = SequenceMatcher(None, na, nb).find_longest_match(0, len(na), 0, len(nb))
-        if m.size >= 0.6 * min(len(na), len(nb)):
-            r = max(r, 0.86)
-    return r
-
-
-def _cell_match(c: str, b: str) -> bool:
-    if c == b or (len(c) >= 3 and c in b):
-        return True
-    # "Minor OCR errors are NOT partial — they are still correct" (the rubric):
-    # one wrong character in a code or name must not cost the whole cell
-    return len(c) >= 5 and SequenceMatcher(None, c, b).ratio() >= 0.85
-
-
-def _row_sim(content: str, block_text: str) -> float:
-    ec = [mnorm(c) for c in content.strip("|").split("|")]
-    ec = [c for c in ec if c]
-    bc = [mnorm(c) for c in block_text.split(" | ")]
-    bc = [c for c in bc if c]
-    if not ec or not bc:
-        return 0.0
-    return sum(1 for c in ec if any(_cell_match(c, b) for b in bc)) / len(ec)
-
-
-def _cells_present(content: str, ntext: str) -> bool:
-    cells = [mnorm(c) for c in content.strip("|").split("|")]
-    cells = [c for c in cells if c]
-    if len(cells) < 2:
-        return False
-    return all(c in ntext for c in cells)
-
-
-def _merged_blocks(blocks):
-    out = list(blocks)
-    for k in range(len(blocks) - 1):
-        if blocks[k][0] == "paragraph" and blocks[k + 1][0] == "paragraph":
-            out.append(("paragraph", blocks[k][1] + " " + blocks[k + 1][1], blocks[k][2]))
-        if blocks[k][0] == "table_row" and blocks[k + 1][0] == "table_row":
-            # a multi-line cell the engine put on an extra row
-            out.append(("table_row", blocks[k][1] + " | " + blocks[k + 1][1], blocks[k][2]))
-    return out
-
-
-def _table_columns(blocks):
-    out, cur = [], []
-
-    def flush():
-        if len(cur) >= 2:
-            width = max(len(r[1].split(" | ")) for r in cur)
-            for j in range(width):
-                out.append(("table_row", " | ".join(r[1].split(" | ")[j] if j < len(r[1].split(" | ")) else "" for r in cur), cur[0][2]))
-        cur.clear()
-
-    for b in blocks:
-        if b[0] == "table_row":
-            cur.append(b)
-        else:
-            flush()
-    flush()
-    return out
 
 
 @dataclass
@@ -344,6 +169,7 @@ class MarkdownVerdict:
     content: str
     verdict: str          # correct | wrong_type | partial | absent
     how: str
+    evidence: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -362,7 +188,7 @@ def score_markdown_code(text: str, items: list[dict]) -> MarkdownCodeResult:
     from evaluation.markdown_structure import match_items
     matches, blocks = match_items(text, items)
     verdicts = [MarkdownVerdict(i + 1, str(item.get("type", "")), str(item.get("content", "")),
-                                match.verdict, match.how)
+                                match.verdict, match.how, match.evidence)
                 for i, (item, match) in enumerate(zip(items, matches))]
     counts = {v: sum(m.verdict == v for m in matches) for v in ("correct", "partial", "wrong_type", "absent")}
     n = len(items)

@@ -4,6 +4,17 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-07 — locate Markdown content before checking structure
+
+- Rebuild the shared Markdown matcher around exact/partial content spans,
+  actual header types, ordered cells and explicit field relationships.
+- Preserve separate fields within one paragraph, literal catalogue text and
+  numbered cells. Reject full credit for changed numbers and content reuse.
+- Use the shared matcher for full-reference diagnostics; expose matched text
+  and ranges in the report. Remove obsolete, unused Markdown matching helpers.
+- Run `20261007T082525Z`: all 915 stored Markdown results replayed, 720 headline
+  changes. Other legs and CER/WER unchanged; no paid calls or reference edits.
+
 ## 2026-10-07 — judge partial values with returned-field context
 
 - Withdraw deterministic split-credit fixes and their intermediate score sets.

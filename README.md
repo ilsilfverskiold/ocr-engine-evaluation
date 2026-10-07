@@ -11,7 +11,7 @@ two geometry-only extensions. Additional integrations remain available but unrun
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python run_benchmark.py --report 20261007T073234Z
+python run_benchmark.py --report 20261007T082525Z
 ```
 
 This prints saved results without inference or API calls. For the browser report,
@@ -19,8 +19,8 @@ first download the source pages, then build the self-contained HTML:
 
 ```bash
 python scripts/download_data.py
-python scripts/build_evidence_report.py 20261007T073234Z \
-  --status "Completed six-leg rescore; all 260 eligible KV results settled. Further paid controls deferred."
+python scripts/build_evidence_report.py 20261007T082525Z \
+  --status "Markdown scorer rebuilt; all saved outputs replayed. Other legs unchanged; paid controls deferred."
 ```
 
 Open **`results/reports/ocr-benchmark-final.html`**. Filter by engine, document
@@ -31,7 +31,8 @@ Generated HTML is local and ignored by Git; source records and the builder ship
 with the repository.
 
 **Current status:** 4,505 six-leg results, including N/A and failed rows.
-Schema has 453 scored results and two server errors. Markdown uses 92/93 cached
+Markdown matching was rebuilt and replayed across all 915 saved results; its
+matched spans are inspectable in the report. Schema has 453 scored results and two server errors. Markdown uses 92/93 cached
 reference catalogues. KV has 260 settled scores across four engines and 65 pages, plus 28
 no-reference rows. No contextual reviews remain pending. Historical silver-document
 estimates remain in older source ledgers and are excluded from this comparison.
@@ -60,7 +61,7 @@ Image licences and dataset sources are in
 | Leg | Main score | Supporting evidence |
 | --- | --- | --- |
 | `text` | Distinct reference-token coverage | CER/WER, word precision/recall/F1; coverage ignores extras and order |
-| `markdown` | Correct structural elements, half credit for partial matches | Actual Markdown/HTML syntax, one-to-one block matching, rendered-text CER/WER |
+| `markdown` | Correct structural elements, half credit for partial matches | Actual Markdown/HTML syntax, disjoint content spans and ordered cells, rendered-text CER/WER |
 | `tables` | Cell F1, including blanks and extra/duplicate cells | Cell precision/recall, spans and structure similarity; row/column association |
 | `key_value` | Correct values / eligible shared reference fields | Exact/cached keys first; value overlap nominates contextual judge reviews; no automatic containment credit |
 | `schema` | Correct values / (requested fields + unexpected/duplicate fields) | Exact supplied keys, same frozen sample, per-field verdicts and JSON compliance |
@@ -103,7 +104,7 @@ python scripts/build_evidence_report.py NEW_TIMESTAMP
 
 # Prepare exact unresolved KV requests and a cost reserve without sending them.
 python scripts/build_kv_synonyms.py prepare-values \
-  --source 20261007T073234Z --output /tmp/kv-review-plan.json
+  --source 20261007T082525Z --output /tmp/kv-review-plan.json
 ```
 
 Later supplied runs replace earlier answers for the same engine/page/leg. A

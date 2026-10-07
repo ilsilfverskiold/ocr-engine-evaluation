@@ -3,13 +3,16 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-07:** the six-leg replay `20261007T073234Z`
-uses accepted references and the corrected scorers. KV contextual review is
+**Implementation status, 2026-10-07:** current run `20261007T082525Z` rescored
+all 915 saved Markdown results with `markdown-structure-v2-spans`; the other
+five legs are unchanged from `20261007T073234Z`. KV contextual review is
 complete: 260 scored results, zero pending, 276 judge calls and $1.7346 recorded
 usage. The common sampled-schema run has 453 scored results and two server
 errors. Markdown catalogues cover 92/93 pages. Further paid prompt/pipeline
 controls and retries are deferred; historical silver estimates are excluded.
-See [follow-up-2026-10-03.md](follow-up-2026-10-03.md) for completion details.
+See [follow-up-2026-10-07.md](follow-up-2026-10-07.md) for the Markdown correction
+and outstanding prompt controls. Earlier KV/schema completion is recorded in
+[follow-up-2026-10-03.md](follow-up-2026-10-03.md).
 
 ## Prompts and provenance
 
@@ -63,12 +66,51 @@ Tables require a valid Markdown separator or HTML table; plain TSV is not
 Markdown table formatting. One outer Markdown code fence may be unwrapped as
 transport packaging; JSON/Python code fences remain code.
 
-Content similarity uses normalized full-string edit similarity, not global
-word presence. Same type and similarity at least 0.85 earns correct; 0.50–0.85
-earns partial; wrong type earns zero. Output blocks cannot be credited twice.
-Consecutive paragraph fragments may satisfy one paragraph. Heading depth,
-bullet style and trailing punctuation are normalized. Record every expected
-block, match and verdict so bad catalogue labels can be reviewed.
+The active scorer is `markdown-structure-v2-spans`. Locate the expected content
+first, then inspect its actual rendered block type. Search exact occurrences
+and boundary-aligned partial spans; compare the **whole expected content** with
+the candidate span. A partial-search similarity is never itself the score.
+NFKC, case and typography whitespace normalize; punctuation and identifier
+digits are retained. Catalogue spacing/OCR differences can therefore match
+without pretending every reference character is authoritative.
+
+A compatible type and content similarity at least 0.85 earns correct; at least
+0.50 earns partial. Full credit also requires matching numeric/identifier
+signatures, including signs and decimal punctuation. Character resemblance
+alone below 0.85 needs token overlap as corroboration. Wrong type earns zero
+and reports where the text was found. Text embedded in a larger heading/list
+entry or wider table row is present, but may receive partial structure credit
+rather than being called absent. If a matching occurrence has already
+been allocated, the reason explicitly says so instead of claiming no content.
+
+Distinct reference items may occupy disjoint spans of one paragraph. Several
+adjacent paragraphs may supply one reference item. Credited output tokens can
+be used only once. Wrong-type evidence earns no credit and may be reused as a
+diagnostic. There are no engine/document-specific matching rules.
+
+`key_value` is a semantic category: a complete pair may be in a paragraph,
+heading, list item, or cells of the same table row. A single-record table may
+also pair each header with the value directly below in its column. Merged or
+multi-record grids are not silently converted into these field pairs. A value
+elsewhere on the page cannot be borrowed. Actual `table_header` blocks retain header semantics;
+a data row with just a row-label `<th>` is not a column header. Older generic
+`table_row` references allow either header or data rows. Full row credit requires
+ordered cell matches, not just finding the same words somewhere in a table.
+Empty padding cells are ignored for this Markdown comparison; the separate
+gold-table leg scores blanks and grid shape. Split item rows are not silently
+merged and cannot receive full row credit. Partial verdicts retain content and
+ordered-cell similarities so a description alone is not evidence for prices.
+
+New catalogue text is literal. Legacy catalogue inline emphasis is decoded
+without interpreting numbered cell text as a Markdown list. Saved verdicts
+include matched block types, token ranges and normalized text excerpts.
+
+With a full Markdown reference, supporting block recall uses complete compatible
+matches from this same matcher. Output-block precision requires at least 85% of
+that block's tokens to be covered by complete matches; unrelated extra prose
+is not credited merely because it contains a matching phrase. Reading order
+uses the positions of these matches, including their positions within a block.
+A sampled catalogue alone still cannot establish full-page block precision.
 
 CER/WER are computed separately on the actual Markdown answer's rendered text,
 using trusted full-page text where available, otherwise the Markdown reference.

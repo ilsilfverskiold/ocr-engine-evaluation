@@ -2041,3 +2041,34 @@ wrong_type verdicts. All absent items are represented in four shared paragraphs.
 Confirmed the existing header/KV-table defects and documented how single-row
 string matching ignores the association between split descriptions and numeric
 rows. Added evidence to the new follow-up; no scorer changes or paid calls.
+
+
+## 2026-10-07 — rebuild Markdown matching and replay every saved result
+
+- Implement `markdown-structure-v2-spans`: locate exact/partial content before
+  inspecting actual Markdown/HTML type. Allocate distinct spans, preserve real
+  table headers and ordered cell relationships, and accept explicit key/value
+  relationships in rows or single-record column tables. Wider rows and merged
+  heading/list content remain visible as partial, not falsely absent.
+- Handle catalogue spacing, literal asterisks and legacy numbered-cell text;
+  changed numbers, signs and decimal punctuation prevent full credit. Remove
+  unused old Markdown scoring helpers rather than leaving conflicting policies.
+- Reuse this matcher in full-reference block diagnostics and retain CER/WER
+  separately. Empty padding rows pass reference self-comparison. Reports show
+  matched normalized text, source blocks and token ranges next to verdicts.
+- Current run `20261007T082525Z`: all 915 Markdown rows replayed, 908 scored,
+  seven missing-catalogue N/A, 720 changed headlines. Audited all 21,401 item
+  verdicts: no overlapping credited spans, no unexplained exact-content/absent
+  contradictions. Other five legs and Markdown CER/WER are unchanged.
+- Validate with 464 passing offline tests and ten browser cases across all six
+  legs, zero browser exceptions. Visually inspect the corrected GST case.
+  Full-reference self-comparison passes on every Markdown sidecar. Record
+  hashes, checks and before/after scores in the run audit JSON.
+- Rebuild the canonical self-contained report and CSVs; archive superseded CSVs
+  outside the repository. Keep original source calls/run evidence, accepted gold
+  and unrun engines. Scratch experiments/checkers remain outside Git. No source
+  reference, engine prompt or model change, paid calls, judge calls or push.
+- The completed 2026-10-03 document is untouched. The new follow-up, scoring
+  design, README and changelog describe the implemented contract and current run.
+  Cached image-authored catalogue text/types remain annotation limitations; this
+  replay is not a claim that all catalogue annotations were human-certified.

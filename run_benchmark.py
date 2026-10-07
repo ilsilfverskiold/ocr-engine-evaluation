@@ -918,6 +918,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     from evaluation.shared_fields import VERSION as SCHEMA_VERSION, KV_VERSION
     from evaluation.table_cells import VERSION as TABLE_VERSION
     from evaluation.geometry_leg import SCORER_VERSION as GEOMETRY_VERSION
+    from evaluation.markdown_structure import VERSION as MARKDOWN_VERSION
     from runners.textract_structured_runner import TABLE_ADAPTER_VERSION
 
     loader = GroundTruthLoader()
@@ -1068,7 +1069,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         "source_selection": "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run",
         "scored_with_judge": not skip_judge,
         "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
-        "scorers": {"markdown": "markdown-structure-v1", "tables": TABLE_VERSION,
+        "scorers": {"markdown": MARKDOWN_VERSION, "tables": TABLE_VERSION,
                     "key_value": KV_VERSION, "schema": SCHEMA_VERSION,
                     "geometry": GEOMETRY_VERSION,
                     "text": "gt coverage (unchanged)"},
@@ -1304,7 +1305,8 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     spec = LEGS[leg]
     methods = set()
     from evaluation.shared_fields import KV_VERSION
-    current_versions = {"markdown": "markdown-structure-v1", "tables": "gold-table-cells-v1",
+    from evaluation.markdown_structure import VERSION as MARKDOWN_VERSION
+    current_versions = {"markdown": MARKDOWN_VERSION, "tables": "gold-table-cells-v1",
                         "key_value": KV_VERSION, "schema": "shared-fields-v1"}
     current_only = True
     for record in records:

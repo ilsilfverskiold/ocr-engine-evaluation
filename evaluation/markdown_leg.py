@@ -35,7 +35,7 @@ BLOCK_MATCH_THRESHOLD = 0.90
 ELEMENT_WEIGHT = 0.8
 ORDER_WEIGHT = 0.2
 
-STRUCTURAL_TYPES = ("heading", "list_item", "table_row")
+STRUCTURAL_TYPES = ("heading", "list_item", "table_header", "table_row")
 
 _FENCE_RE = re.compile(r"^\s*```")
 _HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s+(.*)$")
@@ -252,8 +252,8 @@ def strip_wrapping_fence(text: str) -> str:
 
 def parse_blocks(markdown: str) -> list[Block]:
     """Parse semantic Markdown/HTML; emphasis is not promoted to headings."""
-    from evaluation.markdown_structure import blocks
-    return [Block(kind, normalize_block_text(text), i)
+    from evaluation.markdown_structure import blocks, normalized
+    return [Block(kind, normalized(text), i)
             for i, (kind, text, _) in enumerate(blocks(markdown or ""))]
 
 
@@ -270,43 +270,46 @@ def _similarity(a: str, b: str) -> float:
 def _match_blocks(
     reference: list[Block], hypothesis: list[Block]
 ) -> tuple[list[tuple[Block, Block]], int]:
-    """Greedy best-first matching within a block type; returns (pairs,
-    consumed hypothesis blocks).
+    """Use the same content/structure contract as the catalogue headline.
 
-    A reference block may match a consecutive same-kind RUN of hypothesis
-    blocks: annotators group ("Seller: Bradley-Andrade ...") what engines
-    split with blank lines, and where the content is the same, segmentation
-    is formatting, not structure — an engine must not lose the block for
-    splitting it. Every hypothesis block feeds at most one reference.
-
-    Greedy rather than optimal: an exact assignment would let a distant
-    duplicate steal a match and change the order score for reasons that have
-    nothing to do with the engine.
+    Separate reference paragraphs may occupy disjoint spans of one output
+    paragraph. Precision counts an output block only when at least 85% of its
+    tokens belong to correct reference matches, so a tiny matching phrase in
+    unrelated added prose does not make the whole block correct.
     """
-    consumed: set[int] = set()
-    pairs: list[tuple[Block, Block]] = []
-    for ref in reference:
-        best_run, best_score = None, 0.0
-        for i, head in enumerate(hypothesis):
-            if head.index in consumed or head.kind != ref.kind:
-                continue
-            texts: list[str] = []
-            for j in range(i, len(hypothesis)):
-                block = hypothesis[j]
-                if block.kind != ref.kind or block.index in consumed:
-                    break
-                texts.append(block.text)
-                joined = " ".join(texts)
-                if len(joined) > 2 * len(ref.text) + 40:
-                    break
-                score = _similarity(ref.text, joined)
-                if score > best_score:
-                    best_run, best_score = (i, j + 1), score
-        if best_run is not None and best_score >= BLOCK_MATCH_THRESHOLD:
-            start, end = best_run
-            consumed.update(b.index for b in hypothesis[start:end])
-            pairs.append((ref, hypothesis[start]))
-    return pairs, len(consumed)
+    from evaluation.markdown_structure import match_items, tokens
+    # Reconstruct typed HTML rather than reparsing text as Markdown (literal
+    # asterisks and list numbers in rendered content must stay literal).
+    import html
+    tag = {"heading": "h2", "paragraph": "p", "list_item": "li", "code": "pre"}
+    def markup(block):
+        if block.kind in ("table_row", "table_header"):
+            cell = "th" if block.kind == "table_header" else "td"
+            return "<table><tr>" + "".join(f"<{cell}>{html.escape(v)}</{cell}>" for v in block.text.split("|")) + "</tr></table>"
+        name = tag.get(block.kind, "p")
+        return f"<{name}>{html.escape(block.text)}</{name}>"
+    text = "\n".join(markup(b) for b in hypothesis)
+    matches, _ = match_items(text, [{"type": b.kind, "content": b.text} for b in reference])
+    covered: dict[int, set[int]] = {}
+    pairs = []
+    for ref, match in zip(reference, matches):
+        if match.verdict != "correct":
+            continue
+        first = match.evidence[0]
+        # Include within-block position for order when paragraphs are merged.
+        index = first["block"] - 1
+        base = sum(len(tokens(b.text)) + 1 for b in hypothesis[:index])
+        pairs.append((ref, Block(hypothesis[index].kind, hypothesis[index].text,
+                                 base + first["token_start"])))
+        for span in match.evidence:
+            covered.setdefault(span["block"]-1, set()).update(range(span["token_start"], span["token_end"]))
+    consumed = 0
+    for i, block in enumerate(hypothesis):
+        content = {j for j, word in enumerate(tokens(block.text))
+                   if word != "|" or block.kind not in ("table_row", "table_header")}
+        consumed += (len(covered.get(i, set()) & content) / len(content) >= .85
+                     if content else bool(covered.get(i)))
+    return pairs, consumed
 
 
 def _kendall_tau_order(positions: list[int]) -> float:
@@ -375,7 +378,7 @@ def score_markdown(
     order = _kendall_tau_order([hyp.index for _, hyp in pairs])
 
     per_type: dict[str, float] = {}
-    for kind in ("heading", "list_item", "table_row", "paragraph"):
+    for kind in ("heading", "list_item", "table_header", "table_row", "paragraph"):
         ref_of_kind = [b for b in reference if b.kind == kind]
         if not ref_of_kind:
             continue
@@ -444,7 +447,7 @@ def _score_catalogue(output_markdown, gt, det_kwargs):
                      "wrong_type": res.wrong_type, "absent": res.absent,
                      "engine_blocks": res.blocks},
         code_verdicts=[{"n": v.index, "type": v.type, "content": v.content,
-                        "verdict": v.verdict, "how": v.how} for v in res.verdicts],
+                        "verdict": v.verdict, "how": v.how, "evidence": v.evidence} for v in res.verdicts],
         scorer=VERSION,
         **det_kwargs,
     )

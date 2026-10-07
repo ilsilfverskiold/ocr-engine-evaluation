@@ -171,7 +171,8 @@ def test_engine_that_emits_no_markdown_is_not_applicable_not_zero():
 def test_parse_blocks_types():
     kinds = [b.kind for b in parse_blocks(REFERENCE_MD)]
     assert kinds.count("heading") == 3
-    assert kinds.count("table_row") == 2
+    assert kinds.count("table_row") == 1
+    assert kinds.count("table_header") == 1
     assert kinds.count("list_item") == 2
 
 
@@ -265,3 +266,22 @@ def test_explicit_markdown_fence_with_a_trailing_note_is_packaging():
     # an unclosed markdown fence (truncated answer) is unwrapped too; a bare fence with inner content is not
     assert "```" not in strip_wrapping_fence("```markdown\n# Title\ntext")
     assert strip_wrapping_fence("```\ncode\n```\nprose") == "```\ncode\n```\nprose"
+
+
+def test_full_reference_block_metrics_allow_disjoint_merged_paragraphs():
+    gt = _gt(markdown="First distinct sentence.\n\nSecond separate sentence.")
+    result = score_markdown("First distinct sentence. Second separate sentence.", gt)
+    assert result.element_recall == result.element_precision == result.element_f1 == 1
+
+
+def test_full_reference_block_precision_penalizes_added_prose():
+    gt = _gt(markdown="Expected sentence.")
+    result = score_markdown("Expected sentence. Entirely unrelated extra prose repeated many times here.", gt)
+    assert result.element_recall == 1
+    assert result.element_precision == 0
+
+
+def test_empty_table_padding_row_does_not_break_reference_self_score():
+    text = "| A | B |\n|---|---|\n| | |\n| 1 | 2 |"
+    result = score_markdown(text, _gt(markdown=text))
+    assert result.element_precision == result.element_recall == result.element_f1 == 1
