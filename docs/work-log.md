@@ -2002,3 +2002,13 @@ Created `docs/follow-up-2026-10-07.md` at the user's explicit request. It record
 cleanup status and verified shipping reference selection. The completed
 `follow-up-2026-10-03.md` is unchanged. Documentation only; no paid calls or
 scoring changes.
+
+## 2026-10-07 — Markdown table-header type mismatch reproduced
+
+Sonnet sroie_000 supplies a valid pipe-table header. The Markdown renderer
+produces thead/th, but our parser maps all tr elements to table_row while the
+catalogue allows table_header. The exact text match is wrongly penalized.
+Counted 146 saved table-header verdicts across 10 pages/10 engines: 129
+wrong_type, 17 absent, no correct verdicts. Recorded the cause, scope and required
+regressions in the new follow-up-2026-10-07.md, leaving the completed document
+unchanged. No scoring changes or paid calls; parser correction/rescore pending.
