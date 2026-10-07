@@ -1994,3 +1994,11 @@ Removed the newly appended outstanding-work section and restored the completed
 follow-up document to its delivered version, as requested. No replacement
 document was created. This does not fix or dismiss the newly identified Markdown
 matching issue or execute the outstanding geometry work. No scoring changes.
+
+## 2026-10-07 — separate document for new follow-ups
+
+Created `docs/follow-up-2026-10-07.md` at the user's explicit request. It records
+ the reproduced Markdown diagnostic bug, outstanding Sonnet geometry rerun,
+cleanup status and verified shipping reference selection. The completed
+`follow-up-2026-10-03.md` is unchanged. Documentation only; no paid calls or
+scoring changes.
