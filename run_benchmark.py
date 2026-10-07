@@ -132,7 +132,7 @@ def setup_logging(timestamp: str, file_log: bool = True) -> logging.Logger:
         if not any(isinstance(f, _DropLibraryNoise) for f in handler.filters):
             handler.addFilter(_DropLibraryNoise())
 
-    fmt = logging.Formatter("%(asctime)s  %(message)s", datefmt="%H:%M:%S")
+    fmt = logging.Formatter("%(asctime)s  %(message)s" if file_log else "%(message)s", datefmt="%H:%M:%S")
     logger = logging.getLogger("benchmark")
     logger.setLevel(logging.DEBUG)
     logger.handlers.clear()
@@ -2162,7 +2162,7 @@ def read_run_manifest(timestamp: str) -> dict:
 
 
 def report(timestamp: str | list[str], log: logging.Logger,
-           legs: list[str] | None = None, detailed: bool = False) -> None:
+           legs: list[str] | None = None, detailed: bool = False, sort_by: str = "score") -> None:
     """Print and write the report for one run, or for several runs combined.
 
     Several timestamps (`--report A,B`) concatenate the stored rows of an
@@ -2221,7 +2221,7 @@ def report(timestamp: str | list[str], log: logging.Logger,
         raise ValueError(
             f"Modal timing/cost audit failed; report was not generated:\n{preview}{more}"
         )
-    if used_batches:
+    if used_batches and detailed:
         log.info("Modal timing/cost audit: PASS")
         log.info("  Engine                     GPU          Docs  Batches  "
                  "GPU s/doc   Docs/s      $/doc")
@@ -2265,7 +2265,7 @@ def report(timestamp: str | list[str], log: logging.Logger,
     operational = engine_operational(inference)
 
     from evaluation.reporting import print_report
-    print_report(leg_rows, inference, log, active_legs)
+    print_report(leg_rows, inference, log, active_legs, sort_by=sort_by, details=detailed)
     if not detailed:
         return
 
@@ -2277,16 +2277,10 @@ def report(timestamp: str | list[str], log: logging.Logger,
     _write_summary_csv(agg, summary)
     _write_engine_csv(agg, active_legs, operational, engine_csv)
 
-    # Order fixed by docs/architecture.md: provenance and limitations frame the
-    # scores, then the scores, then cost, then what failed.
+    log.info("\nSUPPORTING DIAGNOSTICS — requested with --report-details")
     _print_gt_provenance(leg_rows, log)
     _print_gt_limitations(log)
-    _print_leg_results(agg, leg_rows, active_legs, engines, operational, log)
     _print_judged_documents(judge_rows, log)
-    _print_engine_summary(agg, active_legs, operational, log)
-    _print_scale_projection(operational, log)
-    _print_per_leg_costs(operational, engines, log, inference)
-    _print_spread_warnings(agg, active_legs, log)
     _print_failures(leg_rows, log)
     _print_inference_errors(inference, log)
 
@@ -2294,7 +2288,6 @@ def report(timestamp: str | list[str], log: logging.Logger,
     log.info(f"  {per_doc}")
     log.info(f"  {summary}")
     log.info(f"  {engine_csv}")
-    log.info(f"  {LOGS_DIR / (timestamp + '.log')}")
 
 
 # ---------------------------------------------------------------------------
@@ -2303,6 +2296,7 @@ def report(timestamp: str | list[str], log: logging.Logger,
 
 def parse_args():
     p = argparse.ArgumentParser(description="OCR Benchmark Runner")
+    p.add_argument("--report-sort", choices=["score", "without-outliers", "cer", "wer", "f1", "cost", "latency"], default="score", help="Rank comparison tables by this metric (default: full score)")
     p.add_argument("--report-details", action="store_true", help="Print detailed audit and write local CSV summaries with --report")
     p.add_argument("--engines", default=",".join(DEFAULT_ENGINES),
                    help="Comma-separated, any subset of: " + ", ".join(ENGINES)
@@ -2546,7 +2540,7 @@ def main() -> None:
                        for v in args.report.split(",") if v.strip()]
         log = setup_logging("+".join(run_ts_list), file_log=False)
         log.info(f"Regenerating report from run(s) {', '.join(run_ts_list)}")
-        report(run_ts_list, log, legs=parse_legs(args.legs), detailed=args.report_details)
+        report(run_ts_list, log, legs=parse_legs(args.legs), detailed=args.report_details, sort_by=args.report_sort)
         return
 
     if args.rescore:

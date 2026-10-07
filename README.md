@@ -20,10 +20,33 @@ python run_benchmark.py --report current --legs text,markdown
 ```
 
 These commands read **`results/current.zip`** without calling engines or judges.
-The terminal report shows full and exclusion-comparison scores, coverage,
-document types, supporting metrics, cost and latency per engine and pass.
-Use `--report-details` for per-engine scores within each document type, the
-longer audit and local CSV exports.
+The terminal report compares engines side by side, rather than listing each
+engine separately. It opens with an engine × leg matrix, then ranks engines
+within each leg. Overall, easy, medium and hard tables put full scores,
+outlier-excluded scores, page counts and the leg's supporting metrics together.
+Legs with fewer than 24 scored pages (currently geometry) stay in one table.
+Cost/latency comparisons use the actual recorded pass for that leg, with cheapest
+first and a separate speed rank. Best values in each metric column are marked `*`.
+Missing values sort last; failed engines remain visible. There is no cross-leg
+average that rewards engines for skipping difficult legs.
+
+```bash
+# Rank text engines by character error rate, lowest first.
+python run_benchmark.py --report current --legs text --report-sort cer
+# Compare geometry latency, fastest first.
+python run_benchmark.py --report current --legs geometry --report-sort latency
+# Rank by the score after removing the common outlier cases.
+python run_benchmark.py --report current --legs tables --report-sort without-outliers
+# Add document families (invoice, receipt, etc.), other metrics, diagnostics and CSVs.
+python run_benchmark.py --report current --report-details
+```
+
+`--report-sort` also accepts `score` (default), `wer`, `f1`, and `cost`.
+Where a leg lacks the requested quality metric, its ranking falls back to Full.
+Supporting metrics use the full scored set; a parenthesized count means the
+metric has fewer reference pages. Cost/latency use successful scored pages;
+coverage is shown and can differ between engines. No logs/exports are created
+unless detailed CSVs are requested. HTML reports are unchanged by terminal reporting.
 
 For the browser report, download the source pages once and build:
 
