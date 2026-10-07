@@ -3,12 +3,11 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-07:** current run `20261007T090753Z` replays
-tables, KV printed-label selection and layout-box geometry from saved calls.
-Text, Markdown, schema and other geometry results remain unchanged from
-`20261007T084348Z`. No new inference or judge calls. KV has 260 settled scores;
-schema has 453 scored results and two server errors. Markdown catalogues cover
-92/93 pages. Further paid controls are deferred. See
+**Implementation status, 2026-10-07:** current run `20261007T094758Z` replays all
+saved table results with `gold-table-values-v3-items`. Other five legs are
+unchanged from `20261007T090753Z`. No new inference or judge calls. KV has 260
+settled scores; schema has 453 scored results and two server errors. Markdown
+catalogues cover 92/93 pages. Further paid controls remain deferred. See
 [follow-up-2026-10-07.md](follow-up-2026-10-07.md) for this audit and limitations.
 
 ## Prompts and provenance
@@ -127,7 +126,7 @@ Human gold at `documents/table_references/gold/` takes precedence over original
 references; a proposal is never selected automatically. All 42 reviewed pages
 have gold. Schema/KV gold is a separate reference collection.
 
-**Headline: reference value score (`gold-table-values-v2`).** Sum per-cell
+**Headline: reference value score (`gold-table-values-v3-items`).** Sum per-cell
 value credit and divide by reference logical cells. Exact normalized text and
 numerically equivalent amounts receive 1; nonnumeric text with character
 similarity at least 0.5 receives that fractional credit; lower similarity and
@@ -139,7 +138,21 @@ Extra cells, rows and tables do **not** reduce this headline. Report extra-cell
 count/rate, extra-table count and the old strict cell precision/recall/F1 as
 separate diagnostics. Empty output against nonempty gold scores zero.
 
-Keep row/column associations and use each physical output cell at most once.
+Keep logical item/column associations and use each returned content span at
+most once. A unique description may anchor several adjacent physical rows.
+Empty label cells or fragments of the same description may continue an item;
+a different label/subtotal, another item anchor, or completion of the record
+ends the group. Ambiguous/repeated labels do not justify an inferred association.
+Preserve value order within columns. This is deterministic grouping, not a model
+inventing missing structure.
+
+Adjacent columns may combine when complete headers establish their identity;
+HTML colspan also establishes which columns a cell covers. Values in one merged
+cell partition into ordered, disjoint word spans. Never reorder those values
+or borrow from another item. Blank cells still need an actual returned blank.
+Every verdict records the combined content, original component cells and their
+normalized-text offsets; the report keeps the original returned table visible.
+A physically different row layout alone does not lose content credit.
 Unique headers permit added, missing or reordered columns. Unique descriptive
 row labels or ISO dates identify rows; otherwise positions govern. Repeated
 side-by-side header groups may reflow into a narrow table. Identical-header

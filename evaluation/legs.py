@@ -131,7 +131,7 @@ LEGS: dict[str, LegSpec] = {
     TABLES: LegSpec(
         name=TABLES,
         title="Table extraction",
-        question="Did the engine recover the table's grid and cells?",
+        question="Did the engine recover the table's items and their associated values?",
         prompt=(
             "Extract every printed table from this image. Output only the tables, "
             "preserving cell text, row/column associations, headers, empty cells and "
@@ -141,7 +141,7 @@ LEGS: dict[str, LegSpec] = {
             "fields into table rows."
         ),
         scored_on="reference value credit; extras, strict cell F1 and structure reported separately",
-        method="one-to-one cell matching against reviewed table references",
+        method="label-associated logical items and non-overlapping value spans against reviewed table references",
         pass_name="tables",
     ),
     KEY_VALUE: LegSpec(

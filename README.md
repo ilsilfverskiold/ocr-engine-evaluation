@@ -11,7 +11,7 @@ two geometry-only extensions. Additional integrations remain available but unrun
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python run_benchmark.py --report 20261007T090753Z
+python run_benchmark.py --report 20261007T094758Z
 ```
 
 This prints saved results without inference or API calls. For the browser report,
@@ -19,7 +19,7 @@ first download the source pages, then build the self-contained HTML:
 
 ```bash
 python scripts/download_data.py
-python scripts/build_evidence_report.py 20261007T090753Z \
+python scripts/build_evidence_report.py 20261007T094758Z \
   --status "Tables and KV selection rescored; layout geometry included. Saved outputs only; Sonnet pixel recipe unrun."
 ```
 
@@ -33,7 +33,8 @@ current browser. Generated HTML is local and ignored by Git; source records and 
 with the repository.
 
 **Current status:** 4,505 six-leg results, including N/A and failed rows.
-Tables use partial reference value credit; extras and strict F1 are separate.
+Tables match logical items across adjacent rows and ordered cell spans; partial
+reference value credit is the headline. Extras and strict F1 are separate.
 Geometry has 196 scored results, including 51 layout-box results for DeepSeek-OCR,
 MinerU and PaddleOCR-VL. Sonnet's pixel recipe is prepared but unrun.
 Markdown matching was rebuilt and replayed across all 915 saved results; its
@@ -115,7 +116,7 @@ python scripts/build_evidence_report.py NEW_TIMESTAMP
 
 # Prepare exact unresolved KV requests and a cost reserve without sending them.
 python scripts/build_kv_synonyms.py prepare-values \
-  --source 20261007T090753Z --output /tmp/kv-review-plan.json
+  --source 20261007T094758Z --output /tmp/kv-review-plan.json
 ```
 
 Later supplied runs replace earlier answers for the same engine/page/leg. A

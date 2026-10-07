@@ -2148,3 +2148,30 @@ rows. Added evidence to the new follow-up; no scorer changes or paid calls.
 - The seven-item offline audit is complete. Sonnet's pixel recipe remains
   prepared but unrun; DeepSeek's adapter/provenance changes remain undeployed.
   Existing results are not presented as measurements of these new recipes.
+
+## 2026-10-07 — logical-item table scoring across every engine
+
+- Replace physical-row-only matching with shared label/identifier-associated
+  item groups, adjacent continuation rows and ordered disjoint cell spans.
+  Handle item codes above descriptions, header-confirmed column combinations,
+  and merged description cells without distributing their text into amounts.
+- Preserve item boundaries, blank records, missing/offset headers and section
+  units rows. Regression tests reject swapped amounts, unrelated following
+  items, wrong column order and repeated use of the same text.
+- Replay all 959 table records (504 scored) in 20261007T094758Z: 89 changed
+  headlines; other five legs unchanged. Mistral and DeepSeek sroie_002 each
+  change 0.2488 to 0.6000; missing GST-summary cells remain zero.
+- Verify every table headline from its cell credits, every allocated span for
+  non-overlap, and all 47 reference self-comparisons. Full suite: 489 passed;
+  final boundary corrections: all 65 table/report tests passed.
+- Report original tables alongside combined matched content and original-cell
+  text offsets. No paid inference/judge calls or reference edits. Replace the
+  superseded scored run/CSV exports and remove session scratch after validation.
+
+- Final report check: all 4,505 scores agree with the saved run and all 2,282
+  source-call files remain available. Execute the report JavaScript for Mistral
+  and DeepSeek sroie_002: 0.6000, combined item text, source spans and missing
+  GST summary render correctly. Other-leg comparison confirms 3,546 identical
+  records. All 60 shipping scores select the higher complete reference result.
+- Remove the superseded JSONL/CSV exports and this session's scratch folder
+  without creating an archive. Keep only the current scored export and report.

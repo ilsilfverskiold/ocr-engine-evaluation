@@ -4,6 +4,15 @@ Notable changes to the scoring code. The reference run is never modified;
 every change is rescored from stored outputs (`--rescore`) and the run id
 is given here.
 
+## 2026-10-07 — score logical table items across split rows and cells
+
+- Match label-associated item groups instead of requiring one physical row per
+  reference row. Keep column identity, ordered values and non-reused text spans.
+- Show combined matched content and every original source-cell span in the report.
+- Replay all saved tables in `20261007T094758Z`; other legs unchanged. Mistral
+  sroie_002 changes 0.2488 → 0.6000; the missing GST summary stays missing.
+- No paid calls. Replace superseded exports and delete session scratch work.
+
 ## 2026-10-07 — table values, printed KV labels, geometry and report audit
 
 - Table headline becomes reference value credit with partial text matching and

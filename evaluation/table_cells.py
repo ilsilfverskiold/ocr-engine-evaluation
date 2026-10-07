@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v2"
+VERSION = "gold-table-values-v3-items"
 
 
 def normalize_cell(text: str) -> str:
@@ -300,48 +300,259 @@ def _flex_columns(ref, pred):
     return {i: i for i in range(min(ref.cols, pred.cols))}
 
 
+def _anchor_strength(expected, returned):
+    """Identify a record by its label, never by the amount being graded."""
+    if expected == returned and expected:
+        return 1.0
+    if not expected or not returned or not re.search(r"[^\W\d_]", returned):
+        return 0.0
+    # A description can be split into a name and a quantity/continuation line.
+    if len(returned) >= 4 and re.search(r"(?<!\w)" + re.escape(returned) + r"(?!\w)", expected):
+        return len(returned) / len(expected)
+    sim = _similarity(expected, returned)
+    return sim if sim >= .75 else 0.0
+
+
+def _item_rows(ref, pred, columns):
+    """Disjoint adjacent row groups, bounded by item labels and new labels.
+
+    Reference labels establish identity. Empty label cells and fragments of the
+    same label may continue an item; another label/total terminates it. Repeated
+    or ambiguous labels never justify guessing which item owns an amount.
+    """
+    fallback = _row_map(ref, pred, columns)
+    groups = {r: [p] for r, p in fallback.items()}
+    def identifier(c):
+        return bool(re.search(r"[^\W\d_]", c.normalized) or
+                    (c.col == 0 and re.fullmatch(r"\d{4,}", c.normalized)))
+    # Prefer a stable left-hand record key over long, repeated fee descriptions.
+    label_col = max(range(ref.cols), key=lambda col: (
+        len({c.normalized for c in ref.cells if c.row > 0 and c.col == col and identifier(c)}),
+        -col), default=0)
+    if label_col not in columns:
+        return groups
+    labels = {c.row: c.normalized for c in ref.cells if c.col == label_col and c.row > 0
+              and identifier(c)}
+    counts = Counter(labels.values())
+    plabels = {c.row: c.normalized for c in pred.cells if c.col == columns[label_col] and c.row > 0}
+    candidates = {}
+    for pr, label in plabels.items():
+        ranked = sorted(((_anchor_strength(text, label), rr) for rr, text in labels.items()
+                         if counts[text] == 1), reverse=True)
+        if ranked and ranked[0][0] >= .35 and (len(ranked) == 1 or ranked[0][0] - ranked[1][0] >= .15):
+            candidates[pr] = ranked[0]
+    starts = {}
+    for rr in labels:
+        hits = [(strength, pr) for pr, (strength, row) in candidates.items() if row == rr]
+        if not hits:
+            continue
+        best = max(s for s, _ in hits)
+        best_rows = [pr for s, pr in hits if s == best]
+        if len(best_rows) == 1:
+            starts[rr] = best_rows[0]
+    header_row = fallback.get(0)
+    occupied = {header_row} if header_row is not None else set()
+    anchored = {}
+    for rr, start in sorted(starts.items(), key=lambda x: x[1]):
+        rows = [start]
+        # A printed item code may precede its description on the row above.
+        previous = plabels.get(start - 1, '')
+        if (start - 1 not in occupied and start - 1 not in starts.values()
+                and re.fullmatch(r"\d{3,}", previous)
+                and labels[rr].startswith(previous + ' ')):
+            rows.insert(0, start - 1)
+        for pr in range(start + 1, pred.rows):
+            if pr == header_row or not any(c.normalized for c in pred.cells if c.row == pr):
+                break
+            if not plabels.get(pr, '') and not any(
+                    c.row == rr and c.col != label_col and c.normalized for c in ref.cells):
+                break  # a section label does not absorb a following units row
+            # A complete record must not absorb a subsequent unlabeled total
+            # or numeric-only record. Use label completion and field lengths,
+            # not a search for whichever later amount matches the reference.
+            label_text = ' '.join(plabels.get(r, '') for r in rows).strip()
+            required = [c for c in ref.cells if c.row == rr and c.normalized]
+            complete = _similarity(labels[rr], label_text) >= .95 and all(
+                sum(len(c.normalized.split()) for c in pred.cells
+                    if c.row in rows and c.col == columns.get(rc.col)) >= len(rc.normalized.split())
+                for rc in required)
+            if complete:
+                break
+            if pr in starts.values():
+                break
+            # Another reference item can begin in a secondary label column.
+            # Shared codes such as SR do not establish a new item boundary.
+            boundary = False
+            for pc in (c for c in pred.cells if c.row == pr and re.search(r"[^\W\d_]", c.normalized)):
+                own = max((_anchor_strength(c.normalized, pc.normalized) for c in ref.cells if c.row == rr), default=0)
+                other = max((_anchor_strength(c.normalized, pc.normalized) for c in ref.cells if c.row > 0 and c.row != rr), default=0)
+                if other >= .75 and other > own + .15:
+                    boundary = True
+                    break
+            if boundary:
+                break
+            label = plabels.get(pr, '')
+            if label and not re.search(r"(?<!\w)" + re.escape(label) + r"(?!\w)", labels[rr]):
+                break
+            rows.append(pr)
+        anchored[rr] = rows
+        occupied.update(rows)
+    groups = {0: [header_row]} if 0 in fallback else {}
+    groups.update(anchored)
+    for rr, pr in fallback.items():
+        if rr == 0 or rr in anchored:
+            continue
+        if pr not in occupied:
+            groups[rr] = [pr]
+            occupied.add(pr)
+    return groups
+
+
+def _column_groups(ref, pred):
+    """Match complete header phrases, allowing adjacent headers to combine."""
+    columns = _flex_columns(ref, pred)
+    groups = {r: [p] for r, p in columns.items()}
+    rh, ph = _header(ref), _header(pred)
+    if len(rh) != ref.cols or len(ph) != pred.cols:
+        return groups
+    for pi, label in enumerate(ph):
+        if not label:
+            continue
+        matches = [(a, b) for a in range(len(rh)) for b in range(a + 2, len(rh) + 1)
+                   if all(rh[a:b]) and ' '.join(rh[a:b]) == label]
+        if len(matches) == 1 and pred.cols < ref.cols:
+            a, b = matches[0]
+            for ri in range(a, b):
+                groups[ri] = [pi]
+    for ri, label in enumerate(rh):
+        if not label:
+            continue
+        matches = [(a, b) for a in range(len(ph)) for b in range(a + 2, len(ph) + 1)
+                   if all(ph[a:b]) and ' '.join(ph[a:b]) == label]
+        if len(matches) == 1 and pred.cols > ref.cols:
+            a, b = matches[0]
+            groups[ri] = list(range(a, b))
+    return groups
+
+
+def _partition_values(expected, text):
+    """Ordered, non-overlapping word spans within a header-confirmed cell.
+
+    Partition the whole returned value; do not reorder values or search other
+    items. Bound the DP for pathological merged paragraphs.
+    """
+    from functools import lru_cache
+    words = list(re.finditer(r"\S+", text))
+    if len(words) > 128:
+        return []
+
+    @lru_cache(None)
+    def solve(i, start):
+        if i == len(expected):
+            return (0.0, ()) if start == len(words) else (-1.0, ())
+        best = (-1.0, ())
+        for end in range(start, len(words) + 1):
+            a = words[start].start() if start < len(words) else len(text)
+            b = words[end - 1].end() if end > start else a
+            tail, spans = solve(i + 1, end)
+            value = (_value_credit(expected[i], text[a:b]) if a < b else 0.0) + tail
+            if tail >= 0 and value > best[0]:
+                best = value, ((a, b),) + spans
+        return best
+    return list(solve(0, 0)[1])
+
+
 def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
     """Reference-value recall is the headline; extras/strict F1 are diagnostics."""
     strict = _compare_strict(reference, predicted)
     refs, preds = _views(reference, predicted)
     table_map = _assignment([[_table_similarity(r, p) + _header_overlap(r, p) for p in preds] for r in refs])
-    used, verdicts = set(), []
+    used, verdicts = {}, []
     credit = 0.0
     correct = partial = blanks_correct = 0
     for rt, ref in enumerate(refs):
         pt = table_map.get(rt)
         pred = preds[pt] if pt is not None else None
-        columns = _flex_columns(ref, pred) if pred else {}
-        rows = _row_map(ref, pred, columns) if pred else {}
-        # Unique dates also anchor rows; arbitrary repeated numeric amounts do not.
+        columns = _column_groups(ref, pred) if pred else {}
+        rows = _item_rows(ref, pred, {k: v[0] for k, v in columns.items()}) if pred else {}
         if pred:
             rdates = {c.text: c.row for c in ref.cells if c.col == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", c.text)}
-            pdates = [(c.text, c.row) for c in pred.cells if c.col == columns.get(0)]
+            pdates = [(c.text, c.row) for c in pred.cells if c.col in columns.get(0, [])]
             for date, row in rdates.items():
                 hits = [pr for text, pr in pdates if text == date]
                 if len(hits) == 1:
-                    rows[row] = hits[0]
-        positions = {(c.row, c.col): c for c in pred.cells} if pred else {}
+                    rows[row] = hits
+        # Build candidate content from the item's rows and identified columns.
+        # A shared physical cell is partitioned in reference-column order.
+        bundles = {}
         for cell in ref.cells:
-            output = positions.get((rows.get(cell.row), columns.get(cell.col)))
-            sources = pred.origins.get((output.row, output.col), []) if output else []
-            ids = {(ti, c.row, c.col) for ti, c in sources}
-            if ids & used:
-                output, sources, ids = None, [], set()
-            if output is not None:
-                used.update(ids)
-            value = _value_credit(cell.text, output.text) if output is not None else 0.0
+            def label_span(c):
+                return c.colspan > 1 and any(
+                    rc.row == cell.row and c.col in columns.get(rc.col, [])
+                    and _anchor_strength(rc.normalized, c.normalized) >= .35
+                    for rc in ref.cells)
+            matches = [c for c in pred.cells if c.row in rows.get(cell.row, [])
+                       and any(c.col == col or (c.col < col < c.col + c.colspan and not label_span(c))
+                               for col in columns.get(cell.col, []))] if pred else []
+            matches.sort(key=lambda c: (c.row, c.col))
+            signature = (cell.row, tuple((c.row, c.col) for c in matches))
+            bundles.setdefault(signature, ([], matches))[0].append(cell)
+        candidates = {}
+        for (_, signature), (cells, matches) in bundles.items():
+            if not signature:
+                continue
+            cells.sort(key=lambda c: c.col)
+            pieces, offsets, cursor = [], [], 0
+            for output in matches:
+                value = output.normalized
+                if not value:
+                    continue
+                if pieces:
+                    cursor += 1
+                pieces.append(value)
+                offsets.append((cursor, cursor + len(value), output))
+                cursor += len(value)
+            joined = ' '.join(pieces)
+            spans = _partition_values([c.text for c in cells], joined) if len(cells) > 1 else [(0, len(joined))]
+            if not spans:
+                spans = [(0, len(joined))]  # unresolved shared cell cannot be reused
+            for cell, (start, end) in zip(cells, spans):
+                sources = []
+                for left, right, output in offsets:
+                    lo, hi = max(start, left), min(end, right)
+                    if lo >= hi:
+                        continue
+                    for ti, original in pred.origins[(output.row, output.col)]:
+                        sources.append({"table": ti, **asdict(original), "start": lo-left,
+                                        "end": hi-left, "matched_text": output.normalized[lo-left:hi-left]})
+                if not joined and len(cells) == 1:
+                    sources = [{"table": ti, **asdict(original), "start": 0, "end": 0,
+                                "matched_text": ""} for output in matches
+                               for ti, original in pred.origins[(output.row, output.col)]]
+                candidates[(cell.row, cell.col)] = (joined[start:end], sources)
+        for cell in ref.cells:
+            text, sources = candidates.get((cell.row, cell.col), ('', []))
+            collision = any(any((a < src['end'] and src['start'] < b) or
+                                (a == b == src['start'] == src['end'] == 0)
+                                for a, b in used.get((src['table'], src['row'], src['col']), []))
+                            for src in sources)
+            if collision:
+                text, sources = '', []
+            for src in sources:
+                used.setdefault((src['table'], src['row'], src['col']), []).append((src['start'], src['end']))
+            value = _value_credit(cell.text, text) if sources else 0.0
             credit += value
             correct += value == 1
             partial += 0 < value < 1
             blanks_correct += value == 1 and not cell.normalized
             rs = ref.origins[(cell.row, cell.col)]
-            verdicts.append({"reference_table": rs[0][0], "output_table": sources[0][0] if sources else None,
-                "reference": asdict(rs[0][1]), "output": asdict(sources[0][1]) if sources else None,
+            output = {k: sources[0][k] for k in ('row', 'col', 'text', 'rowspan', 'colspan')} if sources else None
+            verdicts.append({"reference_table": rs[0][0], "output_table": sources[0]['table'] if sources else None,
+                "reference": asdict(rs[0][1]), "output": output, "matched_text": text,
                 "reference_components": [{"table": ti, **asdict(c)} for ti, c in rs],
-                "output_components": [{"table": ti, **asdict(c)} for ti, c in sources],
-                "credit": value, "verdict": "correct" if value == 1 else "partial" if value else "wrong" if output else "missing",
-                "how": "matched table, row label/order and column label/order; normalized complete value or partial text"})
+                "output_components": sources, "output_rows": rows.get(cell.row, []),
+                "credit": value, "verdict": "correct" if value == 1 else "partial" if value else "wrong" if sources else "missing",
+                "how": "label-associated item rows and columns; ordered, non-overlapping content spans"})
     extra = []
     for ti, table in enumerate(predicted):
         for cell in table.cells:
@@ -359,4 +570,4 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
             "extra_tables": max(0, len(predicted) - len(reference)),
             "unmatched_tables": sum(not any(i == ti for i, _, _ in used) for ti in range(len(predicted))),
             "verdicts": verdicts + extra, "alignment_table_matches": table_map,
-            "normalization": "repeated column groups, label-confirmed transpose, same-header table chunks; original cell identities retained"}
+            "normalization": "label-associated adjacent item rows; ordered cell spans; repeated columns, transpose and table chunks; source positions retained"}

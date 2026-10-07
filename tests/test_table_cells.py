@@ -153,3 +153,118 @@ def test_blank_header_column_is_not_discarded_by_label_alignment():
     result = compare_cells(tables, tables)
     assert result["score"] == 1
     assert result["extra_cells"] == 0
+
+
+def test_item_can_span_adjacent_rows_without_losing_its_amounts():
+    ref = [['', 'RM', 'Code'], ['PPD 4MM DENLIME 1.000 PC x', '1.887', 'SR 2.00'],
+           ['6023# GARDEN 1.000 PC x', '5.000', 'SR 5.30']]
+    pred = [ref[0], ['PPD 4MM DENLIME', '', ''], ['', '1.887', 'SR'], ['1.000 PC x', '', '2.00'],
+            ['6023# GARDEN', '', ''], ['', '5.000', 'SR'], ['1.000 PC x', '', '5.30'],
+            ['Subtotal', '', '7.30']]
+    result = score(html(ref), html(pred))
+    assert result.score == 1
+    assert result.cell_counts['extra_cells'] > 0
+    values = [v for v in result.code_verdicts if v['reference'] and v['reference']['text'] == 'SR 2.00']
+    assert values[0]['matched_text'] == 'sr 2.00'
+    assert len(values[0]['output_components']) == 2
+    # The same numbers in the wrong logical item cannot rescue it.
+    pred[2][1], pred[5][1] = pred[5][1], pred[2][1]
+    assert score(html(ref), html(pred)).score == pytest.approx(7/9)
+
+
+def test_continuation_stops_at_unknown_item_or_subtotal():
+    ref = [['Item', 'Price'], ['Apple pack', '10']]
+    pred = [ref[0], ['Apple', ''], ['Unrelated item', '10']]
+    result = score(html(ref), html(pred))
+    assert next(v for v in result.code_verdicts if v['reference'] and v['reference']['text']=='10')['credit'] == 0
+    pred[-1][0] = 'Subtotal'
+    assert score(html(ref), html(pred)).score == result.score
+
+
+def test_merged_columns_use_ordered_disjoint_spans_not_value_search():
+    ref = [['Item', 'Qty', 'Price'], ['Apples', '2', '100']]
+    pred = [['Item', 'Qty Price'], ['Apples', '2 100']]
+    result = score(html(ref), html(pred))
+    assert result.score == 1
+    parts = [p for v in result.code_verdicts if v['reference'] for p in v['output_components']
+             if p['row']==1 and p['col']==1]
+    assert [(p['start'],p['end']) for p in parts] == [(0,1),(2,5)]
+    assert score(html(ref), html([pred[0], ['Apples','100 2']])).score == pytest.approx(4/6)
+    assert score(html(ref), html([pred[0], ['Apples','2 1000']])).score == pytest.approx(5/6)
+
+
+def test_split_columns_combine_only_when_headers_establish_identity():
+    ref = [['Item', 'Tax code amount'], ['Apples', 'SR 100']]
+    pred = [['Item', 'Tax code', 'amount'], ['Apples', 'SR', '100']]
+    assert score(html(ref), html(pred)).score == 1
+    pred[0][-1] = 'Other item amount'
+    assert score(html(ref), html(pred)).score < 1
+
+
+def test_html_colspan_values_are_partitioned_in_column_order():
+    ref = html([['Item','Qty','Price'],['Apples','2','100']])
+    pred = '<table><tr><td>Item</td><td>Qty</td><td>Price</td></tr><tr><td>Apples</td><td colspan="2">2 100</td></tr></table>'
+    assert score(ref, pred).score == 1
+    assert score(ref, pred.replace('2 100','100 2')).score < 1
+
+
+def test_complete_item_does_not_absorb_unlabeled_numeric_record():
+    rows = [['Name','Current','Previous'], ['Fees','10','20'], ['', '30','40']]
+    assert score(html(rows),html(rows)).score == 1
+
+
+def test_header_can_follow_metadata_rows():
+    ref = [['GST Summary','Amount','Tax'],['SR @ 6','6.89','0.41']]
+    pred = [['Total items','2','']] + ref
+    assert score(html(ref),html(pred)).score == 1
+
+
+def test_crowded_header_does_not_merge_distinct_data_columns():
+    ref = [['Item','Note','2025','2024'],['Apples','4','245','618']]
+    pred = [['Item','Note 2025 2024','','',''],['Apples','4','245','618','']]
+    r=score(html(ref),html(pred))
+    assert all(v['credit']==1 for v in r.code_verdicts if v['reference'] and v['reference']['row']==1)
+
+
+def test_blank_record_after_partial_item_stays_a_separate_record():
+    ref = [['Item','Price'],['Red apple box','100'],['','']]
+    pred = [['Item','Price'],['Red apple','100'],['','']]
+    r=score(html(ref),html(pred))
+    assert r.cell_counts['correct_blank_cells']==2
+
+
+def test_description_after_item_code_and_spanning_columns_is_one_item():
+    ref = html([['Item','Qty','Price'],['6783 SR CERAMIC CAP','5','3.50']])
+    pred = '<table><tr><th>Item</th><th>Qty</th><th>Price</th></tr><tr><td>6783</td><td>5</td><td>3.50</td></tr><tr><td colspan="3">SR CERAMIC CAP</td></tr></table>'
+    assert score(ref,pred).score == 1
+
+
+def test_section_label_spanning_columns_is_not_split_into_numeric_fields():
+    ref = html([['Name','2025','2024'],['CAPITAL AND RESERVES','','']])
+    pred = '<table><tr><th>Name</th><th>2025</th><th>2024</th></tr><tr><td colspan="3">CAPITAL AND RESERVES</td></tr></table>'
+    r=score(ref,pred)
+    assert next(v for v in r.code_verdicts if v['reference'] and v['reference']['text']=='CAPITAL AND RESERVES')['credit']==1
+
+
+def test_missing_value_in_combined_cell_does_not_consume_other_values():
+    ref = html([['Item','Qty','Price'],['Apples','2','100']])
+    pred = html([['Item','Qty Price'],['Apples','100']])
+    assert score(ref,pred).score == pytest.approx(5/6)
+
+
+def test_missing_header_does_not_discard_first_returned_item():
+    ref = [['Item','Price'],['Apples','10'],['Pears','20']]
+    assert score(html(ref),html(ref[1:])).score == pytest.approx(4/6)
+
+
+def test_section_label_with_missing_number_does_not_absorb_units_row():
+    ref = [['Name','Year'],['1. Capital',''],['',"£'000"],['Apples','10']]
+    pred = [ref[0],['Capital',''],ref[2],ref[3]]
+    r=score(html(ref),html(pred))
+    assert next(v for v in r.code_verdicts if v['reference'] and v['reference']['text']=="£'000")['credit']==1
+
+
+def test_shipment_identifier_takes_priority_over_repeated_fee_description():
+    ref = [['Shipment','Description','Amount'],['123456','Delivery fee handling fee','10'],['654321','Delivery fee','20']]
+    pred = [ref[0],['123456','Delivery fee','10'],['','handling fee',''],['654321','Delivery fee','20']]
+    assert score(html(ref),html(pred)).score == 1
