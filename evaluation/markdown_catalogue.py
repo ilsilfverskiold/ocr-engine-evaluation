@@ -5,6 +5,8 @@ review is recorded. Existing catalogues are preserved.
 """
 from __future__ import annotations
 
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+
 import hashlib
 import json
 import os
@@ -72,7 +74,7 @@ def prepare():
     requests = []
     for doc in json.loads((ROOT / 'documents/manifest.json').read_text()):
         path = ROOT / doc['file']
-        if (CACHE / (path.stem + '.json')).exists():
+        if artifact_exists(CACHE / (path.stem + '.json')):
             continue
         actual = source_hash(path)
         if actual != doc['sha256']:
@@ -111,12 +113,12 @@ def _one(request):
     from google import genai
     from google.genai import types
     path = _check_request(request)
-    if (CACHE / (path.stem + '.json')).exists():
+    if artifact_exists(CACHE / (path.stem + '.json')):
         return {'document': request['document'], 'skipped': 'existing catalogue', 'cost_usd': 0}
     journal = CACHE / 'calls' / (request['id'] + '.json')
     journal.parent.mkdir(parents=True, exist_ok=True)
-    if journal.exists():
-        saved = json.loads(journal.read_text())
+    if artifact_exists(journal):
+        saved = json.loads(artifact_text(journal))
         if saved.get('raw_text') and not saved.get('error'):
             _write_proposal(request, validate(json.loads(saved['raw_text'])), journal)
         return saved  # No automatic retries, including failures.
@@ -156,7 +158,7 @@ def _one(request):
 
 def _write_proposal(request, items, journal):
     dest = CACHE / 'proposals' / (Path(request['document']).stem + '.json')
-    if dest.exists():
+    if artifact_exists(dest):
         return  # Preserve reviewer edits and recover only a missing proposal.
     proposal = {**request, 'items': items, 'review_status': 'pending', 'review_notes': '',
                 'source_call': str(journal.relative_to(ROOT))}
@@ -191,7 +193,7 @@ def accept(stem, reviewer, notes):
     if not reviewer.strip() or not notes.strip():
         raise ValueError('Record who checked the source image and what was reviewed')
     path = CACHE / 'proposals' / (stem + '.json')
-    proposal = json.loads(path.read_text())
+    proposal = json.loads(artifact_text(path))
     image = _check_request(proposal)
     validate({'items': proposal['items']})
     selected = [item for item in proposal['items'] if item['confident']]
@@ -208,9 +210,9 @@ def accept(stem, reviewer, notes):
 def reviewed_items(document_path):
     """Current-image, explicitly reviewed catalogues can establish eligibility."""
     path = CACHE / (Path(document_path).stem + '.json')
-    if not path.exists():
+    if not artifact_exists(path):
         return None
-    data = json.loads(path.read_text())
+    data = json.loads(artifact_text(path))
     if data.get('version') != VERSION or data.get('review_status') != 'accepted':
         return None
     if data.get('image_sha256') != source_hash(Path(document_path)):

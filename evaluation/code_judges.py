@@ -10,6 +10,8 @@ scorer; current tables use table_cells through table_leg.
 
 from __future__ import annotations
 
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+
 import html as _html
 import json
 import re
@@ -56,10 +58,10 @@ def _sample(items: list, cap: int) -> list:
 # ---------------------------------------------------------------- checklists
 def load_markdown_checklist(document_stem: str) -> list[dict] | None:
     path = MARKDOWN_CACHE_DIR / f"{document_stem}.json"
-    if not path.exists():
+    if not artifact_exists(path):
         return None
     try:
-        record = json.loads(path.read_text(encoding="utf-8"))
+        record = json.loads(artifact_text(path))
         if record.get('version') == 'markdown-image-catalogue-v1' and record.get('review_status') != 'accepted':
             return None
         items = record.get("items") or []
@@ -120,10 +122,10 @@ def load_table_checklist(document_stem: str, reference_html: str | None = None,
     With `reference_html` (the human table reference) and the policy on, only
     the checklist tables that correspond to it are kept before sampling."""
     path = TABLE_CACHE_DIR / f"{document_stem}.json"
-    if not path.exists():
+    if not artifact_exists(path):
         return None
     try:
-        items = json.loads(path.read_text(encoding="utf-8")).get("items") or []
+        items = json.loads(artifact_text(path)).get("items") or []
     except Exception:
         return None
     items = [i for i in items if isinstance(i, dict)]

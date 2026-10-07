@@ -49,6 +49,8 @@ See docs/judge-redesign.md.
 
 from __future__ import annotations
 
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+
 import json
 import os
 import time
@@ -288,8 +290,8 @@ def build_checklist(
     """Stage 1. Engine-blind, cached — every engine is checked against the same list."""
     model = model or os.environ.get("OCR_JUDGE_MODEL") or DEFAULT_MODEL
     cache_path = CACHE_DIR / f"{Path(document_path).stem}.json"
-    if use_cache and cache_path.exists():
-        cached = json.loads(cache_path.read_text(encoding="utf-8"))
+    if use_cache and artifact_exists(cache_path):
+        cached = json.loads(artifact_text(cache_path))
         # Capped on the way out, not on the way in: a checklist cached before
         # the cap still yields the same sampled list every engine sees.
         return _sample_checklist([ChecklistItem(**i) for i in cached["items"]]), 0.0

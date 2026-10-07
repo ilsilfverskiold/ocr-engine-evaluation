@@ -118,8 +118,9 @@ class _DropLibraryNoise(logging.Filter):
         return not record.name.startswith(_LIBRARY_NOISE)
 
 
-def setup_logging(timestamp: str) -> logging.Logger:
-    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+def setup_logging(timestamp: str, file_log: bool = True) -> logging.Logger:
+    if file_log:
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGS_DIR / f"{timestamp}.log"
 
     # Libraries log through the root logger; ours is "benchmark". Attach the
@@ -140,11 +141,11 @@ def setup_logging(timestamp: str) -> logging.Logger:
     ch.setFormatter(fmt)
     logger.addHandler(ch)
 
-    fh = logging.FileHandler(log_path, encoding="utf-8")
-    fh.setFormatter(fmt)
-    logger.addHandler(fh)
-
-    logger.info(f"Log file: {log_path}")
+    if file_log:
+        fh = logging.FileHandler(log_path, encoding="utf-8")
+        fh.setFormatter(fmt)
+        logger.addHandler(fh)
+        logger.info(f"Log file: {log_path}")
     return logger
 
 
@@ -194,12 +195,9 @@ def _measured_modal_costs() -> dict[tuple[str, str], float]:
     exists for a pass, the estimate uses it instead.
     """
     sums: dict[tuple[str, str], list[float]] = {}
-    for path in sorted(RUNS_DIR.glob("*_inference.jsonl")):
-        for line in path.read_text(encoding="utf-8").splitlines():
-            try:
-                r = json.loads(line)
-            except json.JSONDecodeError:
-                continue
+    from evaluation.artifacts import glob_paths
+    for path in glob_paths(RUNS_DIR, "*_inference.jsonl"):
+        for r in read_jsonl(path):
             if r.get("measurement_scope") != "modal_batch":
                 continue
             cost = r.get("cost_per_page")
@@ -439,11 +437,14 @@ def log_record(record: dict, path: Path) -> None:
 
 
 def read_jsonl(path: Path) -> list[dict]:
-    if not path.exists():
+    from evaluation.artifacts import read_text
+    try:
+        contents = read_text(path)
+    except FileNotFoundError:
         return []
     records = []
-    with open(path, encoding="utf-8") as f:
-        for line in f:
+    if contents:
+        for line in contents.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -469,9 +470,7 @@ def _write_ocr_output(
     pass_name: str, structured_output: dict | None = None,
     result=None, task=None, legs: tuple[str, ...] = (),
 ) -> None:
-    """Two files per (document, engine, pass), in a folder per engine:
-
-        <tier>__<type>__<stem>/<engine>/<pass>.txt        what we scored
+    """One complete call file per (document, engine, pass):
         <tier>__<type>__<stem>/<engine>/<pass>.call.json  the whole call
 
     `.call.json` holds the prompt sent, the provider's complete reply before
@@ -486,7 +485,6 @@ def _write_ocr_output(
     folder = f"{gt.tier}__{gt.doc_type}__{doc_path.stem}"
     out_dir = OCR_OUTPUTS_DIR / timestamp / folder / engine
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"{pass_name}.txt").write_text(text, encoding="utf-8")
 
     if result is not None:
         envelope = {
@@ -777,10 +775,9 @@ def _read_stored_call(timestamp: str, engine: str, doc_path: Path, gt,
     """The persisted `.call.json` for one (engine, document, pass), or None."""
     folder = f"{gt.tier}__{gt.doc_type}__{doc_path.stem}"
     path = OCR_OUTPUTS_DIR / timestamp / folder / engine / f"{pass_name}.call.json"
-    if not path.exists():
-        return None
+    from evaluation.artifacts import read_text
     try:
-        call = json.loads(path.read_text(encoding="utf-8"))
+        call = json.loads(read_text(path))
     except Exception:
         return None
     blocks = ((call.get("raw_response") or {}).get("Blocks")) if isinstance(call.get("raw_response"), dict) else None
@@ -928,6 +925,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     from runners.textract_structured_runner import TABLE_ADAPTER_VERSION
 
     loader = GroundTruthLoader()
+    RUNS_DIR.mkdir(parents=True, exist_ok=True)
     results_jsonl = RUNS_DIR / f"{target}_results.jsonl"
     inference_jsonl = RUNS_DIR / f"{target}_inference.jsonl"
     if results_jsonl.exists() or inference_jsonl.exists():
@@ -1131,6 +1129,22 @@ def engine_leg_means(agg: dict) -> dict[tuple[str, str], float]:
     return {k: sum(v) / len(v) for k, v in buckets.items()}
 
 
+def unique_inference_calls(records: list[dict]) -> list[dict]:
+    """Leg-selection rows can refer to the same physical persisted call."""
+    calls = {}
+    for record in records:
+        key = (record.get("engine_name"), record.get("document_path"),
+               record.get("pass_name") or DEFAULT_PASS,
+               record.get("source_timestamp") or record.get("timestamp"),
+               bool(record.get("error")))
+        if key not in calls:
+            calls[key] = dict(record)
+        else:
+            calls[key]["legs"] = list(dict.fromkeys(
+                list(calls[key].get("legs") or []) + list(record.get("legs") or [])))
+    return list(calls.values())
+
+
 def engine_operational(inference: list[dict]) -> dict[str, dict]:
     """Per-engine cost and latency, document-weighted, cold starts excluded.
 
@@ -1151,7 +1165,7 @@ def engine_operational(inference: list[dict]) -> dict[str, dict]:
     per_pass_latency: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
     passes: dict[str, set[str]] = defaultdict(set)
 
-    for r in inference:
+    for r in unique_inference_calls(inference):
         if r.get("error"):
             continue
         engine, doc = r["engine_name"], r["document_path"]
@@ -2174,16 +2188,15 @@ def write_run_manifest(
 
 def read_run_manifest(timestamp: str) -> dict:
     path = RUNS_DIR / f"{timestamp}_run.json"
-    if not path.exists():
-        return {}
+    from evaluation.artifacts import read_text
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(read_text(path))
     except Exception:
         return {}
 
 
 def report(timestamp: str | list[str], log: logging.Logger,
-           legs: list[str] | None = None) -> None:
+           legs: list[str] | None = None, detailed: bool = False) -> None:
     """Print and write the report for one run, or for several runs combined.
 
     Several timestamps (`--report A,B`) concatenate the stored rows of an
@@ -2228,6 +2241,8 @@ def report(timestamp: str | list[str], log: logging.Logger,
                 + ", ".join(f"{e}/{l}" for e, l in clashes[:10])
             )
     timestamp = "+".join(timestamps)
+
+    inference = unique_inference_calls(inference)
 
     # Modal cost audit gate — the report is not printed if a GPU figure cannot
     # be re-derived from the stored batch fields.
@@ -2283,6 +2298,11 @@ def report(timestamp: str | list[str], log: logging.Logger,
     agg = aggregate_legs(leg_rows)
     operational = engine_operational(inference)
 
+    from evaluation.reporting import print_report
+    print_report(leg_rows, inference, log, active_legs)
+    if not detailed:
+        return
+
     SUMMARIES_DIR.mkdir(parents=True, exist_ok=True)
     per_doc = SUMMARIES_DIR / f"{timestamp}_per_doc.csv"
     summary = SUMMARIES_DIR / f"{timestamp}_summary.csv"
@@ -2317,6 +2337,7 @@ def report(timestamp: str | list[str], log: logging.Logger,
 
 def parse_args():
     p = argparse.ArgumentParser(description="OCR Benchmark Runner")
+    p.add_argument("--report-details", action="store_true", help="Print detailed audit and write local CSV summaries with --report")
     p.add_argument("--engines", default=",".join(DEFAULT_ENGINES),
                    help="Comma-separated, any subset of: " + ", ".join(ENGINES)
                         + " (default: all)")
@@ -2382,6 +2403,8 @@ def parse_args():
         if args.resume or args.rerun_errors:
             p.error("--resume-unattempted cannot combine with --resume/--rerun-errors")
         args.resume = args.resume_unattempted
+    if args.report_details and not args.report:
+        p.error("--report-details requires --report")
     if args.plan_output and not args.dry_run:
         p.error('--plan-output requires --dry-run')
     if args.dry_run and (args.rescore or args.score or args.report or args.check or args.resume):
@@ -2390,9 +2413,14 @@ def parse_args():
 
 
 def _resolve_timestamp(value: str) -> str:
+    from evaluation.artifacts import current_timestamp
+    if value == "current":
+        return current_timestamp()
     if value != "latest":
         return value
     candidates = sorted(RUNS_DIR.glob("*_results.jsonl"))
+    if not candidates:
+        return current_timestamp()
     if not candidates:
         raise FileNotFoundError("No results JSONL found in results/runs/")
     return candidates[-1].name.replace("_results.jsonl", "")
@@ -2545,14 +2573,14 @@ def main() -> None:
         os.environ["OCR_JUDGE_MODEL"] = args.judge_model
 
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    log = setup_logging(ts)
+    log = setup_logging(ts, file_log=not bool(args.report))
 
     if args.report:
         run_ts_list = [_resolve_timestamp(v.strip())
                        for v in args.report.split(",") if v.strip()]
-        log = setup_logging("+".join(run_ts_list))
+        log = setup_logging("+".join(run_ts_list), file_log=False)
         log.info(f"Regenerating report from run(s) {', '.join(run_ts_list)}")
-        report(run_ts_list, log)
+        report(run_ts_list, log, legs=parse_legs(args.legs), detailed=args.report_details)
         return
 
     if args.rescore:

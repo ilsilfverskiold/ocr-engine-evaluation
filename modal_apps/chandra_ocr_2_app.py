@@ -2,7 +2,7 @@
 Modal app: Chandra OCR 2 — datalab-to/chandra-ocr-2. GPU: A10.
 
 Size: the HF safetensors index reports 5,295,564,288 BF16 parameters
-(10.59 GB file) — "4B" in docs/engine-expansion-research.md is wrong; Surya's
+(10.59 GB file); Surya's
 model card lists Chandra OCR 2 at 5.3B. Architecture Qwen3_5ForConditionalGeneration.
 
 Route (all read from chandra-ocr v0.2.0, github.com/datalab-to/chandra/tree/v0.2.0;

@@ -539,8 +539,7 @@ ENGINES: dict[str, EngineSpec] = {
     # been run yet, so none has a measured cost, and none is part of the
     # reference run 20260810T130609Z. They are opted into with --engines and
     # collected into an extension run (--collect-only --extends <baseline>).
-    # Research: docs/engine-expansion-research.md and
-    # docs/engine-leg-and-cost-matrix.md; per-engine contracts live as
+    # Integration guide: docs/engine-integrations.md; contracts live as
     # comments at the top of each app/runner file.
     # =======================================================================
     # --- Cloud APIs (expansion) ----------------------------------------------

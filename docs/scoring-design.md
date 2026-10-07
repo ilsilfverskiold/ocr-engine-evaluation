@@ -3,12 +3,10 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-**Implementation status, 2026-10-07:** current run `20261007T094758Z` replays all
-saved table results with `gold-table-values-v3-items`. Other five legs are
-unchanged from `20261007T090753Z`. No new inference or judge calls. KV has 260
-settled scores; schema has 453 scored results and two server errors. Markdown
-catalogues cover 92/93 pages. Further paid controls remain deferred. See
-[follow-up-2026-10-07.md](follow-up-2026-10-07.md) for this audit and limitations.
+The published bundle records exact scorer versions, source calls and coverage.
+Current table scoring is `gold-table-values-v3-items`; Markdown uses
+`markdown-structure-v3-spans-reflow`. Offline reporting never changes scores.
+See the [README](../README.md) for commands, current limitations and coverage.
 
 ## Prompts and provenance
 
@@ -318,3 +316,23 @@ without new inference or model judging. New schema calls use the current
 `--docs`, `--engines` and `--legs` support separately approved batches. The repo
 includes accepted table/structured gold and the five original shipping tables;
 the downloader restores manifest-verified source images and original sidecars.
+
+## Consistently low cases (reporting only)
+
+Full corpus scores remain primary. The secondary comparison excludes a page/leg
+case when at least three distinct engines have scored it, all their scores are
+≤0.25, and no participant failed or remains pending. Nonapplicable engines do not
+count as zeros. The complete saved cohort determines one common exclusion set
+before display filtering. Recompute document-type means and report remaining
+pages and lost types; all-excluded results are N/A. Costs retain all saved calls.
+This sensitivity check cannot distinguish hard documents from bad references,
+prompt problems or scorer defects. It is not a corrected leaderboard.
+
+## Published evidence
+
+`results/current.zip` contains one score set, its inference records, exact source
+calls and shared catalogues/KV decisions. Readers use it directly; local working
+files override bundled files during new runs. `scripts/publish_results.py` verifies
+SHA-256 hashes and atomically replaces the bundle. Images download separately.
+The HTML is generated locally and is not committed. Source identifiers inside
+the archive preserve provenance, not additional published result sets.

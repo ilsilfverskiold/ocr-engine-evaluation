@@ -52,7 +52,7 @@ PILLOW_VERSION = "10.4.0"
 MISTRAL_COMMON_VERSION = "1.11.2"
 MODEL_ID = "ATH-MaaS/OvisOCR2"
 # https://huggingface.co/api/models/ATH-MaaS/OvisOCR2 -> sha (lastModified 2026-08-28),
-# identical to the sha recorded in docs/engine-expansion-research.md.
+# pinned for reproducible inference.
 MODEL_REVISION = "1fc9221b7823a371d6e97f92d527cc847e24e107"
 
 # --- Exact card prompt (README.md @ MODEL_REVISION, OvisOCR2Parser.__init__) ----

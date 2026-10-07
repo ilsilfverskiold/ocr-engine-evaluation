@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 import json
 import os
 from functools import lru_cache
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
 from pathlib import Path
 from threading import RLock
 
@@ -56,8 +57,8 @@ def _path(gt):
 
 def _read(gt):
     path = _path(gt)
-    if path.exists():
-        record = json.loads(path.read_text())
+    if artifact_exists(path):
+        record = json.loads(artifact_text(path))
         if record.get("version") == VERSION and record.get("reference_id") == reference_id(gt):
             _limit_repeated_aliases(record['decisions'], [f.path for f in reference_fields(gt)])
             return record
@@ -80,8 +81,8 @@ def _limit_repeated_aliases(entries, keys):
 def _saved_calls(root):
     """Index earlier paid replies once on startup, independent of batch grouping."""
     by_reference = defaultdict(list)
-    for path in sorted((root / 'calls').glob('*.json')):
-        saved = json.loads(path.read_text())
+    for path in sorted(glob_paths(root / 'calls', '*.json')):
+        saved = json.loads(artifact_text(path))
         request = saved.get('request', {})
         if request.get('version') == VERSION and saved.get('raw_text'):
             try:
@@ -197,8 +198,8 @@ def _ask(request):
     """One journaled SDK attempt. Interrupted/invalid calls are never auto-retried."""
     global _reserved_usd
     path = CACHE_ROOT / "calls" / (request["id"] + ".json")
-    if path.exists():
-        saved = json.loads(path.read_text())
+    if artifact_exists(path):
+        saved = json.loads(artifact_text(path))
         if "raw_text" not in saved:
             raise RuntimeError(f"Unfinished paid request needs review: {path}")
         return validate(request, decode_reply(saved["raw_text"])), 0.0
@@ -260,7 +261,7 @@ def resolve(gt, pairs, use_judge=None):
         while requests:
             request = requests[0]
             # Saved valid replies can always be recovered without spending.
-            if not enabled and not (CACHE_ROOT / "calls" / (request["id"] + ".json")).exists():
+            if not enabled and not artifact_exists(CACHE_ROOT / "calls" / (request["id"] + ".json")):
                 break
             try:
                 entries, cost = _ask(request)

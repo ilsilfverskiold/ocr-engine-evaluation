@@ -6,6 +6,8 @@ when the request now includes fragments or previously omitted output context.
 """
 from __future__ import annotations
 
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -214,8 +216,8 @@ def _journal_reviews(root):
     """Recover paid context decisions even when later aliases regroup batches."""
     from evaluation.kv_synonyms import decode_reply
     indexed = {}
-    for path in sorted((root / 'calls').glob('*.json')):
-        saved = json.loads(path.read_text())
+    for path in sorted(glob_paths(root / 'calls', '*.json')):
+        saved = json.loads(artifact_text(path))
         request = saved.get('request', {})
         if request.get('version') != VERSION or not saved.get('raw_text'):
             continue
@@ -267,7 +269,7 @@ def resolve(gt, pairs, use_judge=None):
         enabled = use_judge is not False and bool(os.environ.get('GOOGLE_API_KEY'))
         while requests:
             request = requests[0]
-            if not enabled and not (legacy.CACHE_ROOT / 'calls' / (request['id'] + '.json')).exists():
+            if not enabled and not artifact_exists(legacy.CACHE_ROOT / 'calls' / (request['id'] + '.json')):
                 break
             try:
                 entries, cost = legacy._ask(request)

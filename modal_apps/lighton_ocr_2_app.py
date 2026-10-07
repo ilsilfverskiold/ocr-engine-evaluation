@@ -48,7 +48,7 @@ PILLOW_VERSION = "10.4.0"
 MISTRAL_COMMON_VERSION = "1.11.2"
 MODEL_ID = "lightonai/LightOnOCR-2-1B"
 # https://huggingface.co/api/models/lightonai/LightOnOCR-2-1B -> sha
-# (lastModified 2026-07-08), identical to docs/engine-expansion-research.md.
+# (lastModified 2026-07-08), pinned for reproducible inference.
 MODEL_REVISION = "c97bd377f04481830395218fa8951df9deaba756"
 SERVED_MODEL_NAME = "lighton-ocr-2"
 SERVER_HOST = "127.0.0.1"

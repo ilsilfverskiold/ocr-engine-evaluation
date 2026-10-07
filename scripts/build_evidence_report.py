@@ -4,19 +4,21 @@ from PIL import Image
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import run_benchmark as rb
+from evaluation.artifacts import location
+from evaluation.reporting import comparison
 from evaluation.ground_truth import GroundTruthLoader
 from evaluation.kv_schema_code import engine_pairs
 from evaluation.normalizers import markdown_for_scoring
 from evaluation.code_judges import engine_grids
 from evaluation.metrics import normalize_text
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('run',help='Saved scored run timestamp')
+parser.add_argument('run',nargs='?',default='current',help='Saved scored run timestamp (default: current)')
 parser.add_argument('--output',type=Path,default=Path('results/reports/ocr-benchmark-final.html'))
 parser.add_argument('--compare-with',help='Optional saved baseline timestamp')
 parser.add_argument('--include-historical-judge',action='store_true',help='Also show unchanged historical silver-document estimates, separate from the six legs')
 parser.add_argument('--runs-dir',type=Path,default=rb.RUNS_DIR,help='Read a provisional run outside the repository')
-parser.add_argument('--status',default='Work in progress: remaining calls and reference coverage are listed below.',help='Visible run status; do not label an incomplete run final')
-args=parser.parse_args(); TS=args.run
+parser.add_argument('--status',default='Saved benchmark results. Coverage, failed calls and configuration limitations are shown with the evidence.',help='Visible run status; do not label an incomplete run final')
+args=parser.parse_args(); TS=rb._resolve_timestamp(args.run)
 rb.RUNS_DIR=args.runs_dir
 rows=rb.read_jsonl(rb.RUNS_DIR/f'{TS}_results.jsonl'); inf=rb.read_jsonl(rb.RUNS_DIR/f'{TS}_inference.jsonl')
 if not args.include_historical_judge:
@@ -48,7 +50,7 @@ for r in rows:
    elif isinstance(v,list):
     for x in v:find_stops(x)
   find_stops(call.get('raw_response',{}))
-  calls[key]={'raw':raw,'structured':so,'model':call.get('model_version') or rec.get('model_version'),'prompt':prompt,'prompt_note':prompt_note,'source':src,'pass':p,'stop_reasons':sorted(set(finish)),'path':str(rb.OCR_OUTPUTS_DIR/str(src)/f'{gts[d].tier}__{gts[d].doc_type}__{Path(d).stem}'/e/(p+'.call.json')),'raw_sha256':hashlib.sha256(raw.encode()).hexdigest(),'json_schema':call.get('json_schema')}
+  calls[key]={'raw':raw,'structured':so,'model':call.get('model_version') or rec.get('model_version'),'prompt':prompt,'prompt_note':prompt_note,'source':src,'pass':p,'stop_reasons':sorted(set(finish)),'path':location(rb.OCR_OUTPUTS_DIR/str(src)/f'{gts[d].tier}__{gts[d].doc_type}__{Path(d).stem}'/e/(p+'.call.json')),'raw_sha256':hashlib.sha256(raw.encode()).hexdigest(),'json_schema':call.get('json_schema')}
  item={**r,'call_key':key,'page':Path(d).stem,'observation':rb._diagnose(r) if r['leg']!='judge' else 'Historical model-judged estimate, copied unchanged.'}
  c=calls[key]
  if r['leg']=='markdown':
@@ -95,7 +97,7 @@ for r in rows:
   if r['metrics']['scorer']=='markdown-structure-v3-spans-reflow':
    item['method']+=' Repeated column groups can reflow under matching headers with unique row anchors.'
    if e=='llamaparse' and Path(d).stem=='bank_000':
-    item['case_note']='Source-image review: the returned Account Transfers Out row contains the opening balances, and ETF numeric values shift onto the following funds. Consultant/address/preference text is omitted. Daily Date/Amount pairs may legitimately reflow into a narrow table; this score now accepts that layout while checking each date’s own amount. Three cached reference typos were corrected against the image and accepted gold. See docs/follow-up-2026-10-07.md for exact comparisons.'
+    item['case_note']='Source-image review: the returned Account Transfers Out row contains the opening balances, and ETF numeric values shift onto the following funds. Consultant/address/preference text is omitted. Daily Date/Amount pairs may legitimately reflow into a narrow table; this score now accepts that layout while checking each date’s own amount. Three cached reference typos were corrected against the image and accepted gold.'
  if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')=='gold-table-values-v3-items':
   item['method']='Reference value credit / reference cells: exact normalized values earn 1, partial text earns its similarity (at least 0.5), wrong numeric values earn 0. Match label-associated logical items across adjacent rows and ordered, disjoint cell spans. New item labels stop a group; values cannot move between items or columns. Header-confirmed column changes, transpose, repeated groups and table chunks are normalized. Extras do not lower this headline; strict F1 and extra counts remain diagnostics.'
  if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')=='gold-table-values-v2':
@@ -119,16 +121,19 @@ for r in rows:
 valid=lambda r:r.get('applicable') and r.get('score') is not None and not r.get('error')
 means=rb.engine_leg_means(rb.aggregate_legs(rows));engines=sorted({r['engine_name'] for r in rows});legs=list(rb.ALL_LEGS)
 changes=collections.Counter(r['leg'] for r in evidence if 'previous_score' in r and r['score']!=r['previous_score'])
-manifest=json.loads((rb.RUNS_DIR/f'{TS}_run.json').read_text())
+manifest=rb.read_run_manifest(TS)
 if not changes: changes=manifest.get('audit_score_changes',{})
 payload={'run':TS,'rows':evidence,'calls':calls,'images':images,'engines':engines,'legs':legs,'manifest':manifest,'changes':dict(changes),'means':{e:{l:means.get((e,l)) for l in legs} for e in engines},'status':args.status}
 
-methods={'text':'Unique normalized GT-token coverage, not character accuracy. CER/WER support it. Sensitive to spacing/punctuation, blind to order and extra words; no judge.','markdown':'Saved code checklist score: (correct + 0.5 × partial) / elements. Known flaw: the scorer promotes bold text to headings and can reuse output blocks. This is not strict Markdown structure accuracy. Heading syntax and block separation are not reliably validated by this saved score.','tables':'Code verdicts on nonempty sampled cells in returned grids, with row/column association. Cached model-authored reference checklist. TEDS is supporting/fallback.','key_value':'Returned scalar pairs versus fields marked as printed label/value pairs by cached aliases. (correct + blank_ok) / printed fields. Code verdicts; no new judge.','schema':'Parsed fields and aligned array rows versus the supplied schema reference. (correct + blank_ok) / sampled fields. Not full JSON equality; extra rows are not independently penalized.','geometry':'Text-associated boxes and mutual-center containment. SROIE uses line fragments; FUNSD/SynFinTabs use words. Line/coarse-block diagnostics stay separate. Errors are excluded from means and shown.','judge':'Old model-judged estimates for silver-GT pages, copied unchanged. Separate from the six legs; no judge rerun.'}
+methods={leg:rb._recorded_scoring_method(leg,[r for r in rows if r['leg']==leg])[1] for leg in rb.ALL_LEGS}
+methods['judge']='Historical silver-document estimates; separate from the six legs.'
 payload['methods']=methods
+payload['low_comparison']=comparison(rows)
+payload['operations']=rb.engine_operational(inf)
 html_template=r'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OCR benchmark — audited saved results</title><style>
 body{font:15px/1.5 system-ui;margin:0;color:#172b35;background:#f3f5f6}main{max-width:1450px;margin:auto;padding:22px}section,header{background:white;border:1px solid #ccd6dc;border-radius:8px;padding:20px;margin-bottom:16px}h1,h2,h3{line-height:1.2}h1{font-size:28px}h2{font-size:23px}select,input,button{font:inherit;padding:8px;max-width:100%}label{display:inline-block;margin:5px 16px 5px 0}button,summary{cursor:pointer}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px 9px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top}th{background:#edf1f4;position:sticky;top:0}td{overflow-wrap:anywhere}.scroll{overflow:auto;max-height:500px}.short{max-height:320px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;background:#f2f4f6;padding:12px;max-height:500px;overflow:auto}details{margin:12px 0}summary{font-weight:600}.warn{border-left:5px solid #c88013;padding:8px 14px;background:#fff6e7}.muted{color:#53636e}.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px}img,svg{width:100%;height:auto}#inventory tr{cursor:pointer}#inventory tr:hover{background:#eef6fa}.pill{display:inline-block;padding:3px 8px;background:#e7f0f5;margin:3px;border-radius:4px}a{color:#065ba3}@media(max-width:850px){.cols{grid-template-columns:1fr}main{padding:10px}}
 </style><main><header><h1>OCR benchmark: results and evidence</h1><p id="intro"></p><p class="warn" id="status"></p><p>Scores describe the saved configurations. N/A, pending work and failed calls remain visible and do not become zero scores. Inspect the exact prompt and output before assigning a cause.</p></header>
-<section><h2>Compare results</h2><label>Engine <select id="engine"></select></label><label>Document type <select id="doctype"></select></label><label>Leg <select id="leg"></select></label><label>Page <input id="search" type="search" placeholder="e.g. invoice_000"></label><p>Means average pages within each document type, then types equally. Counts show scored rows / selected rows. Filters apply to the overview and evidence list. Click a column heading to sort ascending or descending; N/A stays last.</p><div id="overview" class="scroll"></div><details><summary>Run provenance and changed scores</summary><div id="changes"></div><pre id="manifest"></pre></details><p id="count"></p><div id="inventory" class="scroll short"></div></section>
+<section><h2>Full scores and consistently low-scoring pages</h2><p>The full score remains primary. The alternative excludes page/leg cases where all scored engines score ≤0.25, with at least three engines and no failed/pending participants. The same excluded cases apply to every engine. This is a sensitivity check: hard pages, incorrect references and scorer defects can all cause low results. Removing all pages of a document type changes the type mix; counts and lost types are shown. Costs and latency use the full saved inference set.</p><div id="low-comparison" class="scroll"></div><details><summary>Excluded page/leg cases and score range</summary><div id="low-cases"></div></details></section><section><h2>Cost and latency</h2><p>Successful saved primary pass per page; steady-state where recorded. Model judging, setup and failed-call spend are not included in these deployment estimates. All-pass cost includes additional extraction passes. Shared conversion calls are counted once.</p><div id="operations" class="scroll"></div></section><section><h2>Compare results</h2><label>Engine <select id="engine"></select></label><label>Document type <select id="doctype"></select></label><label>Leg <select id="leg"></select></label><label>Page <input id="search" type="search" placeholder="e.g. invoice_000"></label><p>Means average pages within each document type, then types equally. Counts show scored rows / selected rows. Filters apply to the overview and evidence list. Click a column heading to sort ascending or descending; N/A stays last.</p><div id="overview" class="scroll"></div><details><summary>Run provenance and changed scores</summary><div id="changes"></div><pre id="manifest"></pre></details><p id="count"></p><div id="inventory" class="scroll short"></div></section>
 <section id="case"><h2 id="title"></h2><p id="method"></p><p id="observation"></p><details><summary>Configuration and interpretation for this leg</summary><p id="engine-note"></p></details><p id="provenance"></p><div id="evidence"></div><details><summary>Exact prompt and source provenance</summary><div id="prompt"></div></details><details><summary>Full saved transcription / structured payload (supporting raw data)</summary><div id="raw"></div></details><details><summary>All stored metrics, verdicts and reference repairs</summary><div id="metrics"></div></details></section></main>
 <script id="data" type="application/octet-stream">__DATA__</script>
 <script id="report-code" type="text/plain">
@@ -137,6 +142,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const pretty=o=>'<pre>'+esc(typeof o==='string'?o:JSON.stringify(o,null,2))+'</pre>';
 const tbl=(heads,rows)=>'<table><thead><tr>'+heads.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 const fmt=x=>x==null?'N/A':Number(x).toFixed(4);
+const money=x=>x==null?'N/A':Number(x).toFixed(6);
 $('status').textContent=D.status;
 $('intro').textContent='Run '+D.run+' · '+D.engines.length+' engines/configurations · all saved results included · current scorer versions recorded below.';
 $('overview').innerHTML=tbl(['Engine',...D.legs],D.engines.map(e=>[e,...D.legs.map(l=>fmt(D.means[e][l]))]));$('manifest').textContent=JSON.stringify(D.manifest,null,2);$('changes').innerHTML='<p>Scores changed relative to the superseded provisional rescore (changes overlap prior audit batches):</p>'+tbl(['Leg','Changed rows'],Object.entries(D.changes));
@@ -152,6 +158,11 @@ $('count').textContent=rs.length+' results, including '+rs.filter(r=>r.error).le
 const rowExtras=$('leg').value?extras:[['Text CER ↓','cer'],['Text WER ↓','wer']];
 $('inventory').innerHTML=tbl(['Engine','Leg','Page','Type','Score',...rowExtras.map(x=>x[0]),'Status'],rs.map(r=>[r.engine_name,r.leg,r.page,r.doc_type,fmt(r.score),...rowExtras.map(x=>fmt(r.metrics?.[x[1]])),r.error||r.reason||'scored']));$('inventory').querySelectorAll('tbody tr').forEach((tr,i)=>tr.onclick=()=>show(rs[i]));sortable('overview');sortable('inventory');}
 const sortState={};
+$('low-comparison').innerHTML=tbl(['Engine','Leg','Full score','Scored pages','Without low pages','Remaining pages','Types removed'],D.low_comparison.scores.map(x=>[x.engine,x.leg,fmt(x.full.score),x.full.n,fmt(x.without_low.score),x.without_low.n,x.types_removed]));
+$('low-cases').innerHTML=tbl(['Page','Leg','Document type','Engines','Lowest','Highest'],D.low_comparison.cases.map(x=>[x.page,x.leg,x.doc_type,x.engines,fmt(x.min),fmt(x.max)]));
+$('operations').innerHTML=tbl(['Engine','Primary $/page','Primary seconds/page','All-pass $/page','Pages'],Object.entries(D.operations).map(([e,x])=>[e,money(x.cost_per_page),fmt(x.latency_s),money(x.cost_all_passes),x.documents]));
+for(const id of ['low-comparison','low-cases','operations'])sortable(id);
+
 function sortable(id){const table=$(id).querySelector('table');if(!table)return;const hs=[...table.querySelectorAll('thead th')],body=table.querySelector('tbody');
 function apply(col,asc){let rows=[...body.rows];const value=row=>{let s=row.cells[col]?.textContent.trim()||'';if(!s||s==='N/A'||s.startsWith('N/A '))return null;return /^[-+]?\d+(?:\.\d+)?(?:\s|$)/.test(s)?Number.parseFloat(s):s.toLowerCase()};rows.sort((a,b)=>{let x=value(a),y=value(b);if(x===null)return y===null?0:1;if(y===null)return -1;return (typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),undefined,{numeric:true}))*(asc?1:-1)});for(const row of rows)body.appendChild(row);hs.forEach((h,i)=>h.setAttribute('aria-sort',i===col?(asc?'ascending':'descending'):'none'));}
 hs.forEach((h,i)=>{const label=h.textContent;h.innerHTML='<button type="button" title="Sort highest/lowest or A–Z/Z–A">'+esc(label)+'</button>';h.firstChild.onclick=()=>{let prev=sortState[id];let asc=prev&&prev.col===i?!prev.asc:true;sortState[id]={col:i,asc,label};apply(i,asc)}});let state=sortState[id];if(state&&hs[state.col]?.textContent===state.label)apply(state.col,state.asc);}

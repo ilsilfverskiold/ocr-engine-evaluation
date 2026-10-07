@@ -29,10 +29,10 @@ documents/structured_references/*
 documents/structured_references/gold/*
 !documents/structured_references/gold/*.json
 
-# Run logs are local noise; everything else in results/ is committed
-# (reference run, raw engine outputs, judge caches) so --report works
-# straight after clone.
-results/logs/
+# Published evidence lives in one verified bundle. Working runs and exports
+# are local; publish_results.py replaces the bundle after an offline rescore.
+results/*
+!results/current.zip
 
 # Python
 __pycache__/
@@ -51,5 +51,5 @@ __pycache__/
 # Test cache
 .pytest_cache/
 
-# Local browser exports; saved JSONL/CSV results remain versioned
+# Local browser exports
 results/reports/

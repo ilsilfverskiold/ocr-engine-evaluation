@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 import hashlib
 import json
 import re
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
 from pathlib import Path
 
 from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
@@ -38,9 +39,9 @@ def reference_fields(gt, leg=None):
 
 def load_synonym_decisions(gt) -> dict[str, str | None]:
     path = CACHE_ROOT / (Path(gt.document_path).stem + ".json")
-    if not path.exists():
+    if not artifact_exists(path):
         return {}
-    data = json.loads(path.read_text())
+    data = json.loads(artifact_text(path))
     if data.get("reference_id") != reference_id(gt):
         return {}  # A changed reference invalidates previous key decisions.
     allowed = {f.path for f in reference_fields(gt)}
