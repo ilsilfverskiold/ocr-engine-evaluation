@@ -2136,3 +2136,5 @@ rows. Added evidence to the new follow-up; no scorer changes or paid calls.
   deleted rather than relocated.
 
 - Final cleanup removed 1,085,793,190 bytes of superseded files and scratch work. Both October 6/7 audit workspaces are deleted.
+
+- Remove the redundant outer legacy `.venv` (2,320,290,375 bytes) under the requested cleanup. The active nested environment remains; no outer Git files or source code changed.
