@@ -2012,3 +2012,16 @@ Counted 146 saved table-header verdicts across 10 pages/10 engines: 129
 wrong_type, 17 absent, no correct verdicts. Recorded the cause, scope and required
 regressions in the new follow-up-2026-10-07.md, leaving the completed document
 unchanged. No scoring changes or paid calls; parser correction/rescore pending.
+
+## 2026-10-07 — full Sonnet receipt Markdown verdict audit
+
+Inspected sroie_000 source image, saved Markdown, all 21 parsed blocks and all
+27 checklist verdicts. All ten absent items have visible returned text; whole
+paragraph comparison/exclusivity and reference parsing explain the misses.
+Eleven key/value items are rejected for valid two-column table representation.
+Literal thank-you asterisks are wrongly interpreted as Markdown in the reference.
+The bold-only TAX INVOICE and detached shoe-description table text are actual
+structural losses. N/A block metrics correctly reflect the lack of a full
+Markdown reference. Findings and required policy/regression work added to the
+new follow-up document, with the completed document untouched. No scoring
+changes, model calls or unverified replacement score.
