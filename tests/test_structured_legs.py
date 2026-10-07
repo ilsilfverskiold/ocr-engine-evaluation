@@ -455,10 +455,12 @@ def test_code_numeric_rules_preserve_identifier_and_printed_amount_semantics():
 
 
 def test_lease_units_label_filled_term_without_inventing_renewal_values():
-    from evaluation.kv_schema_code import load_aliases
-    aliases = load_aliases("lease_004")
-    assert "year(s)" in aliases["lease.years"]["printed_labels"]
-    assert "month(s)" in aliases["lease.months"]["printed_labels"]
+    # Exercise the matching behavior without the retired model-authored cache.
+    aliases = {
+        "lease.years": {"printed_labels": ["year(s)"], "is_printed_pair": True},
+        "lease.months": {"printed_labels": ["month(s)"], "is_printed_pair": True},
+        "optionsToRenew.renewalMonths": {"printed_labels": ["month(s)"], "is_printed_pair": True},
+    }
     items = _items(("lease.years", "3"), ("lease.months", "10"),
                    ("optionsToRenew.renewalMonths", ""))
     result = score_fields(items, [["year(s)", "3"], ["month(s)", "10"]], "key_value", aliases)

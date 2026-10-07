@@ -464,3 +464,11 @@ is given here.
 - Final combined run `20261007T073234Z` and browsable report replace provisional
   exports. Other five legs are unchanged. 426 tests and browser evidence checks
   pass; all accepted references, source evidence and unrun engines retained.
+
+### Completion status corrected; retired caches removed
+
+- Keep the improved-prompt Sonnet geometry rerun explicitly outstanding.
+- Remove inactive pre-rebuild caches and obsolete plans, retaining active
+  references, decisions, raw evidence and expansion engines.
+- Record the reproduced Markdown embedded-heading diagnostic bug; current
+  scores are unchanged pending its correction.

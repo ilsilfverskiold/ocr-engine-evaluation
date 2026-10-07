@@ -196,11 +196,11 @@ def test_spanning_year_header_and_split_row_preserve_cell_locations():
 
 
 def test_receipt_blank_first_header_slot_is_preserved():
-    from evaluation.code_judges import load_table_checklist
-    items = load_table_checklist("sroie_002", sampled=False)
-    headers = {i["label"]: i["col"] for i in items if i["row"] == 1}
-    assert headers == {"Table 1, Header: RM": 2, "Table 1, Header: Code": 3,
-                       "Table 2, Header: Amount": 2, "Table 2, Header: Tax": 3}
+    from evaluation.table_cells import parse_tables
+    tables = parse_tables('<table><tr><th></th><th>RM</th><th>Code</th></tr></table>'
+                          '<table><tr><th></th><th>Amount</th><th>Tax</th></tr></table>')
+    assert [[(c.col, c.text) for c in t.cells] for t in tables] == [
+        [(0, ''), (1, 'RM'), (2, 'Code')], [(0, ''), (1, 'Amount'), (2, 'Tax')]]
 
 
 def test_repeated_header_in_preamble_does_not_override_table_header():

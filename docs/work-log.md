@@ -1966,3 +1966,24 @@ session scratch. Original inference and paid journals remain intact.
 - Final audit: `results/runs/20261007T073234Z_audit.json`. No further paid work
   is required or planned under the current scope; deferred controls and existing
   provider/reference limitations are disclosed. No GitHub push performed.
+
+## 2026-10-07 — completion correction and embedded-heading diagnosis
+
+- Rechecked shipping: every one of 60 scored rows selects max(gold, original)
+  whole-page F1; original selected 38 times, gold 22. That requirement is done.
+- Corrected the overbroad completion claim. The researched improved Sonnet
+  geometry rerun remains outstanding; earlier two-page controls are partial
+  evidence, not the rerun. Restored the unexecuted prompt proposal to follow-up.
+- Removed retired KV alias/schema/table checklist caches, obsolete key-only KV
+  request archive and unexecuted geometry continuation plan from the publication
+  tree. Preserved active caches, source evidence, gold and unrun engines. Recovery
+  copies are under session scratch, outside the repo.
+- Reproduced Sonnet tax_001 heading diagnosis: exact text is embedded in a
+  168-character paragraph, giving 0.3284 full-block similarity; the 0.5 cutoff
+  prevents the type check and produces absent. It should diagnose wrong type
+  while retaining zero heading credit. Documented the remaining matcher issue;
+  no score changes, new OCR/judge calls or rescore were made in this turn.
+- Cleanup validation: 424 existing tests passed after cache removal. Updated the
+  two tests that depended on retired on-disk data: explicit unit-label fixture
+  retains matching checks; blank-header test now exercises the active table
+  parser. Both updated tests pass. No production scoring logic changed.
