@@ -162,3 +162,35 @@ inference ledger entries. The manifest explicitly distinguishes rescored and
 inherited legs. The canonical bundle and HTML evidence report were rebuilt;
 working replay files/logs were removed after verification. Sonnet geometry's
 paid rerun remains separately pending approval.
+
+## KV payslip_002 audit — 2026-10-07 (correction outstanding)
+
+Inspected Textract's native 15-row, 10-column table and FORMS output against all
+143 accepted KV fields. An independent comparison using each consultant's row
+and the printed column headers finds 57 correct nonblank values and 86 correct
+blanks: no missing or wrong fields. That corresponds to 1.0000 under the current
+field-accuracy definition, rather than the published 0.8321678.
+
+All 24 published missing verdicts originate in one cached contextual judge call,
+`1eaaacccefe17c9323db331208492dfb22b0dda180550d823e209b1a787bcb4f`.
+Its 24 replies each returned output_ids=[] with the explanation "Reference value
+is null, and extracted value is empty." The provider completed normally (STOP);
+this was not truncation. Every review item was offered 58 blank candidates.
+The adapter flattened the native table into repeated header/value pairs without
+preserving explicit row identity in the judge input. The prompt lacks an explicit
+instruction to select the existing empty-field ID for a matching blank. The
+empty ID lists were accepted as completed no-match decisions and cached, so
+local replay reproduces them without a pending-review flag.
+
+The report observation also understates credited fields: 57 is the nonblank
+correct count. Published accuracy is (57 + 62 blank_ok) / 143 = 0.8321678,
+so it should say 119/143 credited and show blanks separately.
+
+Required correction: preserve native table/row/header provenance in KV pairs;
+use a uniquely identified row plus printed header to resolve its fields, including
+blanks, deterministically. Do not match anonymous blanks globally or patch named
+people manually. Use contextual judging only for remaining ambiguous mappings,
+with explicit blank-field instructions and cache identities reflecting the full
+context. Update the report observation and rescore affected saved outputs.
+This turn only audited the result: no scorer/cache changes, paid calls, score
+replacement or report layout changes.
