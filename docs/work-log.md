@@ -289,3 +289,40 @@ actual returned boxes, recorded pixel recipe and prompt provenance. The obsolete
 “pixel prompt unrun” notice is gone. Intermediate runs, duplicate call files and
 local audit scratch were removed after verified publication. No further paid
 controls are pending as part of this geometry request.
+
+## Markdown coverage patch — 2026-10-07 (running)
+
+The user requested rerunning missing Markdown outputs so the engine comparison
+covers the same pages. Audited the published 20261007T113310Z bundle: 92 pages
+have usable cached Markdown references. Seven Markdown engines already score
+all 92; four lack inference outputs on part of that cohort:
+
+| Existing engine | Saved scored pages | Missing calls | Existing GPU |
+| --- | ---: | ---: | --- |
+| DeepSeek-OCR | 63 | 29 | A100-80GB |
+| GLM-OCR | 57 | 35 | A10 |
+| Qwen3-VL | 62 | 30 | A100-80GB |
+| Marker | 82 | 10 | A100-80GB |
+
+The 104 missing entries have no existing Markdown call to rescore. All four
+runners and deployments already exist; no engine implementation, deployment,
+prompt, model, GPU, output cap or batch configuration is being changed. Prepared
+exact per-engine missing-page plans and verified each prompt/converter selector
+against its saved successful calls. Reused the modal-inference-engineer skill
+and its architecture/case-study references. Each deployment caps containers at
+one; the existing batch runner queues at most 24 pages per measured GPU batch.
+
+Executed only the missing-page lists with `--legs markdown --collect-only
+--skip-judge --stop-on-error`, keeping inference and offline scoring separate
+so checklist scoring does not interrupt warm GPU batching. Existing cached
+references will be used; no new judge calls or successful-output retries.
+`newspaper_000` lacks a usable Markdown reference for every engine and remains
+outside this 92-page cohort. Gemini/Sonnet's historical default-prompt limitation
+is separate and remains disclosed; those complete outputs are not being rerun.
+
+The current [Modal pricing](https://modal.com/pricing) still matches the recorded
+rates (checked 2026-10-07): A100-80GB $0.000694/s, A10 $0.000306/s. Matching saved
+batch timings imply about $0.154 warm GPU inference for these pages; cold start,
+idle, CPU/RAM are additional. Planning reserve: $5. Report measured batch GPU
+cost separately from an actual provider invoice. Completion and measured costs
+will be recorded below.
