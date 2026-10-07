@@ -2033,3 +2033,11 @@ IBAN. Both pass the match threshold; IBAN wins by whole-block similarity
 (0.736842 versus 0.567164), consumes the paragraph and blocks Tax ID credit.
 Recorded the regression in the new follow-up document. No scorer changes,
 paid calls or rescore; the completed follow-up remains unchanged.
+
+## 2026-10-07 — second receipt Markdown audit
+
+Reproduced Sonnet sroie_001: five correct, eight partial, 17 absent and three
+wrong_type verdicts. All absent items are represented in four shared paragraphs.
+Confirmed the existing header/KV-table defects and documented how single-row
+string matching ignores the association between split descriptions and numeric
+rows. Added evidence to the new follow-up; no scorer changes or paid calls.
