@@ -2025,3 +2025,11 @@ structural losses. N/A block metrics correctly reflect the lack of a full
 Markdown reference. Findings and required policy/regression work added to the
 new follow-up document, with the completed document untouched. No scoring
 changes, model calls or unverified replacement score.
+
+## 2026-10-07 — invoice Tax ID false absence
+
+Reproduced Sonnet invoice_002 paragraph 5 containing both seller Tax ID and
+IBAN. Both pass the match threshold; IBAN wins by whole-block similarity
+(0.736842 versus 0.567164), consumes the paragraph and blocks Tax ID credit.
+Recorded the regression in the new follow-up document. No scorer changes,
+paid calls or rescore; the completed follow-up remains unchanged.
