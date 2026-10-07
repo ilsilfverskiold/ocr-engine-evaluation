@@ -284,6 +284,13 @@ The default transcription is never substituted. Correct text in misplaced
 boxes may have low CER/WER and poor location scores; empty extra boxes affect
 precision but not text errors.
 
+Sonnet's pixel recipe requests absolute coordinates in a pre-resized image with
+its exact width/height included in the prompt. The adapter saves the original
+pixel boxes and divides x by sent width, y by sent height. No inferred rescaling
+or axis swapping is applied to these known-frame results. Geometry requests use
+temperature 0, a 32,768-token cap and streaming; stop reasons remain visible.
+The exact saved call determines which recipe a report describes.
+
 Coordinate-frame conversions must be explicit and recorded. Keep source image,
 returned text/box associations, matched/misplaced/missing/extra overlays and
 invalid-box counts. Corpus precision/F1 and box-text errors use the rectangular

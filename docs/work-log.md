@@ -255,3 +255,37 @@ call payload instead of the task's generic normalized-coordinate prompt. The
 HTML comparison's geometry notice derives from the saved requests, so it cannot
 continue saying the pixel prompt is unrun after publication. Other legs and
 engines will be inherited unchanged. Completion and spend are recorded below.
+
+## Sonnet geometry rerun — 2026-10-07 (completed)
+
+Published **20261007T113310Z**. All 17 approved calls completed with `end_turn`;
+no provider failures, output truncations, retries or judge calls. Recorded cost:
+**$0.716370**, below the $9 allowance. Input/output tokens: **21285 / 43501**.
+
+The geometry headline improved **0.0324 → 0.1525**, using the existing equal
+family weighting. Results by reference granularity:
+
+| Family | Pages | Before | Pixel prompt |
+| --- | ---: | ---: | ---: |
+| Receipts (lines) | 6 | 0.0840 | 0.0081 |
+| Financial tables (words) | 5 | 0.0046 | 0.4366 |
+| Forms (words) | 6 | 0.0086 | 0.0129 |
+
+The prompt helps some financial pages substantially (`fintab_000`: 0.9746), but
+receipt and form boxes remain unreliable. On `sroie_000`, for example, the
+returned title rectangle is [131, 18, 381, 45] in the 463×894 sent image while
+the reference is approximately [98, 26, 321, 66]: the shift is present in the
+model's pixel output. It is not introduced by normalized-coordinate conversion.
+Source images and box coordinates were inspected for the poor receipt and the
+high-scoring financial page; all 17 calls passed exact-prompt, frame and per-box
+conversion checks. No coordinate adjustment was fitted to the references.
+
+The complete new Sonnet geometry pass replaces its historical pass. Every other
+engine/leg payload is unchanged apart from the run timestamp. The bundle retains
+4,505 result rows and 2,375 inference records with exact source-call provenance;
+its manifest includes the checked 17-request plan and per-page before/after audit.
+Comparison and evidence HTML were regenerated, including updated cost/latency,
+actual returned boxes, recorded pixel recipe and prompt provenance. The obsolete
+“pixel prompt unrun” notice is gone. Intermediate runs, duplicate call files and
+local audit scratch were removed after verified publication. No further paid
+controls are pending as part of this geometry request.

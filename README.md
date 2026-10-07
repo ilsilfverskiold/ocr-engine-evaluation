@@ -141,9 +141,10 @@ are a separate optional facility and are not part of the six published legs.
 Historical default prompts were not uniformly dedicated Markdown/table requests.
 Gemini's old default did not explicitly request Markdown; Sonnet requested structure
 but not a dedicated Markdown-only control. These fairness limits remain disclosed.
-Sonnet's improved pixel-coordinate geometry recipe is prepared but **unrun**;
-the report retains saved geometry results. Further DeepSeek/prompt/backend controls
-also remain unmeasured. Scorer changes do not imply new inference or new deployments.
+Sonnet geometry was rerun on all 17 pages with the known-frame pixel-coordinate
+prompt (run `20261007T113310Z`): overall location recall is 0.1525, versus 0.0324
+before. All responses completed without truncation; receipt/form localization
+remains weak. Further DeepSeek/prompt/backend controls remain unmeasured.
 
 ## Re-evaluate saved calls without spending
 

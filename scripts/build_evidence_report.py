@@ -85,6 +85,9 @@ for r in rows:
   item['engine_note']='Compare the returned logical cells with the selected reference and inspect missing, wrong and extra cells. A table-only control has not been run for historical general-model default answers.'
  if r['leg']=='geometry':
   item['engine_note']='Location is evaluated from the returned text/box pairs displayed here. Transcription from another pass is not evidence for geometry.'
+  frame=c['structured'].get('geometry_frame')
+  if frame:
+   item['engine_note']+=' Saved recipe: '+str(frame.get('recipe'))+'. Sent image: '+str(frame.get('sent_size'))+' pixels. Returned absolute pixels were divided by that width/height; no inferred coordinate rescaling.'
  if r['leg']=='text':
   item['engine_note']='Coverage ignores order and added/repeated words. CER/WER measure sequence differences; compare the normalized output and reference below before attributing those differences to recognition.'
  if any(stop in ('length','max_tokens','MAX_TOKENS') for stop in c['stop_reasons']):
