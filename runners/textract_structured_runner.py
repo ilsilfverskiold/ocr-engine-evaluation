@@ -7,7 +7,7 @@ from html import escape
 from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 
 COST_PER_PAGE = 0.065  # AnalyzeDocument TABLES + FORMS in US West/Oregon: $0.015 + $0.050/page
-TABLE_ADAPTER_VERSION = "textract-merged-cells-v1 (2026-10-02)"
+TABLE_ADAPTER_VERSION = "textract-merged-cells-v2-selection-metadata (2026-10-09)"
 
 
 class TextractStructuredRunner(OCRRunner):
@@ -88,6 +88,7 @@ class TextractStructuredRunner(OCRRunner):
                 continue
 
             cells: dict[tuple[int, int], dict] = {}
+            cell_selections = {}
             for rel in block.get("Relationships", []):
                 if rel["Type"] != "CHILD":
                     continue
@@ -95,6 +96,12 @@ class TextractStructuredRunner(OCRRunner):
                     cell = block_map.get(cell_id, {})
                     if cell.get("BlockType") != "CELL":
                         continue
+                    selections = [block_map[cid].get('SelectionStatus')
+                                  for cr in cell.get('Relationships', []) if cr['Type'] == 'CHILD'
+                                  for cid in cr['Ids'] if cid in block_map
+                                  and block_map[cid].get('BlockType') == 'SELECTION_ELEMENT']
+                    if selections:
+                        cell_selections[f"{cell['RowIndex']},{cell['ColumnIndex']}"] = selections
                     cells[(cell["RowIndex"], cell["ColumnIndex"])] = {
                         "text": cls._cell_text(cell, block_map),
                         "rowspan": int(cell.get("RowSpan", 1) or 1),
@@ -153,7 +160,8 @@ class TextractStructuredRunner(OCRRunner):
                     cells_html.append(f"<td{attrs}>{escape(cell['text'])}</td>")
                 # Even an entirely covered row occupies a rowspan position.
                 html_rows.append(f"<tr>{''.join(cells_html)}</tr>")
-            tables.append({"html": f"<table>{''.join(html_rows)}</table>"})
+            tables.append({"html": f"<table>{''.join(html_rows)}</table>",
+                           "cell_selections": cell_selections})
         if _include_merged:
             # The provider supplies both primitive cells and merged groups.
             # Preserve both; joining a multiline address must not discard its

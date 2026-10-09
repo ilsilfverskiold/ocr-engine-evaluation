@@ -354,3 +354,19 @@ files override bundled files during new runs. `scripts/publish_results.py` verif
 SHA-256 hashes and atomically replaces the bundle. Images download separately.
 The HTML is generated locally and is not committed. Source identifiers inside
 the archive preserve provenance, not additional published result sets.
+
+
+## 2026-10-09 audit update
+
+See [the tax/blank/report audit](audit-2026-10-09.md) for the current limitations.
+KV retains its existing blank-inclusive headline pending a policy choice and
+now also reports populated-only and blank-field accuracy. Identifier fragment
+validation preserves digit groups, order and leading zeros. Native Textract
+cell selection metadata can establish an explicit false checkbox value; a
+plain empty cell cannot. Saved model approvals rejected by the old guards can
+be revalidated without another call, with original requests/replies retained.
+New unreviewed candidates remain pending, never silently awarded credit.
+
+Saved silver-document estimates appear by default in a separate judged-text
+comparison in HTML and terminal reports. Restored pre-fix verdicts are labeled
+historical; they are not blended with deterministic text scores or CER/WER.

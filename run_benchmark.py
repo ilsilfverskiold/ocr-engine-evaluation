@@ -942,7 +942,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     source_records = [read_jsonl(RUNS_DIR / f"{src}_inference.jsonl") for src in sources]
     selected = _rescore_selection(source_records)
     historical_judge = {}
-    if selected_legs is None:
+    if selected_legs is None or 'text' in selected_legs:
         for src in sources:
             for row in read_jsonl(RUNS_DIR / f"{src}_results.jsonl"):
                 if row.get('leg') == 'judge' and not row.get('error'):
@@ -1951,7 +1951,7 @@ def _print_per_leg_costs(
     log.info("")
 
 
-def _print_judged_documents(records: list[dict], log: logging.Logger) -> None:
+def _print_judged_documents(records: list[dict], log: logging.Logger, expected_engines=None) -> None:
     judged = [r for r in records if r["leg"] == "judge" and r.get("score") is not None]
     if not judged:
         return
@@ -1961,6 +1961,12 @@ def _print_judged_documents(records: list[dict], log: logging.Logger) -> None:
     log.info("  Item accuracy = checklist items the engine got right / items on the page.")
     log.info("  DIRECTIONAL: the checklist is model-generated and has not been validated")
     log.info("  against human judgement. Not comparable to the GT-scored legs above.")
+    if any((r.get('metrics') or {}).get('historical_verdicts') for r in judged):
+        log.info("  Historical verdicts preserved unchanged; pre-fix substring matching may inflate scores.")
+        log.info("  These are not new verdicts from the corrected judge. Missing engines were never judged.")
+    unjudged = sorted(set(expected_engines or []) - {r['engine_name'] for r in judged})
+    if unjudged:
+        log.info('  No saved judged score (N/A): ' + ', '.join(unjudged))
     log.info(div)
     by_engine: dict[str, list[float]] = defaultdict(list)
     checklist_sizes: list[int] = []
@@ -2269,6 +2275,8 @@ def report(timestamp: str | list[str], log: logging.Logger,
 
     from evaluation.reporting import print_report
     print_report(leg_rows, inference, log, active_legs, sort_by=sort_by, details=detailed)
+    if 'text' in active_legs:
+        _print_judged_documents(judge_rows, log, {r['engine_name'] for r in leg_rows if r['leg'] == 'text'})
     if not detailed:
         return
 
@@ -2283,7 +2291,6 @@ def report(timestamp: str | list[str], log: logging.Logger,
     log.info("\nSUPPORTING DIAGNOSTICS — requested with --report-details")
     _print_gt_provenance(leg_rows, log)
     _print_gt_limitations(log)
-    _print_judged_documents(judge_rows, log)
     _print_failures(leg_rows, log)
     _print_inference_errors(inference, log)
 

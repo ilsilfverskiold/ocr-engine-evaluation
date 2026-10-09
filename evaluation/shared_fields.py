@@ -17,7 +17,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
-KV_VERSION = "shared-fields-v7-native-row-context"
+KV_VERSION = "shared-fields-v8-identifiers-native-checkboxes"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -135,7 +135,7 @@ class Result:
     verdicts: list[FieldVerdict] = field(default_factory=list)
 
 
-def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None, native_matches: dict | None = None) -> Result:
+def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = None, confirmed_groups: list | None = None, native_matches: dict | None = None, pair_context=None) -> Result:
     fields = reference_fields(gt, leg)
     synonyms = load_synonyms(gt) if leg == "key_value" else {}
     if leg == "key_value":
@@ -155,7 +155,7 @@ def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = No
         if f.path in groups:
             group = groups[f.path]
             key = " + ".join(str(pairs[i][0]) for i in group['indices'])
-            value = " | ".join(str(pairs[i][1]) for i in group['indices'])
+            value = " | ".join(str(v) for v in group.get('evaluated_values', [pairs[i][1] for i in group['indices']]))
             how = "judge-confirmed value group; request " + group['request_id']
             verdict = "blank_ok" if blank else "correct"
         elif hit is None:
@@ -163,6 +163,12 @@ def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = No
         else:
             i, how = hit
             key, value = pairs[i]
+            if leg == 'key_value' and pair_context:
+                from evaluation.kv_schema_code import contextual_value
+                interpreted = contextual_value(f.value, value, pair_context[i])
+                if interpreted != value:
+                    how += '; explicit native checkbox ' + str(interpreted)
+                    value = interpreted
             if blank:
                 verdict = "blank_ok" if is_blank_value(value) else "invented"
             else:

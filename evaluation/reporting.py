@@ -68,6 +68,7 @@ METRICS = {
     'schema': [('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Extra/page', 'schema_extra_fields', False), ('Valid JSON', 'schema_valid_json', True)],
 }
 EXTRA_METRICS = {
+    'key_value': [('Populated fields', 'kv_populated_accuracy', True), ('Blank fields', 'kv_blank_accuracy', True)],
     'text': [('Word P', 'word_precision', True), ('Word R', 'word_recall', True)],
     'tables': [('Strict P', 'cell_precision', True), ('Strict R', 'cell_recall', True)],
     'markdown': [('Block P', 'element_precision', True), ('Block R', 'element_recall', True)],

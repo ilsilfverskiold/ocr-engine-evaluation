@@ -1,5 +1,11 @@
 # Work log
 
+## 2026-10-09 — tax KV audit and missing judged-text recovery
+
+- Audited all five tax pages across four KV engines, including source images, provider blocks and rejected paid approvals. Findings and remaining policy/scorer gaps: [audit-2026-10-09.md](audit-2026-10-09.md).
+- Corrected shared identifier-fragment validation and preserved explicit native checkbox states. Blank headline policy remains unchanged pending choice; populated/blank diagnostics are added.
+- Recovered all 110 lost historical judged-text rows for default HTML/terminal reporting; no paid calls. Published `20261009T080833Z`: 4,719 rows, all source calls retained. Textract tax_001 0.8416 → 0.9109; tax_000 gains three fields but remains provisional. Seventeen newly discovered identifier review items across five outputs are pending; no new model calls. Detailed remaining limitations and verification are in the audit document. A second replay exactly reproduced all 288 KV results; the HTML was browser-checked. Removed temporary replay/log files after archive verification.
+
 ## 2026-10-07 — publish one reproducible benchmark
 
 - Consolidated the 4,505 current score records, 2,375 inference ledger entries,

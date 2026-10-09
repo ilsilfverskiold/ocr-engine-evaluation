@@ -12,6 +12,7 @@ LABELS = dict(zip(LEGS, ['Text', 'Markdown', 'Tables', 'Key–value', 'Schema', 
 
 
 def build(rows, inference, run, output, evidence_name='ocr-benchmark-evidence.html'):
+    judged = [r for r in rows if r['leg'] == 'judge']
     rows = [r for r in rows if r['leg'] in LEGS]
     analysis = comparison(rows)
     excluded = {(c['document_path'], c['leg']) for c in analysis['cases']}
@@ -56,7 +57,20 @@ def build(rows, inference, run, output, evidence_name='ocr-benchmark-evidence.ht
     else:
         geometry_note = ("Sonnet geometry still uses the saved normalized-coordinate requests; "
                          "the prepared pixel-coordinate rerun is not represented in these results.")
-    payload = dict(scopes=data, legs=LEGS, labels=LABELS, metrics=metrics, methods=METHOD,
+    judge_scopes = {}
+    for scope in data:
+        tier, family = scope.split('|')
+        group = [r for r in judged if (not tier or r['tier'] == tier)
+                 and (not family or r['doc_type'] == family)]
+        judge_scopes[scope] = [dict(engine=e, full=mean_metric(rs),
+            n=sum(valid(r) for r in rs), errors=sum(bool(r.get('error')) for r in rs))
+            for e in sorted({r['engine_name'] for r in rows if r['leg'] == 'text'})
+            for rs in [[r for r in group if r['engine_name'] == e]]]
+    judge_note = (f"Saved model-judged checklist accuracy on {len({r['document_path'] for r in judged})} pages. "
+                  "Separate from text coverage and CER/WER. Engines with no saved verdict are N/A, not zero.")
+    if any((r.get('metrics') or {}).get('historical_verdicts') for r in judged):
+        judge_note += " Historical verdicts are restored unchanged; the older substring shortcut may inflate these scores."
+    payload = dict(scopes=data, judge_scopes=judge_scopes, judge_note=judge_note, legs=LEGS, labels=LABELS, metrics=metrics, methods=METHOD,
                    evidence=evidence_name, cases=analysis['cases'])
     encoded = json.dumps(payload, allow_nan=False, separators=(',', ':')).replace('<', '\\u003c')
     esc = html.escape
@@ -76,7 +90,7 @@ def build(rows, inference, run, output, evidence_name='ocr-benchmark-evidence.ht
 </style><main><header><h1>OCR benchmark</h1><p>Engine comparison · __RUN__ · __ENGINES__ engines/configurations · __PAGES__ recorded pages</p><a href="__EVIDENCE__">Open supporting evidence and individual document results →</a></header>
 <div class="controls"><label>Difficulty <select id="tier"><option value="">All difficulties</option><option>easy</option><option>medium</option><option>hard</option></select></label><label>Document family <select id="family"><option value="">All document families</option></select></label><button id="reset">Reset filters</button></div>
 <section><h2>Scores by engine and leg</h2><p class="muted">Full scores; higher is better. Best values are highlighted. Click any column to rank engines; click a score for its evidence. Scores from different legs are not blended.</p><div id="overview" class="scroll">__INITIAL__</div></section>
-<section><div id="tabs" class="tabs" role="tablist" aria-label="Evaluation leg"></div><h2 id="leg-title"></h2><p id="method"></p><p id="scope-note" class="muted"></p><div id="ranking" class="scroll"></div><p class="muted">Full = all scored pages. Without outliers = the same scores with the common low-page exclusions below. Pages shows Full → retained. Supporting metrics use Full pages; parentheses show fewer available metric pages. Click any metric to sort; click again to reverse. N/A stays last.</p><details><summary>Other metrics for this leg</summary><div id="extra" class="scroll"></div></details><h2>Cost and latency</h2><div id="operations" class="scroll"></div><p class="muted">Actual saved pass serving each scored page; steady-state where recorded. Lowest cost first initially. Shared calls are paid once: do not sum costs across legs. Excludes judge, startup and failed-call spend. Local $0 excludes machine expense.</p><details><summary>Outlier exclusions for this leg</summary><p>At least three engines scored the page, all ≤0.25, with no failed or pending participant. Every engine uses the same excluded page/leg cases. This is a sensitivity comparison, not proof the references are wrong.</p><div id="exclusions"></div></details><p><a id="leg-evidence" href="__EVIDENCE__">Inspect this leg’s document results and evidence →</a></p></section>
+<section><div id="tabs" class="tabs" role="tablist" aria-label="Evaluation leg"></div><h2 id="leg-title"></h2><p id="method"></p><p id="scope-note" class="muted"></p><div id="ranking" class="scroll"></div><p class="muted">Full = all scored pages. Without outliers = the same scores with the common low-page exclusions below. Pages shows Full → retained. Supporting metrics use Full pages; parentheses show fewer available metric pages. Click any metric to sort; click again to reverse. N/A stays last.</p><details><summary>Other metrics for this leg</summary><div id="extra" class="scroll"></div></details><div id="judged-text"><h2>Text on pages without trusted references</h2><p id="judged-note"></p><div id="judged-ranking" class="scroll"></div><p><a href="__EVIDENCE__#leg=judge">Inspect judged-text pages and every saved item verdict →</a></p></div><h2>Cost and latency</h2><div id="operations" class="scroll"></div><p class="muted">Actual saved pass serving each scored page; steady-state where recorded. Lowest cost first initially. Shared calls are paid once: do not sum costs across legs. Excludes judge, startup and failed-call spend. Local $0 excludes machine expense.</p><details><summary>Outlier exclusions for this leg</summary><p>At least three engines scored the page, all ≤0.25, with no failed or pending participant. Every engine uses the same excluded page/leg cases. This is a sensitivity comparison, not proof the references are wrong.</p><div id="exclusions"></div></details><p><a id="leg-evidence" href="__EVIDENCE__">Inspect this leg’s document results and evidence →</a></p></section>
 <details><summary>Aggregation and current limitations</summary><p>Scores average pages within each difficulty/document-family group, then weight those groups equally, matching the terminal report. Errors and N/A are excluded from means and shown separately. Different page coverage can affect rankings. Removing a whole group can change the average in either direction.</p><p>Difficulty filters also work for small legs, but the default compares all their pages together. Cost and latency are arithmetic page means and include their own coverage counts.</p><p class="note">__GEOMETRY_NOTE__ Historical general-model default answers do not establish a dedicated Markdown/table prompt comparison. Exact prompts and stop reasons are in the evidence.</p></details><noscript><p>JavaScript enables filters, metric tables and sorting. The overall scores above remain visible.</p></noscript></main>
 <script id="comparison-data" type="application/json">__DATA__</script><script>
 const D=JSON.parse(document.getElementById('comparison-data').textContent),$=id=>document.getElementById(id);let leg='text';const sort={};
@@ -93,6 +107,8 @@ const headline=[engineCol,{key:'full',label:'Full ↑',high:true,highlight:true,
 const metrics=D.metrics[leg],mainN={text:3,markdown:4,tables:3,geometry:4,key_value:3,schema:4}[leg];
 table('ranking',[...headline,...metrics.slice(0,mainN).map(metricCol),{key:'errors',label:'Errors ↓',get:r=>r.errors,render:r=>String(r.errors)},{key:'na',label:'N/A',get:r=>r.na,render:r=>String(r.na)}],rs,'full',false);
 table('extra',[engineCol,...metrics.map(metricCol)],rs,metrics[0][1],!metrics[0][2]);
+$('judged-text').hidden=leg!=='text';$('judged-note').textContent=D.judge_note;
+table('judged-ranking',[{...engineCol,render:r=>'<a href="'+esc(link(r.engine,'judge'))+'">'+esc(r.engine)+'</a>'},{key:'full',label:'Judged item accuracy ↑',high:true,highlight:true,get:r=>r.full},{key:'n',label:'Pages',get:r=>r.n,render:r=>String(r.n)},{key:'errors',label:'Errors',get:r=>r.errors,render:r=>String(r.errors)}],D.judge_scopes[$('tier').value+'|'+$('family').value]||[],'full',false);
 table('operations',[engineCol,{key:'cost',label:'$/page ↓',get:r=>r.cost,highlight:true,render:r=>fmt(r.cost,6)},{key:'latency',label:'Seconds/page ↓',get:r=>r.latency,highlight:true,render:r=>fmt(r.latency,2)},{key:'cost_n',label:'Cost / time pages',get:r=>r.cost_n,render:r=>r.cost_n+' / '+r.latency_n}],rs,'cost',true);
 const cs=D.cases.filter(c=>c.leg===leg&&(!$('family').value||c.doc_type===$('family').value)&&(!$('tier').value||c.tier===$('tier').value));$('exclusions').innerHTML=cs.length?cs.map(c=>'<p>'+esc(c.page)+' · '+esc(c.doc_type)+' · '+c.engines+' engines · '+fmt(c.min)+'–'+fmt(c.max)+'</p>').join(''):'<p>No exclusions in this selection.</p>';
 $('leg-evidence').href=link();$('tabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.leg===leg));}

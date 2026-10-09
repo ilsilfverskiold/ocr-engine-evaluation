@@ -60,6 +60,10 @@ class KeyValueScore:
             "kv_pairs_invented_value": self.pairs_invented_value,
             "kv_blank_total": self.blank_total,
             "kv_blank_correct": self.blank_correct,
+            "kv_populated_total": self.pairs_total - self.blank_total,
+            "kv_populated_accuracy": (self.pairs_correct / (self.pairs_total - self.blank_total)
+                                      if self.pairs_total > self.blank_total and not self.pending_key_review else None),
+            "kv_blank_accuracy": self.blank_correct / self.blank_total if self.blank_total else None,
             "kv_engine_pairs": self.engine_pairs,
             "kv_parsed_how": self.parsed_how,
             "kv_alias_missing": self.alias_missing,
@@ -117,7 +121,7 @@ def score_key_value(
     from evaluation.shared_fields import KV_VERSION, reference_id, score_shared, reference_fields
     from evaluation.kv_value_groups import resolve, relation
     resolution = resolve(gt, pairs, use_judge=use_judge, pair_context=pair_context, native_matches=native_matches)
-    res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups, native_matches)
+    res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups, native_matches, pair_context)
     pending = resolution.pending
     for item in res.unresolved:
         key, value = pairs[item['index']]

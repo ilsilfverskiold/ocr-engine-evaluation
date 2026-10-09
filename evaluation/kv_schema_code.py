@@ -257,7 +257,9 @@ def engine_pairs(engine: str, text: str, structured_output: dict | None, pair_co
                             if pair_context is not None:
                                 pair_context.append({'kind': 'native_table', 'table': ti, 'row': ri,
                                     'column': j, 'row_key': row[0] if row else '',
-                                    'row_header': hdr[0], 'column_header': hdr[j] if j < len(hdr) else ''})
+                                    'row_header': hdr[0], 'column_header': hdr[j] if j < len(hdr) else '',
+                                    **({'selection_status': t['cell_selections'][f'{ri+1},{j+1}']}
+                                       if f'{ri+1},{j+1}' in t.get('cell_selections', {}) else {})})
         return pairs, "Textract FORMS pairs + table cells (no JSON interface)"
     obj, how = parse_json_answer(text or "")
     return (flatten(obj) if obj is not None else []), how
@@ -488,11 +490,30 @@ def is_blank_value(v: Any) -> bool:
     return bool(_DASHES.match(t)) or norm_str(t) in _BLANK_WORDS
 
 
+def contextual_value(expected, value, source=None):
+    """Only explicit provider selection evidence can turn a blank into false."""
+    states = (source or {}).get('selection_status', [])
+    if is_bool_expected(expected) and len(states) == 1 and (is_blank_value(value) or value == '[X]'):
+        if states[0] in ('SELECTED', 'NOT_SELECTED'):
+            return states[0]
+    return value
+
+
 def _symbols(s: Any) -> str:
     """A value with no letters or digits ("£", "---", "✓") compared as itself:
     dashes of any length or kind are one dash, spaces dropped."""
     t = re.sub(r"\s+", "", str(s).strip())
     return "-" if _DASHES.match(t) else t
+
+
+def is_identifier_key(names: list[str] | None) -> bool:
+    """Identifiers retain digits/leading zeros; counts remain quantities."""
+    tokens = {token for n in names or [] for token in norm_label(n).split()}
+    identifier = bool(tokens & {"id", "identifier", "ssn", "tel", "phone", "telephone",
+                                 "iban", "postcode", "postal", "zip", "number", "no"})
+    count = bool(tokens & {"quantity", "qty", "count"}) or any(
+        re.search(r"\bnumber of\b", norm_label(n)) for n in names or [])
+    return identifier and not count
 
 
 def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_label: bool = False) -> bool:
@@ -510,11 +531,7 @@ def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_
     # Identifiers are strings, not quantities. Keep their leading zeros and
     # all digits while accepting printed separators (SSNs, phone numbers).
     name_tokens = {token for n in names or [] for token in norm_label(n).split()}
-    identifier = bool(name_tokens & {"id", "identifier", "ssn", "tel", "phone", "telephone",
-                                     "iban", "postcode", "postal", "zip", "number", "no"})
-    count_field = bool(name_tokens & {"quantity", "qty", "count"}) or any(
-        re.search(r"\bnumber of\b", norm_label(n)) for n in names or [])
-    if identifier and not count_field:
+    if is_identifier_key(names):
         e, g = norm_str(expected), norm_str(got)
         if shared_label and as_number(expected) is None:
             te, tg = e.split(), g.split()
