@@ -239,30 +239,37 @@ Source IDs, image hashes and selection are in `documents/manifest.json`.
 
 ## Cost and latency
 
-The two rankings below use the **same 82 text-scored pages per engine**, with the
-actual pass used for text. Costs are recorded USD/page, excluding startup,
-reference/judge work and failed calls. Local CPU cost is unpriced (shown as $0).
-Modal seconds/page are batch-amortized; API/local timings are per-call. Additional
-schema, KV and geometry passes have their own cost/latency in the full report.
+The rankings use the **same 82 text-scored pages per engine** and the actual pass
+that supplied each text result. Prices are **estimated usage charges, not verified
+invoices**. Modal figures cover GPU processing only; local CPU expense is unpriced.
+Startup, idle time, storage, evaluation judges, failed calls, retries, taxes and
+subscriptions are excluded. Modal seconds/page are batch-amortized throughput;
+API/local timings are per-call.
 
-### Cost — lowest first
+### Cost and volume estimates — lowest first
 
-| Rank | Engine | USD/page ↓ | Seconds/page ↓ |
-| --- | --- | --- | --- |
-| 1 | `docling` | 0.000000 | 15.60 |
-| 2 | `tesseract` | 0.000000 | 2.38 |
-| 3 | `glm_ocr` | 0.000540 | 1.76 |
-| 4 | `deepseek_ocr` | 0.000749 | 1.08 |
-| 5 | `mineru` | 0.000782 | 1.13 |
-| 6 | `paddleocr_vl` | 0.000949 | 1.37 |
-| 7 | `marker` | 0.001173 | 1.69 |
-| 8 | `gemini_flash` | 0.001251 | 4.06 |
-| 9 | `textract_text` | 0.001500 | 4.73 |
-| 10 | `qwen3_vl` | 0.003734 | 5.38 |
-| 11 | `llamaparse` | 0.003750 | 21.88 |
-| 12 | `mistral_ocr_4` | 0.004000 | 3.85 |
-| 13 | `claude_sonnet_4_6` | 0.015129 | 18.27 |
-| 14 | `textract_structured` | 0.065000 | 7.08 |
+Volume estimates multiply the **unrounded mean cost/page** by the page count,
+assuming the same document mix, token lengths, pipeline and GPU batch throughput.
+They describe one text-producing pass per page, not every benchmark leg. Dollar
+amounts are before free credits, caching and batch-API discounts. GPU-only amounts
+are lower bounds on hosting expense; local engines have no priced estimate.
+
+| Rank | Engine | USD/page ↓ | 1,000 pages | 100,000 pages | 1 million pages | Seconds/page |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | `glm_ocr` | 0.000540 | $0.54 | $53.97 | $539.74 | 1.76 |
+| 2 | `deepseek_ocr` | 0.000749 | $0.75 | $74.92 | $749.23 | 1.08 |
+| 3 | `mineru` | 0.000782 | $0.78 | $78.23 | $782.33 | 1.13 |
+| 4 | `paddleocr_vl` | 0.000949 | $0.95 | $94.89 | $948.93 | 1.37 |
+| 5 | `marker` | 0.001173 | $1.17 | $117.27 | $1,172.69 | 1.69 |
+| 6 | `gemini_flash` | 0.001251 | $1.25 | $125.13 | $1,251.28 | 4.06 |
+| 7 | `textract_text` | 0.001500 | $1.50 | $150.00 | $1,500.00 | 4.73 |
+| 8 | `qwen3_vl` | 0.003734 | $3.73 | $373.45 | $3,734.50 | 5.38 |
+| 9 | `llamaparse` | 0.003750 | $3.75 | $375.00 | $3,750.00 | 21.88 |
+| 10 | `mistral_ocr_4` | 0.004000 | $4.00 | $400.00 | $4,000.00 | 3.85 |
+| 11 | `claude_sonnet_4_6` | 0.015129 | $15.13 | $1,512.91 | $15,129.11 | 18.27 |
+| 12 | `textract_structured` | 0.065000 | $65.00 | $6,500.00 | $65,000.00 | 7.08 |
+| — | `docling` | Unpriced | — | — | — | 15.60 |
+| — | `tesseract` | Unpriced | — | — | — | 2.38 |
 
 ### Time — fastest first
 
@@ -273,22 +280,69 @@ schema, KV and geometry passes have their own cost/latency in the full report.
 | 3 | `paddleocr_vl` | 0.000949 | 1.37 |
 | 4 | `marker` | 0.001173 | 1.69 |
 | 5 | `glm_ocr` | 0.000540 | 1.76 |
-| 6 | `tesseract` | 0.000000 | 2.38 |
+| 6 | `tesseract` | Unpriced | 2.38 |
 | 7 | `mistral_ocr_4` | 0.004000 | 3.85 |
 | 8 | `gemini_flash` | 0.001251 | 4.06 |
 | 9 | `textract_text` | 0.001500 | 4.73 |
 | 10 | `qwen3_vl` | 0.003734 | 5.38 |
 | 11 | `textract_structured` | 0.065000 | 7.08 |
-| 12 | `docling` | 0.000000 | 15.60 |
+| 12 | `docling` | Unpriced | 15.60 |
 | 13 | `claude_sonnet_4_6` | 0.015129 | 18.27 |
 | 14 | `llamaparse` | 0.003750 | 21.88 |
 
-**Geometry-only configurations** (17 pages each; cost sorted):
+**Geometry-only configurations** (17 pages each; GPU-only cost, lowest first):
 
-| Engine | USD/page ↓ | Seconds/page ↓ |
-| --- | --- | --- |
-| `paddleocr_ppocrv5` | 0.000268 | 0.88 |
-| `mineru_pipeline` | 0.000430 | 2.62 |
+| Engine | USD/page | 1,000 pages | 100,000 pages | 1 million pages | Seconds/page |
+| --- | --- | --- | --- | --- | --- |
+| `paddleocr_ppocrv5` | 0.000268 | $0.27 | $26.82 | $268.18 | 0.88 |
+| `mineru_pipeline` | 0.000430 | $0.43 | $42.98 | $429.84 | 2.62 |
+
+### Pricing audit — checked October 13, 2026
+
+| Tested service / pipeline | Rate used and audit finding |
+| --- | --- |
+| Claude Sonnet 4.6, direct Anthropic API | $3 / million input tokens + $15 / million output tokens. Saved usage reproduces the recorded costs; image tokens are included. [Pricing](https://platform.claude.com/docs/en/about-claude/pricing). |
+| Gemini 3.1 Flash-Lite, Gemini API | $0.25 / million input tokens + $1.50 / million output tokens, including thinking. Saved usage reproduces the recorded costs. [Pricing](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite). |
+| Mistral OCR 4.1 conversion / 4.0 annotations | $4 / 1,000 OCR pages; $5 / 1,000 annotated pages. Published results already correct the old conversion logger's $0.001/page to $0.004. Schema is a separate annotated call, not the conversion price. [OCR pricing](https://docs.mistral.ai/models/ocr-4-1). |
+| LlamaParse v1 Parse page with LLM / LlamaExtract v1 Multimodal | Parse: 3 credits/page × $1.25 / 1,000 credits = $0.00375/page. Published results already correct the old logger's $0.003. Schema: 20 credits = $0.025/page for an uncached file; cached extraction can be 14 credits = $0.0175. These are list-price estimates, not captured credit charges. [Mode-specific pricing](https://developers.llamaindex.ai/llamaparse/general/pricing/). |
+| Textract DetectDocumentText / AnalyzeDocument TABLES + FORMS | $0.0015/page for text; $0.015 tables + $0.05 forms = $0.065/page, with OCR included. These match the first-million-page US rates, including the template's `us-east-1`; the old calls did not persist their region. The runner's fixed rate must be checked if using another region. [Pricing](https://aws.amazon.com/textract/pricing/), [US East price list](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonTextract/current/us-east-1/index.json). |
+| Modal model pipelines | GPU rate × measured batch seconds / attempted pages. A100-80GB: $0.000694/s for DeepSeek, MinerU VLM, PaddleOCR-VL, Marker and Qwen; A10: $0.000306/s for GLM and PP-OCRv5; T4: $0.000164/s for MinerU pipeline. Saved calculations match these rates. **CPU/RAM and container overhead are missing from these costs.** [Resource pricing](https://modal.com/pricing). |
+| Local Docling / Tesseract | Saved `$0` means no provider charge was assigned. It excludes the machine and electricity; the tables now show **Unpriced**. |
+
+### What changes at scale
+
+**GPU hosting:** add CPU and RAM charges, model loading and billed container idle
+time to the GPU processing estimates. A useful estimate is
+`(processing seconds + startup seconds + idle seconds) × container rate`;
+CPU/RAM usage was not recorded, so a complete historical bill cannot be reconstructed.
+As an illustration, a 190.8-second DeepSeek startup plus the configured 30-second
+shutdown delay adds about **$0.153 in GPU charges per container session**: $0.00153
+per page over 100 pages, or $0.0000153 over 10,000. Multiple containers repeat that
+cost. Sustained batches spread it out; isolated requests do not. Modal also bills
+CPU/RAM at the higher of requested or used resources. [Billing rules](https://modal.com/pricing).
+
+**Token-priced engines:** longer outputs and extra task prompts change cost.
+Async batch endpoints offer 50% lower token prices for
+[Sonnet](https://platform.claude.com/docs/en/about-claude/pricing#batch-processing)
+and [Gemini](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite),
+and [Mistral's OCR Batch API](https://docs.mistral.ai/resources/cookbooks/mistral-ocr-batch_ocr)
+offers 50% off. The benchmark uses standard API calls, so these savings are
+**not applied** above; running calls concurrently does not earn a batch discount.
+For the same token mix, 1 million pages would be approximately $7,564.55 for
+Sonnet or $625.64 for Gemini via their batch APIs; Mistral conversion would be $2,000.
+These are price projections, not tested batch runs.
+
+**Volume tiers:** Textract's next pages after the first million per month cost
+$0.0006 for text or $0.05 for Forms + Tables at the US rates used here. Thus
+2 million pages would cost $2,100 or $115,000 respectively, rather than doubling
+the first-million price. [AWS volume examples](https://aws.amazon.com/textract/pricing/).
+
+**Multiple legs:** count unique inference passes, not score rows. One conversion
+can supply text, Markdown and tables at no additional inference charge. Dedicated
+Markdown, schema, KV or geometry calls cost extra. For example, Mistral conversion
+plus a separate annotated extraction is $9 / 1,000 pages; LlamaParse plus uncached
+v1 Multimodal extraction is $28.75 / 1,000. Cached vendor work can reduce charges.
+Evaluation judge calls are a separate benchmark expense, not a production OCR price.
 
 ## Engines and versions tested
 
