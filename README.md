@@ -258,29 +258,48 @@ schema, KV and geometry passes have their own cost/latency in the full report.
 
 ## Engines and versions tested
 
-These are **recorded run versions**, not inferred from today's package releases.
-Aliases such as `latest` remain unpinned where the capture did not record an
-immutable version. Exact prompts, task options and responses are in
-`results/current.zip` and the evidence report.
+Versions below come from saved replies, with source pins and the dated Mistral
+alias resolution identified separately. Exact prompts, task options and replies
+are in `results/current.zip` and the evidence report. An engine ID is a stable
+result identifier, not proof of its model version.
 
 | Engine ID | Recorded model/version | Configuration |
 | --- | --- | --- |
 | `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; dedicated schema/KV/Markdown and pixel-frame geometry passes |
-| `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1) | vLLM, Modal A100-80GB |
+| `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1); source pin `9f30c71f441d` | vLLM, Modal A100-80GB |
 | `docling` | `docling-latest` (exact release unrecorded) | Local CPU document pipeline |
 | `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
-| `glm_ocr` | `zai-org/GLM-OCR` | vLLM, Modal A10 |
-| `llamaparse` | `llamaparse-latest`; `llama-extract` for schema | Hosted Parse/Extract APIs |
+| `glm_ocr` | `zai-org/GLM-OCR`; source pin `ca5d8b3e287e` | vLLM, Modal A10 |
+| `llamaparse` | Parse backend version unrecorded (`llamaparse-latest`); schema config `openai-gpt-4-1` | Hosted Parse/Extract APIs |
 | `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
-| `mineru` | `MinerU2.5-2509-1.2B` | vLLM native batch, Modal A100-80GB |
+| `mineru` | `MinerU2.5-2509-1.2B`; source pin `1aa090b41282` | vLLM native batch, Modal A100-80GB |
 | `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
-| `mistral_ocr_4` | `mistral-ocr-latest` conversion; `mistral-ocr-4-0` schema | Mistral OCR/Annotations API |
+| `mistral_ocr_4` | **4.1 conversion** (dated alias resolution); **4.0 schema** (saved reply) | Mistral OCR/Annotations API; mixed versions, see below |
 | `paddleocr_ppocrv5` | PP-OCRv5 server det `ca867c89` / rec `b26c3587`; PaddleOCR `3.7.0`; Paddle GPU `3.2.1` | Modal A10; geometry only |
 | `paddleocr_vl` | `PaddleOCR-VL@7fa00a8c55b7`, pipeline v1 | Layout + vLLM recognition, Modal A100-80GB |
-| `qwen3_vl` | `Qwen/Qwen3-VL-8B-Instruct` | vLLM, Modal A100-80GB |
+| `qwen3_vl` | `Qwen/Qwen3-VL-8B-Instruct`; source pin `0c351dd01ed8` | vLLM, Modal A100-80GB |
 | `tesseract` | `5.5.2` | Local CPU |
-| `textract_structured` | `aws-textract-analyze-document` | AWS FORMS/TABLES; no supplied-schema interface |
-| `textract_text` | `aws-textract-detect-document-text` | AWS text/word detection |
+| `textract_structured` | `AnalyzeDocumentModelVersion: 1.0` | AWS FORMS/TABLES; provider-reported version; no supplied-schema interface |
+| `textract_text` | `DetectDocumentTextModelVersion: 1.0` | AWS text/word detection; provider-reported version |
+
+**Mistral:** all 93 conversion replies from `20260810T130609Z` saved
+`mistral-ocr-latest`. Mistral's [changelog](https://docs.mistral.ai/resources/changelogs)
+states that this alias switched to `mistral-ocr-4-1` on July 16, 2026. Thus the
+conversion results (text, judged text, Markdown and tables) correspond to 4.1
+according to the published alias history, not an immutable ID in those replies.
+All 65 schema replies from `20261006T205850Z` explicitly report
+`mistral-ocr-4-0`. The runner pins conversion to 4.1 and schema to 4.0 separately;
+it does not silently substitute a model. Mistral now lists 4.0 as retired, so
+reproducing that schema run may no longer be possible through the hosted API.
+
+**Source pins:** the four revisions marked above already appear in the initial
+benchmark commit `e649e5a`; full hashes are in the corresponding
+[Modal apps](modal_apps). Their old replies did not record the deployed hash,
+so these establish the configured weights rather than independent per-call
+verification. New replies include the revision. Docling's historical package
+release and LlamaParse's backend version cannot be recovered from the saved
+calls; today's installed versions are not evidence of what ran then. Docling
+now records its installed release instead of `docling-latest`.
 
 **Comparison limits:** historical default table/Markdown prompts vary; the saved
 Markdown coverage was completed with dedicated calls where needed. Sonnet's 17

@@ -195,7 +195,7 @@ class MinerUInference:
                     "raw_text": text,
                     "structured_output": structured_output,
                     "gpu_type": GPU_TYPE,
-                    "model_version": f"{MODEL_ID} via vllm-engine native batch",
+                    "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-engine native batch",
                 })
             if len(results) != len(files):
                 raise RuntimeError(
@@ -233,7 +233,7 @@ class MinerUInference:
             "structured_output": {},
             "gpu_seconds": 0.0,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-engine",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-engine",
             "error": f"{exc.__class__.__name__}: {message}",
         }
 
@@ -254,5 +254,5 @@ class MinerUInference:
             "structured_output": structured_output,
             "gpu_seconds": gpu_seconds,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-engine",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-engine",
         }

@@ -262,7 +262,7 @@ class GLMOCRInference:
             "structured_output": {},
             "gpu_seconds": 0.0,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-server",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-server",
             "error": f"{exc.__class__.__name__}: {message}",
         }
 
@@ -453,5 +453,5 @@ class GLMOCRInference:
             "structured_output": {"api_response": data} if "data" in dir() else {},
             "gpu_seconds": gpu_seconds,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-server",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-server",
         }

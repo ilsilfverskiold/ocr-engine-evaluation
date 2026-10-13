@@ -65,7 +65,7 @@ class TextractTextRunner(OCRRunner):
             latency_seconds=elapsed,
             cost_per_page=COST_PER_PAGE,
             page_count=1,
-            model_version="aws-textract-detect-document-text",
+            model_version=f"aws-textract-detect-document-text@{response.get('DetectDocumentTextModelVersion', 'unreported')}",
             raw_response=provider_payload(response),
         )
 

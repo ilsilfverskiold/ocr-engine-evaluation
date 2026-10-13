@@ -57,7 +57,7 @@ class TextractStructuredRunner(OCRRunner):
             latency_seconds=elapsed,
             cost_per_page=COST_PER_PAGE,
             page_count=1,
-            model_version="aws-textract-analyze-document",
+            model_version=f"aws-textract-analyze-document@{response.get('AnalyzeDocumentModelVersion', 'unreported')}",
             # structured_output above is OUR walk of the block graph. At
             # $0.065/page, a bug in _extract_tables must be re-derivable from
             # the blocks rather than re-bought.

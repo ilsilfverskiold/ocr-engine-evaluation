@@ -368,7 +368,7 @@ class DeepSeekOCRInference:
             "structured_output": {},
             "gpu_seconds": 0.0,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-server",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-server",
             "error": f"{exc.__class__.__name__}: {message}",
         }
 
@@ -547,7 +547,7 @@ class DeepSeekOCRInference:
             "structured_output": structured_output,
             "gpu_seconds": gpu_seconds,
             "gpu_type": GPU_TYPE,
-            "model_version": f"{MODEL_ID} via vllm-server",
+            "model_version": f"{MODEL_ID}@{MODEL_REVISION} via vllm-server",
             "finish_reason": data["choices"][0].get("finish_reason"),
             "usage": data.get("usage", {}),
             "inference_config": {"model_revision": MODEL_REVISION, "vllm_version": VLLM_VERSION,

@@ -8,11 +8,12 @@ from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 
 COST_PER_PAGE = 0.004        # $4.00 / 1000 pages (OCR)
 COST_PER_PAGE_ANNOTATION = 0.005  # $5.00 / 1000 pages (annotations / schema extraction)
-MODEL_ID = "mistral-ocr-4-0"
+MODEL_ID = "mistral-ocr-4-1"
+SCHEMA_MODEL_ID = "mistral-ocr-4-0"
 
 
 class MistralOCRRunner(OCRRunner):
-    """Mistral OCR API (mistral-ocr-4-0)."""
+    """Mistral OCR: pinned 4.1 conversion and historical 4.0 annotations."""
 
     name = "mistral_ocr_4"
     supports_pdf = True
@@ -64,7 +65,7 @@ class MistralOCRRunner(OCRRunner):
         b64 = base64.b64encode(raw_bytes).decode()
 
         response = self._client.ocr.process(
-            model=MODEL_ID,
+            model=SCHEMA_MODEL_ID if schema else MODEL_ID,
             document={
                 "type": "document_url",
                 "document_url": f"data:application/pdf;base64,{b64}",
@@ -79,7 +80,7 @@ class MistralOCRRunner(OCRRunner):
         mime = "image/jpeg" if path.suffix.lower() in (".jpg", ".jpeg") else "image/png"
 
         response = self._client.ocr.process(
-            model=MODEL_ID,
+            model=SCHEMA_MODEL_ID if schema else MODEL_ID,
             document={
                 "type": "image_url",
                 "image_url": f"data:{mime};base64,{b64}",
@@ -112,5 +113,6 @@ class MistralOCRRunner(OCRRunner):
             latency_seconds=0.0,  # filled by caller
             cost_per_page=COST_PER_PAGE_ANNOTATION if annotated else COST_PER_PAGE,
             page_count=page_count,
-            model_version=MODEL_ID,
+            model_version=getattr(response, "model", None) or "unreported",
+            metadata={"requested_model": SCHEMA_MODEL_ID if annotated else MODEL_ID},
         )

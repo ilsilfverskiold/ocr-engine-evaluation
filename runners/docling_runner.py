@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib.metadata import version
 from pathlib import Path
 
 from runners.base import OCRResult, OCRRunner, OCRTask
@@ -128,5 +129,5 @@ class DoclingRunner(OCRRunner):
             latency_seconds=elapsed,
             cost_per_page=0.0,
             page_count=page_count,
-            model_version="docling-latest",
+            model_version=f"docling=={version('docling')}",
         )
