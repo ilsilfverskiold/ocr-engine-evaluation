@@ -270,7 +270,7 @@ result identifier, not proof of its model version.
 | `docling` | `2.118.1` (reconstructed environment; calls saved `docling-latest`) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6; see provenance below |
 | `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
 | `glm_ocr` | `zai-org/GLM-OCR`; source pin `ca5d8b3e287e` | vLLM, Modal A10 |
-| `llamaparse` | Parse backend unresolved; schema `openai-gpt-4-1` | Hosted Parse/Extract APIs; recovered client packages `llama-cloud-services==0.6.94`, `llama-cloud==0.1.46` |
+| `llamaparse` | v1 Balanced / Parse with LLM, August 10 run (dated release unconfirmed); schema `openai-gpt-4-1` | Hosted Parse/Extract APIs; recovered client packages `llama-cloud-services==0.6.94`, `llama-cloud==0.1.46` |
 | `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
 | `mineru` | `MinerU2.5-2509-1.2B`; source pin `1aa090b41282` | vLLM native batch, Modal A100-80GB |
 | `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
@@ -323,10 +323,16 @@ Docling release.
 **LlamaParse:** the retained client packages have August 9 installation
 timestamps, but SDK versions do not identify the hosted parser model. The
 original runner selected Markdown output without a tier, parser version or
-vendor model. The [July](https://developers.llamaindex.ai/llamaparse/changelog/2026-07/)
-and [August](https://developers.llamaindex.ai/llamaparse/changelog/2026-08/)
-changelogs and [SDK history](https://github.com/run-llama/llama-parse-py/blob/main/CHANGELOG.md)
-do not establish which backend those unconfigured v1 jobs used. An October 13
+vendor model. The [legacy mode documentation](https://developers.llamaindex.ai/llamaparse/parse/v1/presets_and_modes/advance_parsing_modes/)
+identifies this default as **Parse with LLM / Balanced** (`parse_page_with_llm`).
+The [published parser version list](https://developers.llamaindex.ai/reference/resources/parsing/methods/list_versions/)
+places Cost Effective `2026-08-08` immediately before our August 10 run, with
+the next release on August 11. Thus **`2026-08-08` is a date-based candidate
+if legacy Balanced followed v2 Cost Effective's latest release**. The inspected
+changelogs and migration documentation do not establish that mapping, so this
+is not a verified version pin. Other tiers had different release dates:
+Agentic `2026-07-24`, Agentic Plus `2026-07-08`, Fast `2026-06-15`.
+An October 13
 read-only lookup of saved job `9b19a059-c95c-49b0-a983-3120f5bb9a97` returned
 only its ID and `SUCCESS`; the v2 lookup did not expose that legacy job.
 The underlying parsing model remains unresolved and needs provider confirmation
