@@ -267,10 +267,10 @@ result identifier, not proof of its model version.
 | --- | --- | --- |
 | `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; dedicated schema/KV/Markdown and pixel-frame geometry passes |
 | `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1); source pin `9f30c71f441d` | vLLM, Modal A100-80GB |
-| `docling` | `docling-latest` (exact release unrecorded) | Local CPU document pipeline |
+| `docling` | `2.118.1` (reconstructed environment; calls saved `docling-latest`) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6; see provenance below |
 | `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
 | `glm_ocr` | `zai-org/GLM-OCR`; source pin `ca5d8b3e287e` | vLLM, Modal A10 |
-| `llamaparse` | Parse backend version unrecorded (`llamaparse-latest`); schema config `openai-gpt-4-1` | Hosted Parse/Extract APIs |
+| `llamaparse` | Parse backend unresolved; schema `openai-gpt-4-1` | Hosted Parse/Extract APIs; recovered client packages `llama-cloud-services==0.6.94`, `llama-cloud==0.1.46` |
 | `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
 | `mineru` | `MinerU2.5-2509-1.2B`; source pin `1aa090b41282` | vLLM native batch, Modal A100-80GB |
 | `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
@@ -296,10 +296,44 @@ reproducing that schema run may no longer be possible through the hosted API.
 benchmark commit `e649e5a`; full hashes are in the corresponding
 [Modal apps](modal_apps). Their old replies did not record the deployed hash,
 so these establish the configured weights rather than independent per-call
-verification. New replies include the revision. Docling's historical package
-release and LlamaParse's backend version cannot be recovered from the saved
-calls; today's installed versions are not evidence of what ran then. Docling
-now records its installed release instead of `docling-latest`.
+verification. New replies include the revision.
+
+<details>
+<summary>Recovered Docling and LlamaParse version evidence</summary>
+
+**Docling:** [2.118.1 was released August 7, 2026](https://github.com/docling-project/docling/releases/tag/v2.118.1).
+The retained environment's package/source timestamps are August 9, before the
+August 10 run, and the October 2 environment inspection recorded the same
+versions: Docling `2.118.1`, docling-core `2.91.0`, docling-ibm-models `3.13.3`,
+docling-parse `7.11.0`, RapidOCR `3.9.2`. This reconstructs the likely run
+environment; the original per-call records do not independently verify it.
+
+The runner used `DocumentConverter()` defaults. In that environment these select
+Heron (RT-DETR/ResNet50) for layout and TableFormer **Accurate** for tables.
+The model-cache refs were written during the run, August 10 at 13:13 UTC:
+`docling-project/docling-layout-heron@8f39ad3c0b4c58e9c2d2c84a38465abf757272d8`
+and `docling-project/docling-models@fc0f2d45e2218ea24bce5045f58a389aed16dc23`
+(TableFormer release `v2.3.0`). Auto-OCR resolves to RapidOCR with Torch in the
+retained environment: ocrmac, ONNX Runtime and EasyOCR are absent. Its cached
+August 9 checkpoints are `PP-OCRv6_det_small.pth`, `PP-OCRv6_rec_small.pth` and
+`ch_ptocr_mobile_v2.0_cls_mobile.pth`. These identify a multi-model document
+pipeline, not a single Docling language model. New calls record the installed
+Docling release.
+
+**LlamaParse:** the retained client packages have August 9 installation
+timestamps, but SDK versions do not identify the hosted parser model. The
+original runner selected Markdown output without a tier, parser version or
+vendor model. The [July](https://developers.llamaindex.ai/llamaparse/changelog/2026-07/)
+and [August](https://developers.llamaindex.ai/llamaparse/changelog/2026-08/)
+changelogs and [SDK history](https://github.com/run-llama/llama-parse-py/blob/main/CHANGELOG.md)
+do not establish which backend those unconfigured v1 jobs used. An October 13
+read-only lookup of saved job `9b19a059-c95c-49b0-a983-3120f5bb9a97` returned
+only its ID and `SUCCESS`; the v2 lookup did not expose that legacy job.
+The underlying parsing model remains unresolved and needs provider confirmation
+against the saved job IDs. Separately, all 65 saved **LlamaExtract schema**
+replies name `openai-gpt-4-1`; that does not identify the parsing model.
+
+</details>
 
 **Comparison limits:** historical default table/Markdown prompts vary; the saved
 Markdown coverage was completed with dedicated calls where needed. Sonnet's 17
