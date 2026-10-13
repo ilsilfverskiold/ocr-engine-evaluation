@@ -7,10 +7,10 @@ Configuration and cost assumptions for the benchmark results in the
 
 | Engine ID | Recorded model/version | Configuration |
 | --- | --- | --- |
-| `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; default transcription for text/Markdown/tables; dedicated schema/KV and pixel-frame geometry |
+| `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; default text transcription; dedicated Markdown/tables/schema/KV and pixel-frame geometry |
 | `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1); source pin `9f30c71f441d` | vLLM, Modal A100-80GB |
 | `docling` | `2.118.1` (reconstructed environment; calls saved `docling-latest`) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6 |
-| `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
+| `gemini_flash` | `gemini-3.1-flash-lite` | Google API; dedicated Markdown/table, schema/KV and geometry passes |
 | `glm_ocr` | `zai-org/GLM-OCR`; source pin `ca5d8b3e287e` | vLLM, Modal A10 |
 | `llamaparse` | v1 Balanced / Parse with LLM, August 10 run (dated release unconfirmed); schema `openai-gpt-4-1` | Hosted Parse/Extract APIs; recovered client packages `llama-cloud-services==0.6.94`, `llama-cloud==0.1.46` |
 | `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
@@ -42,15 +42,15 @@ Configuration and cost assumptions for the benchmark results in the
   the revision do not independently verify the deployed hash. Full pins are in
   [the Modal apps](../modal_apps).
 
-The published Sonnet and Gemini Markdown/table scores use default transcription
-calls (92 Markdown pages and 42 table pages each). Fresh runs request dedicated
-Markdown/table passes. Dependency ranges in `requirements.txt` are not a frozen
-reproduction environment, so installation alone does not reproduce the listed versions.
+Sonnet and Gemini use separate dedicated requests for Markdown (92 pages each)
+and tables (42 pages each). Exact prompts and provider settings are saved with
+each call. Dependency ranges in `requirements.txt` are not a frozen reproduction
+environment, so installation alone does not reproduce the listed versions.
 
 ## Pricing audit
 
 Rates checked October 13, 2026. These are usage estimates, not reconciled invoices.
-All 2,472 successful published inference records match the applicable token,
+All 2,740 successful published inference records match the applicable token,
 page or GPU-time formula; failed calls are excluded from the comparison.
 
 | Service | Rate used | Source |
@@ -75,7 +75,7 @@ failed calls and retries are excluded.
 
 Multiply unrounded mean cost/page by page count for the same document mix and
 configuration. Count unique inference passes, not score rows: shared conversion
-costs once, while separate schema/KV/Markdown/geometry requests cost extra.
+costs once, while separate Markdown/table/schema/KV/geometry requests cost extra.
 Evaluation judges are separate from production OCR cost.
 
 Modal uses processing-only batch seconds divided by attempted pages.

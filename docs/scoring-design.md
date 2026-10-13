@@ -1,6 +1,6 @@
 # Scoring design
 
-Rules implemented by the scorers and used in published run `20261013T081846Z`,
+Rules implemented by the scorers and used in published run `20261013T112225Z`,
 checked October 13, 2026. [Results and commands](../README.md) ·
 [Engine versions and pricing](engines-and-pricing.md).
 
@@ -29,7 +29,9 @@ Scoring does not regenerate Markdown catalogues or replace human gold with propo
 `engines.py` and `evaluation/legs.py` define native and prompted passes. Shared
 passes are called once. Prompted passes use the engine's supported task recipe;
 schema requests contain the field contract, never the expected values. Saved
-requests and responses establish what was actually tested.
+requests and responses establish what was actually tested. Sonnet and Gemini
+use dedicated Markdown and table requests on the same 92- and 42-page cohorts
+as the other participating engines.
 
 ## Text
 
@@ -285,9 +287,6 @@ are downloaded separately; references ship in the repository.
 
 - Some saved calls omit exact prompts or immutable model versions. Recovered
   configuration is labeled separately from per-call evidence.
-- Sonnet and Gemini's published Markdown/table scores use default transcription,
-  while the current planner requests dedicated passes. Missing outputs for other
-  engines were completed separately; table-only controls are unrun.
 - Reference omissions, granularity differences and sampled schema fields limit
   what can be concluded from aggregate scores.
 - Cached judged-text scores carry the limitation described above. Low scores

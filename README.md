@@ -5,7 +5,7 @@ schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
-Saved run: **`20261013T081846Z`**. Rankings use the saved outputs and current scoring rules.
+Saved run: **`20261013T112225Z`**. Rankings use the saved outputs and current scoring rules.
 Each leg is sorted by overall score, highest first. Overall means give each
 document family equal weight. **Easy/medium/hard are difficulty tiers.** “Pages”
 counts successful scores; errors are listed separately. **—** means no score,
@@ -66,12 +66,12 @@ the answers. CER/WER below measure rendered text separately.
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | CER ↓ | WER ↓ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `claude_sonnet_4_6` | 0.8221 | 0.8854 | 0.7909 | 0.8336 | 92 | 0.1301 | 0.1911 |
+| `gemini_flash` | 0.7724 | 0.8601 | 0.7309 | 0.7868 | 92 | 0.1915 | 0.2651 |
 | `mistral_ocr_4` | 0.7634 | 0.8313 | 0.6746 | 0.8242 | 92 | 0.1355 | 0.2034 |
 | `qwen3_vl` | 0.7566 | 0.8913 | 0.7464 | 0.7319 | 92 | 0.2410 | 0.3122 |
-| `claude_sonnet_4_6` | 0.7062 | 0.8243 | 0.6440 | 0.7311 | 92 | 0.1267 | 0.1799 |
 | `mineru` | 0.6972 | 0.8225 | 0.6624 | 0.6964 | 92 | 0.2136 | 0.2836 |
 | `llamaparse` | 0.6911 | 0.8441 | 0.6663 | 0.6747 | 92 | 0.1855 | 0.2826 |
-| `gemini_flash` | 0.6781 | 0.8115 | 0.5792 | 0.7314 | 92 | 0.1588 | 0.2375 |
 | `docling` | 0.6520 | 0.8434 | 0.6406 | 0.6141 | 92 | 0.3166 | 0.4273 |
 | `marker` | 0.6398 | 0.7972 | 0.5581 | 0.6718 | 92 | 0.2490 | 0.3260 |
 | `deepseek_ocr` | 0.6391 | 0.8065 | 0.5767 | 0.6519 | 92 | 0.2941 | 0.3798 |
@@ -83,15 +83,16 @@ the answers. CER/WER below measure rendered text separately.
 Reference-cell value credit against accepted gold, including blanks and partial
 text matches. Logical row/column associations matter; compatible reflow is allowed.
 Extras are separate diagnostics. Shipping uses the better whole-page gold/original
-reference score for every engine.
+reference score for every engine. Sonnet and Gemini use separate table-extraction
+calls.
 
 | Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages | Strict F1 ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `claude_sonnet_4_6` | 0.8539 | 0.8578 | 0.9325 | 0.8072 | 0.9156 | 42 | 0.7132 |
+| `gemini_flash` | 0.8225 | 0.8299 | 0.8637 | 0.8542 | 0.6865 | 42 | 0.7198 |
 | `textract_structured` | 0.7896 | 0.7872 | 0.7883 | 0.8064 | 0.7409 | 42 | 0.5729 |
-| `claude_sonnet_4_6` | 0.7552 | 0.7587 | 0.9299 | 0.6681 | 0.8422 | 42 | 0.6505 |
 | `qwen3_vl` | 0.7368 | 0.7420 | 0.7459 | 0.8036 | 0.5273 | 42 | 0.6261 |
 | `mistral_ocr_4` | 0.7301 | 0.7324 | 0.7309 | 0.6718 | 0.9042 | 42 | 0.5886 |
-| `gemini_flash` | 0.7233 | 0.7212 | 0.8156 | 0.7216 | 0.6359 | 42 | 0.6384 |
 | `paddleocr_vl` | 0.7204 | 0.7205 | 0.6781 | 0.7120 | 0.7879 | 42 | 0.5950 |
 | `llamaparse` | 0.6449 | 0.6503 | 0.7793 | 0.6936 | 0.3643 | 42 | 0.5480 |
 | `mineru` | 0.6304 | 0.6300 | 0.6107 | 0.6080 | 0.7175 | 42 | 0.5345 |
