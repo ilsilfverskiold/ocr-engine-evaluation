@@ -285,8 +285,9 @@ are downloaded separately; references ship in the repository.
 
 - Some saved calls omit exact prompts or immutable model versions. Recovered
   configuration is labeled separately from per-call evidence.
-- Saved default Markdown/table prompts differ. Missing Markdown outputs
-  were completed with dedicated calls; dedicated table-only controls are unrun.
+- Sonnet and Gemini's published Markdown/table scores use default transcription,
+  while the current planner requests dedicated passes. Missing outputs for other
+  engines were completed separately; table-only controls are unrun.
 - Reference omissions, granularity differences and sampled schema fields limit
   what can be concluded from aggregate scores.
 - Cached judged-text scores carry the limitation described above. Low scores

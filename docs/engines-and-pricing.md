@@ -7,7 +7,7 @@ Configuration and cost assumptions for the benchmark results in the
 
 | Engine ID | Recorded model/version | Configuration |
 | --- | --- | --- |
-| `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; dedicated schema/KV/Markdown and pixel-frame geometry passes |
+| `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; default transcription for text/Markdown/tables; dedicated schema/KV and pixel-frame geometry |
 | `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1); source pin `9f30c71f441d` | vLLM, Modal A100-80GB |
 | `docling` | `2.118.1` (reconstructed environment; calls saved `docling-latest`) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6 |
 | `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
@@ -41,6 +41,11 @@ Configuration and cost assumptions for the benchmark results in the
 - **Open models:** source revisions identify configured weights. Calls that omit
   the revision do not independently verify the deployed hash. Full pins are in
   [the Modal apps](../modal_apps).
+
+The published Sonnet and Gemini Markdown/table scores use default transcription
+calls (92 Markdown pages and 42 table pages each). Fresh runs request dedicated
+Markdown/table passes. Dependency ranges in `requirements.txt` are not a frozen
+reproduction environment, so installation alone does not reproduce the listed versions.
 
 ## Pricing audit
 
