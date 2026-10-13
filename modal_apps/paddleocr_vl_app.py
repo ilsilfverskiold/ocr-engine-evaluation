@@ -1,25 +1,4 @@
-"""
-Modal app: PaddleOCR-VL — PaddlePaddle/PaddleOCR-VL. GPU: A100-80GB.
-
-Runs the model the way it is documented to be run: the full page-parsing pipeline,
-PP-DocLayoutV3 layout detection -> per-region recognition by the 0.9B VLM. Feeding
-whole pages straight to the 0.9B is element-level-only usage and degenerates into
-repetition loops on forms; see results/RUNS.md.
-
-Both stages run on the GPU in this one container.
-
-Dependency isolation
---------------------
-vLLM and paddlepaddle-gpu cannot share a Python environment: vLLM pulls torch 2.8
-with CUDA 12.8 wheels, which replace the CUDA 12.6 wheels paddlepaddle-gpu pins and
-break libpaddle.so ("Can not import paddle core ... libcuda.so.1"). This is why the
-upstream docs tell you to run genai_server on a separate machine.
-
-Instead of a second container (which would force layout onto CPU and make the timing
-meaningless), vLLM lives in its own venv at /opt/vllmenv. The system interpreter keeps
-paddlepaddle-gpu for GPU layout detection; the venv interpreter serves the 0.9B over
-localhost. One GPU, one container, no cross-container network hop.
-"""
+"""Modal app: PaddleOCR-VL — PaddlePaddle/PaddleOCR-VL. GPU: A100-80GB."""
 
 import modal
 

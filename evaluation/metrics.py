@@ -19,13 +19,7 @@ def _markdown_to_plain(text: str) -> str:
 
 
 def normalize_text(text: str) -> str:
-    # An answer wrapped entirely in ```markdown ... ``` is packaging, not
-    # content. Left in, the fence makes _markdown_to_plain treat the whole page
-    # as a code block and skip the markdown flattening every other engine gets,
-    # so an identical reading scores a far worse CER/WER purely for being
-    # wrapped: qwen3_vl wraps 44 of its 72 outputs, and invoice_000 moves
-    # CER 0.710 -> 0.406, WER 1.218 -> 0.460, length_ratio 1.736 -> 1.011 once
-    # it is removed. Same unwrapping the markdown leg already does.
+    # Remove outer Markdown fences before rendering so packaging does not change CER/WER.
     from evaluation.markdown_leg import strip_wrapping_fence
 
     text = strip_wrapping_fence(text or "")
@@ -108,15 +102,3 @@ def compute_ned(hypothesis: str, reference: str) -> float:
         return 0.0
     dist = editdistance.eval(h, r)
     return 1.0 - dist / max(len(h), len(r))
-
-
-# Table structure is scored in evaluation/table_leg.py. The TEDS that used to
-# live here compared HTML dialects — it saw <thead>/<th> where the reference had
-# plain rows and scored a byte-perfect table 0.846 — so it was rewritten rather
-# than kept beside its replacement. Import it from there:
-#
-#     from evaluation.table_leg import compute_teds
-#
-# The block-fuzzy "heuristic score" that also lived here is superseded by
-# evaluation/markdown_leg.py, which measures structure and reading order
-# directly instead of correlating with them.

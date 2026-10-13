@@ -1,15 +1,6 @@
-"""
-Modal app: Qwen3-VL-8B — Qwen/Qwen3-VL-8B-Instruct. GPU: A100-80GB.
+"""Modal app: Qwen3-VL-8B — Qwen/Qwen3-VL-8B-Instruct. GPU: A100-80GB.
 Weights are pre-fetched into the image's Hugging Face cache at build time;
-inference runs through a local vLLM server.
-
-Backend decision:
-- vLLM is intentional here. The official Qwen3-VL vLLM recipe recommends
-  vLLM serving for deployment, and server mode lets us batch overlapping Modal
-  calls inside one measured batch on a single warm A100 container.
-- We cap context length and disable video inputs because this benchmark sends
-  one document image per request, not long video or multi-image conversations.
-"""
+inference runs through a local vLLM server."""
 
 import modal
 

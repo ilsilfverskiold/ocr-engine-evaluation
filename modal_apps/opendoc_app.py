@@ -1,39 +1,5 @@
-"""
-Modal app: OpenDoc-0.1B — openocr-python==0.1.5, OpenOCR(task='doc', use_layout_detection=True).
-Device: CPU (4 cores, 8 GiB). L4 is the documented probe (flip GPU_TYPE).
-
-Sources (read 2026-09-30):
-  - recipe: https://github.com/Topdu/OpenOCR/blob/059fe2b3ec71bb137b8c8504203498b1f563fdcc/docs/opendoc.md
-    (commit "release 0.1.5 fix bug", 2026-02-12; the repo has no 0.1.5 tag)
-  - package source: openocr_python-0.1.5.tar.gz from PyPI
-    (sha256 734f42bf6ac832d5339e153cb13c4b5e75b369d4b435e819d97554ad8dec7397):
-    openocr/openocr.py, openocr/tools/infer_doc_onnx.py, openocr/tools/infer_unirec_onnx.py
-
-What `OpenOCR(task='doc')` actually runs in 0.1.5
--------------------------------------------------
-openocr.py `_init_doc_task` -> tools.infer_doc_onnx.OpenDocONNX: an ONNX Runtime
-pipeline — PP-DocLayoutV2 exported to ONNX (topdu/PP_DoclayoutV2_onnx) for
-layout, then UniRec-0.1B exported to ONNX (topdu/unirec_0_1b_onnx: encoder +
-KV-cached decoder, greedy, FP32) on each crop. The package's dependencies are
-onnxruntime, opencv, numpy, etc. — NOT torch, transformers or paddle.
-
-The "Torch 2.6 / Transformers 4.49 / paddlepaddle-gpu 3.2.0 (cu126)" recipe in
-opendoc.md belongs to the *source* path (`python tools/infer_doc.py`, PaddleX
-layout + PyTorch UniRec from topdu/unirec-0.1b), which is also the path the
-OmniDocBench 90.57 figure is reproduced with. This engine follows the requested
-package API, so that stack is not installed. The two paths are not shown to be
-output-equivalent; see the UNVERIFIED list in the hand-off.
-
-Device choice
--------------
-CPU first: the package's hard dependency is CPU `onnxruntime`; GPU needs the
-optional `onnxruntime-gpu` extra and a swap of the ORT wheel. The decoder is a
-Python per-token loop that passes the numpy KV cache in and out of ORT on every
-step (infer_unirec_onnx.py `_infer_single_image`), so a GPU spends much of each
-step on host<->device copies. The research plan also lists "CPU, then L4". The
-L4 probe is a one-line change: GPU_TYPE = "L4" swaps the ORT wheel, requests the
-GPU, and forces use_gpu=True; the actual ORT providers are recorded per result.
-"""
+"""Modal app: OpenDoc-0.1B — openocr-python==0.1.5, OpenOCR(task='doc', use_layout_detection=True).
+Device: CPU (4 cores, 8 GiB). L4 is the documented probe (flip GPU_TYPE)."""
 
 import modal
 

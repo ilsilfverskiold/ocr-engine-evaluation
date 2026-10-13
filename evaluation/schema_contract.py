@@ -14,7 +14,6 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-CONTRACT_VERSION = "schema-contract-v1 (2026-10-02)"
 FIELD_FILE = Path(__file__).parent.parent / "documents" / "schema_fields.json"
 
 

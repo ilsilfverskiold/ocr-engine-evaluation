@@ -1,70 +1,4 @@
-"""Code verdicts for the key_value and schema legs.
-
-Historical printed-label caches remain readable for saved-result compatibility.
-New KV evaluation uses accepted shared references and value-group resolution.
-
-Deterministic parsing and matching helpers:
-  1. parse the answer into pairs — JSON leaves (fenced or embedded JSON;
-     every block of an answer with several fenced blocks; truncated JSON
-     salvaged as far as it parses; duplicate keys are all kept, where a
-     dict would keep only the last), or for Textract its FORMS
-     pairs plus 2-column table rows / header->cell pairs;
-  2. cleanup: an empty-valued key containing ":" is split at the first colon;
-     a multi-line value whose later lines are "Label: value" lines (an engine
-     that transcribed a whole column under one label) yields those lines as
-     pairs of their own and the remaining lines as a second value for the
-     key — the original pair is kept too;
-  3. key match: the field path, its last segment, or (key_value only) a printed
-     label — normalised (camelCase split), one-typo tolerant on tokens longer
-     than 3 characters; a label of >= 2 tokens may sit inside a longer engine
-     key ("Tax Id (Seller)" ~ "Tax Id:"); a line number ("5b") matches a key
-     that starts with it; a key with the same words as the name in any
-     order, stop words aside ("name of lessee" ~ lessee.name), unless the key
-     ends in a stop word ("[name of lessee], of" is the fragment printed
-     before the NEXT blank);
-     For blank scalar fields, a key naming the semantic field takes
-     precedence over repeated printed-label candidates. Otherwise a matching
-     blank may satisfy an ambiguous repeated label; another field's explicit
-     value is not attributed solely by label containment.
-  4. value match: EXACT after normalisation — numbers as numbers, dates as
-     dates, strings lowercased with punctuation collapsed. No containment:
-     "193.00 SR" is not 193.00; a 10-star card mask is not the printed 12-x
-     one. Two exceptions, both narrow:
-       * checkboxes (reference true/false): true ~ true/yes/✓/☑/[x]/checked/
-         selected, or the item's own label as the value ("Insulin": "Insulin"),
-         or a radio group whose value is this option ("Filing Status":
-         "Married filing separately"); false ~ false/no/☐/unchecked/
-         NOT_SELECTED/empty, or a radio group that selected another option;
-       * a printed label shared by several reference fields ("Your first name
-         and middle initial" -> firstName + middleInitial; "Date" -> date +
-         datetime), or one that itself names several things (" and ") when
-         the reference holds only one of them: the reference value may be a
-         whole-token part of the engine's value, because the page prints
-         one value for both;
-  5. key_value only, when no matched key holds the value:
-       * a block printed under one label may come back as several pairs
-         whose keys contain the label ("Seller Name" + "Seller Address" for
-         "Seller:"): their ordered concatenation is the value;
-       * when no key matched, or the field's printed label is a sentence
-         fragment ("located at", "A security deposit of" — a lease prints
-         no labels, so every engine keys those blanks differently), the value
-         (4+ characters) may sit under a key that belongs to no other field;
-       * a date the page prints as several blanks ("31" day of "December
-         2025") is composed from the values returned for the field's printed
-         labels;
-  6. arrays (schema): a reference row is aligned to the engine row that
-     shares a value in another column (the same name or id), else to the row
-     with the same index when the engine returned as many rows. A cell is
-     judged in that row only: a blank cell is `blank_ok` unless THAT row has
-     a value for it — another row's value is not an invention. Without an
-     aligned row a value is accepted from any row of its column and a blank
-     is not held against the engine.
-
-key_value denominator = the fields the page prints as label+value pairs (from
-stage 1). A document without a stage-1 file (``alias_missing``), or none of
-whose fields is a printed pair (``fields_total`` 0), is not applicable on
-key_value — never "0 for every engine". schema = all fields.
-"""
+"""Parse engine field pairs and compare keys, values and array rows."""
 
 from __future__ import annotations
 
@@ -234,14 +168,14 @@ def engine_pairs(engine: str, text: str, structured_output: dict | None, pair_co
         pairs = [[str(p.get("key", "")), str(p.get("value", ""))] for p in so.get("forms", [])]
         if pair_context is not None:
             pair_context.extend([None] * len(pairs))
-        from evaluation.code_judges import _html_grid
+        from evaluation.table_extractor import html_grid
         for ti, t in enumerate(so.get("tables", [])):
             if not isinstance(t, dict):
                 continue
             for html in dict.fromkeys(t.get(key) for key in ("cell_html", "html")):
                 if not html:
                     continue
-                grid = _html_grid(html)
+                grid = html_grid(html)
                 if grid and all(len(r) == 2 for r in grid):
                     pairs += [[r[0], r[1]] for r in grid]
                     if pair_context is not None:
@@ -793,11 +727,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None,
         if exact:
             cands = exact
         if it.is_blank:
-            # A semantic field name beats an ambiguous printed label. The
-            # spouse's explicitly filled "Last name (spouse)" cannot borrow
-            # a blank from "Last name (dependent 1)" merely because both
-            # contain "Last name". Repeated labels without a field-specific
-            # key still use the candidates below (e.g. a lease's "year(s)").
+            # Prefer a field-specific key over a repeated printed label, including for blanks.
             field_names = [it.path, it.path.split(".")[-1]]
             specific = [(k, v) for k, v in cands if key_names(k, field_names)]
             if specific:
@@ -821,11 +751,7 @@ def score_fields(items, pairs: list[list[str]], leg: str, aliases: dict | None,
                         kept.append((k, v))
                 cands = kept
         if it.is_blank and cands and not any(is_blank_value(v) for _, v in cands):
-            # every matching pair holds a value: an invention only when one of
-            # them NAMES the field. A key that merely contains the label
-            # belongs to another line of the page ("Dependent 1 Last name"
-            # for a blank spouse; "NOT_SELECTED The Lessee may have the
-            # right…" for a blank renewal period).
+            # Count an invented value only when its key identifies this field, not another use of the label.
             named = [(k, v) for k, v in cands if key_names(k, names)]
             if not named:
                 verdicts.append(FieldVerdict(it.path, it.value, True, "blank_ok", str(cands[0][0]), str(cands[0][1]),

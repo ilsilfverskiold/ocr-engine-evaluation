@@ -144,7 +144,6 @@ def _operations(records, inference):
 
 def print_report(rows, inference, log, legs, *, sort_by='score', details=False):
     """Engine comparison tables, grouped by leg, then difficulty tier."""
-    import run_benchmark as rb
     analysis = comparison(rows)  # Never choose exclusions independently per engine or tier.
     excluded = {(c['document_path'], c['leg']) for c in analysis['cases']}
     selected = [r for r in rows if r['leg'] in legs]

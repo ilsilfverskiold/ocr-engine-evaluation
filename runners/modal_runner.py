@@ -6,15 +6,7 @@ from uuid import uuid4
 from modal_apps._shared import GPU_SECOND_RATES_USD, calculate_modal_cost
 from runners.base import OCRResult, OCRRunner, OCRTask
 
-# Derived view over the single registry in engines.py, kept under the historical
-# name and shape: engine name → (modal_app_name, class_name, gpu_type, supports_pdf).
-#
-# WARNING: gpu_type is only a FALLBACK for cost calculation. The authoritative
-# value is GPU_TYPE in the corresponding modal_apps/*_app.py, which decides which GPU
-# Modal actually allocates AND is returned in every response. _to_result() prefers the
-# response value, so a mismatch no longer mis-bills a run -- but keep them in sync
-# anyway. Changing only the app file previously billed A100 runs at the A10G rate,
-# understating cost by 2.3x (4.2x for marker on T4).
+# Registry-derived Modal configuration. Response GPU type overrides the registry cost fallback.
 from engines import ENGINES as _ENGINE_SPECS
 
 MODAL_ENGINES: dict[str, tuple[str, str, str, bool]] = {
@@ -23,20 +15,8 @@ MODAL_ENGINES: dict[str, tuple[str, str, str, bool]] = {
     if spec.kind == "modal"
 }
 
-# Every self-hosted engine is benchmarked through one explicit batch call on one
-# Modal container/GPU. The app returns the measured wall time for that batch and
-# this runner amortizes it over the documents in the batch. This is the only
-# reliable way to avoid both:
-#   * over-counting overlapping requests on a shared vLLM server, and
-#   * under-counting several containers/GPUs that happen to run in parallel.
-#
-# Sizes are deliberately bounded because the corpus is ~93 MiB.  Marker and Paddle
-# need a few documents queued to keep their internal workers/stages busy; MinerU has
-# a native batch API; the vLLM apps use the concurrency each model can sustain.
-# Batch sizes come from EngineSpec.batch_size. Queue substantially more work than
-# the active concurrency so the next document starts as soon as a worker/server
-# slot becomes free — setting the outer chunk equal to concurrency creates
-# head-of-line bubbles at every chunk. (MinerU uses its native batch API at 8.)
+# Measure one batch on one container/GPU and amortize its time across documents.
+# Batch size comes from EngineSpec; queue time and startup are recorded separately.
 MODAL_BATCH_SIZES: dict[str, int] = {
     name: spec.batch_size
     for name, spec in _ENGINE_SPECS.items()
@@ -149,16 +129,7 @@ class ModalRunner(OCRRunner):
 
     @staticmethod
     def _response_format(task: OCRTask | None) -> dict | None:
-        """The provider constrained-decoding directive for this task.
-
-        Cloud engines get JSON enforcement from their providers — gemini sets
-        response_mime_type, mistral uses document_annotation_format — while the
-        self-hosted engines were sent nothing at all, so key_value/schema partly
-        measured which engine happened to have JSON enforcement rather than
-        which could extract. vLLM supports both forms, and they are not
-        equivalent: json_object only forces syntactically valid JSON, while
-        json_schema constrains generation to the supplied schema.
-        """
+        """The provider constrained-decoding directive for this task."""
         if task is None or not task.wants_json:
             return None
         if task.json_schema:

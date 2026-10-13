@@ -1,43 +1,4 @@
-"""
-Modal app: Chandra OCR 2 — datalab-to/chandra-ocr-2. GPU: A10.
-
-Size: the HF safetensors index reports 5,295,564,288 BF16 parameters
-(10.59 GB file); Surya's
-model card lists Chandra OCR 2 at 5.3B. Architecture Qwen3_5ForConditionalGeneration.
-
-Route (all read from chandra-ocr v0.2.0, github.com/datalab-to/chandra/tree/v0.2.0;
-master is 11 commits ahead with README/olmOCR-bench/hf-backend changes only):
-- The official server recipe is `chandra_vllm` (chandra/scripts/vllm.py), a
-  `docker run vllm/vllm-openai:v0.17.0 ...` command. Modal cannot run Docker,
-  so @modal.enter starts the same `vllm serve` flags from a pip-installed
-  vllm==0.17.0 and waits for /health and /v1/models.
-- Inference uses the official `InferenceManager(method="vllm").generate(batch,
-  ...)` (chandra/model/__init__.py) pointed at that server with the kwarg
-  `vllm_api_base`. The manager's client (chandra/model/vllm.py) owns request
-  shape, scale_to_fit, temperature 0 / top_p 0.1 and repeat-retries.
-- Conversion: BatchInputItem(image, prompt_type="ocr_layout"), with
-  include_headers_footers=True (the CLI default excludes Page-Header/Footer)
-  and include_images=True (CLI default). Max output = settings.MAX_OUTPUT_TOKENS
-  = 12,384. settings.IMAGE_DPI=192 governs PDF rendering only (input.py
-  load_pdf_images); the corpus is images, so the image path applies:
-  chandra.input.load_image upsamples any image whose width or height is below
-  settings.MIN_IMAGE_DIM=1536 so the SHORT side becomes 1536 (LANCZOS).
-- Extraction legs: BatchInputItem.prompt is forwarded verbatim
-  (vllm.py `_generate`: `prompt = item.prompt` if set). The manager then runs
-  its layout parsers over every reply, so `raw` is the answer and is kept.
-  Chandra's vLLM client sends no response_format / guided decoding, so the
-  harness's JSON constraint cannot be applied on this route; that is recorded
-  per item (response_format_applied=False), not silently dropped.
-
-Batching owner: vLLM continuous batching fed by the manager's own
-ThreadPoolExecutor (generate_vllm max_workers). Conversion and extraction
-items go to ONE manager.generate call (each BatchInputItem carries its prompt).
-
-Licensing: code Apache-2.0; weights under a modified OpenRAIL-M licence
-(free for research, personal use and startups under $2M funding/revenue;
-"cannot be used competitively with our API" — HF model card). Distinct from
-Surya's terms. Benchmarking is research use; no commercial deployment implied.
-"""
+"""Modal app: Chandra OCR 2 — datalab-to/chandra-ocr-2. GPU: A10."""
 
 import modal
 
@@ -112,9 +73,7 @@ image = (
 app = modal.App("ocr-bench-chandra-ocr-2")
 
 
-# --------------------------------------------------------------------------
 # Pure helpers (self-contained copy; the container cannot import repo modules)
-# --------------------------------------------------------------------------
 
 def _load_page(image_bytes: bytes, tmpdir: str, index: int):
     """EXIF-transpose + RGB, then Chandra's own image loader

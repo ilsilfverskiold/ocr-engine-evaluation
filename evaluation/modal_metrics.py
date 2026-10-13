@@ -1,16 +1,4 @@
-"""Audit and summarize Modal batch timing records.
-
-Modal models reserve one GPU for the complete ``run_ocr_batch`` method.  The
-method timer starts after ``@modal.enter`` has loaded and warmed the model, so:
-
-    effective GPU seconds/document = batch_gpu_seconds / batch_size
-    cost/document = effective GPU seconds/document * GPU rate
-    documents/second = 1 / effective GPU seconds/document
-
-This module verifies those identities from the persisted JSONL records.  Keeping
-the audit independent from the report aggregation prevents a display-only mean
-from silently becoming the benchmark's billing formula.
-"""
+"""Validate batch-amortized Modal latency and cost against recorded GPU time."""
 
 from __future__ import annotations
 

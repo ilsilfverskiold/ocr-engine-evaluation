@@ -1,38 +1,4 @@
-"""
-Modal app: PaddleOCR-VL 1.6 — PaddlePaddle/PaddleOCR-VL-1.6. GPU: A10 (fit probe).
-
-A NEW engine (`paddleocr_vl_1_6`), not a change to `paddleocr_vl` (v1). The v1
-app (modal_apps/paddleocr_vl_app.py) is left untouched.
-
-Runs the documented page-parsing pipeline, pipeline_version="v1.6":
-PP-DocLayoutV3 layout detection -> per-region crops -> PaddleOCR-VL-1.6-0.9B
-recognition served by vLLM on localhost. Sources (read 2026-09-30):
-  - model card @ c5630ab: https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6
-  - pipeline docs: https://www.paddleocr.ai/latest/en/version3.x/pipeline_usage/PaddleOCR-VL.html
-  - PaddleX v3.7.2 pipeline config (layout model, VLM name, defaults):
-    https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/configs/pipelines/PaddleOCR-VL-1.6.yaml
-  - PaddleX v3.7.2 genai-server vLLM defaults:
-    https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/genai/configs/paddleocr_vl_09b.py
-  - PaddleOCR v3.7.0 wrapper: https://github.com/PaddlePaddle/PaddleOCR/blob/v3.7.0/paddleocr/_pipelines/paddleocr_vl.py
-
-Dependency isolation (same design as the v1 app)
-------------------------------------------------
-vLLM and paddlepaddle-gpu cannot share one environment: vLLM's torch/CUDA wheels
-replace the CUDA 12.6 wheels paddlepaddle-gpu needs. The pipeline docs say the
-same ("mixed inference methods ... usually require deploying the layout analysis
-model and the VLM service in separate environments"). vLLM therefore lives in
-its own venv at /opt/vllmenv; the system interpreter keeps paddlepaddle-gpu for
-GPU layout detection. One GPU, one container, localhost only.
-
-Weights are baked, not fetched at runtime
------------------------------------------
-Both halves of the pipeline are pinned by HF revision and hash-checked at image
-build: the VLM (MODEL_REVISION) and PP-DocLayoutV3 (LAYOUT_REVISION). PaddleX's
-own downloader resolves PaddlePaddle/PP-DocLayoutV3 at `main`, which is mutable
-(its README changed on 2026-09-30); passing layout_detection_model_dir removes
-that drift. Downloads use huggingface_hub only, so the build never imports
-paddle (which needs libcuda.so.1, absent on Modal build machines).
-"""
+"""Modal app: PaddleOCR-VL 1.6 — PaddlePaddle/PaddleOCR-VL-1.6. GPU: A10 (fit probe)."""
 
 import modal
 
@@ -576,16 +542,7 @@ class PaddleOCRVL16Inference:
     # Result extraction
     # ------------------------------------------------------------------ #
     def _result_to_response(self, res, image_size=(0, 0)) -> dict:
-        """Everything the one pipeline call produced, in benchmark shapes.
-
-        res.json["res"] for v1.6 (PaddleX v3.7.2 result.py _to_json) carries
-        width, height, parsing_res_list (block_label/content/bbox/order/
-        polygon points), layout_det_res, and spotting_res only when a spotting
-        region exists. It has NO overall_ocr_res and NO table_res_list: the
-        v1.6 pipeline runs no separate OCR sub-pipeline, and table_res_list is
-        initialised empty and never filled (pipeline.py
-        _paddleocr_vl_assemble_parsing_results).
-        """
+        """Everything the one pipeline call produced, in benchmark shapes."""
         import json
 
         md = res.markdown

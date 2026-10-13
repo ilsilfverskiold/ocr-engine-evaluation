@@ -319,19 +319,7 @@ class GLMOCRInference:
         raise TimeoutError(f"GLM-OCR vLLM server did not become ready: {last_error}")
 
     def _document_parse(self, img_path: str) -> dict:
-        """The official SDK document-parsing pipeline, run against our vLLM.
-
-        One documented operation from the benchmark's point of view, even though
-        it makes several region-level calls internally: PP-DocLayoutV3 detects
-        regions, each is recognised with the card's own task prefix
-        (text -> "Text Recognition:", table -> "Table Recognition:",
-        formula -> "Formula Recognition:", chart/image retained but skipped),
-        and a formatter assembles Markdown plus structured JSON.
-
-        Returns Markdown, tables and coarse layout boxes from this single parse.
-        The registry still uses the historical model-only path until this
-        explicit pipeline variant has passed controlled quality probes.
-        """
+        """The official SDK document-parsing pipeline, run against our vLLM."""
         from glmocr import GlmOcr
         from glmocr.config import load_config
         from importlib.metadata import version

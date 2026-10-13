@@ -1,27 +1,4 @@
-"""Datalab hosted API: /api/v1/convert (default conversion) and /api/v1/extract
-(schema leg). Sources read 2026-09-30:
-
-- https://documentation.datalab.to/api-reference/convert-document
-- https://documentation.datalab.to/api-reference/convert-result-check
-- https://documentation.datalab.to/docs/recipes/conversion/conversion-api-overview
-- https://documentation.datalab.to/api-reference/extract-structured-data
-- https://documentation.datalab.to/docs/recipes/structured-extraction/api-overview
-- https://documentation.datalab.to/docs/recipes/structured-extraction/balanced-mode
-- https://documentation.datalab.to/platform/billing
-- https://documentation.datalab.to/docs/welcome/sdk/conversion (cost_breakdown keys)
-- https://www.datalab.to/pricing
-
-Flow (per the conversion overview's REST example): multipart POST with
-X-API-Key -> persist request_id / request_check_url -> poll the check URL until
-status == "complete" (or "failed") under a deadline with backoff -> if the
-reply carries a signed result_url, download it WITHOUT the API key and merge
-the non-null polling fields over it -> check `success` (a completed job can be
-success=false) -> parse.
-
-The hosted service's model versions are not pinned or pinnable from the
-client; the `versions` dict the service returns is recorded as model_version.
-Hosted models are not assumed identical to the public Surya/Chandra weights.
-"""
+"""Datalab hosted conversion and supplied-schema extraction."""
 
 from __future__ import annotations
 

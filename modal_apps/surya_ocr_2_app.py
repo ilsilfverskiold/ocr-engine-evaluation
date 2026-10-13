@@ -1,44 +1,4 @@
-"""
-Modal app: Surya OCR 2 (~686M params, BF16) — datalab-to/surya-ocr-2. GPU: L4.
-
-Route (all read from surya-ocr v0.22.1, github.com/datalab-to/surya/tree/v0.22.1):
-- Surya 2 runs layout, OCR and table recognition through one VLM served by an
-  OpenAI-compatible vLLM server. `SuryaInferenceManager` would normally spawn
-  that server as a Docker container (surya/inference/backends/vllm.py). Modal
-  containers cannot run Docker, so this app starts the SAME `vllm serve`
-  command line inside @modal.enter and attaches the manager to it with
-  SURYA_INFERENCE_URL (surya/inference/backends/spawn.py: attach_or_spawn,
-  external-URL branch: probes <base>/health, then requires /v1/models to report
-  exactly SURYA_MODEL_CHECKPOINT — hence --served-model-name below).
-- Conversion uses the official `RecognitionPredictor(manager)(images,
-  full_page=True)` — the path `surya_ocr` (scripts/ocr_text.py) uses: one
-  HIGH_ACCURACY_BBOX_PROMPT request per page returning top-level
-  <div data-label data-bbox> HTML blocks. Pages whose full-page output errors,
-  is empty on a non-blank page, loops, or fails to parse fall back INSIDE the
-  predictor to LayoutPredictor + per-block OCR (recognition/__init__.py).
-  Layout+block mode as the default is a separate later probe (see registry
-  proposal); README: "Full-page is the more accurate path".
-- Extraction legs (key_value/schema) use the manager's documented caller
-  prompt override: BatchInputItem.prompt "overrides the default prompt for
-  prompt_type" and openai_client._generate_one sends
-  `item.prompt or PROMPT_MAPPING[item.prompt_type]`. BatchInputItem.guided_json
-  becomes an OpenAI `response_format` json_schema (strict). The raw generation
-  is the answer; nothing is parsed out of it here.
-
-Batching owner: vLLM continuous batching, fed by Surya's own client thread pool
-(openai_client.chat_completions_batch, max_workers = SURYA_INFERENCE_PARALLEL).
-There is no second pool in this app: the whole conversion list goes to ONE
-predictor call, and the extraction list to ONE manager.generate call.
-
-Dependency isolation: surya-ocr 0.22.1 pins opencv-python-headless==4.11.0.86,
-while vllm 0.20.1 requires opencv-python-headless>=4.13.0 (PyPI metadata), so
-vLLM lives in its own venv (same pattern as paddleocr_vl_app.py).
-
-Licensing: Surya code Apache-2.0; weights under a modified AI Pubs OpenRAIL-M
-licence (free for research/personal use and startups under $5M
-funding/revenue; see the model card). Benchmarking is research use; any
-commercial deployment needs its own licence review.
-"""
+"""Modal app: Surya OCR 2 (~686M params, BF16) — datalab-to/surya-ocr-2. GPU: L4."""
 
 import modal
 
@@ -135,9 +95,7 @@ image = (
 app = modal.App("ocr-bench-surya-ocr-2")
 
 
-# --------------------------------------------------------------------------
 # Pure helpers (kept self-contained: the container cannot import repo modules)
-# --------------------------------------------------------------------------
 
 def _load_page(image_bytes: bytes, tmpdir: str, index: int):
     """EXIF-transpose + RGB, then Surya's own image loader.

@@ -1,24 +1,4 @@
-"""Leg 2 — markdown / reading order.
-
-Ask: *"Convert this document to Markdown. Preserve reading order, headings,
-lists and tables. Output only the Markdown."*
-
-The reference encodes **one** valid rendering of the page, so comparing against
-it literally would measure our formatting choices. Instead the comparison is
-structural: both sides are reduced to a sequence of typed blocks — heading,
-list item, table row, paragraph — each carrying its normalised content, and we
-ask which blocks are present and whether they arrive in the same order.
-
-Normalised away, on both sides: heading depth, emphasis markers, list bullet
-style, table alignment rows, and trailing punctuation. Only actual heading syntax creates a heading. Bold emphasis stays a paragraph;
-embedded HTML headings are accepted. Plain TSV is not Markdown table syntax.
-
-Supporting score: `0.8 x element F1 + 0.2 x order`, where element F1 matches blocks by
-type and near-identical content (fuzzy, so an OCR typo inside a paragraph does
-not delete the whole block), and order is a Kendall-tau over the positions of
-matched blocks. The headline is code-scored element accuracy against the
-cached image checklist; see code_judges.py.
-"""
+"""Score Markdown structure and reading order, with separate rendered-text CER/WER."""
 
 from __future__ import annotations
 
@@ -28,25 +8,10 @@ from typing import Any
 
 from evaluation.ground_truth import GroundTruth
 
-# Two blocks of the same type are the same block above this content similarity.
-# Below it they are different content, not a noisy match.
-BLOCK_MATCH_THRESHOLD = 0.90
-
 ELEMENT_WEIGHT = 0.8
 ORDER_WEIGHT = 0.2
 
 STRUCTURAL_TYPES = ("heading", "list_item", "table_header", "table_row")
-
-_FENCE_RE = re.compile(r"^\s*```")
-_HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s+(.*)$")
-_SETEXT_RE = re.compile(r"^\s{0,3}(=+|-{2,})\s*$")
-_BOLD_ONLY_RE = re.compile(r"^\s*(?:\*\*|__)(.+?)(?:\*\*|__)\s*:?\s*$")
-_LIST_RE = re.compile(r"^\s*(?:[-*+]|\d{1,3}[.)])\s+(.*)$")
-_TABLE_ROW_RE = re.compile(r"^\s*\|.*\|\s*$")
-_ALIGNMENT_ROW_RE = re.compile(r"^\s*\|?[\s:|-]+\|[\s:|-]*$")
-_HTML_TAG_RE = re.compile(r"</?[a-zA-Z][^>]*>")
-_EMPHASIS_RE = re.compile(r"(\*{1,3}|_{1,3}|`+|~~)")
-_LINK_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 
 
 @dataclass(frozen=True)
@@ -71,7 +36,7 @@ class MarkdownScore:
     matched_blocks: int = 0
     reference_has_structure: bool = True
     missed: list[tuple[str, str]] = field(default_factory=list)
-    # Judge fields (when LLM judge is used, these are populated)
+    # Historical metric fields retained for result-format compatibility.
     judge_element_accuracy: float | None = None
     judge_cost_usd: float = 0.0
     judge_checklist_size: int = 0
@@ -83,7 +48,7 @@ class MarkdownScore:
     judge_checklist_model: str | None = None
     judge_verdict_model: str | None = None
     judge_error: str | None = None
-    # Code verdicts against the image checklist (the headline since 2026-10-01)
+    # Deterministic checklist verdicts.
     code_element_accuracy: float | None = None
     checklist_size: int = 0
     code_counts: dict[str, int] = field(default_factory=dict)
@@ -148,71 +113,6 @@ class MarkdownScore:
         return d
 
 
-def normalize_block_text(text: str) -> str:
-    """Strip everything that is a rendering choice rather than content."""
-    text = _LINK_RE.sub(r"\1", text)
-    text = _HTML_TAG_RE.sub(" ", text)
-    text = _EMPHASIS_RE.sub("", text)
-    text = text.replace("\\", "")
-    text = re.sub(r"\s+", " ", text).strip()
-    return text.rstrip(" .:;,-").strip().casefold()
-
-
-_HTML_TABLE_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
-_HTML_ROW_RE = re.compile(r"<tr\b.*?</tr>", re.IGNORECASE | re.DOTALL)
-_HTML_CELL_RE = re.compile(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", re.IGNORECASE | re.DOTALL)
-_HTML_TAG_RE = re.compile(r"<[^>]+>")
-
-
-def _html_tables_to_pipe(markdown: str) -> str:
-    """Rewrite embedded HTML tables as pipe rows before block parsing.
-
-    Markdown legitimately embeds HTML tables — PaddleOCR-VL's pipeline emits
-    its tables that way — and scoring the dialect instead of the structure is
-    the same mistake that once cost a byte-perfect table 0.154 in the TEDS
-    leg. Same content, same blocks, whichever syntax the engine chose.
-    """
-    def one(match: re.Match) -> str:
-        rows = []
-        for row in _HTML_ROW_RE.findall(match.group(0)):
-            cells = [_HTML_TAG_RE.sub("", c).strip() for c in _HTML_CELL_RE.findall(row)]
-            if any(cells):
-                rows.append("| " + " | ".join(cells) + " |")
-        return "\n" + "\n".join(rows) + "\n"
-
-    return _HTML_TABLE_RE.sub(one, markdown or "")
-
-
-def _tsv_tables_to_pipe(markdown: str) -> str:
-    """Rewrite tab-separated table blocks as pipe rows.
-
-    The same dialect tolerance HTML tables already get: MinerU renders its
-    tables tab-separated, so a correctly recovered table contributed no
-    table_row blocks at all and the engine scored 0.200 on a page it had
-    parsed. Two or more consecutive lines carrying tabs are a table block.
-    """
-    out: list[str] = []
-    run: list[str] = []
-
-    def flush() -> None:
-        if len(run) >= 2:
-            for line in run:
-                cells = [c.strip() for c in line.split("\t")]
-                out.append("| " + " | ".join(cells) + " |")
-        else:
-            out.extend(run)
-        run.clear()
-
-    for line in (markdown or "").splitlines():
-        if "\t" in line and line.strip():
-            run.append(line)
-        else:
-            flush()
-            out.append(line)
-    flush()
-    return "\n".join(out)
-
-
 def strip_wrapping_fence(text: str) -> str:
     """Unwrap an answer that is entirely one code fence.
 
@@ -226,11 +126,7 @@ def strip_wrapping_fence(text: str) -> str:
     if len(lines) < 2 or not lines[0].lstrip().startswith("```"):
         return text
     if lines[0].strip().lower() in ("```markdown", "```md"):
-        # An explicit markdown fence on the first line is packaging even
-        # when a note follows the closing fence (qwen3_vl, medical_001:
-        # "```markdown … ```\n\nNote: …") or the fence never closes (a
-        # truncated answer): drop the opening line and the first closing
-        # fence after it, keep everything else.
+        # Unwrap an opening Markdown fence even if truncated; retain trailing notes after a closing fence.
         body = lines[1:]
         for k, l in enumerate(body):
             if l.strip() == "```":
@@ -388,11 +284,7 @@ def score_markdown(
     matched_refs = {id(ref) for ref, _ in pairs}
     missed = [(b.kind, b.text) for b in reference if id(b) not in matched_refs]
 
-    # Reading order is only a fact about blocks that were actually matched.
-    # With fewer than two of them there is no order to be right about, and
-    # Kendall tau returns 1.0 for an empty sequence — so an engine that
-    # recovered nothing was collecting the full order weight and landing on a
-    # 0.2 floor. Ten engines shared that exact minimum before this was fixed.
+    # Reading order needs at least two matched blocks; an empty match must not earn perfect order.
     headline = (ELEMENT_WEIGHT * f1 + ORDER_WEIGHT * order) if matched >= 2 else f1
 
     det_score = round(headline, 4)
@@ -420,15 +312,9 @@ def score_markdown(
 
 def _score_catalogue(output_markdown, gt, det_kwargs):
 
-    # --- headline: code verdicts against the image checklist ---------------
-    # The checklist (stage 1) is the cached catalogue Gemini 2.5 Pro built
-    # from the page image; stage 2 is evaluation/code_judges.py, not a model.
-    # A page without a cached checklist is not scored on this leg and is never
-    # sent to a model from here.
+    # Cached checklists only; scoring never generates references.
     from pathlib import Path
-    from evaluation.code_judges import (
-        load_markdown_checklist, score_markdown_code,
-    )
+    from evaluation.markdown_catalogue import load_markdown_checklist
     from evaluation.markdown_structure import VERSION
 
     items = gt.metadata.get('reviewed_markdown_catalogue') or load_markdown_checklist(Path(gt.document_path).stem)
@@ -453,3 +339,49 @@ def _score_catalogue(output_markdown, gt, det_kwargs):
         scorer=VERSION,
         **det_kwargs,
     )
+
+
+@dataclass
+class MarkdownVerdict:
+    index: int
+    type: str
+    content: str
+    verdict: str          # correct | wrong_type | partial | absent
+    how: str
+    evidence: list[dict] = field(default_factory=list)
+
+
+@dataclass
+class MarkdownCodeResult:
+    element_accuracy: float
+    checklist_size: int
+    correct: int
+    partial: int
+    wrong_type: int
+    absent: int
+    verdicts: list[MarkdownVerdict] = field(default_factory=list)
+    blocks: int = 0
+
+
+def score_markdown_code(text: str, items: list[dict]) -> MarkdownCodeResult:
+    from evaluation.markdown_structure import match_items
+    matches, blocks = match_items(text, items)
+    verdicts = [MarkdownVerdict(i + 1, str(item.get("type", "")), str(item.get("content", "")),
+                                match.verdict, match.how, match.evidence)
+                for i, (item, match) in enumerate(zip(items, matches))]
+    counts = {v: sum(m.verdict == v for m in matches) for v in ("correct", "partial", "wrong_type", "absent")}
+    n = len(items)
+    accuracy = (counts["correct"] + .5 * counts["partial"]) / n if n else 0.0
+    return MarkdownCodeResult(round(accuracy, 4), n, counts["correct"], counts["partial"],
+                              counts["wrong_type"], counts["absent"], verdicts, len(blocks))
+
+
+def markdown_for_scoring(raw_text: str, engine: str, structured_output=None) -> str | None:
+    """Select the same emitted Markdown for scoring and evidence display."""
+    rendered = (structured_output or {}).get("markdown")
+    if rendered:
+        return rendered
+    from engines import ENGINES
+    if ENGINES[engine].answers("markdown") == "prompted":
+        return raw_text
+    return raw_text if "markdown" in ENGINES[engine].native_legs else None

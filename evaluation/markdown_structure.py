@@ -130,7 +130,6 @@ def _numbers(text: list[str]) -> list[str]:
     return result
 
 
-
 @dataclass
 class Match:
     verdict: str

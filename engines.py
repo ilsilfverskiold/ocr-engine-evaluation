@@ -1,15 +1,4 @@
-"""
-Single engine registry — the ONE place an engine is declared.
-
-Adding an engine:
-  1. Write a runner in runners/<name>_runner.py subclassing OCRRunner
-     (and, for self-hosted engines, a Modal app in modal_apps/<name>_app.py).
-  2. Add one EngineSpec entry to ENGINES below.
-
-Everything else — CLI defaults, key validation, --check, --estimate, Modal
-deploy, batch sizes, cost math — reads from this registry. See
-docs/adding-an-engine.md for worked examples.
-"""
+"""Single engine registry — the ONE place an engine is declared."""
 
 from __future__ import annotations
 
@@ -40,13 +29,7 @@ class EngineSpec:
     modal_app: str | None = None        # deployed Modal app name
     modal_class: str | None = None      # modal.Cls name inside the app
     modal_app_file: str | None = None   # app file path relative to project root
-    # WARNING: gpu_type here is only a FALLBACK for cost calculation. The
-    # authoritative value is GPU_TYPE in the corresponding modal_apps/*_app.py,
-    # which decides which GPU Modal actually allocates AND is returned in every
-    # response. ModalRunner._to_result() prefers the response value, so a
-    # mismatch here no longer mis-bills a run — but keep them in sync anyway.
-    # Changing only the app file previously billed A100 runs at the A10G rate,
-    # understating cost by 2.3x (4.2x for marker on T4).
+    # GPU_TYPE in the app/response is authoritative; this registry value is a cost fallback.
     gpu_type: str | None = None
     # Documents per run_ocr_batch call. Every Modal engine is measured through
     # one explicit batch on one container; see runners/modal_runner.py for why.
@@ -66,31 +49,12 @@ class EngineSpec:
     # Human-readable reason an engine sits out the legs it cannot answer.
     # Printed in the report so a blank cell is never unexplained.
     leg_notes: str = ""
-    # How this engine's text carries a table, for the table leg's converter:
-    # "markdown" (pipe tables), "html" (real <table> markup), "tsv"
-    # (tab-separated), or None when tables come from structured_output or not
-    # at all. Declared here rather than in evaluation/table_extractor.py so the
-    # registry cannot disagree with the converter about what an engine emits.
-    # Per-leg prompt overrides, keyed by leg name. A specialised model degrades
-    # under a generic instruction, so where its model card prescribes a prompt or
-    # task prefix, that wins over the generic leg prompt in evaluation/legs.py.
-    # Cite the source in a comment beside each entry.
-    # See docs/scoring-design.md, "Prompting is part of the measurement".
+    # Table format and per-leg prompt overrides; model-specific task recipes take precedence.
     leg_prompts: dict = field(default_factory=dict)
     table_format: str | None = None
-    # How the schema leg's {schema} placeholder is rendered for this engine:
-    # "json_schema" (the schema document) or "instance_template" (an empty
-    # example object). Model cards differ on which they demonstrate, and the
-    # wrong one is not a style choice — GLM-OCR echoes a JSON Schema back
-    # instead of filling it. See evaluation/legs.py:instance_template.
+    # Schema document or empty instance template, according to the engine's task recipe.
     schema_render: str = "json_schema"
-    # Legs whose answer, for THIS engine, is not JSON — so the provider's JSON
-    # mode must not be switched on. deepseek_ocr answers geometry with the
-    # grounding markup its card documents (<|ref|>…<|det|>[[…]]), not a JSON
-    # array: forcing JSON mode would both corrupt the ask and split the call
-    # off from the markdown pass it shares a prompt with, paying twice for one
-    # answer. Declared per engine because it is a fact about the engine, not
-    # about the leg.
+    # Disable provider JSON mode for native non-JSON formats such as grounding markup.
     non_json_legs: tuple[str, ...] = ()
 
     def response_format_for(self, leg: str, needs_schema: bool) -> str | None:
@@ -153,12 +117,7 @@ ENGINES: dict[str, EngineSpec] = {
         required_env=("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"),
         cost_per_page=0.065,
         cost_notes="AnalyzeDocument TABLES+FORMS",
-        # schema removed 2026-09-30: AnalyzeDocument(FORMS, TABLES) takes no
-        # schema and no field names, so nothing was ever asked of it on that
-        # leg; its saved schema score came from value presence in its page
-        # text. Amazon's interface for this is Textract Queries, which would
-        # be a separate, separately billed configuration. key_value stays:
-        # FORMS is a genuine label->value interface.
+        # Textract FORMS/TABLES supports KV, but accepts no supplied schema. Queries is a separate API.
         native_legs=("text", "tables", "key_value", "geometry"),
         leg_notes=(
             "no prompt; key_value judged from its FORMS pairs; schema not "
@@ -199,11 +158,7 @@ ENGINES: dict[str, EngineSpec] = {
         cost_per_page=0.0007,
         cost_notes="variable — token-based",
         accepts_task=True,
-        # The runner's transcription prompt serves text. Markdown and tables
-        # are prompted with the leg's own ask: the 2026-08 run scored both
-        # from transcription prompts requesting structure, Markdown tables
-        # and reading order. Dedicated headings/lists and table-only asks
-        # remain unmeasured on those saved pages.
+        # Text uses transcription; Markdown and tables use their dedicated task prompts.
         native_legs=("text",),
         prompted_legs=("markdown", "tables", "key_value", "schema", "geometry"),
         table_format="markdown",
@@ -241,13 +196,7 @@ ENGINES: dict[str, EngineSpec] = {
         # table output.
         table_format="html",
         leg_prompts={
-            # MinerU2.5 routes internally: "Layout Detection:" over the page,
-            # then "Text Recognition:" / "Table Recognition:" /
-            # "Formula Recognition:" per detected region. Those prompts exist
-            # inside mineru-vl-utils; none is caller-supplied, which is why
-            # accepts_task stays False. image_analysis stays at its default
-            # False: the 2509 model card documents no chart/image task, and
-            # that capability arrived with the later Pro models.
+            # MinerU2.5 chooses region prompts internally; this pipeline accepts no caller prompt or image-analysis task.
         },
     ),
     "glm_ocr": EngineSpec(
@@ -258,30 +207,10 @@ ENGINES: dict[str, EngineSpec] = {
         modal_app_file="modal_apps/glm_ocr_app.py",
         gpu_type="A10", batch_size=24,
         accepts_task=True,
-        # markdown gets its own call rather than being read off the Text
-        # Recognition output: that output is plain text and scored 0.325/0.800,
-        # where an explicit markdown ask scores 0.388/0.943 on the same pages
-        # (2026-08-09). The card documents no markdown task, so the generic leg
-        # prompt is the ask — undocumented, and flagged as such — but it is the
-        # engine's best available shot, which is what the leg must measure.
+        # GLM Markdown uses a dedicated generic prompt; its card documents no Markdown task.
         native_legs=("text",),
-        # REVERTED 2026-08-10. The official SDK document-parse path is the
-        # documented way to get markdown/tables/geometry, but glmocr defaults to
-        # Zhipu's hosted MaaS service and raises MissingApiKeyError in its
-        # constructor; the self-hosted switch is not the kwargs its docs imply.
-        # Routing four legs through it took glm from its baseline
-        # (text 0.894, markdown 0.524, tables 0.596, schema 0.820 over 93 docs)
-        # to errors on everything but text. The 2026-10-02 source audit now
-        # reproduces the cause: ignored constructor kwargs. The pinned SDK
-        # probe uses mode="selfhosted" plus ocr_api_host/ocr_api_port. Keep
-        # direct vLLM routing until the controlled pipeline comparison passes.
-        # key_value was dropped because the documented KIE task requires the
-        # caller to state the target structure. RE-ENABLED 2026-09-30 by
-        # decision (interface rule: it takes a prompt, so it competes). The
-        # ask is the generic key_value prompt from evaluation/legs.py — the
-        # card's KIE prompt needs a structure and this leg gives none. The
-        # reference run 20260810T130609Z has no key_value rows for this
-        # engine; the next run will.
+        # Keep direct vLLM routing until the repaired selfhosted SDK passes a controlled comparison.
+        # KV remains disabled after extraction failures; schema uses the card's instance-template recipe.
         prompted_legs=("markdown", "tables", "key_value", "schema"),
         table_format="markdown",
         non_json_legs=("markdown", "tables"),
@@ -297,11 +226,7 @@ ENGINES: dict[str, EngineSpec] = {
             # prefixes. Using the right one per leg matters: this model is a task-
             # prefixed OCR fine-tune, not a general instruction follower.
             "text": "Text Recognition:",
-            # The card documents no markdown task, so this generic ask is
-            # undocumented and flagged as such — but it is the engine's best
-            # available shot and it produced real results (0.524 over 57 docs).
-            # The SDK path is repaired locally but its controlled quality
-            # comparison has not run; see the note above.
+            # Generic Markdown prompt; the repaired SDK pipeline remains unmeasured.
             "tables": "Table Recognition:",
             # The card's own information-extraction prompt, given in Chinese, and
             # it states the output must strictly follow the supplied JSON schema.
@@ -327,42 +252,8 @@ ENGINES: dict[str, EngineSpec] = {
                   "(PP-ChatOCR is the separate Paddle product for those)",
         table_format="html",
         leg_prompts={
-            # Our deployment runs the page-level doc_parser PIPELINE, which takes
-            # no prompt (modal_apps/paddleocr_vl_app.py exposes no prompt param).
-            # Its raw_text IS the pipeline's own markdown rendering
-            # (res.markdown["markdown_texts"]), with tables embedded as HTML —
-            # which the markdown scorer normalises, so text, markdown and tables
-            # are all scored from this single default output. The model card's
-            # element-level prefixes ("OCR:", "Table Recognition:") apply to raw
-            # transformers usage, not to this pipeline, and are not sent.
-            # key_value/schema stay out: the pipeline has no extraction interface
-            # (PP-ChatOCR is a separate product pairing it with an external LLM).
-            #
-            # THE ASK FOR THIS ENGINE IS ITS PIPELINE CONFIGURATION, not a prompt.
-            # Capability flags default to False in paddleocr, so accepting the
-            # defaults silently narrows what the model is allowed to do — the
-            # equivalent of sending a worse prompt. Currently set in
-            # modal_apps/paddleocr_vl_app.py:
-            #   use_chart_recognition=True  — was default-False, which made the
-            #     layout stage label each chart a figure, crop it to
-            #     imgs/img_in_chart_box_*.jpg and drop it; the crop is never
-            #     returned, so the whole region was lost on all 5 chart
-            #     documents. Fires only on chart-labelled regions (the corpus
-            #     has 6, all in chart_000-004), so other pages are unaffected.
-            #   use_seal_recognition=True — also enabled in the app (an
-            #     earlier version of this comment said it was still off).
-            #     sroie_002 contains a seal region (img_in_seal_box).
-            # Still at their defaults, and each one narrows the ask:
-            #   use_doc_orientation_classify=False, use_doc_unwarping=False —
-            #     the corpus contains photographed pages (bank_*, photo_receipt_*,
-            #     scanned_*) where a real deployment would enable both.
-            # Geometry caveat (found 2026-09-30 from the saved outputs): the
-            # note above says rec_texts/rec_boxes are returned, but PaddleX 3.7's
-            # res.json has no overall_ocr_res, so none of the 93 saved v1
-            # outputs carries text_regions and the geometry leg scored this
-            # engine from its raw markdown text (unparseable -> 0.0). The v1
-            # app is left as it ran; paddleocr_vl_1_6 pairs layout-block boxes
-            # with their VLM text instead.
+            # PaddleOCR-VL uses its fixed page pipeline: native Markdown, HTML tables and geometry.
+            # Element-level model prompts do not apply; the pipeline has no KV/schema extraction interface.
         },
     ),
     "marker": EngineSpec(
@@ -373,11 +264,7 @@ ENGINES: dict[str, EngineSpec] = {
         modal_app_file="modal_apps/marker_app.py",
         gpu_type="A100-80GB", batch_size=24, supports_pdf=True,
         accepts_task=True,
-        # Marker 1.8.2 ships a converter per task, so this is not one fixed
-        # pipeline. Treating it as one meant text was scored from flattened
-        # document markdown instead of OCRConverter, tables were scraped out of
-        # that markdown instead of TableConverter, and geometry was marked
-        # ineligible although every JSON block carries a polygon.
+        # Marker selects OCR, document or table conversion through task-specific sentinels.
         native_legs=(),
         prompted_legs=("text", "markdown", "tables", "geometry"),
         # Text and markdown share the document converter; geometry uses the
@@ -387,11 +274,7 @@ ENGINES: dict[str, EngineSpec] = {
                   "requires an external LLM, which would make this a hybrid engine",
         table_format="markdown",
         leg_prompts={
-            # Sentinels selecting a converter — see modal_apps/marker_app.py.
-            # Preserve the measured text/document route. The 2026-10-02
-            # pinned-source audit found the walker handles OCRJSONRenderer's
-            # children correctly; sparse output needs a pipeline probe, not
-            # an assumed tree-parser fix. See the handoff.
+            # Converter sentinels are interpreted in modal_apps/marker_app.py.
             "text": "__marker_pdf_converter__",
             "markdown": "__marker_pdf_converter__",
             # Native OCR line polygons are the geometry evidence. The
@@ -409,22 +292,7 @@ ENGINES: dict[str, EngineSpec] = {
         gpu_type="A100-80GB", batch_size=24,
         accepts_task=True,
         native_legs=("text",),
-        # The card documents no extraction prompt, and a 2026-08-09
-        # prompt-sensitivity check over four phrasings (grounding prefix with a
-        # schema, the same without it, a plain "return JSON" instruction, and a
-        # label->value ask) produced an empty string, an empty string, "No line
-        # breaks detected.", and a markdown conversion of the page. The model
-        # can be prompted, so it competes and whatever it scores is its score —
-        # what the check bought is the certainty that a zero here is the model
-        # failing, not us asking badly.
-        # key_value dropped 2026-08-10: no documented extraction prompt, no
-        # instruction/chat training stage per the authors, and two phrasings
-        # over 65 documents never returned JSON. RE-ENABLED 2026-09-30 by
-        # decision: the model takes a prompt, so under the interface rule in
-        # docs/scoring-design.md it competes and its score is its score —
-        # withdrawing it while keeping schema (where it does return JSON on
-        # 59 of 65 pages) was inconsistent. The reference run 20260810T130609Z
-        # has no key_value rows for this engine; the next run will.
+        # No documented extraction recipe; retain prompted participation rather than excluding poor results.
         prompted_legs=("markdown", "tables", "key_value", "schema", "geometry"),
         # The grounding conversion emits real <table> markup. Declared "tsv"
         # until 2026-08-09, which sent the HTML through the tab-splitter and
@@ -443,35 +311,11 @@ ENGINES: dict[str, EngineSpec] = {
             # part by the app, so the card's literal "<image>\n" prefix is omitted.
             "text": "Free OCR.",
             "markdown": "<|grounding|>Convert the document to markdown.",
-            # Tables are part of the documented document-parsing task, not a
-            # missing one: the training data contains HTML-formatted tables,
-            # OmniDocBench scores DeepSeek on a dedicated table metric, and the
-            # official inference config special-cases the <td>/</td> tokens in
-            # its repetition control — which this app inherits verbatim as
-            # whitelist_token_ids=[128821, 128822]. So the grounding conversion
-            # IS the right ask for a printed table, and it shares markdown's
-            # call rather than paying twice. (An earlier note here read "no
-            # table task documented", which was misleading.)
+            # DeepSeek tables share the grounding conversion pass and its native table-token repetition exceptions.
             "tables": "<|grounding|>Convert the document to markdown.",
-            # Geometry rides the SAME grounding pass — no third call. Grounding
-            # mode annotates each region it reads as
-            #   <|ref|>text<|/ref|><|det|>[[x1,y1,x2,y2]]<|/det|>
-            # with coordinates normalised 0-999. The app's cleaner deleted those
-            # spans, which is why the registry used to claim this model had no
-            # coordinate task; it has one, and we were discarding its output.
+            # Geometry shares the grounding pass; retain region text and boxes in its native coordinate frame.
             "geometry": "<|grounding|>Convert the document to markdown.",
-            # NOT on the card — it documents no extraction prompt at all. Kept so
-            # the engine competes rather than being excluded by us.
-            #
-            # No <|grounding|> prefix. The repo README documents eight prompts
-            # (github.com/deepseek-ai/DeepSeek-OCR) and uses that token on ONLY
-            # the two layout tasks — "Convert the document to markdown." and
-            # "OCR this image." The non-layout ones ("Parse the figure.",
-            # "Describe this image in detail.") carry no prefix. Sending it with
-            # a JSON instruction put the ask off-distribution twice and told the
-            # model to do grounded OCR; 58 of 65 schema replies came back empty.
-            # Whatever it scores without the prefix is a fair result; with it,
-            # we were measuring our own ask.
+            # Experimental JSON extraction prompt. Omit the grounding prefix, which requests layout conversion.
             "schema": "Extract the values from this document as JSON "
                       "conforming exactly to this schema. Output only JSON.\n\n{schema}",
         },
@@ -502,14 +346,7 @@ ENGINES: dict[str, EngineSpec] = {
         # markdown table.
         table_format="markdown",
         leg_prompts={
-            # The bare model card is sparse, but the Qwen3-VL repo ships
-            # cookbooks for OCR/KIE, document parsing and 2D grounding. Two legs
-            # have a documented ask and were previously using our generic one.
-            #
-            # Direct OCR, per the official vLLM Qwen3-VL recipe. Previously the
-            # text leg was scored from the MARKDOWN pass, which measures how
-            # much text survives a formatting task rather than what the model
-            # reads.
+            # Use Qwen's OCR/KIE and grounding cookbook recipes; text has a dedicated OCR pass.
             "text": "Read all the text in the image.",
             # tables is given markdown's exact wording so the two resolve to one
             # ask and the planner folds them into a single call — the table is
@@ -519,14 +356,7 @@ ENGINES: dict[str, EngineSpec] = {
                 "Convert this document to Markdown. Preserve reading order, "
                 "headings, lists and tables. Output only the Markdown."
             ),
-            # markdown/tables keep the generic instruction: Qwen's native
-            # documented document representation is Qwen HTML with layout
-            # positions, so there is no official markdown ask, and a general
-            # instruction-following VLM is legitimately asked this way.
-            #
-            # Word-level text spotting, verbatim from the OCR cookbook. Its
-            # bbox_2d values are RELATIVE 0-1000, not pixels — the app divides
-            # by 1000 before handing them to the scorer.
+            # Qwen Markdown/tables use generic instructions; geometry follows the text-spotting recipe.
             "geometry": (
                 "Spotting all the text in the image with word-level, and output "
                 "in JSON format as [{'bbox_2d': [x1, y1, x2, y2], "
@@ -534,14 +364,12 @@ ENGINES: dict[str, EngineSpec] = {
             ),
         },
     ),
-    # =======================================================================
     # Expansion, 2026-09-30. Every engine below is default=False: none has
     # been run yet, so none has a measured cost, and none is part of the
     # reference run 20260810T130609Z. They are opted into with --engines and
     # collected into an extension run (--collect-only --extends <baseline>).
     # Integration guide: docs/engine-integrations.md; contracts live as
     # comments at the top of each app/runner file.
-    # =======================================================================
     # --- Cloud APIs (expansion) ----------------------------------------------
     "mistral_ocr_4_1": EngineSpec(
         name="mistral_ocr_4_1", kind="cloud",

@@ -11,6 +11,7 @@ from evaluation.artifacts import source_image_hash as source_hash
 ROOT = Path(__file__).resolve().parents[1]
 
 CACHE = ROOT / 'results/markdown_judge_cache'
+MARKDOWN_MAX_ITEMS = 40
 
 VERSION = 'markdown-image-catalogue-v1'
 
@@ -43,3 +44,32 @@ def reviewed_items(document_path):
         raise ValueError(f'Markdown catalogue image mismatch: {document_path}')
     validate({'items': data['items']})
     return data['items']
+
+
+def _sample(items: list, cap: int) -> list:
+    if len(items) <= cap:
+        return items
+    step = len(items) / cap
+    return [items[int(i * step)] for i in range(cap)]
+
+
+def load_markdown_checklist(document_stem: str) -> list[dict] | None:
+    path = CACHE / f"{document_stem}.json"
+    if not artifact_exists(path):
+        return None
+    try:
+        record = json.loads(artifact_text(path))
+        if record.get('version') == 'markdown-image-catalogue-v1' and record.get('review_status') != 'accepted':
+            return None
+        items = record.get("items") or []
+    except Exception:
+        return None
+    items = [{**i, "content_format": "plain" if record.get("version") == "markdown-image-catalogue-v1" else "markdown"}
+             for i in items if isinstance(i, dict) and i.get("confident", True)]
+    if document_stem == "invoice_004":
+        for item in items:
+            if "Picturebook ☐☐☐☐☐☐☐☐" in item.get("content", ""):
+                item["content"] = item["content"].replace("Picturebook ☐☐☐☐☐☐☐☐", "Picturebook")
+                item["reference_review"] = "invoice-reference-v1: unreadable replacement-glyph span excluded"
+    items = _sample(items, MARKDOWN_MAX_ITEMS)          # sample first, as the judge did
+    return [i for i in items if i.get("content") and i.get("type")] or None

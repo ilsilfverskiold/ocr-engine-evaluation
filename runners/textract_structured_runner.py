@@ -66,21 +66,7 @@ class TextractStructuredRunner(OCRRunner):
 
     @classmethod
     def _extract_tables(cls, blocks: list[dict], *, _include_merged: bool = True) -> list[dict[str, Any]]:
-        """Walk the block graph into HTML tables.
-
-        Textract returns cells, not records: each CELL carries RowIndex,
-        ColumnIndex; merged spans are separate MERGED_CELL relationships.
-        https://docs.aws.amazon.com/textract/latest/dg/how-it-works-tables.html
-        Cell text lives in
-        child WORD/SELECTION_ELEMENT blocks. Three things a naive walk gets
-        wrong and this one handles:
-          * merged cells — spans are emitted as rowspan/colspan and the covered
-            positions are not re-emitted as empty cells,
-          * missing positions — a row that skips a column index gets an empty
-            <td> so column alignment survives,
-          * checkbox cells — SELECTION_ELEMENT children contribute their
-            selection status, which is otherwise silently dropped.
-        """
+        """Walk the block graph into HTML tables."""
         block_map = {b["Id"]: b for b in blocks}
         tables = []
         for block in blocks:

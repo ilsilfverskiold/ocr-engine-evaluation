@@ -1,45 +1,4 @@
-"""Mistral OCR 4.1 (`mistral-ocr-4-1`) — a NEW engine row, not a change to
-`mistral_ocr_4`.
-
-Reuses runners/mistral_runner.py (client construction and the Annotations
-request shape) without modifying it, so the historical `mistral_ocr_4` row keeps
-its behaviour.
-
-Request contract (all verified 2026-09-30):
-  * model id `mistral-ocr-4-1` — docs.mistral.ai/resources/changelogs
-    ("We released OCR 4.1 (`mistral-ocr-4-1`). `mistral-ocr-latest` and
-    `mistral-ocr-4` now point to it.") and docs.mistral.ai/models/ocr-4-1.
-  * `table_format="html"` — "Returns tables separately as HTML tables"; the page
-    markdown then carries placeholders such as `[tbl-3.html](tbl-3.html)`
-    (docs.mistral.ai/studio/document-processing/basic_ocr).
-  * `include_blocks=True` — "Return paragraph-level bounding boxes for all
-    content blocks" (docs.mistral.ai/api/endpoint/ocr; mistralai 2.9.1
-    models/ocrrequest.py).
-  * `extract_header=False`, `extract_footer=False` — the documented default
-    ("OCR treats headers and footers as part of the main content"), set
-    explicitly so header/footer text stays in the scored markdown.
-  * `confidence_scores_granularity="block"` — page + block confidence
-    (changelog, 2026-07-16). Word confidence is NOT word geometry: the API
-    returns no word boxes, so geometry here is block/paragraph granularity.
-  * Schema leg: `document_annotation_format` with `type="json_schema"` (the
-    request field accepts only json_schema — mistralai 2.9.1 ocrrequest.py
-    docstring), same shape as the mistral_ocr_4 runner.
-
-Response contract (mistralai 2.9.1 models/*.py, generated from the OpenAPI):
-  OCRResponse{pages, model, usage_info{pages_processed, doc_size_bytes},
-  document_annotation}; OCRPageObject{index, markdown, images, tables, blocks,
-  confidence_scores, header, footer, hyperlinks, dimensions{dpi,height,width}};
-  OCRTableObject{id, content, format}; blocks carry type, top_left_x/y,
-  bottom_right_x/y (int), content, confidence_scores and, for tables, table_id.
-
-key_value leg: NOT offered. The OCR endpoint has no label-discovery contract.
-The only extraction route is document annotation, which requires a caller-
-supplied json_schema (`document_annotation_prompt` is optional and "A
-document_annotation_format must be provided"). A KV answer would therefore need
-a schema we invent (e.g. an open string->string object) plus our own prompt —
-that is our construction, not a vendor contract. Left out; see the registry
-note for the user's decision.
-"""
+"""Mistral OCR 4.1 conversion and schema annotations."""
 
 from __future__ import annotations
 

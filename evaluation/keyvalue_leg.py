@@ -7,11 +7,9 @@ candidates but do not earn credit until their field identity is confirmed.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-
 
 
 @dataclass

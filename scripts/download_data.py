@@ -1,18 +1,4 @@
-"""
-Download the benchmark source images from HuggingFace.
-
-Fetches the 93-document corpus from the dataset
-https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark and rebuilds
-the image layout the harness expects:
-
-  documents/<tier>/<doc_type>/<stem>.png          the page image
-All ground-truth sidecars, accepted references and saved results ship in Git.
-Images are needed for new inference and source-page previews in HTML reports.
-Downloading images never replaces the repository's reference files.
-
-Usage:
-  python scripts/download_data.py
-"""
+"""Download the benchmark source images from HuggingFace."""
 
 from __future__ import annotations
 

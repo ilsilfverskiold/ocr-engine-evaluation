@@ -1,40 +1,8 @@
-"""
-Modal app: dots.mocr (3B, MIT) — dots-studio/dots.mocr (older examples:
-rednote-hilab/dots.mocr, which now redirects here). The document model, not
-the separate dots.mocr-svg variant.
-
-Served by upstream vLLM (DotsOCRForCausalLM, integrated since vLLM 0.11.0 per
-the card) through its OpenAI-compatible server with the author's serve flags,
-fed by a bounded thread pool so vLLM's continuous batching owns the batch.
-GPU: L4 (first fit probe; see GPU_TYPE).
-
-Two documented task routes, chosen per item:
-- Document parsing (default, prompt=None): the author's `prompt_layout_all_en`
-  -> ordered layout JSON [{bbox, category, text}], converted here with a
-  vendored copy of the author's post-processing (bbox back-mapping and
-  layoutjson2md). One pass answers text, markdown, tables and geometry.
-- General QA (any other prompt): the author's `prompt_general` route — the
-  caller's prompt plus the system prompt "You are a helpful assistant."
-  (parser.py: "general tasks need system_prompt"). Used for key_value/schema.
-
-Sources (read 2026-09-30):
-- Model card @ e539fbb5: https://huggingface.co/dots-studio/dots.mocr
-  (+ config.json, generation_config.json, preprocessor_config.json,
-   chat_template.json, tokenizer.json, configuration_dots.py at that revision)
-- Author repo @ 23f3e561: https://github.com/rednote-hilab/dots.mocr (now
-  github.com/studio-dots-ai/dots.mocr): dots_mocr/utils/prompts.py,
-  dots_mocr/model/inference.py, dots_mocr/parser.py,
-  dots_mocr/utils/{layout_utils,format_transformer,image_utils,consts,
-  output_cleaner,doc_utils}.py, demo/demo_vllm.py, demo/demo_vllm_general.py
-- vLLM v0.21.0 source: vllm/model_executor/models/dots_ocr.py (placeholder
-  "<|img|><|imgpad|><|endofimg|>", Qwen2VL processor), vllm/entrypoints/utils.py
-"""
+"""dots.mocr document-layout inference on Modal."""
 
 import modal
 
-# ---------------------------------------------------------------------------
 # Identity and pins
-# ---------------------------------------------------------------------------
 # First fit probe per the modal-inference-engineer skill. Memory estimate, BF16:
 #   weights                       6.08 GB  (3,039,179,264 params)
 #   KV cache per token            2 (K,V) x 28 layers x 2 kv heads x 128 dim
@@ -61,9 +29,7 @@ SERVER_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/v1"
 HEALTH_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/health"
 BATCH_CONCURRENCY = 4
 
-# ---------------------------------------------------------------------------
 # Prompts (verbatim, dots_mocr/utils/prompts.py @ 23f3e561)
-# ---------------------------------------------------------------------------
 LAYOUT_PROMPT = """Please output the layout information from the PDF image, including each layout element's bbox, its category, and the corresponding text content within the bbox.
 
 1. Bbox format: [x1, y1, x2, y2]
@@ -96,9 +62,7 @@ TEMPERATURE = 0.1
 TOP_P = 1.0
 SEED = 0
 
-# ---------------------------------------------------------------------------
 # Resolution policy and context arithmetic
-# ---------------------------------------------------------------------------
 # The page is sent at its own resolution (EXIF-transposed, RGB). The server's
 # Qwen2-VL image processor applies smart_resize with these values
 # (preprocessor_config.json; dots_mocr/utils/consts.py): both sides rounded to
@@ -168,9 +132,7 @@ image = (
 app = modal.App("ocr-bench-dots-mocr")
 
 
-# ---------------------------------------------------------------------------
 # Pure helpers
-# ---------------------------------------------------------------------------
 def _normalized_png(image_bytes: bytes):
     """EXIF transpose, then the author's to_rgb(): RGBA is composited onto
     white (a plain convert("RGB") would turn transparent pixels black)."""
@@ -287,16 +249,7 @@ def _plain_text(content: str) -> str:
 
 
 def _load_cells(raw: str) -> tuple[list | None, str]:
-    """The layout answer is a JSON list of cells. Returns (cells, status).
-
-    status: "json" — parsed whole;
-            "salvaged_partial" — the full parse failed (typically a truncated
-              reply) and the complete leading cell objects were recovered;
-            "failed" — nothing usable.
-    The author's fallback (OutputCleaner) instead returns only the joined text
-    of the cells with no boxes; recovering the complete cells keeps their
-    boxes and is recorded as a deviation via this status.
-    """
+    """The layout answer is a JSON list of cells. Returns (cells, status)."""
     import json
 
     text = raw.strip()
@@ -329,18 +282,7 @@ def _load_cells(raw: str) -> tuple[list | None, str]:
 
 
 def _convert_layout(raw: str, orig_w: int, orig_h: int) -> tuple[str, dict]:
-    """Layout JSON -> Markdown + benchmark shapes.
-
-    Coordinates: the model's [x1, y1, x2, y2] are pixels of the server-side
-    smart_resize()d image (input_w x input_h). The author maps them back with
-    x * orig_w / input_w (post_process_cells); normalising to the page as sent
-    is therefore x / input_w and y / input_h.
-
-    Markdown: layoutjson2md() order and formatting, INCLUDING Page-header and
-    Page-footer (the author's _nohf variant exists only for their benchmarks).
-    Picture cells: the author embeds a base64 crop; a short placeholder link is
-    written instead so a page result does not carry image bytes.
-    """
+    """Layout JSON -> Markdown + benchmark shapes."""
     input_h, input_w = _smart_resize(orig_h, orig_w)
     cells, status = _load_cells(raw)
     structured: dict = {

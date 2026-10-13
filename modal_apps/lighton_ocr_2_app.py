@@ -1,37 +1,5 @@
-"""
-Modal app: LightOnOCR-2-1B — lightonai/LightOnOCR-2-1B
-Card's vLLM OpenAI-server recipe, image-only message. GPU: A10 (initial).
-
-Sources (read 2026-09-30):
-- Model card: https://huggingface.co/lightonai/LightOnOCR-2-1B (README.md @ MODEL_REVISION)
-- config.json, processor_config.json, generation_config.json, chat_template.jinja
-  at https://huggingface.co/lightonai/LightOnOCR-2-1B/raw/<MODEL_REVISION>/<file>
-- Paper: https://arxiv.org/html/2601.14251 (no task prompts at inference; Markdown
-  with LaTeX math spans and HTML table targets; images as ![image](image_N.png);
-  page numbers/headers/footers retained; 200 DPI render, longest edge 1540;
-  decoding T=0.2, top_p=0.9, top_k=0)
-- vLLM v0.22.1 source: vllm/model_executor/models/lightonocr.py (no image
-  break/end tokens: visual tokens = ncols*nrows), vllm/model_executor/models/
-  pixtral.py PixtralHFEncoderInfo.get_patch_grid_size (resize bound =
-  vision_config.image_size, grid unit = patch_size*spatial_merge_size),
-  requirements/test/cuda.txt (CI lock pins).
-
-Backend decision:
-- The card documents `vllm serve ... --limit-mm-per-prompt '{"image": 1}'
-  --mm-processor-cache-gb 0 --no-enable-prefix-caching` and chat-completions
-  requests. So this app starts that server in @modal.enter and feeds it from a
-  bounded ThreadPoolExecutor: vLLM's continuous batching is the one batching owner.
-
-Task boundary:
-- One page image in, the page's Markdown out. The official message contains ONLY
-  the image — no text prompt ("We train the model to perform OCR without task
-  prompts at inference time", paper). There is no documented way to ask it for
-  anything else, so this engine does not accept prompts: a prompt or
-  response_format arriving here is an error, never silently ignored.
-- The bbox VARIANTS (LightOnOCR-2-1B-bbox*) are different checkpoints and their
-  boxes locate embedded images, not text. This checkpoint emits no boxes at all.
-  No geometry.
-"""
+"""Modal app: LightOnOCR-2-1B — lightonai/LightOnOCR-2-1B
+Card's vLLM OpenAI-server recipe, image-only message. GPU: A10 (initial)."""
 
 import modal
 

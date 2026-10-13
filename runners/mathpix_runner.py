@@ -1,42 +1,4 @@
-"""Mathpix OCR — POST https://api.mathpix.com/v3/text (image OCR).
-
-Source for every option below: docs.mathpix.com/reference/post-v3-text and
-docs.mathpix.com/guides/image-ocr, read 2026-09-30.
-
-Two configurations, because the API documents a conflict between them:
-"Combining include_word_data: true with enable_document_layout: true is not
-supported."
-
-  default pass (task=None) — the conversion: text/markdown/tables legs.
-      enable_document_layout=True  "For a full page image, send
-                                   enable_document_layout: true" (guide);
-                                   the default is snippet-oriented.
-      formats=["text","html","data"], data_options.include_table_html=True
-                                   text = Mathpix Markdown (raw_text);
-                                   html/data carry table HTML.
-      include_line_data=True       line contours, kept as metadata.
-      include_page_info=True       documented default, explicit: headers,
-                                   footers and page numbers stay in the text.
-      math delimiters              documented defaults \\( \\) and \\[ \\],
-                                   explicit; formula content is not deleted.
-      enable_tables_fallback       NOT sent: documented as deprecated, "has no
-                                   effect".
-  geometry pass (task.leg == "geometry") — word boxes.
-      include_word_data=True, enable_document_layout=False,
-      include_line_data=True (row count for billing, line contours).
-
-The geometry task's prompt is a CONFIGURATION SELECTOR, not text sent to the
-vendor: /v3/text takes no prompt. The registry maps the geometry leg to the
-sentinel "__mathpix_word_data__" (same pattern as marker's converter
-sentinels) so the harness plans a separate pass; the string itself is never
-transmitted.
-
-Upload: multipart form-data, file field "file" and all options as stringified
-JSON in "options_json" (guide example). "EXIF data is ignored for all images,
-including EXIF orientation" — so EXIF orientation is applied locally before
-upload when present, and recorded. Multipart body limit: "the body limit
-applies to the entire multipart payload including the file" = 5 MB.
-"""
+"""Mathpix OCR — POST https://api.mathpix.com/v3/text (image OCR)."""
 
 from __future__ import annotations
 

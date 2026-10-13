@@ -1,27 +1,4 @@
-"""Apple Vision OCR (VNRecognizeTextRequest) — local, macOS only, OPT-IN.
-
-VNRecognizeTextRequest runs on-device (Apple Neural Engine / GPU / CPU as the
-OS decides). The project rule is no heavy model inference on the user's
-machine, so this engine is registered default=False and must be enabled
-explicitly; whether it may run at all is the user's decision.
-
-How it runs: runners/apple_vision/recognize.swift is compiled once with
-`swiftc -O` into ~/.cache/ocr-benchmark/apple_vision/<source-sha256[:16]>/,
-then invoked per image as a subprocess with a timeout. The helper prints JSON:
-lines (text, confidence, bbox, poly), words (text, bbox, poly from
-VNRecognizedText.boundingBox(for:) over String.enumerateSubstrings(.byWords)
-ranges — "word precision" at recognitionLevel .accurate), image size, EXIF
-orientation, request revision, OS version/build and hardware model.
-Coordinates arrive already flipped to a top-left origin and normalised 0-1
-against the EXIF-oriented image.
-
-Configuration (fixed): recognitionLevel .accurate, usesLanguageCorrection
-true, recognitionLanguages ["en-US"], automaticallyDetectsLanguage false
-(macOS 13+), request revision = the OS default (recorded, not pinned).
-
-Word text comes from .byWords segmentation, which excludes punctuation
-("Total:" -> "Total", "$12.00" -> "12.00"); the box is Vision's word box.
-"""
+"""Apple Vision OCR (VNRecognizeTextRequest) — local, macOS only, OPT-IN."""
 
 from __future__ import annotations
 

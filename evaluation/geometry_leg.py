@@ -1,29 +1,4 @@
-"""Leg 6 — geometry.
-
-Ask: *"For every word, return its text and bounding box as
-`[{"text": ..., "bbox": [x0, y0, x1, y1]}]`, normalised to 0-1. Output only
-JSON."*
-
-Score: match predicted words to reference words by text; a matched word is
-**located** when the two boxes contain each other's centers. The headline is
-located words / reference words, with unmatched reference words as misses.
-
-Located-rate, not raw IoU, because IoU punishes box-drawing convention:
-tesseract boxes the full text line where SynFinTabs boxes the glyphs tightly,
-so a word placed *exactly right* scored ~0.45 for being ~2x taller. Mutual
-center containment scores position and is indifferent to how generously either
-side drew the box. Raw IoU is kept in the metrics as a diagnostic.
-
-Reference boxes exist for 17 of the 93 documents, built from the source
-datasets' own annotations (`<stem>_geometry_gt.json`): SROIE 6, FUNSD 6,
-SynFinTabs 5. The other 76 documents return "not applicable". SROIE's
-annotations are line-level (each sidecar records its granularity), so there
-predicted words are merged into lines by vertical overlap before matching and
-lines pair by fuzzy text similarity — without that, no word-level engine could
-ever match its multi-word lines and everyone was capped near 50%. This is the
-leg that turns Textract's per-word-geometry advantage from an assertion into a
-measurement.
-"""
+"""Score text localization, box precision/recall and box-text CER/WER."""
 
 from __future__ import annotations
 
@@ -325,18 +300,7 @@ def score_geometry(
     infer_scale: bool = True,
     scope: dict | None = None,
 ) -> GeometryScore:
-    """(engine output, ground truth) -> GeometryScore.
-
-    `reference` may be passed directly so the scorer is testable without a
-    corpus document; otherwise it comes from `gt.word_boxes`.
-    `granularity` is the reference's unit as the
-    sidecar records it — "line" lifts predicted words to lines before matching.
-    Known native xyxy outputs are never axis-swapped by their shape. The
-    legacy Gemini generic-box dialect may explicitly opt into the recorded
-    axis heuristic; key-specific box_2d decoding happens during parsing.
-    Set infer_scale=False after an explicitly declared coordinate transform;
-    out-of-frame predictions must not trigger a second guessed rescaling.
-    """
+    """(engine output, ground truth) -> GeometryScore."""
     if reference is None:
         if gt is None or not gt.has_gt_for("geometry"):
             return GeometryScore(
@@ -648,13 +612,7 @@ def _match_lines(refs, lines) -> list[tuple[dict, dict | None]]:
     """
     from difflib import SequenceMatcher
 
-    # Candidate selection: among windows whose text is close enough (>= 0.7),
-    # prefer one that OVERLAPS the reference box, and only then the best text
-    # ratio. Ranking by text first let an exact "193.00" anywhere on a receipt
-    # beat the slightly misread "1193.00" sitting in the right place; with six
-    # identical amounts on the page and every word usable once, each later
-    # reference then took the next instance down and the whole column scored
-    # as misplaced (PP-OCRv5 on sroie_000: 36 located instead of 44).
+    # Among text candidates above 0.7 similarity, prefer spatial overlap before text similarity.
     used: set[int] = set()
     out = []
     for ref in refs:

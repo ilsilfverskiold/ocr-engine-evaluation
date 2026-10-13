@@ -18,7 +18,7 @@ import unicodedata
 
 from evaluation.kv_schema_code import as_number, is_blank_value, value_equal, is_identifier_key, contextual_value
 from evaluation.shared_fields import match_keys, reference_fields, reference_id, load_synonyms
-from evaluation.kv_synonyms import digest, MODEL, CONTROL_CONFIG, PRICES
+from evaluation.kv_value_judge import digest, MODEL, CONTROL_CONFIG, PRICES
 
 VERSION = 'kv-context-groups-v2'
 VALIDATION_VERSION = 'kv-groups-identifiers-native-checkboxes-v3'
@@ -115,9 +115,9 @@ def complete_coverage(expected, selected, key):
 
 
 def prepare(gt, pairs, pair_context=None, native_matches=None):
-    from evaluation import kv_value_judge as legacy
-    record = legacy._read(gt)
-    _, synonyms = legacy._cache_maps(record)
+    from evaluation import kv_value_judge as cache
+    record = cache._read(gt)
+    _, synonyms = cache._cache_maps(record)
     synonyms = {**load_synonyms(gt), **synonyms}
     assigned, unresolved, used = match_keys(gt, pairs, 'key_value', synonyms, native_matches)
     eligible = {f.path for f in reference_fields(gt, 'key_value')}
@@ -225,11 +225,7 @@ def validate(request, reply):
                 or len(set(ids)) != len(ids) or type(row['synonym']) is not bool
                 or not isinstance(row['reason'], str)):
             raise ValueError('Invalid output IDs or synonym flag')
-        # An existing but ineligible output is a failed proposed match, just
-        # like incomplete coverage. Reject that field without discarding other
-        # valid decisions in the already-paid batch. Invented IDs remain a
-        # malformed response above. Only the typed identifier/native-selection
-        # rules above can repair an old candidate list; a reply alone cannot.
+        # Reject ineligible matches without discarding other paid decisions; invented IDs remain malformed.
         ineligible = bool(set(ids) - allowed)
         conflict = bool((used - {item.get('repair_output_id')}) & set(ids))
         values = [contextual_value(item['expected'], outputs[i]['value'], outputs[i].get('source')) for i in ids]
@@ -250,10 +246,10 @@ def validate(request, reply):
 
 @lru_cache(maxsize=256)
 def _saved_request(request_id):
-    from evaluation import kv_value_judge as legacy
-    from evaluation.kv_synonyms import decode_reply
+    from evaluation import kv_value_judge as cache
+    from evaluation.kv_value_judge import decode_reply
     try:
-        saved = json.loads(artifact_text(legacy.CACHE_ROOT / 'calls' / (request_id + '.json')))
+        saved = json.loads(artifact_text(cache.CACHE_ROOT / 'calls' / (request_id + '.json')))
         return saved['request'], decode_reply(saved['raw_text'])
     except (FileNotFoundError, ValueError, TypeError, KeyError):
         return None
@@ -311,7 +307,7 @@ class Resolution:
 @lru_cache(maxsize=4)
 def _journal_reviews(root):
     """Recover paid context decisions even when later aliases regroup batches."""
-    from evaluation.kv_synonyms import decode_reply
+    from evaluation.kv_value_judge import decode_reply
     indexed = {}
     for path in sorted(glob_paths(root / 'calls', '*.json')):
         saved = json.loads(artifact_text(path))
@@ -334,13 +330,13 @@ def _context_id(gt, pairs, pair_context=None):
 
 
 def _recover_context(gt, pairs, pair_context=None):
-    from evaluation import kv_value_judge as legacy
+    from evaluation import kv_value_judge as cache
     rid = reference_id(gt)
     context = _context_id(gt, pairs, pair_context)
-    entries = _journal_reviews(legacy.CACHE_ROOT).get((rid, context), [])
+    entries = _journal_reviews(cache.CACHE_ROOT).get((rid, context), [])
     if not entries:
         return
-    record = legacy._read(gt)
+    record = cache._read(gt)
     reviews = record.setdefault('context_reviews', {}).setdefault(context, [])
     known = {r['reference_key'] for r in reviews}
     used = {i for r in reviews for i in r['indices']}
@@ -356,18 +352,18 @@ def _recover_context(gt, pairs, pair_context=None):
             key, value = pairs[entry['indices'][0]]
             alias = {'key': str(key), 'value': value, 'reference_key': entry['reference_key'],
                      'synonym': True, 'request_id': entry['request_id']}
-            legacy._limit_repeated_aliases([alias], [f.path for f in reference_fields(gt)])
+            cache._limit_repeated_aliases([alias], [f.path for f in reference_fields(gt)])
             if alias['synonym']:
                 record['decisions'].append(alias)
     if added:
-        legacy._save(gt, record)
+        cache._save(gt, record)
 
 
 def resolve(gt, pairs, use_judge=None, pair_context=None, native_matches=None):
-    from evaluation import kv_value_judge as legacy
+    from evaluation import kv_value_judge as cache
     result = Resolution()
-    with legacy._locks[str(legacy._path(gt))]:
-        legacy._recover_saved(gt)
+    with cache._locks[str(cache._path(gt))]:
+        cache._recover_saved(gt)
         _recover_context(gt, pairs)
         if pair_context:
             _recover_context(gt, pairs, pair_context)
@@ -375,10 +371,10 @@ def resolve(gt, pairs, use_judge=None, pair_context=None, native_matches=None):
         enabled = use_judge is not False and bool(os.environ.get('GOOGLE_API_KEY'))
         while requests:
             request = requests[0]
-            if not enabled and not artifact_exists(legacy.CACHE_ROOT / 'calls' / (request['id'] + '.json')):
+            if not enabled and not artifact_exists(cache.CACHE_ROOT / 'calls' / (request['id'] + '.json')):
                 break
             try:
-                entries, cost = legacy._ask(request)
+                entries, cost = cache._ask(request)
                 result.cost_usd += cost
                 record.setdefault('context_reviews', {}).setdefault(context, []).extend(entries)
                 for entry in entries:
@@ -386,10 +382,10 @@ def resolve(gt, pairs, use_judge=None, pair_context=None, native_matches=None):
                         key, value = pairs[entry['indices'][0]]
                         alias = {'key': str(key), 'value': value, 'reference_key': entry['reference_key'],
                                  'synonym': True, 'request_id': request['id']}
-                        legacy._limit_repeated_aliases([alias], [f.path for f in reference_fields(gt)])
+                        cache._limit_repeated_aliases([alias], [f.path for f in reference_fields(gt)])
                         if alias['synonym']:
                             record['decisions'].append(alias)
-                legacy._save(gt, record)
+                cache._save(gt, record)
                 # Rebuild after each batch so no output can be assigned again
                 # by a later batch, and no newly known synonym is re-judged.
                 record, context, synonyms, groups, requests = prepare(gt, pairs, pair_context, native_matches)

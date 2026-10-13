@@ -3,30 +3,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from pathlib import Path
 from evaluation.artifacts import source_image_hash
-
-
-def field_patterns(record: dict) -> set[str]:
-    """Version target fields without confusing new array rows with new keys."""
-    from evaluation.structured_metrics import walk_fields
-    patterns = {re.sub(r'\[\d+\]', '[*]', f.path)
-                for f in walk_fields(record['true_json'], record['json_schema']) if f.path}
-
-    def visit(schema, path=''):
-        if not isinstance(schema, dict):
-            return
-        if schema.get('properties'):
-            for key, child in schema['properties'].items():
-                visit(child, f'{path}.{key}' if path else key)
-        elif schema.get('items'):
-            visit(schema['items'], path + '[*]')
-        elif path:
-            patterns.add(path)
-
-    visit(record['json_schema'])
-    return patterns
 
 
 def validate_structured_record(record: dict) -> None:

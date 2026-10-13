@@ -1,51 +1,4 @@
-"""
-Modal app: MinerU 4.0 document pipeline, explicit Standard tier.
-
-This is a NEW engine (`mineru_4_standard`). It does not replace or modify
-modal_apps/mineru_app.py, which benchmarks the MinerU2.5-2509 VLM through the
-mineru-vl-utils two-step helper. MinerU 4.0 is an application/pipeline release:
-tiers replace the 3.x pipeline/vlm/hybrid backends, and a tier is not a model.
-
-What "Standard" runs (read from the mineru 4.0.10 source, parser/tier.py and
-backend/analysis/pdf/window.py):
-  tier "standard" -> hybrid effort "high":
-    1. the image is converted to a one-page PDF and rendered back to pixels
-       (docvortex PDFDocument.from_image at 200 dpi, render at 200 dpi with a
-       3500 px long-edge cap),
-    2. Torch small models: PP-DocLayoutV2 layout (+ table orientation check),
-    3. the VLM (MinerU2.5-Pro-2605-1.2B on vLLM AsyncLLM) recognises the regions
-       found by the small-model layout (`aio_batch_extract_with_layout`);
-       "Text Recognition:" / "Table Recognition:" / "Formula Recognition:"
-       prompts are chosen per region inside mineru-vl-utils,
-    4. PP-OCRv6 detection for line filling, seal OCR, inline formula recognition,
-    5. one strict MiddleJson (docvortex schema 2.0) rendered to Markdown.
-  Image/chart analysis is forced off for Standard (only Advanced/xhigh sends it).
-
-Batching owner: MinerU's own native-async runtime. `MinerUParser.parse_batch_async`
-is `asyncio.gather(parse_async(p) for p in paths)`; all documents share one
-AsyncLLM whose in-flight VLM requests are capped by model.vlm.max_concurrency
-(default 100, shared across documents), while local small-model stages are
-serialised per device by MinerU. This app issues exactly that gather, only with
-return_exceptions=True so one bad page does not discard the rest of the batch.
-No extra threads or Modal fan-out are added.
-
-No document library is involved: `mineru.parser` is stateless ("it does not
-create a document library"), so there is no cached-result path that could make
-a timed batch skip inference. LLM-aided post-processing (title leveling,
-cross-page table merge) is off by default and asserted off at startup.
-
-Sources (read 2026-09-30):
-  https://github.com/opendatalab/MinerU/releases/tag/mineru-4.0.0-released
-  https://github.com/opendatalab/MinerU/tree/mineru-4.0.10-released  (code used)
-    docs/en/usage/tiers.md, docs/en/usage/model_source.md, docs/en/usage/sdk_api.md,
-    docs/native-async-analysis.md, docker/global/Dockerfile,
-    mineru/parser/{__init__,base,mineru_parser,tier}.py, mineru/model/registry.py,
-    mineru/model/download.py, mineru/model/vlm/{runtime,client,engine_utils}.py,
-    mineru/backend/analysis/pdf/{pipeline,window}.py
-  docvortex 0.5.7 wheel: schema.py, document/pdf/{_document,raster}.py,
-    render/_internal/markdown/*.py, visualization.py
-  mineru-vl-utils 2.0.5 wheel: mineru_client.py, vlm_client/vllm_async_engine_client.py
-"""
+"""Modal app: MinerU 4.0 document pipeline, explicit Standard tier."""
 
 import modal
 
@@ -85,19 +38,8 @@ OCR_MODE = "auto"  # upstream default for parse(); an image-only PDF has no text
 MINERU_HOME = "/opt/mineru_home"  # config.yaml + model base_dir live here
 
 
-
 def _download_pinned_models() -> None:
-    """Build-time model download through MinerU's own downloader, pinned.
-
-    MinerU's downloader calls huggingface_hub.snapshot_download(repo_id) with no
-    revision, so a plain `mineru-kit models download` fetches whatever HEAD is at
-    build time. This wraps the two HF calls it makes (manifest listing and
-    snapshot) to inject the pinned revision, then lets MinerU run its own
-    completeness checks and write its own readiness markers
-    (mineru/model/download.py:download_model_repo). The model set is exactly
-    what `mineru-kit models download --tier standard --small-backend torch
-    --vlm-engine vllm` selects (model_source.md, docker/global/Dockerfile).
-    """
+    """Build-time model download through MinerU's own downloader, pinned."""
     import json
     import os
 

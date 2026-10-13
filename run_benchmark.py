@@ -1,28 +1,4 @@
-"""
-OCR Benchmark Orchestrator
-==========================
-Usage:
-  python run_benchmark.py                          # full run, all engines, tiers, legs
-  python run_benchmark.py --estimate               # print cost estimate, no API calls
-  python run_benchmark.py --check                  # verify API keys + Modal deployments
-  python run_benchmark.py --dry-run                # discover docs + validate, no inference
-  python run_benchmark.py --legs text,tables       # run a subset of the six legs
-  python run_benchmark.py --engines tesseract,docling --tiers easy --skip-judge
-  python run_benchmark.py --resume                 # continue the latest interrupted run
-  python run_benchmark.py --report                 # re-print the report from stored results
-
-Engines are declared in engines.py — the single registry. Legs are declared in
-evaluation/legs.py and specified in docs/scoring-design.md.
-
-Two files are written per run:
-  results/runs/{ts}_inference.jsonl   one record per (engine, document, pass)
-  results/runs/{ts}_results.jsonl     one record per (engine, document, leg)
-
-They are separate because they count different things. The Modal cost audit
-re-derives every GPU figure from the inference records and aborts the report on
-any inconsistency; folding several leg rows into that stream would break the
-identity `batch_gpu_seconds / batch_size` it checks.
-"""
+"""Collect OCR outputs, evaluate saved calls and report engine comparisons. See --help."""
 
 from __future__ import annotations
 
@@ -70,11 +46,7 @@ from evaluation.legs import (  # noqa: E402
     skipped_engines,
 )
 
-# One stage-2 judge call per (engine, document); the stage-1 checklist is built
-# once per document and cached, so it is amortised across every engine.
-# Measured 2026-08-09: a 29-item checklist cost $0.0032 in verdicts. Checklists
-# are capped at evaluation.judge.MAX_CHECKLIST_ITEMS, so the worst case is a
-# full-size list rather than the 568-item page that cost $0.24 before the cap.
+# One verdict call per engine/page; the image checklist is cached and shared across engines.
 JUDGE_COST_PER_ENGINE_DOC = 0.0050
 JUDGE_CHECKLIST_COST_PER_DOC = 0.0060
 
@@ -89,9 +61,7 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png"}
 TIER_ORDER = ["easy", "medium", "hard"]
 
 
-# ---------------------------------------------------------------------------
 # Logging — console + results/logs/{timestamp}.log
-# ---------------------------------------------------------------------------
 
 _LIBRARY_NOISE = ("torch", "transformers", "docling", "rapidocr", "RapidOCR",
                   "PIL", "timm", "huggingface_hub", "filelock", "matplotlib",
@@ -99,18 +69,7 @@ _LIBRARY_NOISE = ("torch", "transformers", "docling", "rapidocr", "RapidOCR",
 
 
 class _DropLibraryNoise(logging.Filter):
-    """Keep third-party logging off the terminal report.
-
-    Local model stacks are loud — docling pulls in torch, transformers and
-    rapidocr, which emit graph-break traces, deprecation notices and per-region
-    "text detection result is empty" warnings. Left alone they bury the
-    per-document results this tool exists to print, and because those libraries
-    create their loggers lazily during inference, muting the loggers that exist
-    at startup does not hold. Filtering at our own handler does, whenever the
-    logger appears. Warnings and errors from the benchmark itself pass through;
-    anything at ERROR from a library still gets shown, since that may explain a
-    failed document.
-    """
+    """Keep third-party logging off the terminal report."""
 
     def filter(self, record: logging.LogRecord) -> bool:
         if record.levelno >= logging.ERROR:
@@ -149,9 +108,7 @@ def setup_logging(timestamp: str, file_log: bool = True) -> logging.Logger:
     return logger
 
 
-# ---------------------------------------------------------------------------
 # Document discovery
-# ---------------------------------------------------------------------------
 
 def discover_documents(tiers: list[str]) -> list[Path]:
     docs = []
@@ -168,9 +125,7 @@ def discover_documents(tiers: list[str]) -> list[Path]:
     return docs
 
 
-# ---------------------------------------------------------------------------
 # --estimate
-# ---------------------------------------------------------------------------
 
 # Provider free allowances, used by --estimate to show what a run could cost
 # with them applied. Conditions are stated in the output because they are not
@@ -347,9 +302,7 @@ def print_estimate(
     print()
 
 
-# ---------------------------------------------------------------------------
 # --check
-# ---------------------------------------------------------------------------
 
 def check_setup(engines: list[str], log: logging.Logger) -> bool:
     import subprocess
@@ -423,9 +376,7 @@ def check_setup(engines: list[str], log: logging.Logger) -> bool:
     return ok
 
 
-# ---------------------------------------------------------------------------
 # Record IO
-# ---------------------------------------------------------------------------
 
 _write_lock = threading.Lock()
 
@@ -471,17 +422,7 @@ def _write_ocr_output(
     result=None, task=None, legs: tuple[str, ...] = (),
 ) -> None:
     """One complete call file per (document, engine, pass):
-        <tier>__<type>__<stem>/<engine>/<pass>.call.json  the whole call
-
-    `.call.json` holds the prompt sent, the provider's complete reply before
-    any parsing, the structured output and the cost/latency — so a scorer fix
-    can be re-applied from disk instead of re-paying for the call.
-
-    Deliberately NOT written: a separate `_structured.json` and `_tables.html`
-    (both are already inside `.call.json`) and a copy of the ground truth
-    (it lives beside the document in documents/). Those made one document
-    folder run to ~100 near-duplicate files.
-    """
+        <tier>__<type>__<stem>/<engine>/<pass>.call.json  the whole call"""
     folder = f"{gt.tier}__{gt.doc_type}__{doc_path.stem}"
     out_dir = OCR_OUTPUTS_DIR / timestamp / folder / engine
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -523,9 +464,7 @@ def _write_ocr_output(
         (out_dir / f"{pass_name}.call.json").write_text(payload, encoding="utf-8")
 
 
-# ---------------------------------------------------------------------------
 # Scoring
-# ---------------------------------------------------------------------------
 
 def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | None,
               use_judge: bool | None = None):
@@ -539,7 +478,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         return score_text(text, gt)
     if leg == "markdown":
         from evaluation.markdown_leg import score_markdown
-        from evaluation.normalizers import markdown_for_scoring
+        from evaluation.markdown_leg import markdown_for_scoring
         emitted = markdown_for_scoring(text, engine, structured_output)
         return score_markdown(emitted, gt, engine, use_judge=use_judge)
     if leg == "tables":
@@ -559,11 +498,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         if so.get("geometry_error") or "words_unmapped_rotated" in so:
             raise RuntimeError(so.get("geometry_error") or
                                "geometry coordinate frame unresolved after provider rotation")
-        # Score the actual returned boxes even when their granularity is coarse.
-        # Do not manufacture word boxes by dividing layout regions.
-        # Each adapter reads what the engine actually stored (the run's own
-        # adapters lost DeepSeek's text — region labels were stored as the
-        # box text — and passed nothing for Paddle).
+        # Score returned boxes at their actual granularity; never manufacture word boxes from layout regions.
         blocks = _geometry_blocks(engine, so)
         if blocks is not None:
             if not gt.has_gt_for("geometry"):
@@ -613,12 +548,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
 
 
 BLOCK_GEOMETRY_ENGINES = ("mineru", "paddleocr_vl", "deepseek_ocr")
-# Engines whose geometry is read from another stored pass than the one the
-# planner assigned the leg to (see rescore_runs). Empty on purpose: marker
-# was briefly read from its conversion pass because it holds more regions,
-# but that pass labels them `layout_block` (a paragraph is one box), so it
-# is not word/line geometry. Marker is scored from its OCR pass (`ocr_line`
-# boxes); the 5 pages where that pass crashed are error rows.
+# Optional saved-pass overrides. Marker uses its OCR geometry, not document-layout boxes.
 GEOMETRY_SOURCE_PASS: dict[str, str] = {}
 
 
@@ -819,17 +749,7 @@ def _read_stored_call(timestamp: str, engine: str, doc_path: Path, gt,
 
 def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> None:
     """Score a run from its persisted outputs — the second half of a
-    collect-only run, or a rescore after a scorer change.
-
-    Reads `{ts}_inference.jsonl` for what was collected and each pass's
-    `.call.json` for what came back, then appends one row per (engine,
-    document, leg) that `{ts}_results.jsonl` does not already hold. Rows
-    already present are never rewritten: to rescore a leg, move the old
-    results file aside first, so the earlier verdicts stay on disk.
-
-    The six legs use code and existing references. Unless --skip-judge,
-    the separate document judge may run on silver-GT text-serving passes.
-    """
+    collect-only run, or a rescore after a scorer change."""
     from evaluation.ground_truth import GroundTruthLoader
 
     inference = read_jsonl(RUNS_DIR / f"{timestamp}_inference.jsonl")
@@ -1110,9 +1030,7 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         log.info(f"Document-judge spend: ${judge_spend:.4f}")
 
 
-# ---------------------------------------------------------------------------
 # Aggregation
-# ---------------------------------------------------------------------------
 
 def aggregate_legs(records: list[dict]) -> dict:
     """Mean score per (engine, tier, doc_type, leg).
@@ -1179,11 +1097,7 @@ def engine_operational(inference: list[dict]) -> dict[str, dict]:
     """
     per_doc_cost: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
     per_doc_latency: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
-    # Single-call cost: the pass that serves the text leg (every engine has
-    # one).  This is "one call per page" — what production deployment costs,
-    # comparable across engines regardless of how many extra legs the benchmark
-    # asked each one.  For most engines this is the "default" pass; for engines
-    # that always need a prompt it is named "text" or "text+markdown", etc.
+    # Use the pass serving text for comparable per-page operating cost; extra task passes are separate.
     per_pass_cost: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
     per_pass_latency: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
     passes: dict[str, set[str]] = defaultdict(set)
@@ -1262,9 +1176,7 @@ def engine_operational(inference: list[dict]) -> dict[str, dict]:
     return stats
 
 
-# ---------------------------------------------------------------------------
 # Report
-# ---------------------------------------------------------------------------
 
 def _print_gt_provenance(records: list[dict], log: logging.Logger) -> None:
     """What kind of ground truth the scores rest on. Printed before any score.
@@ -1339,10 +1251,6 @@ def _print_gt_limitations(log: logging.Logger) -> None:
     log.info("")
 
 
-def _fmt(value, width: int = 6, places: int = 3) -> str:
-    return f"{value:>{width}.{places}f}" if value is not None else f"{'-':>{width}}"
-
-
 def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     """Describe saved scores, without relabelling historical judge runs as code."""
     spec = LEGS[leg]
@@ -1388,231 +1296,6 @@ def _recorded_scoring_method(leg: str, records: list[dict]) -> tuple[str, str]:
     if leg in ("markdown", "tables", "key_value", "schema") and not current_only:
         return "saved headline score (see per-row metrics)", method
     return spec.scored_on, method
-
-
-def _print_leg_results(
-    agg: dict, records: list[dict], legs: list[str], engines: list[str],
-    operational: dict, log: logging.Logger,
-) -> None:
-    """Per-leg results by (engine, tier, doc_type), with cost and latency beside.
-
-    Accuracy per dollar is the whole question, so cost and latency sit in the
-    same table as the score rather than in a separate one.
-    """
-    skips = skipped_engines(legs, engines)
-
-    for leg in legs:
-        spec = LEGS[leg]
-        leg_rows = [v for v in agg.values() if v["leg"] == leg]
-        leg_records = [r for r in records if r["leg"] == leg]
-        scored_docs = {
-            r["document_path"] for r in leg_records
-            if r.get("applicable") and r.get("score") is not None
-        }
-
-        div = "=" * 100
-        log.info(div)
-        log.info(f"Leg: {spec.title}  —  {spec.question}")
-        scored_on, method = _recorded_scoring_method(leg, leg_records)
-        log.info(f"  Scored on: {scored_on}")
-        log.info(f"  Method: {method}")
-        log.info(div)
-
-        if not scored_docs:
-            log.info("  No saved scores for this leg. Inspect error and N/A reasons below.")
-            for reason in sorted({str(r.get("reason") or r.get("error")) for r in leg_records
-                                  if r.get("reason") or r.get("error")}):
-                log.info(f"    {reason}")
-            for engine, note in skips.get(leg, []):
-                log.info(f"    not competing: {engine:<22} {note}")
-            log.info("")
-            continue
-
-        eligible = sorted({v["engine"] for v in leg_rows if v["score"] is not None})
-        log.info(f"  {len(scored_docs)} distinct documents produced a saved score; "
-                 f"{len(eligible)} of {len(engines)} engines competed.")
-
-        for engine, note in skips.get(leg, []):
-            log.info(f"    not competing: {engine:<22} {note}")
-        log.info("")
-
-        means = engine_leg_means(agg)
-        ordered = sorted(eligible, key=lambda e: means.get((e, leg), -1.0), reverse=True)
-
-        for tier in TIER_ORDER:
-            doc_types = sorted({
-                v["doc_type"] for v in leg_rows
-                if v["tier"] == tier and v["score"] is not None
-            })
-            if not doc_types:
-                continue
-            lookup = {
-                (v["engine"], v["doc_type"]): v
-                for v in leg_rows if v["tier"] == tier
-            }
-            width = 11
-            cols = [f"{dt[:width]:^{width}}" for dt in doc_types]
-            sub_cols = [f"{'score  (n)':^{width}}" for _ in doc_types]
-            if len(doc_types) > 1:
-                cols.append(f"{'avg':^{width}}")
-                sub_cols.append(f"{'':^{width}}")
-            header = f"  {'Engine':<24} | " + " | ".join(cols)
-            log.info(f"  --- {tier} tier " + "-" * max(0, len(header) - len(tier) - 12))
-            log.info(header)
-            log.info(f"  {'':<24} | " + " | ".join(sub_cols))
-            log.info("  " + "-" * (len(header) - 2))
-
-            def _tier_avg(engine: str) -> float:
-                scores = [
-                    lookup[(engine, dt)]["score"]
-                    for dt in doc_types
-                    if (engine, dt) in lookup and lookup[(engine, dt)]["score"] is not None
-                ]
-                return sum(scores) / len(scores) if scores else -1.0
-
-            tier_ordered = sorted(
-                [e for e in ordered if any((e, dt) in lookup for dt in doc_types)],
-                key=_tier_avg, reverse=True,
-            )
-            for engine in tier_ordered:
-                cells = []
-                tier_scores = []
-                for dt in doc_types:
-                    row = lookup.get((engine, dt))
-                    if row is None or row["score"] is None:
-                        cells.append(f"{'-':^{width}}")
-                    else:
-                        cells.append(f"{row['score']:.3f} ({row['n']:>2}){'':<{max(0, width - 10)}}")
-                        tier_scores.append(row["score"])
-                if len(doc_types) > 1:
-                    if tier_scores:
-                        tier_avg = sum(tier_scores) / len(tier_scores)
-                        cells.append(f"{tier_avg:.3f}{'':>{max(0, width - 5)}}")
-                    else:
-                        cells.append(f"{'-':^{width}}")
-                log.info(f"  {engine:<24} | " + " | ".join(cells))
-            log.info("")
-
-        # Accuracy beside what it costs.
-        log.info(f"  {'Engine':<24} | {'score':>7} | {'$/page':>9} | {'lat(s)':>8} | "
-                 f"{'docs':>5} | {'fails':>7}")
-        log.info("  " + "-" * 78)
-        for engine in ordered:
-            mean = means.get((engine, leg))
-            ops = operational.get(engine) or {}
-            n = sum(v["n"] for v in leg_rows if v["engine"] == engine)
-            fails = sum(v["n_fail"] for v in leg_rows if v["engine"] == engine)
-            cost = ops.get("cost_per_page")
-            latency = ops.get("latency_s")
-            log.info(
-                f"  {engine:<24} | {_fmt(mean, 7)} | "
-                f"{('$' + format(cost, '.5f')) if cost is not None else '-':>9} | "
-                f"{_fmt(latency, 8, 2)} | {n:>5} | {fails:>3}/{n:<3}"
-            )
-        log.info("  score = mean of per-document-type means, never pooled across document types.")
-
-        # For tables leg: show score with vs without sampled documents
-        if leg == "tables":
-            from collections import defaultdict as _dd
-            from evaluation.code_judges import TABLE_MAX_ITEMS as _MAX_CL
-            eng_all: dict[str, list[float]] = _dd(list)
-            eng_uns: dict[str, list[float]] = _dd(list)
-            for r in leg_records:
-                if r["leg"] != leg or not r.get("applicable") or r.get("score") is None:
-                    continue
-                m = r.get("metrics") or {}
-                was_sampled = m.get("judge_sampled",
-                                    m.get("judge_checklist_size") == _MAX_CL)
-                eng_all[r["engine_name"]].append(r["score"])
-                if not was_sampled:
-                    eng_uns[r["engine_name"]].append(r["score"])
-            if any(len(eng_all[e]) != len(eng_uns.get(e, [])) for e in eng_all):
-                log.info("")
-                log.info(f"  {'Engine':<24}   {'all':>7}  {'no-sample':>9}  "
-                         f"{'diff':>6}  {'sampled':>7}")
-                log.info("  " + "-" * 62)
-                for engine in ordered:
-                    a = eng_all.get(engine, [])
-                    u = eng_uns.get(engine, [])
-                    if not a:
-                        continue
-                    ma = sum(a) / len(a)
-                    mu = sum(u) / len(u) if u else None
-                    diff = f"{mu - ma:+.3f}" if mu is not None else "  n/a"
-                    ns = len(a) - len(u)
-                    log.info(
-                        f"  {engine:<24}   {ma:>7.3f}  "
-                        f"{'n/a' if mu is None else f'{mu:>9.3f}'}  "
-                        f"{diff:>6}  {ns:>3}/{len(a)}"
-                    )
-
-            # TEDS vs Judge comparison
-            eng_judge: dict[str, list[float]] = _dd(list)
-            eng_teds: dict[str, list[float]] = _dd(list)
-            for r in leg_records:
-                if r["leg"] != leg or not r.get("applicable") or r.get("score") is None:
-                    continue
-                m = r.get("metrics") or {}
-                ca = m.get("cell_accuracy")
-                td = m.get("teds")
-                if ca is not None:
-                    eng_judge[r["engine_name"]].append(ca)
-                if td is not None:
-                    eng_teds[r["engine_name"]].append(td)
-            if eng_judge and eng_teds:
-                log.info("")
-                log.info(f"  {'Engine':<24}   {'judge':>7}  {'TEDS':>7}  {'diff':>6}  {'docs':>5}")
-                log.info("  " + "-" * 58)
-                for engine in ordered:
-                    j = eng_judge.get(engine, [])
-                    t = eng_teds.get(engine, [])
-                    if not j and not t:
-                        continue
-                    mj = sum(j) / len(j) if j else None
-                    mt = sum(t) / len(t) if t else None
-                    d = (f"{mj - mt:+.3f}" if mj is not None and mt is not None
-                         else "  n/a")
-                    n = max(len(j), len(t))
-                    log.info(
-                        f"  {engine:<24}   "
-                        f"{'n/a' if mj is None else f'{mj:>7.3f}'}  "
-                        f"{'n/a' if mt is None else f'{mt:>7.3f}'}  "
-                        f"{d:>6}  {n:>5}"
-                    )
-
-        log.info("")
-
-
-def _print_spread_warnings(agg: dict, legs: list[str], log: logging.Logger) -> None:
-    """A leg that does not spread engines is not measuring anything.
-
-    If every engine scores the same the test is too easy or the reference is
-    too thin — that is how schemas covering four fields of a twenty-five-field
-    page were caught. Surfaced as a warning rather than left for a reader to
-    notice.
-    """
-    means = engine_leg_means(agg)
-    warnings = []
-    for leg in legs:
-        scores = [v for (e, l), v in means.items() if l == leg]
-        if len(scores) < 2:
-            continue
-        spread = max(scores) - min(scores)
-        if spread <= SPREAD_WARN_RANGE:
-            warnings.append((leg, spread, min(scores), max(scores), len(scores)))
-
-    if not warnings:
-        return
-    div = "=" * 100
-    log.info(div)
-    log.info("WARNING — legs that did not separate the engines")
-    log.info(div)
-    for leg, spread, low, high, n in warnings:
-        log.info(f"  {leg:<12} {n} engines scored between {low:.3f} and {high:.3f} "
-                 f"(spread {spread:.3f})")
-    log.info("  A leg that does not spread engines is not measuring them. Either the")
-    log.info("  documents are too easy for it, or the reference is too thin to discriminate.")
-    log.info("")
 
 
 def _print_failures(records: list[dict], log: logging.Logger) -> None:
@@ -1782,196 +1465,7 @@ def _print_inference_errors(inference: list[dict], log: logging.Logger) -> None:
     log.info("")
 
 
-def _print_engine_summary(
-    agg: dict, legs: list[str], operational: dict, log: logging.Logger
-) -> None:
-    """One row per engine: every leg it answered, beside cost and throughput."""
-    means = engine_leg_means(agg)
-    engines = sorted({v["engine"] for v in agg.values()})
-    if not engines:
-        return
-
-    active = [leg for leg in legs if any((e, leg) in means for e in engines)]
-    if not active:
-        return
-
-    div = "=" * 100
-    log.info(div)
-    log.info("Per-engine summary — every leg, beside what it costs")
-    log.info(div)
-    header = f"  {'Engine':<24} | " + " | ".join(f"{leg[:9]:>9}" for leg in active)
-    header += f" | {'$/page':>9} | {'pages/hr':>9}"
-    log.info(header)
-    log.info("  " + "-" * (len(header) - 2))
-
-    def sort_key(engine: str) -> float:
-        vals = [means[(engine, leg)] for leg in active if (engine, leg) in means]
-        return sum(vals) / len(vals) if vals else -1.0
-
-    for engine in sorted(engines, key=sort_key, reverse=True):
-        cells = []
-        for leg in active:
-            value = means.get((engine, leg))
-            cells.append(f"{value:>9.3f}" if value is not None else f"{'-':>9}")
-        ops = operational.get(engine) or {}
-        cost = ops.get("cost_per_page")
-        pph = ops.get("pages_per_hour")
-        log.info(
-            f"  {engine:<24} | " + " | ".join(cells)
-            + f" | {('$' + format(cost, '.5f')) if cost is not None else '-':>9}"
-            + f" | {format(pph, ',.0f') if pph else '-':>9}"
-        )
-    log.info("  Blank = the engine does not answer that leg; see the per-leg tables for why.")
-    log.info("  $/page = one call (default conversion pass). Comparable across engines.")
-    log.info("")
-
-
 SCALE_VOLUMES = [1_000, 10_000, 100_000, 1_000_000]
-
-
-def _print_scale_projection(operational: dict, log: logging.Logger) -> None:
-    """Cost and time at volume — what matters when choosing an engine for production."""
-    engines_with_cost = {
-        e: ops for e, ops in operational.items()
-        if ops.get("cost_per_page") is not None or ops.get("pages_per_hour") is not None
-    }
-    if not engines_with_cost:
-        return
-
-    div = "=" * 100
-    log.info(div)
-    log.info("Scale projection  (steady-state; startup/model-load excluded)")
-    log.info(div)
-
-    vol_labels = ["1K", "10K", "100K", "1M"]
-    header = (
-        f"  {'Engine':<24} | {'pages/hr':>9} | {'$/page':>8} | "
-        + " | ".join(f"{'cost@' + l:>10}" for l in vol_labels)
-        + " | "
-        + " | ".join(f"{'hrs@' + l:>8}" for l in vol_labels)
-    )
-    log.info(header)
-    log.info("  " + "-" * (len(header) - 2))
-
-    sorted_engines = sorted(
-        engines_with_cost,
-        key=lambda e: (-(engines_with_cost[e].get("cost_per_page") or 0), e),
-    )
-
-    for eng in sorted_engines:
-        ops = engines_with_cost[eng]
-        cpp = ops.get("cost_per_page") or 0.0
-        pph = ops.get("pages_per_hour")
-        pph_str = f"{pph:>9,.0f}" if pph else f"{'-':>9}"
-
-        cost_cols = " | ".join(
-            f"${cpp * v:>9,.2f}" for v in SCALE_VOLUMES
-        )
-        hrs_cols = " | ".join(
-            f"{v / pph:>7.1f}h" if pph and pph > 0 else f"{'-':>7} "
-            for v in SCALE_VOLUMES
-        )
-        log.info(
-            f"  {eng:<24} | {pph_str} | ${cpp:>7.5f} | {cost_cols} | {hrs_cols}"
-        )
-
-    log.info("")
-    log.info("  Hours assume single-stream processing. Parallelising across N workers")
-    log.info("  divides wall-clock time by N; cost stays the same.")
-    log.info("")
-
-
-def _pass_to_legs(engines: list[str]) -> dict[str, dict[str, list[str]]]:
-    """Build {engine: {pass_name: [leg, ...]}} from the authoritative plan."""
-    mapping: dict[str, dict[str, list[str]]] = {}
-    for eng in engines:
-        if eng not in ENGINES:
-            continue
-        plans = plan_passes(eng, list(ALL_LEGS))
-        mapping[eng] = {p.name: list(p.legs) for p in plans}
-    return mapping
-
-
-def _print_per_leg_costs(
-    operational: dict, engines: list[str], log: logging.Logger,
-    inference: list[dict] | None = None,
-) -> None:
-    """Per-leg cost and latency — what each use case costs per page.
-
-    The leg -> pass mapping comes from the run's own inference records (their
-    `legs` field) when available, so a leg is costed at the pass that served
-    it in THAT run; the planner is only a fallback. Mapping legs from today's
-    planner showed claude's geometry at the conversion pass's $0.015/page
-    while its geometry call cost $0.055/page.
-    """
-    pass_legs = _pass_to_legs(engines)
-    for rec in inference or []:
-        eng, pn = rec.get("engine_name"), rec.get("pass_name")
-        if eng in pass_legs and pn and rec.get("legs"):
-            pass_legs[eng][pn] = list(rec["legs"])
-    has_data = {e for e in engines if e in operational
-                and operational[e].get("per_pass")}
-    if not has_data:
-        return
-
-    legs_seen: list[str] = []
-    for leg in ALL_LEGS:
-        for eng in has_data:
-            for pn, legs in pass_legs.get(eng, {}).items():
-                if leg in legs and leg not in legs_seen:
-                    legs_seen.append(leg)
-    if not legs_seen:
-        return
-
-    div = "=" * 100
-    log.info(div)
-    log.info("Per-leg cost and latency  (what each use case costs per page)")
-    log.info(div)
-
-    col_w = 12
-    header = f"  {'Engine':<24}"
-    for leg in legs_seen:
-        header += f" | {'$/pg':>{col_w//2}}  {'lat':>{col_w//2-1}}"
-    log.info(f"  {'':24}   " + "   ".join(
-        f"{leg:^{col_w+1}}" for leg in legs_seen
-    ))
-    hdr2 = f"  {'Engine':<24}"
-    for _ in legs_seen:
-        hdr2 += f" | {'$/page':>6} {'sec':>5}"
-    log.info(hdr2)
-    log.info("  " + "-" * (25 + len(legs_seen) * 15))
-
-    sorted_engines = sorted(
-        has_data,
-        key=lambda e: -(operational[e].get("cost_per_page") or 0),
-    )
-
-    for eng in sorted_engines:
-        per_pass = operational[eng].get("per_pass", {})
-        eng_pass_legs = pass_legs.get(eng, {})
-        leg_to_pass: dict[str, str] = {}
-        for pn, legs in eng_pass_legs.items():
-            for leg in legs:
-                leg_to_pass[leg] = pn
-
-        row = f"  {eng:<24}"
-        for leg in legs_seen:
-            pn = leg_to_pass.get(leg)
-            if pn and pn in per_pass:
-                ps = per_pass[pn]
-                c = ps.get("cost_per_page")
-                l = ps.get("latency_s")
-                c_s = f"${c:.4f}" if c is not None else "-"
-                l_s = f"{l:.1f}" if l is not None else "-"
-                row += f" | {c_s:>6} {l_s:>5}"
-            else:
-                row += f" | {'—':>6} {'—':>5}"
-        log.info(row)
-
-    log.info("")
-    log.info("  Legs sharing a pass (e.g. text+markdown+tables) show the same")
-    log.info("  cost — it is one API call. Combining legs across passes sums their costs.")
-    log.info("")
 
 
 def _print_judged_documents(records: list[dict], log: logging.Logger, expected_engines=None) -> None:
@@ -2068,9 +1562,7 @@ def _print_judged_documents(records: list[dict], log: logging.Logger, expected_e
     log.info("")
 
 
-# ---------------------------------------------------------------------------
 # CSV
-# ---------------------------------------------------------------------------
 
 def _write_per_doc_csv(records: list[dict], path: Path) -> None:
     """Scored rows only. Rows carrying an error (a failed call, a failed
@@ -2146,26 +1638,13 @@ def _write_engine_csv(
             w.writerow(row)
 
 
-# ---------------------------------------------------------------------------
 # Report entry point
-# ---------------------------------------------------------------------------
 
 def write_run_manifest(
     timestamp: str, engines: list[str], tiers: list[str], legs: list[str],
     collect_only: bool = False, extends: str | None = None,
 ) -> None:
-    """What the run was asked to do.
-
-    Without it, re-reporting could only see the legs that produced records —
-    and a leg with no ground truth produces none, so the one result worth
-    printing (that it could not be measured) would silently vanish.
-
-    A resumed run keeps the manifest it already has: rewriting it with the
-    current --engines/--legs selection used to shrink a published run's
-    manifest to whatever subset the resume happened to name. `extends` records
-    the baseline run this one adds engines to, so a combined report can say
-    which run each row came from.
-    """
+    """What the run was asked to do."""
     path = RUNS_DIR / f"{timestamp}_run.json"
     existing = read_run_manifest(timestamp)
     if existing:
@@ -2195,16 +1674,7 @@ def read_run_manifest(timestamp: str) -> dict:
 
 def report(timestamp: str | list[str], log: logging.Logger,
            legs: list[str] | None = None, detailed: bool = False, sort_by: str = "score") -> None:
-    """Print and write the report for one run, or for several runs combined.
-
-    Several timestamps (`--report A,B`) concatenate the stored rows of an
-    extension run with the baseline it adds engines to. Nothing is rescored
-    or re-averaged across runs: each row keeps the run it came from in its
-    `timestamp` field, and the summaries are written under the joined name.
-    Comparability across runs is the reader's job — the engine columns say
-    which judge/scorer version a row was produced by only through the run
-    manifests, which the report prints first.
-    """
+    """Print and write the report for one run, or for several runs combined."""
     timestamps = [timestamp] if isinstance(timestamp, str) else list(timestamp)
     leg_records: list[dict] = []
     inference: list[dict] = []
@@ -2323,9 +1793,7 @@ def report(timestamp: str | list[str], log: logging.Logger,
     log.info(f"  {engine_csv}")
 
 
-# ---------------------------------------------------------------------------
 # CLI
-# ---------------------------------------------------------------------------
 
 def parse_args():
     p = argparse.ArgumentParser(description="OCR Benchmark Runner")
@@ -2647,14 +2115,7 @@ def main() -> None:
                       f"{', '.join(sorted(unknown))}")
             sys.exit(1)
     if legs != list(ALL_LEGS) and not args.collect_only:
-        # An explicit --legs selection means the user wants THOSE legs
-        # exercised: keep only documents with ground truth for at least one of
-        # them, so `--legs geometry --max-docs 2` validates on 2 geometry
-        # documents instead of truncating to 2 ineligible ones and doing
-        # nothing. A collect-only run keeps every page: the 11 silver-text
-        # pages have no scoreable text reference but their outputs are still
-        # wanted, and GT filtering was silently dropping them from a
-        # supposedly full-corpus collection.
+        # Filter explicit legs to pages with relevant GT; collect-only retains every selected page.
         from evaluation.ground_truth import GroundTruthLoader
         _loader = GroundTruthLoader()
         eligible = [d for d in documents

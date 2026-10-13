@@ -1,48 +1,5 @@
-"""
-Modal app: PaddleOCR PP-OCRv5 (server det + server rec) — Paddle's classic
-text-line OCR pipeline, run as its own engine beside PaddleOCR-VL.
-
-Why a separate engine: PaddleOCR-VL (modal_apps/paddleocr_vl_app.py) is layout
-detection + a 0.9B VLM that reads each layout block, so its finest geometry is
-a block. PP-OCRv5 is the other Paddle product: a text-line DETECTOR, then a
-recogniser per line. Its primary output is one polygon per text line, which is
-what the geometry leg can score. Different weights, different code path, so a
-different engine (never a swap).
-
-Model contract (sources read 2026-10-01):
-  * Detection: PaddlePaddle/PP-OCRv5_server_det, HF commit
-    ca867c897ecbca8873081573a802ad70d499cb94. Card: "one of the PP-OCRv5_det
-    series, the latest generation of text detection models developed by the
-    PaddleOCR team"; output `dt_polys` (one 4-point polygon per text line) +
-    `dt_scores`; companion `text_recognition_model_name PP-OCRv5_server_rec`.
-  * Recognition: PaddlePaddle/PP-OCRv5_server_rec, HF commit
-    b26c3587fda8da3c8ec0ce357214b4d661ff1558.
-  * Pipeline: paddleocr==3.7.0 general OCR pipeline
-    (www.paddleocr.ai/latest/en/version3.x/pipeline_usage/OCR.html):
-    PaddleOCR(text_detection_model_name=..., text_recognition_model_name=...,
-    use_doc_orientation_classify, use_doc_unwarping, use_textline_orientation),
-    predict(input) -> Result with rec_texts, rec_scores, rec_polys, dt_polys,
-    rec_boxes ([x_min, y_min, x_max, y_max]); `return_word_box` ("Whether to
-    return word-level boxes.", default False) — the fields it adds are not
-    documented on that page, so the app records the whole result JSON and
-    reads word boxes from whatever keys appear (see _words_from_result), and
-    falls back to line boxes when none do.
-  * Runtime: paddlepaddle-gpu==3.2.1 from the cu126 index — the exact
-    combination modal_apps/paddleocr_vl_app.py already runs on Modal
-    (paddleocr 3.7.0 pinned there for the same reproducibility reason).
-  * Task boundary: one page image. The three optional preprocessors
-    (document orientation, unwarping, text-line orientation) are OFF so the
-    boxes are in the coordinates of the image as sent; the detector's own
-    resize policy (text_det_limit_side_len / limit_type, 3.x defaults 64 /
-    "min", i.e. no downscaling of these pages) is read back from the pipeline
-    and recorded, not changed.
-  * Batching owner: a sequential loop inside one container call. The
-    pipeline's own text_rec_batch_size batches lines within a page.
-  * GPU: A10 first candidate (sm_86; the Paddle cu126 wheels are known to run
-    on the A100 in the VL app; T4/sm_75 is a later experiment, not assumed).
-    The models are ~100 MB; memory is not the constraint.
-  * No prompt: a prompt/response_format yields an error item.
-"""
+"""Modal app: PaddleOCR PP-OCRv5 (server det + server rec) — Paddle's classic
+text-line OCR pipeline, run as its own engine beside PaddleOCR-VL."""
 
 import modal
 

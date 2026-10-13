@@ -190,7 +190,6 @@ def _compare_strict(reference: list[Table], predicted: list[Table]) -> dict:
 
 def _value_credit(a: str, b: str) -> float:
     """Partial text fidelity; complete numeric values, never digit substrings."""
-    from evaluation.code_judges import _num
     a, b = normalize_cell(a), normalize_cell(b)
     if a == b:
         return 1.0
@@ -725,3 +724,16 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
             "unmatched_tables": sum(not any(i == ti for i, _, _ in used) for ti in range(len(predicted))),
             "verdicts": verdicts + extra, "alignment_table_matches": table_map,
             "normalization": "label-associated adjacent item rows; ordered cell spans; repeated columns, transpose and header-defined sections/chunks; source positions retained"}
+
+
+def _num(s: Any):
+    from evaluation.structured_metrics import as_number
+    t = unicodedata.normalize("NFKC", str(s or "")).strip()
+    # Markdown currency escapes and a math-wrapped minus are presentation.
+    t = re.sub(r"\\+(?=[$€£])", "", t)
+    t = re.sub(r"^\$\s*-\s*\$\s*", "-", t)
+    t = re.sub(r"^RM\s*(?=[-+]?\d)", "", t, flags=re.I)
+    # A date such as 31.7.17 is not a thousands-separated number.
+    if t.count(".") > 1 and not re.fullmatch(r"[-+]?\d{1,3}(?:\.\d{3})+(?:,\d+)?", t):
+        return None
+    return as_number(t)

@@ -1,45 +1,4 @@
-"""Google Document AI — Enterprise Document OCR processor (OCR_PROCESSOR).
-
-Online `process_document` through google-cloud-documentai, authenticated with
-Application Default Credentials / a service account (a Gemini API key does not
-work here). This row is the OCR processor only: Form Parser and Layout Parser
-are different products and must not be substituted under this name, so the
-runner checks the processor type when it can read it.
-
-Environment:
-  GOOGLE_DOCAI_PROJECT, GOOGLE_DOCAI_LOCATION ("us" / "eu" / ...),
-  GOOGLE_DOCAI_PROCESSOR_ID                         — required
-  GOOGLE_DOCAI_PROCESSOR_VERSION                    — optional but strongly
-      preferred, e.g. "pretrained-ocr-v2.1-2024-08-07" (Stable). Without it the
-      processor's default version is resolved once via get_processor and then
-      requested explicitly, so every document in a run uses one version.
-
-Request options (docs.cloud.google.com/document-ai/docs/enterprise-document-ocr,
-REST ProcessOptions/OcrConfig reference, google-cloud-documentai 3.15.0
-types/document_io.py; all read 2026-09-30) — every OCR option is set
-explicitly so the configuration is recorded, not implied:
-  enable_native_pdf_parsing=False   PDFs only; the corpus is images.
-  enable_image_quality_scores=False "Adds additional latency comparable to
-                                    regular OCR"; diagnostics, not text.
-  enable_symbol=False               symbol boxes not needed (tokens suffice).
-  disable_character_boxes_detection=False  documented default (detector on).
-  hints / advanced_ocr_options      unset: automatic language, ML layout.
-  premium_features: compute_style_info=False, enable_math_ocr=False,
-      enable_selection_mark_detection=False — the "OCR add ons", billed
-      separately ($6/1,000 pages on the pricing page), OFF by default.
-  imageless_mode=True               "Option to remove images from the
-                                    document" — drops the rendered page image
-                                    from the reply; no effect on OCR output.
-
-Output mapping (REST Document reference):
-  raw_text                 = Document.text (the service's reading order)
-  structured_output.words  = pages[].tokens — "A detected token"; word-level
-                             boxes from layout.bounding_poly.normalized_vertices
-                             ("relative to the original image and range from
-                             0 to 1"), text via layout.text_anchor.
-  structured_output.lines  = pages[].lines, kept as metadata only.
-No markdown, table, key_value or schema output exists on this processor.
-"""
+"""Google Document AI — Enterprise Document OCR processor (OCR_PROCESSOR)."""
 
 from __future__ import annotations
 

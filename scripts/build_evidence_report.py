@@ -8,8 +8,8 @@ from evaluation.artifacts import location
 from evaluation.reporting import comparison
 from evaluation.ground_truth import GroundTruthLoader
 from evaluation.kv_schema_code import engine_pairs
-from evaluation.normalizers import markdown_for_scoring
-from evaluation.code_judges import engine_grids
+from evaluation.markdown_leg import markdown_for_scoring
+from evaluation.table_extractor import engine_grids
 from evaluation.metrics import normalize_text
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('run',nargs='?',default='current',help='Saved scored run timestamp (default: current)')

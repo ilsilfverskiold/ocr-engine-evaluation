@@ -27,11 +27,7 @@ def _quiet_torch_stack() -> None:
     warnings.filterwarnings("ignore", category=FutureWarning)
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-    # RapidOCR (docling's default OCR backend) installs a colour console
-    # handler on import, but only `if not self.logger.handlers`. Seeding the
-    # logger with a NullHandler first means it finds one already there and
-    # never attaches its own, which is the only way to keep its per-region
-    # INFO/WARNING chatter off a terminal it was going to write to directly.
+    # Seed RapidOCR's logger to prevent its import-time console handler from polluting reports.
     for name in ("RapidOCR", "rapidocr"):
         seeded = logging.getLogger(name)
         if not seeded.handlers:

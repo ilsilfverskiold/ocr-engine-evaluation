@@ -1,16 +1,4 @@
-"""The six legs: what each one asks the engine for, and how a run is grouped
-into inference passes.
-
-Authoritative spec: docs/scoring-design.md. This module is that document turned
-into data — the prompts below are the asks it fixes, verbatim, so every engine
-is asked for the same thing and the benchmark holds one variable still.
-
-A leg needs an inference *pass* only when an engine cannot answer it from the
-default conversion. Legs 1-3 come out of one default call for almost every
-engine; legs 4-5 are one prompted call each. `plan_passes()` works out the
-minimum set for a given engine and leg selection, so selecting more legs never
-costs more calls than the legs actually require.
-"""
+"""Task prompts, eligibility and shared inference-pass planning."""
 
 from __future__ import annotations
 
@@ -219,11 +207,7 @@ def plan_passes(engine: str, legs: list[str]) -> list[PassPlan]:
     """
     spec = ENGINES[engine]
     native: list[str] = []
-    # Prompted legs are grouped by the ASK actually sent — the engine-resolved
-    # prompt plus response format — not by leg name. Two legs whose resolved
-    # ask is identical are one call: deepseek_ocr's markdown and tables legs
-    # both send the model card's grounding prompt, and paying for that call
-    # twice would double the engine's cost for no extra information.
+    # Group identical resolved prompts and response formats into one inference call.
     prompted: dict[tuple, list[str]] = {}
     for leg in legs:
         how = spec.answers(leg)
@@ -239,14 +223,7 @@ def plan_passes(engine: str, legs: list[str]) -> list[PassPlan]:
 
     plans: list[PassPlan] = []
     if native:
-        # An OCR fine-tune whose card prescribes a task prefix must be sent it
-        # explicitly, or the app's own default governs and the registry prompt
-        # is a fiction: deepseek_ocr declares "Free OCR." while its app
-        # defaults to the grounding markdown prompt, so its text leg was being
-        # scored from a markdown conversion. Engines that declare no text
-        # prompt keep None — their runner's conversion default is the ask that
-        # serves text, markdown and tables together, and forcing the generic
-        # text prompt on them would suppress the structure the other legs need.
+        # Send declared task prefixes explicitly; otherwise preserve the runner's default conversion.
         text_override = spec.leg_prompts.get(TEXT) if spec.accepts_task else None
         plans.append(PassPlan(
             DEFAULT_PASS, engine, tuple(native), TEXT if text_override else None

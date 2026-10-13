@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 import hashlib
 import json
 import re
-from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists
 from pathlib import Path
 
 from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal

@@ -1,45 +1,5 @@
-"""
-Modal app: MinerU 2.5 **pipeline backend** (`mineru -b pipeline -m ocr`) — the
-small-model chain, run as its own engine beside the MinerU 2.5 VLM engine.
-
-Why a separate engine: modal_apps/mineru_app.py runs MinerU's vlm backend
-(opendatalab/MinerU2.5-2509-1.2B, two_step_extract: layout detection, then the
-model reads each block), whose finest geometry is a block. The pipeline backend
-is MinerU's other documented mode: layout detection (DocLayout-YOLO), then a
-text-line OCR detector + recogniser, plus formula and table models. Its
-middle.json carries blocks -> lines -> spans, each with a bbox — the line boxes
-the geometry leg can score. Different models, different code path: a different
-engine, never a swap.
-
-Model contract (sources read 2026-10-01, tag mineru-2.5.0-released):
-  * Package: mineru[pipeline]==2.5.4 (last 2.5.x on PyPI). Requires torch>=2.6
-    (<3); README tested range torch 2.2–2.6 excl. 2.5, CUDA 11.8/12.4/12.6/12.8,
-    "GPU: Turing architecture or later, 6GB+ VRAM", Python 3.10–3.13.
-    Pinned here: torch==2.6.0 + torchvision==0.21.0 (cu124 wheels).
-  * Models: downloaded by the package's own `mineru-models-download -s
-    huggingface -m pipeline` (mineru/cli/models_download.py) at image build —
-    the layout, OCR, formula and table weights it selects — and the HF snapshot
-    commits actually fetched are recorded at build time (see
-    MODEL_COMMITS_FILE) and reported in model_version. The downloader fetches
-    HEAD of its repos, so the commit file is the pin.
-  * API (demo/demo.py at the tag): images are turned into a one-page PDF with
-    images_bytes_to_pdf_bytes (PIL "save as PDF": page size = image pixels),
-    then pipeline_doc_analyze(pdf_bytes_list, lang_list, parse_method="ocr",
-    formula_enable, table_enable) -> model lists; result_to_middle_json(...) ->
-    middle.json with pdf_info[page]: page_size [w, h], para_blocks (level-1
-    blocks; table/image blocks nest `blocks`), lines[].bbox, spans[].bbox /
-    content; union_make(pdf_info, MakeMode.MM_MD, image_dir) -> markdown.
-    Coordinates: bbox [x0, y0, x1, y1], origin top-left, in page units — here
-    equal to image pixels — normalised by page_size.
-  * Language: "en" (corpus is English; README recommends -l for non-Chinese
-    documents, default "ch"). parse_method "ocr" because inputs are images.
-    formula and table models left enabled (the engine's default behaviour).
-  * Batching owner: pipeline_doc_analyze takes a LIST of documents and batches
-    internally per stage; run_ocr_batch passes the whole chunk in one call.
-  * GPU: T4 first candidate (Turing is the documented minimum; models are
-    small). CPU fallback exists in MinerU but is not used here.
-  * No prompt: a prompt/response_format yields an error item.
-"""
+"""Modal app: MinerU 2.5 **pipeline backend** (`mineru -b pipeline -m ocr`) — the
+small-model chain, run as its own engine beside the MinerU 2.5 VLM engine."""
 
 import modal
 

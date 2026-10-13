@@ -1,41 +1,5 @@
-"""
-Modal app: OvisOCR2 (0.8B, Qwen3.5 architecture) — ATH-MaaS/OvisOCR2
-Author's offline vLLM recipe (LLM.generate over a list). GPU: A10 (initial).
-
-Sources (read 2026-09-30):
-- Model card / recipe: https://huggingface.co/ATH-MaaS/OvisOCR2 (README.md @ MODEL_REVISION)
-- config.json, preprocessor_config.json, chat_template.jinja, tokenizer_config.json
-  at https://huggingface.co/ATH-MaaS/OvisOCR2/raw/<MODEL_REVISION>/<file>
-  (no generation_config.json exists at this revision — HTTP 404)
-- Technical report: https://arxiv.org/html/2607.13639 (single page->Markdown task;
-  boxes only for images/charts; SFT used a 16K maximum sequence length)
-- vLLM v0.22.1 source: vllm/engine/arg_utils.py (gdn_prefill_backend),
-  vllm/sampling_params.py (StructuredOutputsParams), vllm/inputs/llm.py
-  (per-prompt mm_processor_kwargs), vllm/entrypoints/offline_utils.py
-  (failed add_request aborts the already-added requests),
-  requirements/test/cuda.txt (CI lock: transformers==5.5.3).
-
-Backend decision:
-- The card documents OFFLINE vLLM: `LLM(...)` + `self.model.generate(list, SamplingParams)`.
-  It does not document an OpenAI server. So the batching owner here is vLLM's own
-  scheduler behind one `LLM.generate(list)` call per run_ocr_batch — no thread
-  pool, no HTTP server, no Modal fan-out.
-- Per-item prompts and per-item SamplingParams (structured outputs) are passed as
-  parallel lists to the same generate call, so a tagged batch mixing the
-  conversion pass with key_value/schema passes is still ONE scheduler batch.
-
-Task boundary:
-- The model card and report document exactly ONE task: page image -> Markdown
-  (HTML tables, LaTeX formulas, <img> tags with 0-1000 boxes for charts/images).
-  No text grounding / spotting / word-box output is documented anywhere in the
-  card or report. The <img src="images/bbox_..."> tags locate VISUAL regions,
-  not text; they are kept in structured_output["image_regions"] and are never
-  emitted as words/text_regions.
-- The chat template is the general Qwen3.5 template (text + image content), so a
-  caller prompt reaches the model unchanged. Instruction following beyond the
-  documented OCR prompt is NOT claimed by the authors — key_value/schema passes
-  are measured as "prompted candidates", not documented capabilities.
-"""
+"""Modal app: OvisOCR2 (0.8B, Qwen3.5 architecture) — ATH-MaaS/OvisOCR2
+Author's offline vLLM recipe (LLM.generate over a list). GPU: A10 (initial)."""
 
 import modal
 

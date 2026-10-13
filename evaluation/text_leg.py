@@ -1,21 +1,4 @@
-"""Leg 1 — text accuracy.
-
-Ask: the engine's default conversion. No special prompting; this is what each
-product does out of the box, and all 14 engines answer it.
-
-Headline: **GT coverage** — the fraction of unique ground-truth words present
-anywhere in the output. Set-based, so it is blind to word order and to extra
-words the engine adds. That is deliberate: engines format output differently
-(labels, headers, markdown syntax) and precision-style metrics punish correct
-reading that happens to be formatted unlike the annotation. CER, WER and word
-P/R/F1 are recorded as supporting detail, not headline.
-
-Known limits, both reported rather than papered over:
-  * coverage is repetition-blind — an engine looping a phrase can still score
-    1.0, so `length_ratio` is carried beside it and flagged past 3x,
-  * coverage is order-blind, which is why the FUNSD reading-order defect does
-    not reach this leg.
-"""
+"""Score reference-token coverage, CER/WER and word precision/recall."""
 
 from __future__ import annotations
 

@@ -10,18 +10,7 @@ from typing import Any
 
 @dataclass(frozen=True)
 class OCRTask:
-    """What a leg asks the engine for.
-
-    `task=None` on `run()` means the engine's default conversion — leg 1, and
-    every leg an engine answers natively. A task carries the leg's prompt and,
-    for the schema leg, the document's own JSON schema so every engine is asked
-    for the same structure.
-
-    Engines that cannot be prompted (fixed pipelines) declare
-    `accepts_task=False` in engines.py and are never handed one; they compete
-    only in the legs their default conversion already answers. That is a
-    reportable result, not a failure.
-    """
+    """What a leg asks the engine for."""
 
     leg: str
     prompt: str
@@ -47,11 +36,7 @@ class OCRResult:
     page_count: int
     model_version: str
     metadata: dict[str, Any] = field(default_factory=dict)
-    # The provider's complete reply, as returned, before any of our parsing.
-    # `raw_text` and `structured_output` are what we CHOSE to read out of it;
-    # this is what actually arrived. Kept so a scoring decision can be revisited
-    # without paying for the call again — see provider_payload() below and
-    # _write_ocr_output() in run_benchmark.py, which persists it per call.
+    # Persist the complete provider reply so parsing/scoring can be revised without another paid call.
     raw_response: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
 

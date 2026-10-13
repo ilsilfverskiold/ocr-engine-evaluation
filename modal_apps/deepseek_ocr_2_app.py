@@ -1,44 +1,8 @@
-"""
-Modal app: DeepSeek-OCR-2 (3B MoE, ~0.5B active) — deepseek-ai/DeepSeek-OCR-2.
-A NEW engine (`deepseek_ocr_2`); modal_apps/deepseek_ocr_app.py (v1) is left
-untouched and keeps its own historical recipe.
-
-Served by upstream vLLM (DeepseekOCR2ForCausalLM, vLLM >= 0.16.0) through its
-OpenAI-compatible server, fed by a bounded thread pool so vLLM's continuous
-batching owns the batch. GPU: L4 (first fit probe; see GPU_TYPE).
-
-Sources (read 2026-09-30):
-- Model card @ aaa02f38:  https://huggingface.co/deepseek-ai/DeepSeek-OCR-2
-- Author repo @ 2f3699eb: https://github.com/deepseek-ai/DeepSeek-OCR-2
-    DeepSeek-OCR2-master/DeepSeek-OCR2-vllm/{config.py,run_dpsk_ocr2_image.py,
-    run_dpsk_ocr2_pdf.py,run_dpsk_ocr2_eval_batch.py,process/image_process.py,
-    process/ngram_norepeat.py}
-- vLLM recipe:            https://recipes.vllm.ai/deepseek-ai/DeepSeek-OCR-2
-- vLLM v0.21.0 source:    vllm/model_executor/models/deepseek_ocr2.py,
-    vllm/model_executor/models/deepseek_ocr.py (NGramPerReqLogitsProcessor),
-    vllm/transformers_utils/configs/deepseek_vl2.py (model_type ->
-    "deepseek_ocr2"), vllm/transformers_utils/chat_templates/
-    template_deepseek_ocr.jinja, vllm/entrypoints/utils.py (get_max_tokens)
-- Paper:                  https://arxiv.org/abs/2601.20552
-
-What is deliberately NOT inherited from v1:
-- The figure deep-parse stage ("Parse the figure."). That prompt is on the v1
-  README only. The v2 card, README and config.py document exactly two prompts
-  (grounding markdown and "Free OCR."), so a second-stage figure call would be
-  an invented task for this checkpoint.
-- max_tokens=2048. v1's cap was an empirical fix for v1 loops; v2's cap is
-  derived from its own context arithmetic below.
-- Geometry in structured_output["words"]. Grounding boxes are layout-region
-  boxes and go to "text_regions" with geometry_granularity="block". (v1 also
-  stored the REGION LABEL — "text", "title", "table" — as each box's text;
-  see _parse_grounding for the correct content association.)
-"""
+"""DeepSeek-OCR-2 on Modal; separate from the DeepSeek-OCR v1 engine."""
 
 import modal
 
-# ---------------------------------------------------------------------------
 # Identity and pins
-# ---------------------------------------------------------------------------
 # First fit probe per the modal-inference-engineer skill (L4/A10 at small
 # concurrency, then L40S). Memory estimate, BF16:
 #   weights                       6.78 GB  (safetensors, 3,389,119,360 params)
@@ -63,21 +27,17 @@ SERVER_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/v1"
 HEALTH_URL = f"http://{SERVER_HOST}:{SERVER_PORT}/health"
 BATCH_CONCURRENCY = 4
 
-# ---------------------------------------------------------------------------
 # Prompts — the only two the v2 card/README/config.py document:
 #   "# document: <image>\n<|grounding|>Convert the document to markdown."
 #   "# without layouts: <image>\nFree OCR."
 # The "<image>\n" prefix is produced by vLLM: the deepseek_ocr2 chat template
 # is `bos + content`, and the string-content renderer joins the image
 # placeholder and our text with "\n", giving "<image>\n<prompt>" exactly.
-# ---------------------------------------------------------------------------
 GROUNDING_PROMPT = "<|grounding|>Convert the document to markdown."
 FREE_OCR_PROMPT = "Free OCR."
 DEFAULT_PROMPT = FREE_OCR_PROMPT  # default pass = the text leg's documented task
 
-# ---------------------------------------------------------------------------
 # Context arithmetic (hard limit, not a choice)
-# ---------------------------------------------------------------------------
 # config.json language_config.max_position_embeddings = 8192; every author
 # script uses max_model_len=8192.
 MAX_MODEL_LEN = 8192
@@ -169,9 +129,7 @@ image = (
 app = modal.App("ocr-bench-deepseek-ocr-2")
 
 
-# ---------------------------------------------------------------------------
 # Pure helpers (no model state)
-# ---------------------------------------------------------------------------
 def _normalized_png(image_bytes: bytes) -> tuple[bytes, tuple[int, int]]:
     """EXIF-transpose + RGB, as the author's load_image() does. No resize: the
     vLLM processor builds the 1024 global view and 768 crops itself."""
@@ -203,19 +161,7 @@ def _plain_text(content: str) -> str:
 
 
 def _parse_grounding(raw: str) -> tuple[str, dict]:
-    """Author's grounding post-processing, plus geometry harvesting.
-
-    The grounding output is a sequence of
-        <|ref|>LABEL<|/ref|><|det|>[[x1, y1, x2, y2]]<|/det|>\\nCONTENT
-    where LABEL is a layout category (title/text/table/image/...) and CONTENT is
-    the Markdown/HTML that follows the tag, up to the next tag. The author's
-    re_match() uses exactly this pattern and treats group 2 as `label_type`.
-    Coordinates are 0-999 relative to the original page.
-
-    Markdown: as the author's run_dpsk_ocr2_image.py — image spans become an
-    image link, every other ref/det span is deleted, and \\coloneqq/\\eqqcolon are
-    rewritten. HTML tables are kept as HTML.
-    """
+    """Author's grounding post-processing, plus geometry harvesting."""
     import ast
     import re
 

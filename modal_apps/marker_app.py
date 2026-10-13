@@ -140,18 +140,7 @@ def _block_geometry(node, out: list, page_size=(0, 0)) -> None:
 
 
 def _marker_worker_convert(task: tuple[str, str | None, str | None]) -> dict:
-    """Convert one file in an already-loaded worker process.
-
-    Marker 1.8.2 exposes a converter per task; treating it as one Markdown
-    pipeline used the wrong interface for two legs and hid a third:
-
-      OCRConverter   -> text, plus OCR line polygons
-      PdfConverter   -> markdown AND layout geometry from ONE build_document
-      TableConverter -> tables (its own documented table pipeline)
-
-    Structured extraction stays out: ExtractionConverter needs an external LLM,
-    which would make this a hybrid engine rather than standalone Marker.
-    """
+    """Convert one file in an already-loaded worker process."""
     file_path, document_path, pass_name = task
     config = _marker_pass_config(_marker_config, pass_name)
     base = {

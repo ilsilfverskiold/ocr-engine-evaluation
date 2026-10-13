@@ -10,11 +10,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from html import unescape
-from pathlib import Path
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-from evaluation.table_extractor import extract_all_tables_html, extract_table_html
+from evaluation.table_extractor import extract_all_tables_html
 
 # Table references derived from schema field names rather than printed page
 # columns. Scored, but the report flags them — see gt_limitations.json,
@@ -137,9 +136,7 @@ class TableScore:
         return d
 
 
-# --------------------------------------------------------------------------
 # Normalisation
-# --------------------------------------------------------------------------
 
 def normalize_table_html(html: str) -> str:
     """Reduce a table to the presentation-free grid both sides are compared in.
@@ -190,16 +187,7 @@ def _table_to_tree(table) -> TableNode | None:
 
 
 def html_to_trees(html: str) -> list[TableNode]:
-    """EVERY table in `html` -> a tree each, in document order.
-
-    A page's reference is not always one table: a bank statement ships an
-    account summary, a holdings table and a daily-balance grid as three
-    sibling <table> elements. Reading only the first — which
-    `soup.find("table")` does, and which normalize_table_html did too — meant
-    8 of the 40 table documents were scored against a fraction of their own
-    reference, and an engine that recovered the other tables perfectly earned
-    nothing for them. See score_tables() for how the pieces are combined.
-    """
+    """EVERY table in `html` -> a tree each, in document order."""
     from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(html or "", "lxml")
@@ -222,9 +210,7 @@ def html_to_tree(html: str) -> TableNode | None:
     return trees[0] if trees else None
 
 
-# --------------------------------------------------------------------------
 # Tree edit distance
-# --------------------------------------------------------------------------
 
 def _cell_cost(a: str, b: str) -> float:
     """Normalised edit distance between two cell strings, in [0, 1]."""
@@ -295,60 +281,7 @@ def _row_distance(a: TableNode, b: TableNode) -> float:
     return dp[len(cells_a)][len(cells_b)]
 
 
-def _concatenate_tables(htmls: list[str]) -> str:
-    """All rows from several tables as one table, for engines that split a
-    single reference table into per-section tables."""
-    rows: list[str] = []
-    for html in htmls:
-        tree = html_to_tree(html)
-        if not tree:
-            continue
-        for row in tree.children:
-            cells = "".join(f"<td>{c.text}</td>" for c in row.children)
-            rows.append(f"<tr>{cells}</tr>")
-    return f"<table>{''.join(rows)}</table>"
-
-
-def teds_trees(hyp_tree: TableNode | None, ref_tree: TableNode | None) -> float:
-    """TEDS between two already-parsed tables."""
-    if ref_tree is None or hyp_tree is None:
-        return 0.0
-    distance = _tree_edit_distance(hyp_tree, ref_tree)
-    denominator = max(hyp_tree.size(), ref_tree.size(), 1)
-    return round(max(0.0, 1.0 - distance / denominator), 4)
-
-
-def compute_teds(hypothesis_html: str, reference_html: str) -> float:
-    """TEDS in [0, 1]; 1.0 is a structurally and textually identical table."""
-    return teds_trees(html_to_tree(hypothesis_html), html_to_tree(reference_html))
-
-
-# --------------------------------------------------------------------------
 # Leg entry point
-# --------------------------------------------------------------------------
-
-def _grid_shape(tree: TableNode | None) -> tuple[int, int, int]:
-    if tree is None:
-        return 0, 0, 0
-    rows = len(tree.children)
-    cols = max((len(r.children) for r in tree.children), default=0)
-    cells = sum(len(r.children) for r in tree.children)
-    return rows, cols, cells
-
-
-def _cell_match_rate(hyp: TableNode | None, ref: TableNode | None) -> float | None:
-    """Fraction of reference cell strings present anywhere in the output.
-
-    Structure-blind on purpose: it separates "got the numbers, lost the grid"
-    from "lost the numbers", which a single TEDS figure cannot.
-    """
-    if hyp is None or ref is None:
-        return None
-    ref_cells = [c.text for r in ref.children for c in r.children if c.text]
-    if not ref_cells:
-        return None
-    hyp_cells = {c.text for r in hyp.children for c in r.children if c.text}
-    return round(sum(1 for c in ref_cells if c in hyp_cells) / len(ref_cells), 4)
 
 
 def _structure_score(reference, predicted, mapping: dict[int, int], *, content: bool) -> float:

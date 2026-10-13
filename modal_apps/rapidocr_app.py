@@ -1,42 +1,4 @@
-"""
-Modal app: RapidOCR (rapidocr 3.9.2, ONNX Runtime CPU). CPU-only container.
-
-Why Modal and not local: the project rule is no model inference on the user's
-machine. RapidOCR is small, so it runs in a CPU container (GPU_TYPE="CPU",
-cpu=4.0, memory=8192 — the allocation the harness bills for "CPU").
-
-What runs (read from the rapidocr 3.9.2 source: rapidocr/main.py,
-rapidocr/config.yaml, rapidocr/default_models.yaml; docs
-rapidai.github.io/RapidOCRDocs/main/quickstart/):
-  * `RapidOCR(params=...)` built once in @modal.enter, reused for every image.
-  * Package-default pipeline: DB text detection (PP-OCRv6 det small) ->
-    180-degree text-line classifier (ch_ppocr_mobile_v2.0 cls) -> CTC
-    recognition (PP-OCRv6 rec small, multilingual; the character list is
-    embedded in the ONNX metadata, not a separate dictionary file).
-    All three ONNX files ship inside the 3.9.2 wheel (wheel RECORD lists
-    rapidocr/models/PP-OCRv6_det_small.onnx, PP-OCRv6_rec_small.onnx,
-    ch_ppocr_mobile_v2.0_cls_mobile.onnx). They are passed by explicit
-    model_path and their SHA-256 checked against default_models.yaml, so no
-    runtime download can substitute a different model.
-  * Package-default preprocessing, recorded, not changed: Global.max_side_len
-    2000 / min_side_len 30 resize, Det.limit_side_len 736 (limit_type min),
-    vertical padding for very wide images, text_score 0.5 filter. The package
-    maps every box back to the ORIGINAL image (map_boxes_to_original), so
-    coordinates are normalised against the image as sent (after EXIF transpose).
-  * `return_word_box=True` (Global option / __call__ kwarg). Word boxes are
-    the toolkit's native word results: CalRecBoxes places each word inside its
-    detected line quad from the recogniser's CTC column positions
-    (PaddleOCR-derived, rapidocr/cal_rec_boxes/main.py). They are word
-    granularity for Latin text (split on spaces and on CTC gaps > 5 columns),
-    per-character for CJK. Emitted as "words" only when every kept line got
-    word results; otherwise the page falls back to line boxes as
-    "text_regions" with geometry_granularity "line".
-
-Batching: one owner, a sequential loop over the files inside one container call
-(RapidOCR has no batch-of-images API; ONNX Runtime's intra-op threads do the
-parallel work). No prompt interface: a prompt/response_format yields an error
-item rather than being silently ignored.
-"""
+"""Modal app: RapidOCR (rapidocr 3.9.2, ONNX Runtime CPU). CPU-only container."""
 
 import modal
 

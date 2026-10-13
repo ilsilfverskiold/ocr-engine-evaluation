@@ -1,19 +1,11 @@
-"""Leg 5 — schema JSON, scored by code.
-
-A deterministic checklist is built from true_json + json_schema. The matcher
-compares field names and values, aligning array rows before checking cells.
-See kv_schema_code.py for normalization and matching rules. No LLM verdict
-is requested. Score = (correct + blank_ok) / sampled fields.
-"""
+"""Score supplied-schema field values and extra keys without model judging."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-
 
 
 @dataclass
@@ -99,26 +91,12 @@ def score_schema(
 
     from evaluation.schema_contract import schema_scoring_reference
     gt = schema_scoring_reference(gt)
-    document_stem = Path(gt.document_path).stem
 
-    # Code scoring (evaluation/kv_schema_code.py): the JSON answer parsed
-    # (truncated JSON salvaged as far as it goes), keys matched by path or
-    # its last segment, values matched exactly. No model.
     from evaluation.kv_schema_code import SCORER_VERSION, engine_pairs, score_fields
-    from evaluation.schema_judge import SchemaChecklistItem, build_schema_checklist, _display_value
     from evaluation.structured_metrics import is_blank, walk_fields
 
     reviewed = gt.metadata.get('structured_gold_reference')
     shared = reviewed is not None and reviewed.get('shared_field_selection') is True
-    if shared:
-        excluded = set(reviewed.get('excluded_fields', []))
-        items = [SchemaChecklistItem(f.path, _display_value(f.value), is_blank(f.value))
-                 for f in walk_fields(gt.true_json, gt.json_schema)
-                 if f.path and f.path not in excluded]
-    else:
-        items = build_schema_checklist(gt.true_json, gt.json_schema, document_stem,
-                                       use_cache=False, scalar_only=False,
-                                       excluded_paths=set(gt.metadata.get("structured_reference_repairs", {}).get("excluded_fields", [])))
     pairs, parsed_how = engine_pairs(engine, output_text or "", structured_output)
     if shared:
         from evaluation.shared_fields import VERSION, schema_compliance, score_shared
@@ -135,6 +113,12 @@ def score_schema(
             parsed_how=parsed_how, scorer=VERSION, verdicts=res.verdicts,
             reference_repairs=gt.metadata.get("structured_reference_repairs", {}),
         )
+    excluded = set(gt.metadata.get("structured_reference_repairs", {}).get("excluded_fields", []))
+    items = [SchemaField(f.path, "" if is_blank(f.value) else str(f.value).strip(), is_blank(f.value))
+             for f in walk_fields(gt.true_json, gt.json_schema) if f.path and f.path not in excluded]
+    if len(items) > 80:
+        step = len(items) / 80
+        items = [items[int(i * step)] for i in range(80)]
     res = score_fields(items, pairs, "schema", None)
     return SchemaScore(
         applicable=True,
@@ -149,7 +133,14 @@ def score_schema(
         engine_pairs=res.pairs,
         parsed_how=parsed_how,
         cleanup_log=res.cleanup_log,
-        scorer=SCORER_VERSION + '+shared-reference-v1' if shared else SCORER_VERSION,
+        scorer=SCORER_VERSION,
         reference_repairs=gt.metadata.get("structured_reference_repairs", {}),
         verdicts=res.verdicts,
     )
+
+
+@dataclass
+class SchemaField:
+    path: str
+    value: str
+    is_blank: bool = False
