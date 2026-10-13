@@ -101,8 +101,10 @@ for r in rows:
    item['method']+=' Repeated column groups can reflow under matching headers with unique row anchors.'
    if e=='llamaparse' and Path(d).stem=='bank_000':
     item['case_note']='Source-image review: the returned Account Transfers Out row contains the opening balances, and ETF numeric values shift onto the following funds. Consultant/address/preference text is omitted. Daily Date/Amount pairs may legitimately reflow into a narrow table; this score now accepts that layout while checking each date’s own amount. Three cached reference typos were corrected against the image and accepted gold.'
- if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')in ('gold-table-values-v3-items', 'gold-table-values-v4-sections'):
+ if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')in ('gold-table-values-v3-items', 'gold-table-values-v4-sections', 'gold-table-values-v5-record-layout'):
   item['method']='Reference value credit / reference cells: exact normalized values earn 1, partial text earns its similarity (at least 0.5), wrong numeric values earn 0. Match label-associated logical items across adjacent rows and ordered, disjoint cell spans. New item labels stop a group; values cannot move between items or columns. Header-confirmed column changes, transpose, repeated groups and logical sections across physical tables are normalized. Blank components of a combined field can be established by headers or spans. Extras do not lower this headline; strict F1 and extra counts remain diagnostics.'
+  if r['metrics']['scorer']=='gold-table-values-v5-record-layout':
+   item['method']+=' Spanning and multi-tier headers identify split fields. Descriptions and record IDs identify label/value records even with repeated IDs or multiple records on one printed row; expected amounts do not select the record.'
  if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')=='gold-table-values-v2':
   item['method']='Saved v2 reference value credit: physical cell alignment with column/reflow normalization; partial text credit; extras reported separately. This saved score predates logical item grouping.'
  if r['leg']=='geometry':

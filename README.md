@@ -5,7 +5,7 @@ schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
-Saved run: **`20261013T112225Z`**. Rankings use the saved outputs and current scoring rules.
+Saved run: **`20261013T114938Z`**. Rankings use the saved outputs and current scoring rules.
 Each leg is sorted by overall score, highest first. Overall means give each
 document family equal weight. **Easy/medium/hard are difficulty tiers.** “Pages”
 counts successful scores; errors are listed separately. **—** means no score,
@@ -13,7 +13,7 @@ not zero. CER (character error rate) and WER (word error rate) are better when
 lower; values can exceed 1.
 
 The “Without low” column appears where the common low-scoring-page exclusion
-changes results: `tax_001` for tables and `chart_003` for KV. These are sensitivity
+changes results: `chart_003` for KV. These are sensitivity
 checks, not replacement rankings. [Scoring rules](docs/scoring-design.md).
 
 ### Text accuracy
@@ -86,20 +86,20 @@ Extras are separate diagnostics. Shipping uses the better whole-page gold/origin
 reference score for every engine. Sonnet and Gemini use separate table-extraction
 calls.
 
-| Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages | Strict F1 ↑ |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `claude_sonnet_4_6` | 0.8539 | 0.8578 | 0.9325 | 0.8072 | 0.9156 | 42 | 0.7132 |
-| `gemini_flash` | 0.8225 | 0.8299 | 0.8637 | 0.8542 | 0.6865 | 42 | 0.7198 |
-| `textract_structured` | 0.7896 | 0.7872 | 0.7883 | 0.8064 | 0.7409 | 42 | 0.5729 |
-| `qwen3_vl` | 0.7368 | 0.7420 | 0.7459 | 0.8036 | 0.5273 | 42 | 0.6261 |
-| `mistral_ocr_4` | 0.7301 | 0.7324 | 0.7309 | 0.6718 | 0.9042 | 42 | 0.5886 |
-| `paddleocr_vl` | 0.7204 | 0.7205 | 0.6781 | 0.7120 | 0.7879 | 42 | 0.5950 |
-| `llamaparse` | 0.6449 | 0.6503 | 0.7793 | 0.6936 | 0.3643 | 42 | 0.5480 |
-| `mineru` | 0.6304 | 0.6300 | 0.6107 | 0.6080 | 0.7175 | 42 | 0.5345 |
-| `glm_ocr` | 0.6288 | 0.6283 | 0.6416 | 0.6264 | 0.6232 | 42 | 0.5563 |
-| `deepseek_ocr` | 0.6118 | 0.6139 | 0.7792 | 0.5847 | 0.5256 | 42 | 0.5288 |
-| `docling` | 0.5472 | 0.5472 | 0.5251 | 0.5798 | 0.4713 | 42 | 0.4967 |
-| `marker` | 0.5401 | 0.5396 | 0.5276 | 0.5098 | 0.6436 | 42 | 0.3719 |
+| Engine | Overall ↑ | Easy | Medium | Hard | Pages | Strict F1 ↑ |
+| --- | --- | --- | --- | --- | --- | --- |
+| `claude_sonnet_4_6` | 0.8789 | 0.9325 | 0.8488 | 0.9156 | 42 | 0.7132 |
+| `textract_structured` | 0.8627 | 0.7933 | 0.9184 | 0.7649 | 42 | 0.5729 |
+| `gemini_flash` | 0.8473 | 0.8637 | 0.8836 | 0.7219 | 42 | 0.7198 |
+| `qwen3_vl` | 0.7529 | 0.7391 | 0.8209 | 0.5627 | 42 | 0.6261 |
+| `mistral_ocr_4` | 0.7445 | 0.7500 | 0.6777 | 0.9396 | 42 | 0.5886 |
+| `paddleocr_vl` | 0.7285 | 0.6854 | 0.7120 | 0.8213 | 42 | 0.5950 |
+| `mineru` | 0.6509 | 0.6107 | 0.6314 | 0.7498 | 42 | 0.5323 |
+| `llamaparse` | 0.6462 | 0.7793 | 0.6954 | 0.3654 | 42 | 0.5480 |
+| `glm_ocr` | 0.6359 | 0.6416 | 0.6264 | 0.6586 | 42 | 0.5563 |
+| `deepseek_ocr` | 0.6247 | 0.7792 | 0.5945 | 0.5611 | 42 | 0.5288 |
+| `docling` | 0.5518 | 0.5251 | 0.5803 | 0.4932 | 42 | 0.4967 |
+| `marker` | 0.5474 | 0.5276 | 0.5108 | 0.6769 | 42 | 0.3719 |
 
 ### Key/value extraction
 

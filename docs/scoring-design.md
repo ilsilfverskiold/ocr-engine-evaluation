@@ -1,6 +1,6 @@
 # Scoring design
 
-Rules implemented by the scorers and used in published run `20261013T112225Z`,
+Rules implemented by the scorers and used in published run `20261013T114938Z`,
 checked October 13, 2026. [Results and commands](../README.md) ·
 [Engine versions and pricing](engines-and-pricing.md).
 
@@ -15,7 +15,7 @@ structure and credit it to the OCR engine.
 | --- | --- | --- |
 | Text | Unique reference-token coverage | `evaluation/text_leg.py` |
 | Markdown | `(correct + 0.5 × partial) / elements` | `markdown-structure-v3-spans-reflow` |
-| Tables | Value credit / reference logical cells | `gold-table-values-v4-sections` |
+| Tables | Value credit / reference logical cells | `gold-table-values-v5-record-layout` |
 | Key/value | `(correct + blank_ok) / selected fields` | `shared-fields-v8-identifiers-native-checkboxes` |
 | Schema | `(correct + blank_ok) / (selected fields + extra fields)` | `shared-fields-v1` |
 | Geometry | Located reference units / reference units | `geometry-v8` |
@@ -127,13 +127,18 @@ once. It does not require identical physical grids:
 
 - Unique descriptions can anchor adjacent continuation rows. Another item,
   subtotal, conflicting label or completion of the record ends the group.
-- Unique headers allow added, missing or reordered columns. Complete combined
-  headers or `colspan` can establish combined columns; merged values partition
-  into ordered, disjoint spans. Values cannot be borrowed from another item.
-- Unique descriptive labels or ISO dates identify rows; otherwise positions govern.
+- Unique headers, including multi-tier and spanning headers, identify added,
+  missing, reordered or split columns. Merged values partition into ordered,
+  disjoint spans. Repeated ambiguous headers cannot donate a distant column.
+- Descriptions, record IDs and ISO dates identify records. A label/value record
+  may share a printed row with another record, or repeat its ID before the amount.
+  Expected amounts never select the record. Multiple independent value fields
+  still need column evidence; unresolved layouts retain positional comparison.
 - Repeated header groups can reflow. Repeated header/unit bands define sections;
   unique row labels can locate section boundaries when returned headers are absent.
   Units preserve column order and can establish a Notes column combined into a label.
+  Indented slots under one spanning unit header can map to a combined field;
+  its empty components retain blank credit without inventing a missing record.
 - Matching sections can cross table boundaries. Identical-header chunks may join;
   repeated data rows remain extras. Transposition requires header evidence.
 

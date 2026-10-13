@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v4-sections"
+VERSION = "gold-table-values-v5-record-layout"
 
 
 def normalize_cell(text: str) -> str:
@@ -420,7 +420,7 @@ def _anchor_strength(expected, returned):
     return sim if sim >= .75 else 0.0
 
 
-def _item_rows(ref, pred, columns):
+def _item_rows(ref, pred, columns, column_groups=None):
     """Disjoint adjacent row groups, bounded by item labels and new labels.
 
     Reference labels establish identity. Empty label cells and fragments of the
@@ -442,7 +442,7 @@ def _item_rows(ref, pred, columns):
     groups = {r: [p] for r, p in fallback.items()}
     def identifier(c):
         return bool(re.search(r"[^\W\d_]", c.normalized) or
-                    (c.col == 0 and re.fullmatch(r"\d{4,}", c.normalized)))
+                    (c.col == 0 and re.fullmatch(r"\d{4,}|\d{4}-\d{2}-\d{2}", c.normalized)))
     # Prefer a stable left-hand record key over long, repeated fee descriptions.
     label_col = max(range(ref.cols), key=lambda col: (
         len({c.normalized for c in ref.cells if c.row > 0 and c.col == col and identifier(c)}),
@@ -451,7 +451,10 @@ def _item_rows(ref, pred, columns):
         return groups
     labels = {c.row: c.normalized for c in ref.cells if c.col == label_col and identifier(c)}
     counts = Counter(labels.values())
-    plabels = {c.row: c.normalized for c in pred.cells if c.col == columns[label_col]}
+    label_columns = (column_groups or {}).get(label_col, [columns[label_col]])
+    plabels = {row: ' '.join(c.normalized for c in sorted(pred.cells, key=lambda c: c.col)
+                           if c.row == row and c.col in label_columns and c.normalized)
+               for row in range(pred.rows)}
     candidates = {}
     for pr, label in plabels.items():
         ranked = sorted(((max(_anchor_strength(text, label),
@@ -550,6 +553,64 @@ def _column_groups(ref, pred):
             elif b[0].col == 1:
                 columns.update({i: 0 for i in range(1, a[0].col)})
     groups = {r: [p] for r, p in columns.items()}
+    if len(ru) == len(pu) == 1:
+        a, b = next(iter(ru.values())), next(iter(pu.values()))
+        if [c.normalized for c in a] == [c.normalized for c in b]:
+            for i, (rc, pc) in enumerate(zip(a, b)):
+                # Indented amounts under one spanning unit/year header can
+                # occupy different physical columns without being new fields.
+                if rc.colspan != pc.colspan:
+                    end = b[i + 1].col if i + 1 < len(b) else pred.cols
+                    for col in range(rc.col, rc.col + rc.colspan):
+                        groups[col] = list(range(pc.col, end))
+    # A header is a physical cell, not its ordinal in a flattened first row.
+    # Row/column spans and a second header tier must retain their coordinates.
+    head = _header(pred)
+    if any(label and head.count(label) > 1 for label in head):
+        return groups  # unresolved repeated groups cannot donate a distant column
+    rh_cells, ph_cells = _header_cells(ref), _header_cells(pred)
+    label_links = {}
+    for col in range(ref.cols):
+        labels = [c.normalized for c in ref.cells if c.row > 0 and c.col == col
+                  and len(c.normalized) >= 4 and re.search(r"[a-z]{2}", c.normalized)]
+        counts = Counter(labels)
+        votes = Counter(p.col for label in labels if counts[label] == 1
+                        for p in pred.cells if p.row > 0 and p.normalized == label)
+        best = votes.most_common(2)
+        if best and best[0][1] >= 2 and (len(best) == 1 or best[0][1] > best[1][1] * 2):
+            label_links[col] = best[0][0]
+    for rc in rh_cells:
+        choices = []
+        for row in sorted({c.row for c in ph_cells}):
+            band = sorted((c for c in ph_cells if c.row == row), key=lambda c: c.col)
+            for a in range(len(band)):
+                for b in range(a + 1, min(len(band), a + 4) + 1):
+                    part = band[a:b]
+                    if not all(c.normalized for c in part):
+                        continue
+                    strength = _similarity(rc.normalized, ' '.join(c.normalized for c in part))
+                    if strength >= .8:
+                        choices.append((strength, part))
+        choices.sort(key=lambda x: x[0], reverse=True)
+        if (not rc.normalized or not choices or choices[0][0] < .95
+                or (len(choices) > 1 and choices[0][0] - choices[1][0] < .08)):
+            continue
+        part = choices[0][1]
+        pc = sorted({col for c in part for col in range(c.col, c.col + c.colspan)})
+        rcols = list(range(rc.col, rc.col + rc.colspan))
+        if len(pc) == pred.cols or len(rcols) == ref.cols:
+            # A section title spanning the table is not a combined field.
+            continue
+        pc = [col for col in pc if not any(r not in rcols and p == col for r, p in label_links.items())]
+        if not pc:
+            continue
+        # A parent heading cannot replace a separately named child column.
+        if any(c.row > rc.row and c.col in rcols and c.normalized for c in rh_cells):
+            continue
+        if len(rcols) == len(pc):
+            groups.update({a: [b] for a, b in zip(rcols, pc)})
+        else:
+            groups.update({a: pc for a in rcols})
     rh, ph = _header(ref), _header(pred)
     if len(rh) != ref.cols or len(ph) != pred.cols:
         return groups
@@ -571,6 +632,102 @@ def _column_groups(ref, pred):
             a, b = matches[0]
             groups[ri] = list(range(a, b))
     return groups
+
+
+def _header_cells(table):
+    depth = max((c.rowspan for c in table.cells if c.row == 0), default=1)
+    return [c for c in table.cells if c.row < depth]
+
+
+def _source_candidate(pred, cells):
+    pieces, sources = [], []
+    for c in sorted(cells, key=lambda c: (c.row, c.col)):
+        pieces.append(c.normalized)
+        sources.extend({"table": ti, **asdict(original), "start": 0,
+                        "end": len(c.normalized), "matched_text": c.normalized}
+                       for ti, original in pred.origins[(c.row, c.col)])
+    return ' '.join(p for p in pieces if p), sources
+
+
+def _record_candidates(ref, pred):
+    """Locate descriptive records before aligning their fields in reading order.
+
+    Labels and optional record IDs choose a record, never its expected amounts.
+    Repeated IDs may surround a description. A second description on the same
+    physical row starts a separate record. Ambiguous labels stay unresolved.
+    """
+    if _unit_rows(ref):
+        return {}, set()
+    by_row = {r: sorted((c for c in ref.cells if c.row == r), key=lambda c: c.col)
+              for r in range(ref.rows)}
+    # Apply to label/value records, not competing independent named columns.
+    label_columns = Counter(c.col for c in ref.cells if len(c.normalized) >= 8
+                            and re.search(r"[a-z]{3}", c.normalized))
+    if not label_columns:
+        return {}, set()
+    label_col = label_columns.most_common(1)[0][0]
+    labels = {r: next((c for c in cs if c.col == label_col), None) for r, cs in by_row.items()}
+    labels = {r: c for r, c in labels.items() if c and len(c.normalized) >= 4
+              and re.search(r"[a-z]{2}", c.normalized)}
+    proposals = {}
+    for rr, label in labels.items():
+        before = [c for c in by_row[rr] if c.col < label_col and c.normalized]
+        # A short preceding code is an identifier; amounts never establish identity.
+        key = before[0].normalized if len(before) == 1 and re.fullmatch(r"[\w.-]{1,16}", before[0].normalized) else None
+        choices = []
+        for pc in pred.cells:
+            strength = _anchor_strength(label.normalized, pc.normalized)
+            # A printed line/record code can be attached to the description.
+            clean = re.sub(r"^\(?[a-z0-9]{1,3}\)?[.:]?\s+", '', pc.normalized)
+            strength = max(strength, _anchor_strength(label.normalized, clean))
+            if strength < .8:
+                continue
+            same_row = [c for c in pred.cells if c.row == pc.row]
+            key_hit = key and any(c.normalized == key and abs(c.col - pc.col) <= pc.colspan + 1 for c in same_row)
+            choices.append((strength + (.2 if key_hit else 0), pc, key))
+        choices.sort(key=lambda x: x[0], reverse=True)
+        if choices and (len(choices) == 1 or choices[0][0] - choices[1][0] >= .12):
+            proposals[rr] = choices[0]
+    # Two reference records may not nominate the same descriptive cell.
+    owners = Counter((p.row, p.col) for _, p, _ in proposals.values())
+    proposals = {r: v for r, v in proposals.items() if owners[(v[1].row, v[1].col)] == 1}
+    if len(proposals) < 2:
+        return {}, set()
+    result = {}
+    for rr, (_, label, key) in proposals.items():
+        rcs = by_row[rr]
+        after = [c for c in rcs if c.col > label_col]
+        # Multiple independent values need column-header evidence; do not
+        # infer their meaning merely because their count happens to agree.
+        if len(after) != 1:
+            continue
+        # Bound a record at the next recognized label, including its preceding ID.
+        following = [p for _, p, _ in proposals.values() if p.row == label.row and p.col > label.col]
+        end = min((p.col for p in following), default=pred.cols)
+        pcs = sorted((c for c in pred.cells if c.row == label.row and label.col < c.col < end), key=lambda c: c.col)
+        if following and pcs and re.fullmatch(r"[a-z0-9]{1,3}", pcs[-1].normalized):
+            # Only discard a trailing code if it belongs to the following record.
+            next_keys = {k for _, p, k in proposals.values() if p.row == label.row and p.col == end}
+            if pcs[-1].normalized in next_keys:
+                pcs.pop()
+        ids = [c for c in pred.cells if c.row == label.row and c.normalized == key
+               and label.col - 1 <= c.col < end] if key else []
+        pcs = [c for c in pcs if c not in ids]
+        # No best-value search: fields retain order and must have equal arity.
+        if len(after) != len(pcs) or not after:
+            continue
+        # Named column headings take precedence over this headerless-record route.
+        headers = _header_cells(ref)
+        if any(c.col > label_col and c.normalized and c.colspan == 1
+                          and any(p.normalized == c.normalized for p in _header_cells(pred))
+                          for c in headers):
+            continue
+        result[(rr, label_col)] = _source_candidate(pred, [label])
+        for rc, pc in zip(after, pcs):
+            result[(rr, rc.col)] = _source_candidate(pred, [pc])
+        if key and ids:
+            result[(rr, rcs[0].col)] = _source_candidate(pred, [min(ids, key=lambda c: abs(c.col-label.col))])
+    return result, {r for r, _ in result}
 
 
 def _partition_values(expected, text):
@@ -612,7 +769,7 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
         pt = table_map.get(rt)
         pred = preds[pt] if pt is not None else None
         columns = _column_groups(ref, pred) if pred else {}
-        rows = _item_rows(ref, pred, {k: v[0] for k, v in columns.items()}) if pred else {}
+        rows = _item_rows(ref, pred, {k: v[0] for k, v in columns.items()}, columns) if pred else {}
         if pred:
             rdates = {c.text: c.row for c in ref.cells if c.col == 0 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", c.text)}
             pdates = [(c.text, c.row) for c in pred.cells if c.col in columns.get(0, [])]
@@ -668,7 +825,7 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                     for ti, original in pred.origins[(output.row, output.col)]:
                         sources.append({"table": ti, **asdict(original), "start": lo-left,
                                         "end": hi-left, "matched_text": output.normalized[lo-left:hi-left]})
-                if start == end and len(cells) > 1 and len(matches) == 1 and not cell.normalized:
+                if start == end and len(cells) > 1 and matches and not cell.normalized:
                     # A header/span-confirmed combined field has an empty
                     # component. This is structural evidence, not free padding.
                     sources = [{"table": ti, **asdict(original), "start": start,
@@ -679,7 +836,30 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                                 "matched_text": ""} for output in matches
                                for ti, original in pred.origins[(output.row, output.col)]]
                 candidates[(cell.row, cell.col)] = (joined[start:end], sources)
-        for cell in ref.cells:
+        record_candidates, record_rows = _record_candidates(ref, pred) if pred else ({}, set())
+        candidates.update(record_candidates)
+        header_candidates = set()
+        if pred:
+            # Flattened multi-tier headers still carry the same field labels.
+            for rc in _header_cells(ref):
+                if not rc.normalized:
+                    continue
+                hits = [pc for pc in _header_cells(pred) if pc.normalized == rc.normalized]
+                if len(hits) == 1 and (rc.row > 0 or rc.rowspan > 1):
+                    candidates[(rc.row, rc.col)] = _source_candidate(pred, hits)
+                    header_candidates.add((rc.row, rc.col))
+        if record_rows and 0 not in record_rows:
+            # A synthesized reference header is not the first returned record.
+            header = [c for c in ref.cells if c.row == 0 and c.normalized]
+            if header and all(re.search(r"[a-z]", c.normalized) and _num(c.normalized) is None for c in header):
+                for c in header:
+                    if (_value_credit(c.text, candidates.get((c.row, c.col), ('', []))[0]) == 0
+                            and not any(_similarity(c.normalized, p.normalized) >= .8 for p in _header_cells(pred))):
+                        candidates.pop((c.row, c.col), None)
+        # Reserve label-established records before uncertain positional matches.
+        ordered = sorted(ref.cells, key=lambda c: (
+            (c.row, c.col) not in record_candidates and (c.row, c.col) not in header_candidates, c.row, c.col))
+        for cell in ordered:
             text, sources = candidates.get((cell.row, cell.col), ('', []))
             collision = any(any((a < src['end'] and src['start'] < b) or
                                 (a == b == src['start'] == src['end'] == 0)
@@ -704,7 +884,9 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                 "reference_components": [{"table": ti, **asdict(c)} for ti, c in rs],
                 "output_components": sources, "output_rows": rows.get(cell.row, []),
                 "credit": value, "verdict": "correct" if value == 1 else "partial" if value else "wrong" if sources else "missing",
-                "how": "label-associated item rows and columns; ordered, non-overlapping content spans"})
+                "how": ("description/record-ID anchored fields in source order" if (cell.row, cell.col) in record_candidates
+                        else "header-associated item rows and columns; ordered, non-overlapping content spans")})
+    verdicts.sort(key=lambda v: (v['reference_table'], v['reference']['row'], v['reference']['col']))
     extra = []
     for ti, table in enumerate(predicted):
         for cell in table.cells:
