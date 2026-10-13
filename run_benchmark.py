@@ -2267,9 +2267,8 @@ def main() -> None:
         startup = float(metadata.get("startup_gpu_seconds") or 0.0)
         latency = float(result.latency_seconds)
         cost = float(result.cost_per_page)
-        if is_batch:
-            # The batch timer starts after model load, so the measured interval
-            # is already steady state.
+        if is_batch or metadata.get("startup_excluded"):
+            # The processing timer already excludes model startup.
             steady_latency, steady_cost = latency, cost
         else:
             steady_latency = max(latency - startup, 0.0)

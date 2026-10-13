@@ -87,6 +87,7 @@ class ModalRunner(OCRRunner):
                 "gpu_seconds": gpu_seconds,
                 "startup_gpu_seconds": response.get("startup_gpu_seconds", 0.0),
                 "is_cold_start": response.get("is_cold_start", False),
+                "startup_excluded": True,
             },
             # The app's whole reply. raw_text/structured_output are the two keys
             # we read; an app that also returns a finish reason, a per-page
