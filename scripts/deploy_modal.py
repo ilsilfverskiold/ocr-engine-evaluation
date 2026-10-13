@@ -1,11 +1,4 @@
-"""
-Deploy all 6 Modal OCR apps, then run a smoke test on each.
-
-First deploy: ~5 min per model (~30 min total) — Docker images built in Modal's cloud.
-Re-deploy: ~30 seconds per model (images cached).
-
-Run setup_modal.py first if you haven't already.
-"""
+"""Deploy selected benchmark Modal apps and optionally run smoke tests."""
 
 from __future__ import annotations
 

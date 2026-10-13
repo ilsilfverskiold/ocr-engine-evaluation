@@ -276,17 +276,11 @@ immutable version. Exact prompts, task options and responses are in
 | `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
 | `mistral_ocr_4` | `mistral-ocr-latest` conversion; `mistral-ocr-4-0` schema | Mistral OCR/Annotations API |
 | `paddleocr_ppocrv5` | PP-OCRv5 server det `ca867c89` / rec `b26c3587`; PaddleOCR `3.7.0`; Paddle GPU `3.2.1` | Modal A10; geometry only |
-| `paddleocr_vl` | `PaddleOCR-VL@7fa00a8c55b7`, pipeline v1 | Layout + vLLM recognition, Modal A100-80GB; not VL 1.6 |
+| `paddleocr_vl` | `PaddleOCR-VL@7fa00a8c55b7`, pipeline v1 | Layout + vLLM recognition, Modal A100-80GB |
 | `qwen3_vl` | `Qwen/Qwen3-VL-8B-Instruct` | vLLM, Modal A100-80GB |
 | `tesseract` | `5.5.2` | Local CPU |
 | `textract_structured` | `aws-textract-analyze-document` | AWS FORMS/TABLES; no supplied-schema interface |
 | `textract_text` | `aws-textract-detect-document-text` | AWS text/word detection |
-
-**Available but unmeasured:** TeleOCR, RapidOCR, OvisOCR2, PaddleOCR-VL 1.6,
-DeepSeek-OCR-2, Surya OCR 2, MinerU 4 Standard, Mistral OCR 4.1, Google Document
-OCR, Mathpix, OpenDoc, LightOnOCR 2, Apple Vision, Chandra OCR 2, dots.mocr and
-Datalab. Their IDs, model pins, task routes, initial GPU choices and unresolved
-runtime checks are in [the engine guide](docs/engine-integrations.md).
 
 **Comparison limits:** historical default table/Markdown prompts vary; the saved
 Markdown coverage was completed with dedicated calls where needed. Sonnet's 17
@@ -329,24 +323,23 @@ python run_benchmark.py --engines tesseract,docling --tiers easy --legs text,tab
 python run_benchmark.py --engines claude_sonnet_4_6,gemini_flash --docs invoice_000 --legs schema --dry-run
 
 # Collect outputs first; evaluate them separately.
-python run_benchmark.py --engines rapidocr --collect-only
+python run_benchmark.py --engines glm_ocr --collect-only
 python run_benchmark.py --score RUN_TIMESTAMP --skip-judge
 ```
 
-Use comma-separated engine IDs from `engines.py` or the engine guide. Available
+Use comma-separated engine IDs from the [engine registry](engines.py). Available
 legs: `text,markdown,tables,key_value,schema,geometry`. Omitted engine/leg flags
-use the registry defaults. Tesseract needs its system binary; Apple Vision needs
-macOS. Cloud engines use the credentials listed in `.env.example`.
+use the registry defaults. Tesseract needs its system binary. Cloud engines use
+the credentials listed in `.env.example`.
 
 For a Modal engine, deploy its app before running it:
 
 ```bash
 modal setup
 python scripts/setup_modal.py
-python scripts/deploy_modal.py --apps rapidocr --skip-smoke
+python scripts/deploy_modal.py --apps glm_ocr --skip-smoke
 ```
 
 Deployments and smoke inference can incur charges. `--skip-smoke` skips inference,
-not the build. For engine configuration and GPU requirements, use
-[the engine guide](docs/engine-integrations.md); for scoring details, use
-[the scoring design](docs/scoring-design.md).
+not the build. GPU configurations are listed above; deployment settings are in
+`modal_apps/`. See [the scoring design](docs/scoring-design.md) for evaluation rules.
