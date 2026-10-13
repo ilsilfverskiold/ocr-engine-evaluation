@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v5-record-layout"
+VERSION = "gold-table-values-v6-continuations"
 
 
 def normalize_cell(text: str) -> str:
@@ -420,6 +420,18 @@ def _anchor_strength(expected, returned):
     return sim if sim >= .75 else 0.0
 
 
+def _preceding_item_code(ref, pred, label, row, columns):
+    hits = [c for c in pred.cells if c.row == row and c.col in columns
+            and re.fullmatch(r"\d{3,}", c.normalized)
+            and label.startswith(c.normalized + ' ')]
+    if len(hits) != 1:
+        return None
+    code = hits[0]
+    owners = [c for c in ref.cells if c.normalized.startswith(code.normalized + ' ')]
+    occurrences = [c for c in pred.cells if c.col in columns and c.normalized == code.normalized]
+    return code if len(owners) == len(occurrences) == 1 else None
+
+
 def _item_rows(ref, pred, columns, column_groups=None):
     """Disjoint adjacent row groups, bounded by item labels and new labels.
 
@@ -484,10 +496,8 @@ def _item_rows(ref, pred, columns, column_groups=None):
             continue
         rows = [start]
         # A printed item code may precede its description on the row above.
-        previous = plabels.get(start - 1, '')
         if (start - 1 not in occupied and start - 1 not in starts.values()
-                and re.fullmatch(r"\d{3,}", previous)
-                and labels[rr].startswith(previous + ' ')):
+                and _preceding_item_code(ref, pred, labels[rr], start - 1, label_columns)):
             rows.insert(0, start - 1)
         for pr in range(start + 1, pred.rows):
             if pr == header_row or not any(c.normalized for c in pred.cells if c.row == pr):
@@ -614,6 +624,19 @@ def _column_groups(ref, pred):
     rh, ph = _header(ref), _header(pred)
     if len(rh) != ref.cols or len(ph) != pred.cols:
         return groups
+    # A dedicated blank label column can be folded into the next column:
+    # ['', Rate, Amount] / [Total, '', 10] -> [Rate, Amount] / [Total, 10].
+    # All named headers and mutually exclusive body slots must confirm it.
+    if (ref.cols == pred.cols + 1 and len(rh) >= 3 and not rh[0]
+            and all(rh[1:]) and len(set(rh[1:])) == len(rh[1:])
+            and set(rh[1:]) == set(ph)):
+        leading = {(c.row, c.col): c for c in ref.cells if c.col < 2}
+        if all(not leading.get((r, 0), Cell(r, 0, '')).normalized
+               or (re.search(r"[^\W\d_]", leading[(r, 0)].normalized)
+                   and not leading.get((r, 1), Cell(r, 1, '')).normalized)
+               for r in range(1, ref.rows)):
+            groups = {0: [ph.index(rh[1])],
+                      **{c: [ph.index(rh[c])] for c in range(1, ref.cols)}}
     for pi, label in enumerate(ph):
         if not label:
             continue
@@ -795,6 +818,31 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                                and (not label_span(c) or not cell.normalized))
                                for col in columns.get(cell.col, []))] if pred else []
             matches.sort(key=lambda c: (c.row, c.col))
+            item_rows = rows.get(cell.row, [])
+            if pred and len(item_rows) > 1:
+                code = _preceding_item_code(ref, pred, cell.normalized, item_rows[0], columns.get(cell.col, []))
+                if code:
+                    matches = [c for c in matches if c.row != code.row or c == code]
+            # A row label may occupy either of two otherwise empty adjacent
+            # slots. Require the exact label and an actual empty counterpart.
+            if pred and cell.row > 0 and len(item_rows) == 1:
+                band = [c for c in ref.cells if c.row == cell.row]
+                for label in band:
+                    if label.colspan != 1 or not re.search(r"[^\W\d_]", label.normalized):
+                        continue
+                    for blank in band:
+                        if blank.normalized or blank.colspan != 1 or abs(blank.col - label.col) != 1:
+                            continue
+                        if cell not in (label, blank):
+                            continue
+                        lc, bc = columns.get(label.col, []), columns.get(blank.col, [])
+                        if len(lc) != 1 or len(bc) != 1 or lc == bc:
+                            continue
+                        pair = [c for c in pred.cells if c.row == item_rows[0] and c.col in lc + bc]
+                        if (len(pair) == 2 and all(c.colspan == 1 for c in pair)
+                                and any(c.col == bc[0] and c.normalized == label.normalized for c in pair)
+                                and any(c.col == lc[0] and not c.normalized for c in pair)):
+                            matches = sorted(pair, key=lambda c: c.col)
             signature = (cell.row, tuple((c.row, c.col) for c in matches))
             bundles.setdefault(signature, ([], matches))[0].append(cell)
         candidates = {}

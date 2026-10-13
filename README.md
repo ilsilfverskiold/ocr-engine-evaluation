@@ -5,7 +5,7 @@ schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
-Saved run: **`20261013T114938Z`**. Rankings use the saved outputs and current scoring rules.
+Saved run: **`20261013T154858Z`**. Rankings use the saved outputs and current scoring rules.
 Each leg is sorted by overall score, highest first. Overall means give each
 document family equal weight. **Easy/medium/hard are difficulty tiers.** “Pages”
 counts successful scores; errors are listed separately. **—** means no score,
@@ -88,18 +88,18 @@ calls.
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | Strict F1 ↑ |
 | --- | --- | --- | --- | --- | --- | --- |
-| `claude_sonnet_4_6` | 0.8789 | 0.9325 | 0.8488 | 0.9156 | 42 | 0.7132 |
-| `textract_structured` | 0.8627 | 0.7933 | 0.9184 | 0.7649 | 42 | 0.5729 |
-| `gemini_flash` | 0.8473 | 0.8637 | 0.8836 | 0.7219 | 42 | 0.7198 |
-| `qwen3_vl` | 0.7529 | 0.7391 | 0.8209 | 0.5627 | 42 | 0.6261 |
-| `mistral_ocr_4` | 0.7445 | 0.7500 | 0.6777 | 0.9396 | 42 | 0.5886 |
-| `paddleocr_vl` | 0.7285 | 0.6854 | 0.7120 | 0.8213 | 42 | 0.5950 |
+| `claude_sonnet_4_6` | 0.8810 | 0.9432 | 0.8488 | 0.9156 | 42 | 0.7132 |
+| `textract_structured` | 0.8801 | 0.8802 | 0.9184 | 0.7649 | 42 | 0.5729 |
+| `gemini_flash` | 0.8558 | 0.9064 | 0.8836 | 0.7219 | 42 | 0.7198 |
+| `qwen3_vl` | 0.7631 | 0.7901 | 0.8209 | 0.5627 | 42 | 0.6261 |
+| `mistral_ocr_4` | 0.7469 | 0.7617 | 0.6777 | 0.9396 | 42 | 0.5886 |
+| `paddleocr_vl` | 0.7295 | 0.6902 | 0.7120 | 0.8213 | 42 | 0.5950 |
+| `llamaparse` | 0.6519 | 0.8082 | 0.6954 | 0.3654 | 42 | 0.5480 |
 | `mineru` | 0.6509 | 0.6107 | 0.6314 | 0.7498 | 42 | 0.5323 |
-| `llamaparse` | 0.6462 | 0.7793 | 0.6954 | 0.3654 | 42 | 0.5480 |
 | `glm_ocr` | 0.6359 | 0.6416 | 0.6264 | 0.6586 | 42 | 0.5563 |
-| `deepseek_ocr` | 0.6247 | 0.7792 | 0.5945 | 0.5611 | 42 | 0.5288 |
-| `docling` | 0.5518 | 0.5251 | 0.5803 | 0.4932 | 42 | 0.4967 |
-| `marker` | 0.5474 | 0.5276 | 0.5108 | 0.6769 | 42 | 0.3719 |
+| `deepseek_ocr` | 0.6290 | 0.7964 | 0.5958 | 0.5611 | 42 | 0.5288 |
+| `docling` | 0.5604 | 0.5679 | 0.5803 | 0.4932 | 42 | 0.4967 |
+| `marker` | 0.5545 | 0.5634 | 0.5108 | 0.6769 | 42 | 0.3719 |
 
 ### Key/value extraction
 

@@ -1,6 +1,6 @@
 # Scoring design
 
-Rules implemented by the scorers and used in published run `20261013T114938Z`,
+Rules implemented by the scorers and used in published run `20261013T154858Z`,
 checked October 13, 2026. [Results and commands](../README.md) ·
 [Engine versions and pricing](engines-and-pricing.md).
 
@@ -15,7 +15,7 @@ structure and credit it to the OCR engine.
 | --- | --- | --- |
 | Text | Unique reference-token coverage | `evaluation/text_leg.py` |
 | Markdown | `(correct + 0.5 × partial) / elements` | `markdown-structure-v3-spans-reflow` |
-| Tables | Value credit / reference logical cells | `gold-table-values-v5-record-layout` |
+| Tables | Value credit / reference logical cells | `gold-table-values-v6-continuations` |
 | Key/value | `(correct + blank_ok) / selected fields` | `shared-fields-v8-identifiers-native-checkboxes` |
 | Schema | `(correct + blank_ok) / (selected fields + extra fields)` | `shared-fields-v1` |
 | Geometry | Located reference units / reference units | `geometry-v8` |
@@ -117,7 +117,7 @@ parser padding does not.
 
 Currency formatting may differ. Signs, percentage units and leading-zero
 identifiers remain significant. A blank needs a returned blank or an empty
-component established by a combined header/column span. A missing row cannot earn
+component established by headers and a combined column layout. A missing row cannot earn
 blank credit. Empty output against nonempty gold scores zero.
 
 ### Layout flexibility
@@ -127,6 +127,8 @@ once. It does not require identical physical grids:
 
 - Unique descriptions can anchor adjacent continuation rows. Another item,
   subtotal, conflicting label or completion of the record ends the group.
+  A unique item code can link the preceding amounts row to its description;
+  unrelated codes in separate cells remain extras.
 - Unique headers, including multi-tier and spanning headers, identify added,
   missing, reordered or split columns. Merged values partition into ordered,
   disjoint spans. Repeated ambiguous headers cannot donate a distant column.
@@ -139,6 +141,10 @@ once. It does not require identical physical grids:
   Units preserve column order and can establish a Notes column combined into a label.
   Indented slots under one spanning unit header can map to a combined field;
   its empty components retain blank credit without inventing a missing record.
+- A blank leading label column may fold into its neighbor when every named
+  header agrees and their body slots are mutually exclusive. A row label may
+  move into an adjacent empty slot only when the exact label and an actual
+  empty counterpart are returned. Populated fields cannot swap this way.
 - Matching sections can cross table boundaries. Identical-header chunks may join;
   repeated data rows remain extras. Transposition requires header evidence.
 
