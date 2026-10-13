@@ -3,7 +3,10 @@
 Compare OCR engines on text, Markdown, tables, key/value extraction, supplied
 schemas and geometry. **93 pages · 16 measured engine configurations.**
 
-## Run the saved benchmakr
+## View the saved results
+
+From the repository directory, install the dependencies and display the published
+comparison in your terminal:
 
 ```bash
 python -m venv .venv
@@ -12,18 +15,49 @@ pip install -r requirements.txt
 python run_benchmark.py --report current
 ```
 
-This reads the saved results; no credentials, image downloads or model calls.
+`current` selects the published result bundle, `results/current.zip`. This only
+reads saved scores; no credentials, image downloads or model calls are needed.
 To focus or sort: `--legs text`, `--report-sort cer`, `--report-sort cost`, or
 `--report-sort latency`. `--report-details` adds document-family breakdowns.
 
 The existing browser report is **`results/reports/ocr-benchmark-final.html`**;
 its linked evidence page shows individual outputs, source pages and box overlays.
-On a fresh clone, build those normal reports with:
+On a fresh clone, generate the HTML comparison and its evidence page with:
 
 ```bash
 python scripts/download_data.py                 # source images, once
 python scripts/build_evidence_report.py current
 ```
+
+Open `results/reports/ocr-benchmark-final.html` afterwards. Images are downloaded
+only to display source pages in the evidence report; the references are already
+in the repository. These commands do not rerun OCR or judging.
+
+To collect your own results, use [Run a new benchmark](#run-a-new-benchmark).
+
+## What each leg measures
+
+A leg is one task in the comparison. Engines enter the tasks their native outputs
+or supported prompts can provide; an unsupported task is N/A. Scores are compared
+within each leg, rather than combined into one overall engine score.
+
+| Leg / CLI name | What the engine must return | How it is evaluated |
+| --- | --- | --- |
+| Text · `text` | Transcribed page text | Reference-token coverage, plus character error rate (CER) and word error rate (WER). Coverage measures how much reference text was recovered; CER/WER also count added, missing and changed text. Lower error rates are better. No judge on pages with reliable text references. |
+| Markdown · `markdown` | Text with Markdown or HTML structure | Locate reference content, then check headings, paragraphs, lists and tables use the right structure. Bold alone is not a heading. Correct elements earn 1, partial elements 0.5. CER/WER measure text fidelity separately. Code scores against shared cached model-authored checklists. |
+| Tables · `tables` | Native tables, HTML tables or Markdown tables | Value credit divided by reference cells, using reviewed gold tables. Partial text and valid table reflow can earn credit; wrong numeric values earn none. Blanks count. Extras are reported separately, alongside strict cell precision/recall/F1 and structure diagnostics. Shipping uses whichever whole-page reference scores higher: gold or original. |
+| Key/value · `key_value` | Field names and their values, without a supplied schema | Match printed fields against the accepted structured references. Exact keys and cached mappings are checked first; a contextual judge can resolve wording differences and split values when needed, caching confirmed mappings. Unresolved reviews remain pending. |
+| Schema · `schema` | JSON following the supplied keys and types | Check the requested keys and values against the accepted structured references, with penalties for extra or duplicate fields. Engines receive the same selected fields on each page. No judge. |
+| Geometry · `geometry` | Text paired with bounding boxes | Check text matches and box placement against reference words or lines. Headline is located-reference recall; precision/F1 expose extra boxes. CER/WER measure the text returned with those boxes. No judge. |
+
+**Judged text is shown separately:** 11 pages lack reliable text references, so
+their saved text results use model judgments instead of CER/WER. These estimates
+are not mixed into reference-based text accuracy. Their historical scoring
+limitation is described [with the results](#judged-text).
+
+The tables below show overall and difficulty-tier results for each leg. See
+[Scoring rules](docs/scoring-design.md) for matching, reference selection and
+aggregation details.
 
 ## Results
 
@@ -347,51 +381,36 @@ geometry calls use the updated pixel prompt. Output-cap stops and provider error
 remain recorded. Reference omissions and different output granularity can affect
 scores; inspect same-page evidence before attributing a loss to recognition.
 
-## Run the benchmark yourself
+## Run a new benchmark
 
-After the installation above:
+This workflow sends the source pages to your selected engines and creates a new
+run. Hosted APIs and Modal inference can incur charges. Run commands from the
+repository directory.
 
-```bash
-cp .env.example .env
-# Add credentials only for your chosen engines.
-python scripts/download_data.py        # source images; preserves committed GT
-
-# Preview the selected experiment without calling engines.
-python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --dry-run
-
-# Run those engines; this can incur provider/Modal charges.
-python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --skip-judge
-
-# Use the timestamp printed by the run.
-python run_benchmark.py --report RUN_TIMESTAMP
-python scripts/build_evidence_report.py RUN_TIMESTAMP
-```
-
-`--skip-judge` prevents new evaluation judge calls; OCR inference still runs.
-For KV with new wording, cached decisions are reused and uncached reviews remain
-pending. Omit the flag to enable needed contextual judging; set
-`OCR_KV_JUDGE_BUDGET_USD` to your allowance.
-
-### Choose engines and pages
+### 1. Install and prepare the data
 
 ```bash
-# Multiple engines, selected difficulty and legs.
-python run_benchmark.py --engines tesseract,docling --tiers easy --legs text,tables --skip-judge
-
-# One specific page; inspect the plan first.
-python run_benchmark.py --engines claude_sonnet_4_6,gemini_flash --docs invoice_000 --legs schema --dry-run
-
-# Collect outputs first; evaluate them separately.
-python run_benchmark.py --engines glm_ocr --collect-only
-python run_benchmark.py --score RUN_TIMESTAMP --skip-judge
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python scripts/download_data.py
 ```
 
-Use comma-separated engine IDs from the [engine registry](engines.py). Available
-legs: `text,markdown,tables,key_value,schema,geometry`. Omitted engine/leg flags
-use the registry defaults. Tesseract needs its system binary. Cloud engines use
-the credentials listed in `.env.example`.
+The download supplies source images; committed ground-truth references are
+preserved. If you already installed the environment and downloaded the images,
+activate `.venv` and continue.
 
-For a Modal engine, deploy its app before running it:
+### 2. Configure your chosen engines
+
+Create your local credentials file once, then edit it:
+
+```bash
+cp -n .env.example .env
+```
+
+Add only the credentials required by your chosen engines, as listed in
+[.env.example](.env.example). Tesseract also needs its system binary installed.
+For Modal engines, authenticate and deploy the selected app first; for example:
 
 ```bash
 modal setup
@@ -399,6 +418,61 @@ python scripts/setup_modal.py
 python scripts/deploy_modal.py --apps glm_ocr --skip-smoke
 ```
 
-Deployments and smoke inference can incur charges. `--skip-smoke` skips inference,
-not the build. GPU configurations are listed above; deployment settings are in
-`modal_apps/`. See [the scoring design](docs/scoring-design.md) for evaluation rules.
+`--skip-smoke` skips test inference during deployment. Deployment builds may
+still incur charges. Hosted API engines such as Mistral do not need Modal setup.
+
+### 3. Choose engines, tasks and pages
+
+Use comma-separated engine IDs from [Engines and versions tested](#engines-and-versions-tested).
+The same selection flags apply to the preview and the actual run:
+
+| Flag | Example | Selection |
+| --- | --- | --- |
+| `--engines` | `mistral_ocr_4,docling` | Engines to compare. Specify explicitly to avoid running the registry defaults. |
+| `--legs` | `text,markdown,tables` | Tasks to evaluate; all supported legs if omitted. See [leg definitions](#what-each-leg-measures). |
+| `--tiers` | `easy,medium` | Difficulty tiers; all three if omitted. |
+| `--docs` | `invoice_000,sroie_000` | Particular page IDs within the selected tiers; all pages if omitted. |
+
+For example, preview Mistral on text, Markdown and tables without making model calls:
+
+```bash
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --skip-judge --dry-run
+```
+
+### 4. Run and evaluate
+
+Remove `--dry-run` to execute that experiment:
+
+```bash
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --skip-judge
+```
+
+This runs OCR, saves the outputs, evaluates them and **prints the engine
+comparison automatically**. Keep the run timestamp printed in the terminal.
+
+**Choosing whether to use evaluation judges:** `--skip-judge` disables new judge
+calls, not OCR inference. Deterministic scores and existing cached KV decisions
+are still used. New KV wording that needs review remains pending, and the 11
+pages without reliable text references receive no new judged-text scores.
+To include those judgments, omit `--skip-judge` and add `GOOGLE_API_KEY` to `.env`.
+`OCR_KV_JUDGE_BUDGET_USD` sets the KV judge planning allowance (default `$2`);
+it does not cap OCR or the separate judged-text calls.
+
+### 5. Open the results of your new run
+
+The terminal comparison is already printed. To reopen or sort it later, replace
+`RUN_TIMESTAMP` with your run's timestamp:
+
+```bash
+python run_benchmark.py --report RUN_TIMESTAMP --report-sort cost
+```
+
+To create the browser comparison and supporting evidence for that same run:
+
+```bash
+python scripts/build_evidence_report.py RUN_TIMESTAMP
+```
+
+Open `results/reports/ocr-benchmark-final.html`. This replaces the local HTML
+report with the selected run; it does not change the published `current` bundle.
+Both report commands only read saved results and make no model calls.
