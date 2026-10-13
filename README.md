@@ -2,9 +2,34 @@
 
 Compare OCR engines on six separate tasks: text, Markdown structure, tables,
 key/value extraction, supplied-schema extraction and geometry. The corpus has
-93 pages. The published comparison contains 16 engine configurations and 4,505
+93 pages. The published comparison contains 16 engine configurations and 4,719
 results, including failed and not-applicable records. Additional engine
 integrations are available but have not been benchmarked.
+
+## Run your selected engines
+
+Use Python 3.11 or newer. From a fresh clone:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Fill in credentials only for the engines you will use.
+python scripts/download_data.py
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --dry-run
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --collect-only
+# Use the timestamp printed by collection:
+python run_benchmark.py --score SAVED_TIMESTAMP --skip-judge
+python scripts/build_evidence_report.py SAVED_TIMESTAMP
+```
+
+Replace the engine list with comma-separated names from
+[the engine guide](docs/engine-integrations.md) or `engines.py`.
+Local and Modal engines need the setup described below. Collection calls the
+selected engines and can incur charges; `--skip-judge` prevents new evaluation
+judge calls. Accepted references and the common schema sample are already shipped.
+There is no reference-generation or benchmark-development step to run.
 
 ## View the saved results
 
@@ -135,8 +160,8 @@ and rates describe the saved run, not guaranteed current vendor behavior/pricing
 
 There are 82 usable text-reference pages; 11 unreliable silver-text pages are
 excluded. Reading order, punctuation and incomplete references can raise CER/WER
-without proving a recognition error. Historical silver-document judge estimates
-are a separate optional facility and are not part of the six published legs.
+without proving a recognition error. Saved silver-document judge estimates appear in a separate comparison; they
+are not blended into the six leg scores or CER/WER.
 
 All 11 participating Markdown engines now score the same 92 cached-reference
 pages, after filling 104 missing outputs (run `20261007T121019Z`). `newspaper_000`
@@ -227,7 +252,7 @@ by `python run_benchmark.py --help`. Resuming/retrying can spend money.
 | `runners/` | Required runtime adapters that call APIs, local engines and Modal |
 | `modal_apps/` | Deployable inference applications, including unrun integrations |
 | `evaluation/` | Shared task planning, reference loading, scoring and reporting |
-| `scripts/` | Corpus download, schema/catalogue preparation, deployment, publishing and HTML reporting |
+| `scripts/` | Corpus download, deployment, publishing and HTML reporting |
 | `documents/` | Corpus metadata and accepted references; source images download separately |
 | `results/current.zip` | One published score set, inference evidence and reusable judge/reference caches |
 | `results/reports/` | Local HTML only; ignored by Git |

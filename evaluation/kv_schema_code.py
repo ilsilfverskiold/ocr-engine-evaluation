@@ -1,12 +1,9 @@
 """Code verdicts for the key_value and schema legs.
 
-Stage 1 (``evaluation/alias_pass.py``, once per document, engine-blind):
-gemini-3.1-pro-preview sees the page image and our reference field list and
-returns, per field, the label(s) printed on the page for it and whether it is
-printed as a label+value pair. It is not asked for values. Cached under
-``results/kv_alias_cache/<stem>__<model>.json``.
+Historical printed-label caches remain readable for saved-result compatibility.
+New KV evaluation uses accepted shared references and value-group resolution.
 
-Stage 2 (this module, per engine, no model):
+Deterministic parsing and matching helpers:
   1. parse the answer into pairs — JSON leaves (fenced or embedded JSON;
      every block of an answer with several fenced blocks; truncated JSON
      salvaged as far as it parses; duplicate keys are all kept, where a

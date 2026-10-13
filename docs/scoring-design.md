@@ -46,9 +46,8 @@ The headline is `(correct + 0.5 × partial) / checklist elements`, with determin
 verdicts against a shared, cached image-authored structural catalogue. It is not
 a per-engine model judgment. Existing catalogues are sampled to 40 elements.
 Missing catalogues remain N/A; receipt coverage is now included in the 92 cached catalogues.
-Image-only catalogue generation is a separate, cost-approved action through
-`scripts/build_markdown_catalogues.py`. Proposals stay inactive until source-image
-review is recorded; uncertain elements are excluded and source hashes checked.
+Accepted catalogues ship in `results/current.zip`; running the benchmark does
+not regenerate them. Uncertain elements are excluded and source hashes checked.
 A reviewed catalogue can establish structure eligibility without a Markdown
 sidecar. It is not substituted for a full transcript: full-page block F1/order
 remain N/A without one, and CER/WER need an independent trusted text reference.
@@ -291,8 +290,7 @@ or axis swapping is applied to these known-frame results. Geometry requests use
 temperature 0, a 32,768-token cap and streaming; stop reasons remain visible.
 The exact saved call determines which recipe a report describes.
 
-The [2026-10-13 integration audit](geometry-audit-2026-10-13.md) makes new
-adapters' declared granularity/frame authoritative. Block outputs retain their
+Adapters' declared granularity and coordinate frame are authoritative. Block outputs retain their
 actual boxes; mixed MinerU line/table regions retain their individual types and
 render native table HTML to text. Normalized coordinates are not clipped or
 scaled a second time. Finite out-of-frame, reversed and zero-area rectangles
@@ -365,9 +363,7 @@ The HTML is generated locally and is not committed. Source identifiers inside
 the archive preserve provenance, not additional published result sets.
 
 
-## 2026-10-09 audit update
-
-See [the tax/blank/report audit](audit-2026-10-09.md) for the current limitations.
+## Reference and reporting limitations
 KV retains its existing blank-inclusive headline pending a policy choice and
 now also reports populated-only and blank-field accuracy. Identifier fragment
 validation preserves digit groups, order and leading zeros. Native Textract

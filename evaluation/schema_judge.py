@@ -1,6 +1,6 @@
 """Build and sample the deterministic GT field checklist.
 
-The legacy module name is retained for the field scorers and alias builder.
+The legacy module name is retained for the field scorers.
 Per-engine verdicts live in kv_schema_code.py. The old LLM verdict client,
 substring verifier and verdict cache code were removed; this module makes
 no model calls. Existing deterministic checklist caches remain readable.

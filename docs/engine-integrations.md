@@ -1,9 +1,17 @@
 # Additional engine integrations
 
-These 16 opt-in integrations are implemented but have not been measured in the
-published comparison. This guide describes source configuration, not verified
-runtime performance. `engines.py` and each app/runner are authoritative for
-model revisions, prompts, dependencies, task routes and initial hardware.
+The registry has 18 opt-in engines. The 16 in the table below are implemented
+but have no measurements in the saved comparison in the published comparison.
+The other two, `paddleocr_ppocrv5` and `mineru_pipeline`, already have 17 geometry
+results each in `results/current.zip`, with no inference-error rows. They have
+not been scored on their other eligible legs. The saved PP-OCRv5 calls return
+word boxes; MinerU's pipeline calls mix text lines and table regions, labeled
+`mixed_line_block` by the current scorer.
+
+This guide describes source configuration, not verified runtime performance.
+`engines.py` and each app/runner are authoritative for model revisions, prompts,
+dependencies, task routes and initial hardware. Presence of an app file does
+not establish that it is deployed. Check your Modal deployment before running an app.
 
 Use the same six scorers and accepted references as the published baseline.
 First inspect `--dry-run` and `--estimate`, then explicitly choose the engine and
@@ -121,12 +129,40 @@ source, not observed.
 - **google_document_ocr**: `revisions[].processor` populated; `imageless_mode`
   accepted by OCR v2.1; token polygons stay in the original frame on deskewed
   pages.
-- **mathpix**: **three corpus images (medical_000 18.4 MB, bank_000 14.4 MB,
-  shipping_000 7.5 MB) exceed the 5 MB request limit** and will error — a
-  policy decision (skip, or a disclosed re-encode configuration).
+- **mathpix**: three original corpus files (`medical_000`, `bank_000`,
+  `shipping_000`) exceed the 5 MB request limit. The runner already attempts
+  a lossless PNG re-encode before rejecting an oversized upload; original
+  size alone does not establish whether that upload will fail. Do not silently
+  downscale or change endpoints to bypass the limit.
 - **datalab_ocr**: JSON tree shape and page bbox base (then enable geometry);
   `cost_breakdown.final_cost_cents` presence; form-string booleans.
 - **rapidocr**: whether word results appear on real pages (upstream drops
   them for the page if any line lacks them → line fallback).
 - **apple_vision**: compile once and run one receipt; `word_range_failures`.
 
+## Runtime limitations
+
+Geometry dispatch uses each adapter's declared block/line/word contract and
+normalized coordinate frame. Coarse boxes compete using their actual extents;
+they are not divided into invented word boxes. MinerU classic's table HTML is
+rendered to text while preserving whole-table boxes. Mathpix rotated boxes with
+an unverified frame produce an adapter error, not a quality score.
+
+Before running new integrations, resolve these source-level limitations:
+
+- Mathpix's native MMD list syntax needs a faithful structural conversion before
+  interpreting Markdown list scores; oversized images and rotated frames also
+  require an explicit input/coordinate policy.
+- Datalab's fallback cost estimate does not apply the vendor's cent rounding;
+  prefer returned billing. Extraction fees may vary.
+- Google processor lookup failures can leave processor type/version unverified.
+  Ensure the selected processor is Enterprise Document OCR, and validate boxes
+  on transformed pages.
+- MinerU classic records downloaded model revisions but still downloads mutable
+  defaults. Pin the recorded assets before reproducing a deployment.
+- Generic prompted KV/schema routes on OCR fine-tunes are experimental tasks;
+  supported prompt transport does not establish extraction quality. Context,
+  output caps and constrained-decoding differences remain recorded per call.
+
+These limitations do not require rebuilding the accepted references. All engines
+use the same shipped corpus, applicable legs and fixed reference selection.
