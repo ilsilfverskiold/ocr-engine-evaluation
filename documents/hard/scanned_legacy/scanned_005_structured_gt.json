@@ -1,0 +1,48 @@
+{
+  "dataset": "hand-labeled",
+  "split": "train",
+  "doc_type": "scanned_legacy",
+  "note": "Philip Morris inter-office correspondence, 1981 (UCSF Industry Documents, ksdd0025). The previous schema held the five routing fields only. Extended with the letterhead block (company, document type, city), the overprinted document control number the earlier note identified but did not record, and the foot-of-page apparatus: typist initials, the handwritten signature, the Bates number and the handwritten archival mark in the top-right corner. All five original fields and their values are preserved byte-for-byte, including 'cc' as a single '; '-joined string. Judgement calls: (1) the control number is printed in a much larger overstruck face with a wide gap after the hyphen; roughly half the engines close the gap and half keep it, both at 10 of 14. It is recorded closed as 'C81-05224', matching the reading in the previous annotator's note, since the gap is a typographic artefact of the overprint rather than part of the identifier. (2) 'signature' is the handwritten signature above the Bates number. Only 2 of 14 engines resolve it as 'Christopher L. Irving' — most produce partial readings such as 'Christopher L. ling' — but it is legible on the page, and it is precisely the sort of value the benchmark should be separating engines on, so it is kept and flagged. (3) 'archival_mark' is the handwritten '0307' in the top-right corner; 7 of 14 engines recover it and the dataset's own text sidecar includes it, so unlike the archival annotations on the SROIE receipts it is retained. (4) The body remains out of scope. It is continuous prose apart from a four-item numbered list, and copying those four multi-line sentences into the structured leg would duplicate what the text leg already scores while testing little beyond line-joining, so it is deliberately not added.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["To", "From", "Subject", "Date", "cc"],
+    "model_verified": [
+      "company", "document_type", "location", "control_number",
+      "typist_initials", "signature", "bates_number", "archival_mark"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "document_type": { "type": "string" },
+      "location": { "type": "string" },
+      "To": { "type": ["string", "null"] },
+      "From": { "type": ["string", "null"] },
+      "Subject": { "type": ["string", "null"] },
+      "Date": { "type": ["string", "null"] },
+      "control_number": { "type": ["string", "null"] },
+      "cc": { "type": ["string", "null"] },
+      "typist_initials": { "type": ["string", "null"] },
+      "signature": { "type": ["string", "null"] },
+      "bates_number": { "type": ["string", "null"] },
+      "archival_mark": { "type": ["string", "null"] }
+    },
+    "required": ["To", "From", "Subject", "Date"]
+  },
+  "true_json": {
+    "company": "PHILIP MORRIS U. S. A.",
+    "document_type": "INTER-OFFICE CORRESPONDENCE",
+    "location": "RICHMOND, VIRGINIA",
+    "To": "Mr. T. A. Newman",
+    "From": "C. L. Irving",
+    "Subject": "Evaluation of Borgwaldt Firmness Tester",
+    "Date": "July 31, 1981",
+    "control_number": "C81-05224",
+    "cc": "Dr. W. F. Gannon; Mr. J. S. Osmalov",
+    "typist_initials": "jbn",
+    "signature": "Christopher L. Irving",
+    "bates_number": "2000771338",
+    "archival_mark": "0307"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 2,
+  "dataset_offset": 1,
+  "doc_type": "chart",
+  "json_schema": {
+    "type": "object",
+    "title": "Revenue by Geography and Segment",
+    "required": [
+      "geographyRevenue",
+      "productRevenue"
+    ],
+    "properties": {
+      "productRevenue": {
+        "type": "object",
+        "required": [
+          "totalRevenueBillions",
+          "segments"
+        ],
+        "properties": {
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "segmentName",
+                "revenueBillions"
+              ],
+              "properties": {
+                "segmentName": {
+                  "type": "string",
+                  "description": "Name of the product segment"
+                },
+                "revenueBillions": {
+                  "type": "number",
+                  "description": "Revenue for this segment in billions of USD"
+                }
+              }
+            },
+            "description": "Breakdown of revenue by product segment (in billions USD)"
+          },
+          "totalRevenueBillions": {
+            "type": "number",
+            "description": "Total BD revenue in billions of USD"
+          }
+        },
+        "description": "Detailed product/segment breakdown of total BD revenue"
+      },
+      "geographyRevenue": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "region",
+            "revenueMillions"
+          ],
+          "properties": {
+            "region": {
+              "enum": [
+                "United States",
+                "Europe",
+                "Africa",
+                "South America",
+                "Greater Asia",
+                "South East Asia",
+                "Middle East",
+                "Other"
+              ],
+              "type": "string",
+              "description": "Name of the region or country group"
+            },
+            "revenueMillions": {
+              "type": "number",
+              "description": "Revenue in millions of USD"
+            }
+          }
+        },
+        "description": "Revenue by geography (in millions USD)"
+      }
+    }
+  },
+  "true_json": {
+    "productRevenue": {
+      "segments": [
+        {
+          "segmentName": "BD Medical",
+          "revenueBillions": 9.1
+        },
+        {
+          "segmentName": "BD Life Sciences",
+          "revenueBillions": 4.3
+        },
+        {
+          "segmentName": "BD Interventional",
+          "revenueBillions": 3.9
+        },
+        {
+          "segmentName": "Diabetes Care",
+          "revenueBillions": 1.1
+        },
+        {
+          "segmentName": "Pharmaceutical Systems",
+          "revenueBillions": 1.5
+        },
+        {
+          "segmentName": "Preanalytical Systems",
+          "revenueBillions": 1.6
+        },
+        {
+          "segmentName": "Diagnostic Systems",
+          "revenueBillions": 1.5
+        },
+        {
+          "segmentName": "Biosciences",
+          "revenueBillions": 1.2
+        },
+        {
+          "segmentName": "Surgery",
+          "revenueBillions": 1.4
+        },
+        {
+          "segmentName": "Peripheral Intervention",
+          "revenueBillions": 1.4
+        },
+        {
+          "segmentName": "Urology and Critical Care",
+          "revenueBillions": 1.1
+        },
+        {
+          "segmentName": "Medication Delivery Solutions",
+          "revenueBillions": 3.9
+        },
+        {
+          "segmentName": "Medication Management Solutions",
+          "revenueBillions": 2.6
+        }
+      ],
+      "totalRevenueBillions": 17.3
+    },
+    "geographyRevenue": [
+      {
+        "region": "United States",
+        "revenueMillions": 9730
+      },
+      {
+        "region": "Europe",
+        "revenueMillions": 3359
+      },
+      {
+        "region": "Greater Asia",
+        "revenueMillions": 2726
+      },
+      {
+        "region": "Other",
+        "revenueMillions": 1476
+      }
+    ]
+  }
+}

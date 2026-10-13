@@ -1,9 +1,9 @@
 """Human-selected table references. Proposed patches are never an automatic fallback."""
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
+from evaluation.artifacts import source_image_hash
 
 
 def load_gold_table(document_path: Path) -> dict | None:
@@ -22,7 +22,7 @@ def _load_table_version(document_path: Path, version: str) -> dict | None:
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("page") != document_path.stem or data.get("version") != 1:
         raise ValueError(f"Invalid gold table identity/version: {path}")
-    if data.get("image_sha256") != hashlib.sha256(document_path.read_bytes()).hexdigest():
+    if data.get("image_sha256") != source_image_hash(document_path):
         raise ValueError(f"Gold table source image changed: {path}")
     markup = data.get("table_html")
     if not isinstance(markup, str):

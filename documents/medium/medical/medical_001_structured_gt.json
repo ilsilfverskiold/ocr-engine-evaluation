@@ -1,0 +1,187 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 1,
+  "dataset_offset": 679,
+  "doc_type": "medical",
+  "json_schema": {
+    "type": "object",
+    "required": [
+      "firstName",
+      "lastName",
+      "address"
+    ],
+    "properties": {
+      "dob": {
+        "type": "string",
+        "description": "Patient's date of birth as it appears"
+      },
+      "state": {
+        "type": "string",
+        "description": "Patient's state as it appears"
+      },
+      "address": {
+        "type": "string",
+        "description": "Street address of the patient as it appears, only including number and street"
+      },
+      "lastName": {
+        "type": "string",
+        "description": "Patient's last name"
+      },
+      "firstName": {
+        "type": "string",
+        "description": "Patient's first name"
+      },
+      "spousePhone": {
+        "type": "string",
+        "description": "Spouse's phone number as it appear"
+      },
+      "isNewTherapy": {
+        "type": "boolean",
+        "description": "Indicates if requested medicine is new, must return true or false"
+      },
+      "isHospitalized": {
+        "type": "boolean",
+        "description": "Indicates if patient has been hospitalized in the past year, must return true or false"
+      },
+      "reviewOfSymptoms": {
+        "type": "object",
+        "properties": {
+          "chills": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced chills, must return true or false"
+          },
+          "eyePain": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced eye pain, must return true or false"
+          },
+          "fatigue": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced fatigue, must return true or false"
+          },
+          "coughing": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced persistent coughing, must return true or false"
+          },
+          "allergies": {
+            "type": "boolean",
+            "description": "Indicates if patient has allergies, must return true or false"
+          },
+          "blackOuts": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced blackouts, must return true or false"
+          },
+          "chestPain": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced chest pain, must return true or false"
+          },
+          "hearingLoss": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced hearing loss, must return true or false"
+          },
+          "jointSwelling": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced joint swelling, must return true or false"
+          },
+          "dentalProblems": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced dental problems, must return true or false"
+          },
+          "excessiveThirst": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced excessive thirst, must return true or false"
+          },
+          "excessiveBruising": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced excessive bruising, must return true or false"
+          },
+          "tuberculosisExposure": {
+            "type": "boolean",
+            "description": "Indicates if patient has been exposed to tuberculosis, must return true or false"
+          },
+          "difficultyEmptyingBowelOrBladder": {
+            "type": "boolean",
+            "description": "Indicates if patient has difficulty emptying their bowel or bladder, must return true or false"
+          }
+        },
+        "description": "Indicates if specific symptoms are present or not"
+      },
+      "familyHealthHistory": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "relation"
+          ],
+          "properties": {
+            "relation": {
+              "type": "string",
+              "description": "Relation to patient"
+            },
+            "ageAtDeath": {
+              "type": "number",
+              "description": "If applicable, age at death"
+            },
+            "ageIfLiving": {
+              "type": "number",
+              "description": "Age if living"
+            },
+            "chronicHealthProblems": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of chronic health problems, must return null if not provided"
+            }
+          }
+        },
+        "description": "Patient's family health history, must return null if not provided"
+      }
+    }
+  },
+  "true_json": {
+    "dob": "10-06-1961",
+    "state": "HI",
+    "address": "8574 Aspen Ave",
+    "lastName": "Brown",
+    "firstName": "Daniel",
+    "spousePhone": null,
+    "isNewTherapy": false,
+    "isHospitalized": true,
+    "reviewOfSymptoms": {
+      "chills": true,
+      "eyePain": false,
+      "fatigue": false,
+      "coughing": true,
+      "allergies": true,
+      "blackOuts": true,
+      "chestPain": true,
+      "hearingLoss": false,
+      "jointSwelling": false,
+      "dentalProblems": false,
+      "excessiveThirst": false,
+      "excessiveBruising": true,
+      "tuberculosisExposure": true,
+      "difficultyEmptyingBowelOrBladder": true
+    },
+    "familyHealthHistory": [
+      {
+        "relation": "Father",
+        "ageAtDeath": null,
+        "ageIfLiving": 55,
+        "chronicHealthProblems": [
+          "diabetes",
+          "dementia"
+        ]
+      },
+      {
+        "relation": "Sister",
+        "ageAtDeath": null,
+        "ageIfLiving": 27,
+        "chronicHealthProblems": [
+          "adhd"
+        ]
+      }
+    ]
+  }
+}

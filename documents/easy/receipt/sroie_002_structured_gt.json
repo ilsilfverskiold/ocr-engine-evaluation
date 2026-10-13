@@ -1,0 +1,116 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 5,
+  "dataset_offset": 5,
+  "doc_type": "receipt",
+  "note": "Extended from the four SROIE Task 3 targets (company, date, address, total) to every extractable value on this crumpled thermal receipt. Added the two registration numbers, the invoice reference, both line items with their GST-exclusive unit price / quantity / inclusive amount, the full totals ladder and the GST summary row. Judgement calls: (1) the 'Total Sales Excluding GST' line prints 6.69 on the page while the GST Summary Amount two blocks lower prints 6.89 — a 16x threshold crop shows the middle glyph of the first as a single-loop 6 and of the second as a double-loop 8, so both are recorded verbatim as printed rather than reconciled arithmetically (7.30 - 0.41 = 6.89 suggests the 6.69 line is a POS/print defect, but the page is the ground truth). (2) 'Cashier #' is printed with an empty value and is recorded as null. (3) 'stamp' is the red circular rubber stamp overlaying the GST summary; it reads PAID and is legible on the page but no engine returned it, so it is kept as a model-only value and flagged here.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["company", "date", "address", "total"],
+    "model_verified": [
+      "tel", "fax", "company_reg_no", "gst_reg_no", "document_type",
+      "customer", "invoice_no", "cashier_no", "items", "subtotal",
+      "total_sales_excluding_gst", "total_sales_inclusive_of_gst",
+      "rounding_adjustment", "payment", "change_due", "total_items",
+      "gst_summary", "stamp"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "address": { "type": "string" },
+      "tel": { "type": "string" },
+      "fax": { "type": "string" },
+      "company_reg_no": { "type": "string" },
+      "gst_reg_no": { "type": "string" },
+      "document_type": { "type": "string" },
+      "customer": { "type": "string" },
+      "invoice_no": { "type": "string" },
+      "date": { "type": "string" },
+      "cashier_no": { "type": ["string", "null"] },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "description": { "type": "string" },
+            "unit_price_excluding_gst": { "type": "string" },
+            "tax_code": { "type": "string" },
+            "qty": { "type": "string" },
+            "amount": { "type": "string" }
+          }
+        }
+      },
+      "subtotal": { "type": "string" },
+      "total_sales_excluding_gst": { "type": "string" },
+      "total_sales_inclusive_of_gst": { "type": "string" },
+      "rounding_adjustment": { "type": "string" },
+      "total": { "type": "string" },
+      "payment": { "type": "string" },
+      "change_due": { "type": "string" },
+      "total_items": { "type": "string" },
+      "gst_summary": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tax_code": { "type": "string" },
+            "rate": { "type": "string" },
+            "amount": { "type": "string" },
+            "tax": { "type": "string" }
+          }
+        }
+      },
+      "stamp": { "type": ["string", "null"] }
+    },
+    "required": ["company", "date", "address", "total"]
+  },
+  "true_json": {
+    "company": "SIN LIANHAP SDN BHD",
+    "address": "LOT 13, JALAN IPOH, KG BATU 30 , ULU YAM LAMA 44300 BTG KALI, SELANGOR.",
+    "tel": "03-60752222(HUNTING LINE)",
+    "fax": "03-60752572",
+    "company_reg_no": "284922-D",
+    "gst_reg_no": "001610833920",
+    "document_type": "TAX INVOICE",
+    "customer": "CASH CUSTOMER",
+    "invoice_no": "H0003939",
+    "date": "05/02/2018",
+    "cashier_no": null,
+    "items": [
+      {
+        "description": "PPD 4MM DENLIME",
+        "unit_price_excluding_gst": "1.887",
+        "tax_code": "SR",
+        "qty": "1.000 PC",
+        "amount": "2.00"
+      },
+      {
+        "description": "6023# GARDEN",
+        "unit_price_excluding_gst": "5.000",
+        "tax_code": "SR",
+        "qty": "1.000 PC",
+        "amount": "5.30"
+      }
+    ],
+    "subtotal": "7.30",
+    "total_sales_excluding_gst": "6.69",
+    "total_sales_inclusive_of_gst": "7.30",
+    "rounding_adjustment": "0.00",
+    "total": "7.30",
+    "payment": "7.30",
+    "change_due": "0.00",
+    "total_items": "2",
+    "gst_summary": [
+      {
+        "tax_code": "SR",
+        "rate": "@6",
+        "amount": "6.89",
+        "tax": "0.41"
+      }
+    ],
+    "stamp": "PAID"
+  }
+}

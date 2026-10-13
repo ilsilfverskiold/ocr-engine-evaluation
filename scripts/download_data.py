@@ -1,19 +1,14 @@
 """
-Download the benchmark documents from HuggingFace.
+Download the benchmark source images from HuggingFace.
 
 Fetches the 93-document corpus from the dataset
 https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark and rebuilds
-the on-disk layout the harness expects:
+the image layout the harness expects:
 
   documents/<tier>/<doc_type>/<stem>.png          the page image
-  documents/<tier>/<doc_type>/<stem>_gt.txt        plain-text GT
-  documents/<tier>/<doc_type>/<stem>_gt.json       table/plain-text GT
-  documents/<tier>/<doc_type>/<stem>_structured_gt.json
-  documents/<tier>/<doc_type>/<stem>_markdown_gt.md
-  documents/<tier>/<doc_type>/<stem>_geometry_gt.json
-
-The reference run results ship with the git repo (results/), so this is only
-needed for inference, offline rescoring and source images in the HTML report.
+All ground-truth sidecars, accepted references and saved results ship in Git.
+Images are needed for new inference and source-page previews in HTML reports.
+Downloading images never replaces the repository's reference files.
 
 Usage:
   python scripts/download_data.py
@@ -52,22 +47,11 @@ def write_row(row: dict, manifest: dict, root: Path = ROOT) -> None:
     if hashlib.sha256(data).hexdigest() != entry["sha256"]:
         raise ValueError(f"Published image differs from pinned manifest: {stem}")
     target = root / relative
-    sidecars = {
-        f"{stem}_gt.txt": row.get("gt_text"),
-        f"{stem}_gt.json": row.get("gt_json"),
-        f"{stem}_structured_gt.json": row.get("structured_gt"),
-        f"{stem}_markdown_gt.md": row.get("markdown_gt"),
-        f"{stem}_geometry_gt.json": row.get("geometry_gt"),
-    }
-    files = {target: data, **{target.parent / name: value.encode("utf-8")
-                            for name, value in sidecars.items() if value is not None}}
-    for path, content in files.items():
-        if path.exists() and path.read_bytes() != content:
-            raise ValueError(f"Local file differs; preserve/review it before downloading: {path}")
+    if target.exists() and target.read_bytes() != data:
+        raise ValueError(f"Local file differs; preserve/review it before downloading: {target}")
     target.parent.mkdir(parents=True, exist_ok=True)
-    for path, content in files.items():
-        if not path.exists():
-            path.write_bytes(content)
+    if not target.exists():
+        target.write_bytes(data)
 
 
 def main() -> None:

@@ -1,0 +1,300 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 3,
+  "dataset_offset": 10,
+  "doc_type": "shipping",
+  "note": "The getomni schema keeps only the issue date and one shipment out of the six printed, and for that shipment records only the gross value of each surcharge, dropping the amount and VAT columns entirely. Extended with the header block (title, carrier, document number, client number, page) and a 'shipments' array: one object per printed row with shipment number, reference number, date, both parties split into company/address/city/zipCode, service type, weight, shipment count, base charge and every additional-charge line with all three of its money columns. The dataset's 'issueDate' and 'mostRecentShipment' are preserved unchanged; 'shipments[5]' is that shipment in full. All added values clear the one-third engine threshold except the document number. Judgement calls: (1) 'documentNumber' is '0ONSJC0OKP' — a deliberately nasty mixed zero/letter-O string; only 4 of 14 engines produce that exact sequence and the rest vary the O/0 assignment, but it matches the dataset's own text sidecar and the page, so it is kept and flagged as a hard field. (2) Reference number is blank on four rows and recorded as null. (3) Weight 18 on row four is printed without a decimal and is kept that way. (4) The table has several blank ruled rows below the last shipment; they carry no data and are not represented.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["issueDate", "mostRecentShipment"],
+    "model_verified": ["title", "carrier", "documentNumber", "clientNumber", "page", "pageFooter", "shipments"]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "Document title as printed" },
+      "carrier": { "type": "string", "description": "Carrier whose logo appears on the invoice" },
+      "documentNumber": { "type": "string", "description": "Unique identifier for the invoice" },
+      "clientNumber": { "type": "string", "description": "Unique identifier for the client" },
+      "issueDate": { "type": "string", "description": "Date the invoice was issued" },
+      "page": { "type": "string", "description": "Page indicator in the header block" },
+      "pageFooter": { "type": "string", "description": "Page number printed at the foot of the page" },
+      "shipments": {
+        "type": "array",
+        "description": "Every shipment row printed in the table, in page order",
+        "items": {
+          "type": "object",
+          "required": ["shipmentNumber"],
+          "properties": {
+            "shipmentNumber": { "type": "string" },
+            "referenceNumber": { "type": ["string", "null"] },
+            "date": { "type": "string" },
+            "sender": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "recipient": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "typeOfService": { "type": "string" },
+            "weightInKg": { "type": "number" },
+            "numberOfShipments": { "type": "number" },
+            "baseCharge": { "type": "number" },
+            "additionalCharges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["description"],
+                "properties": {
+                  "description": { "type": "string" },
+                  "amount": { "type": "number" },
+                  "vat": { "type": "number", "description": "Value from the VAT / Code column" },
+                  "grossValue": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "mostRecentShipment": {
+        "type": "object",
+        "required": ["shipmentNumber"],
+        "description": "Shipment with the most recent date (closest to today's date), always the last item in the list",
+        "properties": {
+          "sender": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "company": { "type": "string", "description": "Sender's company name as it appears" }
+            }
+          },
+          "recipient": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "address": { "type": "string", "description": "Street address of the recipient as it appears, only including number and street" },
+              "company": { "type": "string", "description": "Recipient's company name as it appears" },
+              "zipCode": { "type": "string", "description": "Zip code of the recipient as it appears" }
+            }
+          },
+          "weightInKg": { "type": "number", "description": "Weight of the shipment in kilograms" },
+          "shipmentNumber": { "type": "string", "description": "Unique identifier for the shipment" },
+          "referenceNumber": { "type": "string", "description": "Reference number for the shipment, must return null if not provided" },
+          "additionalCharges": {
+            "type": "array",
+            "description": "Details of additional charges applied to the shipment",
+            "items": {
+              "type": "object",
+              "required": ["description"],
+              "properties": {
+                "grossValue": { "type": "number", "description": "Gross value of the charge, including VAT" },
+                "description": { "type": "string", "description": "Description of the additional charge as it appears" }
+              }
+            }
+          },
+          "numberOfShipments": { "type": "number", "description": "Total number of shipments" }
+        }
+      }
+    }
+  },
+  "true_json": {
+    "title": "VAT BILLING RECEIPT",
+    "carrier": "UPS",
+    "documentNumber": "0ONSJC0OKP",
+    "clientNumber": "104603756",
+    "issueDate": "03-02-2003",
+    "page": "32 of 94",
+    "pageFooter": "32",
+    "shipments": [
+      {
+        "shipmentNumber": "0304996236",
+        "referenceNumber": null,
+        "date": "03-18-1981",
+        "sender": {
+          "company": "ADAMS - MACEJKOVIC",
+          "address": "80496 Lime Grove",
+          "city": "GRADYSIDE",
+          "zipCode": "87884"
+        },
+        "recipient": {
+          "company": "GOODWIN, JOHNSON AND RUECKER",
+          "address": "3284 Murphy Mews",
+          "city": "CONCEPCIONBOROUGH",
+          "zipCode": "52126"
+        },
+        "typeOfService": "EXPRESS WORLDWIDE",
+        "weightInKg": 4.4,
+        "numberOfShipments": 7,
+        "baseCharge": 195.42,
+        "additionalCharges": [
+          { "description": "OUT-OF-HOURS DELIVERY FEE", "amount": 9.03, "vat": 2.38, "grossValue": 11.72 },
+          { "description": "CHANGE OF ADDRESS FEE", "amount": 2.76, "vat": 4.74, "grossValue": 33.89 },
+          { "description": "SAME-DAY DELIVERY CHARGE", "amount": 4.93, "vat": 3.65, "grossValue": 11.51 },
+          { "description": "ADDRESS CORRECTION FEE", "amount": 8.03, "vat": 2.66, "grossValue": 23.68 },
+          { "description": "HOLIDAY DELIVERY FEE", "amount": 4.41, "vat": 4.46, "grossValue": 41.52 }
+        ]
+      },
+      {
+        "shipmentNumber": "0135277879",
+        "referenceNumber": null,
+        "date": "01-09-1987",
+        "sender": {
+          "company": "WEBER, DUBUQUE AND MAYER",
+          "address": "9442 Kohler Extensions",
+          "city": "TRESSAVIEW",
+          "zipCode": "99772"
+        },
+        "recipient": {
+          "company": "REINGER - BERGSTROM",
+          "address": "41153 Rohan Unions",
+          "city": "SCHROEDERBOROUGH",
+          "zipCode": "43301-8290"
+        },
+        "typeOfService": "DOMESTIC PRIORITY",
+        "weightInKg": 44.7,
+        "numberOfShipments": 6,
+        "baseCharge": 109.74,
+        "additionalCharges": [
+          { "description": "DANGEROUS GOODS HANDLING FEE", "amount": 4.03, "vat": 1.77, "grossValue": 26.96 },
+          { "description": "SPECIAL HANDLING FEE", "amount": 3.7, "vat": 2.74, "grossValue": 18.8 },
+          { "description": "HANDLING CHARGE", "amount": 8.92, "vat": 2.28, "grossValue": 49.38 },
+          { "description": "INSURANCE PREMIUM", "amount": 5.95, "vat": 3.84, "grossValue": 25.08 },
+          { "description": "HANDLING CHARGE", "amount": 1.5, "vat": 4.8, "grossValue": 20.05 }
+        ]
+      },
+      {
+        "shipmentNumber": "7691803040",
+        "referenceNumber": null,
+        "date": "06-01-1989",
+        "sender": {
+          "company": "WALKER - LABADIE",
+          "address": "2821 Stanley Street",
+          "city": "HELOISEVIEW",
+          "zipCode": "59075-2518"
+        },
+        "recipient": {
+          "company": "WILDERMAN AND SONS",
+          "address": "26696 Feil Field",
+          "city": "JOHNSTONMOUTH",
+          "zipCode": "75436-6635"
+        },
+        "typeOfService": "EXPRESS WORLDWIDE",
+        "weightInKg": 15.5,
+        "numberOfShipments": 7,
+        "baseCharge": 87.09,
+        "additionalCharges": [
+          { "description": "CARBON OFFSET FEE", "amount": 2.16, "vat": 3.11, "grossValue": 45.26 },
+          { "description": "ENVIRONMENTAL SURCHARGE", "amount": 3.3, "vat": 2.01, "grossValue": 35.13 }
+        ]
+      },
+      {
+        "shipmentNumber": "0260970084",
+        "referenceNumber": null,
+        "date": "10-26-1990",
+        "sender": {
+          "company": "FAHEY, ERNSER AND FRANECKI",
+          "address": "64469 Mill Close",
+          "city": "EAST BRADYSTAD",
+          "zipCode": "61566"
+        },
+        "recipient": {
+          "company": "O'KON AND SONS",
+          "address": "7351 Waverley Road",
+          "city": "ROBERTSMOUTH",
+          "zipCode": "37035-3113"
+        },
+        "typeOfService": "EXPRESS WORLDWIDE",
+        "weightInKg": 18,
+        "numberOfShipments": 8,
+        "baseCharge": 190.47,
+        "additionalCharges": [
+          { "description": "REMOTE AREA SURCHARGE", "amount": 9.32, "vat": 4.69, "grossValue": 26.22 }
+        ]
+      },
+      {
+        "shipmentNumber": "6063818296",
+        "referenceNumber": "9XPL0VZIDJ",
+        "date": "08-14-1992",
+        "sender": {
+          "company": "KUHN - CUMMERATA",
+          "address": "240 Balistreri Inlet",
+          "city": "PORT ALLYBURY",
+          "zipCode": "25396-8037"
+        },
+        "recipient": {
+          "company": "MCKENZIE - LUBOWITZ",
+          "address": "963 Avis Ways",
+          "city": "PEMBROKE PINES",
+          "zipCode": "39364-4915"
+        },
+        "typeOfService": "EXPRESS WORLDWIDE",
+        "weightInKg": 2.3,
+        "numberOfShipments": 2,
+        "baseCharge": 198.03,
+        "additionalCharges": [
+          { "description": "OUT-OF-HOURS DELIVERY FEE", "amount": 9.99, "vat": 3.16, "grossValue": 19.19 },
+          { "description": "FRAGILE ITEM FEE", "amount": 6.87, "vat": 3.42, "grossValue": 22.92 }
+        ]
+      },
+      {
+        "shipmentNumber": "5746129347",
+        "referenceNumber": "9FBBU7JJH9",
+        "date": "07-28-1997",
+        "sender": {
+          "company": "GOYETTE - CUMMERATA",
+          "address": "1151 Erdman Plain",
+          "city": "FORT WARREN",
+          "zipCode": "06081-0070"
+        },
+        "recipient": {
+          "company": "PARISIAN INC",
+          "address": "9081 Edward Street",
+          "city": "FLINT",
+          "zipCode": "77829-7862"
+        },
+        "typeOfService": "ECONOMY SELECT",
+        "weightInKg": 20.2,
+        "numberOfShipments": 1,
+        "baseCharge": 46.57,
+        "additionalCharges": [
+          { "description": "SAME-DAY DELIVERY CHARGE", "amount": 3.94, "vat": 2.4, "grossValue": 25.61 },
+          { "description": "REMOTE AREA SURCHARGE", "amount": 5.38, "vat": 1.6, "grossValue": 13.22 },
+          { "description": "FUEL ADJUSTMENT CHARGE", "amount": 4.78, "vat": 1.26, "grossValue": 15.12 },
+          { "description": "OUT-OF-HOURS DELIVERY FEE", "amount": 8.55, "vat": 2.43, "grossValue": 28.88 }
+        ]
+      }
+    ],
+    "mostRecentShipment": {
+      "sender": {
+        "company": "GOYETTE - CUMMERATA"
+      },
+      "recipient": {
+        "address": "9081 Edward Street",
+        "company": "PARISIAN INC",
+        "zipCode": "77829-7862"
+      },
+      "weightInKg": 20.2,
+      "shipmentNumber": "5746129347",
+      "referenceNumber": "9FBBU7JJH9",
+      "additionalCharges": [
+        { "grossValue": 25.61, "description": "SAME-DAY DELIVERY CHARGE" },
+        { "grossValue": 13.22, "description": "REMOTE AREA SURCHARGE" },
+        { "grossValue": 15.12, "description": "FUEL ADJUSTMENT CHARGE" },
+        { "grossValue": 28.88, "description": "OUT-OF-HOURS DELIVERY FEE" }
+      ],
+      "numberOfShipments": 1
+    }
+  }
+}

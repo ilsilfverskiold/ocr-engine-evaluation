@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from evaluation.artifacts import source_image_hash
 
 
 def field_patterns(record: dict) -> set[str]:
@@ -77,7 +78,7 @@ def load_gold_structured(document_path: Path) -> dict | None:
     record = json.loads(path.read_text(encoding='utf-8'))
     if record.get('version') != 1 or record.get('page') != document_path.stem:
         raise ValueError(f'Invalid structured gold identity/version: {path}')
-    if record.get('image_sha256') != hashlib.sha256(document_path.read_bytes()).hexdigest():
+    if record.get('image_sha256') != source_image_hash(document_path):
         raise ValueError(f'Structured gold source image changed: {path}')
     validate_structured_record(record)
     record['path'] = str(path)

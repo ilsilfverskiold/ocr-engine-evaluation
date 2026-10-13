@@ -1,0 +1,94 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 0,
+  "dataset_offset": 0,
+  "doc_type": "receipt",
+  "note": "One schema covering every extractable value on the receipt. The dataset ships only the four SROIE Task 3 targets (company, date, address, total) because that is the task it was built for — too thin to test extraction against, so the rest was hand-labelled from the image and corroborated by OCR engine consensus. `field_provenance` records which fields came from which source. One dataset correction: the postcode was recorded as 'B1750'; the image and every engine read '81750'.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["company", "date", "address", "total"],
+    "model_verified": [
+      "registration_no", "tel", "fax", "email", "document_type", "invoice_no",
+      "datetime", "cashier", "sales_person", "bill_to", "items",
+      "total_exclude_gst", "total_gst", "total_inclusive_gst", "round_amount",
+      "payment_method", "payment_amount", "card_number", "approval_code"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "registration_no": { "type": "string" },
+      "address": { "type": "string" },
+      "tel": { "type": "string" },
+      "fax": { "type": "string" },
+      "email": { "type": "string" },
+      "document_type": { "type": "string" },
+      "invoice_no": { "type": "string" },
+      "date": { "type": "string" },
+      "datetime": { "type": "string" },
+      "cashier": { "type": "string" },
+      "sales_person": { "type": "string" },
+      "bill_to": { "type": "string" },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "description": { "type": "string" },
+            "qty": { "type": "string" },
+            "price": { "type": "string" },
+            "amount": { "type": "string" },
+            "tax_code": { "type": "string" }
+          }
+        }
+      },
+      "total_exclude_gst": { "type": "string" },
+      "total_gst": { "type": "string" },
+      "total_inclusive_gst": { "type": "string" },
+      "round_amount": { "type": "string" },
+      "total": { "type": "string" },
+      "payment_method": { "type": "string" },
+      "payment_amount": { "type": "string" },
+      "card_number": { "type": "string" },
+      "approval_code": { "type": "string" }
+    },
+    "required": ["company", "date", "address", "total"]
+  },
+  "true_json": {
+    "company": "OJC MARKETING SDN BHD",
+    "registration_no": "538358-H",
+    "address": "NO 2 & 4, JALAN BAYU 4, BANDAR SERI ALAM, 81750 MASAI, JOHOR",
+    "tel": "07-388 2218",
+    "fax": "07-388 8218",
+    "email": "ng@ojcgroup.com",
+    "document_type": "TAX INVOICE",
+    "invoice_no": "PEGIV-1030765",
+    "date": "15/01/2019",
+    "datetime": "15/01/2019 11:05:16 AM",
+    "cashier": "NG CHUAN MIN",
+    "sales_person": "FATIN",
+    "bill_to": "THE PEAK QUARRY WORKS",
+    "items": [
+      {
+        "code": "000000111",
+        "description": "KINGS SAFETY SHOES KWD 805",
+        "qty": "1",
+        "price": "193.00",
+        "amount": "193.00",
+        "tax_code": "SR"
+      }
+    ],
+    "total_exclude_gst": "193.00",
+    "total_gst": "0.00",
+    "total_inclusive_gst": "193.00",
+    "round_amount": "0.00",
+    "total": "193.00",
+    "payment_method": "VISA CARD",
+    "payment_amount": "193.00",
+    "card_number": "xxxxxxxxxxxx4318",
+    "approval_code": "000"
+  }
+}

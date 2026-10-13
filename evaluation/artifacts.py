@@ -1,11 +1,27 @@
 """Read the published result bundle, with local working files taking precedence."""
 from functools import lru_cache
 from pathlib import Path
+import hashlib
 import json
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / 'results' / 'current.zip'
+
+
+def source_image_hash(path):
+    """Verify present image bytes; use the pinned corpus identity when absent."""
+    path = Path(path)
+    if path.is_file():
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    try:
+        relative = path.resolve().relative_to(ROOT).as_posix()
+        for entry in json.loads((ROOT / 'documents/manifest.json').read_text()):
+            if entry['file'] == relative:
+                return entry['sha256']
+    except (ValueError, FileNotFoundError):
+        pass
+    raise FileNotFoundError(f'Image absent and not pinned in corpus manifest: {path}')
 
 @lru_cache(maxsize=2)
 def _archive(path, mtime, size):

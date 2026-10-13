@@ -1,0 +1,97 @@
+{
+  "dataset": "hand-labeled",
+  "split": "train",
+  "doc_type": "scanned_legacy",
+  "note": "Brown & Williamson internal correspondence memo, 1983 (UCSF Industry Documents, klpb0135). The previous schema covered the six routing-header fields only and explicitly deferred everything else to the text leg; that leaves the hardest and most extractable parts of the page untested. Extended with the letterhead block, the overlaid secrecy stamp, the two-column trial specification table, and the whole foot-of-page apparatus: signature initials, typist reference, document code, the RECEIVED date stamp and the Bates number. All six original fields and their values are preserved byte-for-byte, including CC as a single '; '-joined string. Every added value corroborated by 5-14 of the 14 saved engine outputs. Judgement calls: (1) the earlier note excluded the SECRET stamp as 'a notice, not a labeled field' — that decision is reversed here. It is machine-printed, sits in a different typeface overlapping the header, and a real pipeline classifying a tobacco-archive document would very much want it; it is recorded verbatim in 'security_notice'. (2) The spec table has three shapes of row: two columns of distinct values, two columns of identical values, and rows where a single centred value spans both columns while each column prints '---'. All three are represented with the same keys — 'trial_1', 'trial_2' and 'common' — with 'common' null where each trial has its own value, so an engine that silently duplicates a spanning value into both columns is distinguishable from one that reads the layout correctly. The literal '---' cell markers are preserved rather than normalised to null, because they are printed characters. (3) The Blend (%) sub-rows are split into their own array since they are a labelled sub-block with numeric values, not free-form specs. (4) The body prose and the asterisk footnote remain out of scope, as before — they are the text leg's job. (5) The RECEIVED stamp is heavily degraded; only 5 engines recover the word, but it is legible on the page above the date stamp, so it is kept. (6) New keys use snake_case; the six original keys keep their original casing (TO, CC, FROM, DATE, SUBJECT, Ref) so no dataset value or key is disturbed.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["TO", "CC", "FROM", "DATE", "SUBJECT", "Ref"],
+    "model_verified": [
+      "company", "division", "document_type", "security_notice",
+      "blend_percent", "specifications", "signature_initials",
+      "typist_reference", "document_code", "received_stamp",
+      "received_stamp_date", "bates_number"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "division": { "type": "string" },
+      "document_type": { "type": "string" },
+      "security_notice": { "type": ["string", "null"] },
+      "TO": { "type": ["string", "null"] },
+      "CC": { "type": ["string", "null"] },
+      "FROM": { "type": ["string", "null"] },
+      "DATE": { "type": ["string", "null"] },
+      "SUBJECT": { "type": ["string", "null"] },
+      "Ref": { "type": ["string", "null"] },
+      "blend_percent": {
+        "type": "array",
+        "description": "Blend (%) sub-block of the trial table, one entry per component",
+        "items": {
+          "type": "object",
+          "properties": {
+            "component": { "type": "string" },
+            "trial_1": { "type": "string" },
+            "trial_2": { "type": "string" }
+          }
+        }
+      },
+      "specifications": {
+        "type": "array",
+        "description": "Remaining rows of the trial table, one entry per printed row",
+        "items": {
+          "type": "object",
+          "properties": {
+            "parameter": { "type": "string" },
+            "trial_1": { "type": "string" },
+            "trial_2": { "type": "string" },
+            "common": { "type": ["string", "null"], "description": "Value printed once across both columns, null when each trial has its own value" }
+          }
+        }
+      },
+      "signature_initials": { "type": ["string", "null"] },
+      "typist_reference": { "type": ["string", "null"] },
+      "document_code": { "type": ["string", "null"] },
+      "received_stamp": { "type": ["string", "null"] },
+      "received_stamp_date": { "type": ["string", "null"] },
+      "bates_number": { "type": ["string", "null"] }
+    },
+    "required": ["TO", "FROM", "DATE", "SUBJECT"]
+  },
+  "true_json": {
+    "company": "BROWN & WILLIAMSON TOBACCO CORPORATION",
+    "division": "RESEARCH & DEVELOPMENT",
+    "document_type": "INTERNAL CORRESPONDENCE",
+    "security_notice": "SECRET. Do Not Copy Or Make Notes Of This Page And Do Not Give Any Of The Information Contained In This Document To Anyone Except In Conformance With The Moorgate Secrecy Protocol.",
+    "TO": "MR. P. H. HARPER",
+    "CC": "MR. T. E. SANDEFUR; DR. P. L. AULBACH",
+    "FROM": "MR. D. S. ROTH",
+    "DATE": "JANUARY 13, 1983",
+    "SUBJECT": "KENT 80/KS TAR REDUCTION - FINLAND/907",
+    "Ref": "S/R 107/82",
+    "blend_percent": [
+      { "component": "MGLF-31", "trial_1": "69.9", "trial_2": "69.9" },
+      { "component": "Oriental", "trial_1": "10.3", "trial_2": "10.3" },
+      { "component": "MRT", "trial_1": "5.0", "trial_2": "0.0" },
+      { "component": "F.C. WTS", "trial_1": "14.8", "trial_2": "19.8" }
+    ],
+    "specifications": [
+      { "parameter": "Final Casing", "trial_1": "MGE-651", "trial_2": "MGE-651", "common": null },
+      { "parameter": "Final Flavor", "trial_1": "MGE-603", "trial_2": "MGE-603", "common": null },
+      { "parameter": "Cigarette Paper", "trial_1": "---", "trial_2": "---", "common": "Current KENT" },
+      { "parameter": "Density", "trial_1": "---", "trial_2": "---", "common": "KENT GOLDEN LIGHTS (Less 2%)" },
+      { "parameter": "Filter Tow", "trial_1": "---", "trial_2": "---", "common": "KENT GOLDEN LIGHTS" },
+      { "parameter": "Plugwrap", "trial_1": "---", "trial_2": "---", "common": "9500 Coresta" },
+      { "parameter": "Tipping", "trial_1": "---", "trial_2": "---", "common": "1100 Coresta MMP*" },
+      { "parameter": "Vent Target", "trial_1": "---", "trial_2": "---", "common": "42-44%" }
+    ],
+    "signature_initials": "D. S. R.",
+    "typist_reference": "DSR/bfw",
+    "document_code": "0014x",
+    "received_stamp": "RECEIVED",
+    "received_stamp_date": "JAN 1 8 1983",
+    "bates_number": "620441151"
+  }
+}

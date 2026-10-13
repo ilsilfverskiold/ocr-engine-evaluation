@@ -1,0 +1,71 @@
+{
+  "dataset": "hand-labeled",
+  "split": "test",
+  "doc_type": "form",
+  "note": "Ohio Attorney General confidential facsimile cover sheet. The previous schema held the eight fill-in fields of the form body and explicitly ruled out the fax-header furniture and the boilerplate. That leaves out the parts of the page that actually separate engines: the low-contrast fax transmission strip along the top edge, the letterhead, the all-caps instruction banner, the footer block and the Bates number printed sideways down the right margin. Extended to cover all of them. Every one of the eight original label/value pairs is preserved byte-for-byte, including 'SPECIAL INSTRUCTIONS' as null for a printed-but-blank field. All added values corroborated by 5-14 of the 14 saved engine outputs. Judgement calls: (1) the fax transmission strip is split into its four components (source, fax number, timestamp, page marker) rather than kept as one line, because engines that recover the strip disagree about how to join it, and the components are individually checkable. Its fax number, '614-466-5087', is the same number the form body prints as 'FAX NO. (614) 466-5087' in a different format — both are recorded as printed. (2) The 'NOTE:' confidentiality paragraph is still not included. It is a labelled field, but it is ninety words of boilerplate prose already scored by the text leg, and exact-matching it would fail every engine equally rather than discriminate between them. (3) 'bates_number' is the archival stamp rotated 90 degrees down the right margin; only 6 of 14 engines recover it, which is the point of including it. (4) 'printed_on_notice' at the very foot is the faintest text on the page at 5 of 14 and is kept for the same reason. (5) Labels remain transcribed verbatim with the trailing colon dropped, as in the original file.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": [
+      "TO", "FAX NUMBER", "PHONE NUMBER", "DATE",
+      "NUMBER OF PAGES INCLUDING COVER SHEET",
+      "SENDER/PHONE NUMBER", "SPECIAL INSTRUCTIONS", "FAX NO."
+    ],
+    "model_verified": [
+      "transmission_header_source", "transmission_header_fax",
+      "transmission_header_timestamp", "transmission_header_page",
+      "issuer_title", "issuer_name", "document_title",
+      "instruction_banner", "footer_address", "footer_website",
+      "footer_tagline", "printed_on_notice", "bates_number"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "transmission_header_source": { "type": ["string", "null"], "description": "Sending station name in the fax strip across the top edge" },
+      "transmission_header_fax": { "type": ["string", "null"], "description": "Fax number as printed in the transmission strip" },
+      "transmission_header_timestamp": { "type": ["string", "null"], "description": "Date and time as printed in the transmission strip" },
+      "transmission_header_page": { "type": ["string", "null"], "description": "Page marker as printed in the transmission strip" },
+      "issuer_title": { "type": ["string", "null"] },
+      "issuer_name": { "type": ["string", "null"] },
+      "document_title": { "type": ["string", "null"] },
+      "FAX NO.": { "type": ["string", "null"] },
+      "TO": { "type": ["string", "null"] },
+      "FAX NUMBER": { "type": ["string", "null"] },
+      "PHONE NUMBER": { "type": ["string", "null"] },
+      "DATE": { "type": ["string", "null"] },
+      "NUMBER OF PAGES INCLUDING COVER SHEET": { "type": ["string", "null"] },
+      "SENDER/PHONE NUMBER": { "type": ["string", "null"] },
+      "SPECIAL INSTRUCTIONS": { "type": ["string", "null"] },
+      "instruction_banner": { "type": ["string", "null"] },
+      "footer_address": { "type": ["string", "null"] },
+      "footer_website": { "type": ["string", "null"] },
+      "footer_tagline": { "type": ["string", "null"] },
+      "printed_on_notice": { "type": ["string", "null"] },
+      "bates_number": { "type": ["string", "null"] }
+    },
+    "required": ["TO", "DATE", "FAX NUMBER", "NUMBER OF PAGES INCLUDING COVER SHEET"]
+  },
+  "true_json": {
+    "transmission_header_source": "ATT. GEN. ADMIN.OFFICE",
+    "transmission_header_fax": "614-466-5087",
+    "transmission_header_timestamp": "Dec 10 '98 17:46",
+    "transmission_header_page": "P.01",
+    "issuer_title": "Attorney General",
+    "issuer_name": "Betty D. Montgomery",
+    "document_title": "CONFIDENTIAL FACSIMILE TRANSMISSION COVER SHEET",
+    "FAX NO.": "(614) 466-5087",
+    "TO": "George Baroody",
+    "FAX NUMBER": "(336) 335-7392",
+    "PHONE NUMBER": "(336) 335-7363",
+    "DATE": "12/10/98",
+    "NUMBER OF PAGES INCLUDING COVER SHEET": "3",
+    "SENDER/PHONE NUMBER": "June Flynn for Eric Brown/(614) 466-8980",
+    "SPECIAL INSTRUCTIONS": null,
+    "instruction_banner": "IF YOU DO NOT RECEIVE ANY OF THE PAGES PROPERLY, PLEASE CONTACT SENDER AS SOON AS POSSIBLE",
+    "footer_address": "State Office Tower / 30 East Broad Street / Columbus, Ohio 43215-3428",
+    "footer_website": "www.ag.state.oh.us",
+    "footer_tagline": "An Equal Opportunity Employer",
+    "printed_on_notice": "Printed on Recycled Paper",
+    "bates_number": "82092117"
+  }
+}

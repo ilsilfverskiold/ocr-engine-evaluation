@@ -1,16 +1,28 @@
 # Secrets
 .env
 
-# Document images + GT sidecars live on HuggingFace
+# Document images live on HuggingFace; reference sidecars ship in Git.
 # (https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark).
 # Fetch with: python scripts/download_data.py
-# The three corpus metadata files are committed — the report needs them.
+# Corpus metadata and scoring references are committed.
 documents/*
 !documents/manifest.json
 !documents/gt_limitations.json
 !documents/gt_provenance.json
 !documents/schema_fields.json
 !documents/schema_sample.json
+!documents/easy/
+!documents/medium/
+!documents/hard/
+documents/easy/**/*
+documents/medium/**/*
+documents/hard/**/*
+!documents/easy/**/
+!documents/medium/**/
+!documents/hard/**/
+!documents/**/*_gt.txt
+!documents/**/*_gt.json
+!documents/**/*_gt.md
 
 # Accepted references are part of the reproducible evaluation. Images, draft
 # proposals, editor exports and save history remain local corpus artifacts.

@@ -340,7 +340,7 @@ without new inference or model judging. New schema calls use the current
 `gt.inference_schema`; record them before scoring. `--collect-only`, `--score`,
 `--docs`, `--engines` and `--legs` support separately approved batches. The repo
 includes accepted table/structured gold and the five original shipping tables;
-the downloader restores manifest-verified source images and original sidecars.
+original sidecars ship in Git and the downloader restores manifest-verified source images.
 
 ## Consistently low cases (reporting only)
 

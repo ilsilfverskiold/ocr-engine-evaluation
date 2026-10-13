@@ -1,272 +1,352 @@
 # OCR Benchmark
 
-Compare OCR engines on six separate tasks: text, Markdown structure, tables,
-key/value extraction, supplied-schema extraction and geometry. The corpus has
-93 pages. The published comparison contains 16 engine configurations and 4,719
-results, including failed and not-applicable records. Additional engine
-integrations are available but have not been benchmarked.
+Compare OCR engines on text, Markdown, tables, key/value extraction, supplied
+schemas and geometry. **93 pages · 16 measured engine configurations.**
 
-## Run your selected engines
-
-Use Python 3.11 or newer. From a fresh clone:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# Fill in credentials only for the engines you will use.
-python scripts/download_data.py
-python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --dry-run
-python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --collect-only
-# Use the timestamp printed by collection:
-python run_benchmark.py --score SAVED_TIMESTAMP --skip-judge
-python scripts/build_evidence_report.py SAVED_TIMESTAMP
-```
-
-Replace the engine list with comma-separated names from
-[the engine guide](docs/engine-integrations.md) or `engines.py`.
-Local and Modal engines need the setup described below. Collection calls the
-selected engines and can incur charges; `--skip-judge` prevents new evaluation
-judge calls. Accepted references and the common schema sample are already shipped.
-There is no reference-generation or benchmark-development step to run.
-
-## View the saved results
+## Open the saved report
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python run_benchmark.py --report current
-
-# Focus on one or several legs.
-python run_benchmark.py --report current --legs tables
-python run_benchmark.py --report current --legs text,markdown
 ```
 
-These commands read **`results/current.zip`** without calling engines or judges.
-The terminal report compares engines side by side, rather than listing each
-engine separately. It opens with an engine × leg matrix, then ranks engines
-within each leg. Overall, easy, medium and hard tables put full scores,
-outlier-excluded scores, page counts and the leg's supporting metrics together.
-Legs with fewer than 24 scored pages (currently geometry) stay in one table.
-Cost/latency comparisons use the actual recorded pass for that leg, with cheapest
-first and a separate speed rank. Best values in each metric column are marked `*`.
-Missing values sort last; failed engines remain visible. There is no cross-leg
-average that rewards engines for skipping difficult legs.
+This reads the saved results; no credentials, image downloads or model calls.
+To focus or sort: `--legs text`, `--report-sort cer`, `--report-sort cost`, or
+`--report-sort latency`. `--report-details` adds document-family breakdowns.
+
+The existing browser report is **`results/reports/ocr-benchmark-final.html`**;
+its linked evidence page shows individual outputs, source pages and box overlays.
+On a fresh clone, build those normal reports with:
 
 ```bash
-# Rank text engines by character error rate, lowest first.
-python run_benchmark.py --report current --legs text --report-sort cer
-# Compare geometry latency, fastest first.
-python run_benchmark.py --report current --legs geometry --report-sort latency
-# Rank by the score after removing the common outlier cases.
-python run_benchmark.py --report current --legs tables --report-sort without-outliers
-# Add document families (invoice, receipt, etc.), other metrics, diagnostics and CSVs.
-python run_benchmark.py --report current --report-details
+python scripts/download_data.py                 # source images, once
+python scripts/build_evidence_report.py current
 ```
 
-`--report-sort` also accepts `score` (default), `wer`, `f1`, and `cost`.
-Where a leg lacks the requested quality metric, its ranking falls back to Full.
-Supporting metrics use the full scored set; a parenthesized count means the
-metric has fewer reference pages. Cost/latency use successful scored pages;
-coverage is shown and can differ between engines. No logs/exports are created
-unless detailed CSVs are requested. HTML reports are unchanged by terminal reporting.
+## Results
 
-For the browser report, download the source pages once and build:
+Saved run: **`20261013T081846Z`**. Rankings use the saved outputs and current scoring rules.
+Each leg is sorted by overall score, highest first. Overall means give each
+document family equal weight. **Easy/medium/hard are difficulty tiers.** “Pages”
+counts successful scores; errors are listed separately. **—** means no score,
+not zero. CER/WER are error rates: lower is better and values can exceed 1.
 
-```bash
-python scripts/download_data.py
-python scripts/build_evidence_report.py
-```
+The “Without low” column appears where the common low-scoring-page exclusion
+changes results: `tax_001` for tables and `chart_003` for KV. These are sensitivity
+checks, not replacement rankings. [Scoring rules](docs/scoring-design.md).
 
-Open **`results/reports/ocr-benchmark-final.html`** for the engine comparison.
-It shows scores by leg, difficulty and document family, full and outlier-excluded
-scores, sortable supporting metrics, cost and latency. The linked
-**`ocr-benchmark-evidence.html`** contains individual document results, source
-images, exact returned outputs, prompts, box overlays and field/cell verdicts.
-Both pages open offline; keep them together. Individual text and Markdown results
-show CER/WER. HTML files are **ignored by Git**. Building makes no model calls;
-downloading source pages requires network access.
+### Text accuracy
 
-## What each leg measures
+Distinct normalized reference-token coverage. CER/WER also measure omissions,
+insertions and ordering; coverage alone ignores extra text. No judge.
 
-All headline scores below run from 0 to 1, higher being better. CER/WER are
-separate error rates: lower is better, and insertions can make them exceed 1.
+| Engine | Overall ↑ | Easy | Medium | Hard | Pages | CER ↓ | WER ↓ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `claude_sonnet_4_6` | 0.9634 | 0.9664 | 0.9610 | 0.9649 | 82 | 0.1267 | 0.1799 |
+| `gemini_flash` | 0.9508 | 0.9690 | 0.9489 | 0.9474 | 82 | 0.1588 | 0.2375 |
+| `textract_text` | 0.9471 | 0.9625 | 0.9513 | 0.9385 | 82 | 0.1476 | 0.2094 |
+| `textract_structured` | 0.9465 | 0.9625 | 0.9513 | 0.9370 | 82 | 0.1478 | 0.2102 |
+| `mistral_ocr_4` | 0.9231 | 0.9560 | 0.9554 | 0.8813 | 82 | 0.1355 | 0.2034 |
+| `qwen3_vl` | 0.9077 | 0.9536 | 0.8856 | 0.9168 | 82 | 0.5730 | 0.7905 |
+| `glm_ocr` | 0.9039 | 0.9459 | 0.9197 | 0.8761 | 82 | 0.1698 | 0.2407 |
+| `mineru` | 0.8613 | 0.9133 | 0.8926 | 0.8152 | 82 | 0.2122 | 0.2826 |
+| `llamaparse` | 0.8584 | 0.9145 | 0.8294 | 0.8714 | 82 | 0.1855 | 0.2826 |
+| `marker` | 0.8563 | 0.8868 | 0.8673 | 0.8365 | 82 | 0.2490 | 0.3260 |
+| `paddleocr_vl` | 0.8525 | 0.9386 | 0.8057 | 0.8746 | 82 | 0.2490 | 0.2499 |
+| `docling` | 0.8248 | 0.9092 | 0.8814 | 0.7441 | 82 | 0.3166 | 0.4273 |
+| `deepseek_ocr` | 0.8243 | 0.8910 | 0.7837 | 0.8458 | 82 | 0.2319 | 0.3298 |
+| `tesseract` | 0.7391 | 0.8682 | 0.7539 | 0.6874 | 82 | 0.3532 | 0.5126 |
 
-| Leg | Headline | Why the supporting metrics matter |
+### Judged text
+
+Separate image/checklist estimates for 11 hard pages without reliable text GT.
+**Historical verdicts:** the old substring shortcut may inflate these scores.
+They are not combined with text accuracy or CER/WER. Engines without saved
+judge verdicts are omitted from this table.
+
+| Engine | Overall ↑ | Hard | Pages |
+| --- | --- | --- | --- |
+| `gemini_flash` | 0.8691 | 0.8691 | 11 |
+| `mistral_ocr_4` | 0.8421 | 0.8421 | 11 |
+| `claude_sonnet_4_6` | 0.8272 | 0.8272 | 11 |
+| `textract_text` | 0.7878 | 0.7878 | 11 |
+| `textract_structured` | 0.7799 | 0.7799 | 11 |
+| `mineru` | 0.6281 | 0.6281 | 11 |
+| `llamaparse` | 0.6253 | 0.6253 | 11 |
+| `paddleocr_vl` | 0.5245 | 0.5245 | 11 |
+| `docling` | 0.5151 | 0.5151 | 11 |
+| `tesseract` | 0.2853 | 0.2853 | 11 |
+
+### Markdown structure
+
+Correct structural elements plus half credit for partial matches. Bold is not a
+heading. Cached model-authored checklists are shared across engines; code scores
+the answers. CER/WER below measure rendered text separately.
+
+| Engine | Overall ↑ | Easy | Medium | Hard | Pages | CER ↓ | WER ↓ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `mistral_ocr_4` | 0.7634 | 0.8313 | 0.6746 | 0.8242 | 92 | 0.1355 | 0.2034 |
+| `qwen3_vl` | 0.7566 | 0.8913 | 0.7464 | 0.7319 | 92 | 0.2410 | 0.3122 |
+| `claude_sonnet_4_6` | 0.7062 | 0.8243 | 0.6440 | 0.7311 | 92 | 0.1267 | 0.1799 |
+| `mineru` | 0.6972 | 0.8225 | 0.6624 | 0.6964 | 92 | 0.2136 | 0.2836 |
+| `llamaparse` | 0.6911 | 0.8441 | 0.6663 | 0.6747 | 92 | 0.1855 | 0.2826 |
+| `gemini_flash` | 0.6781 | 0.8115 | 0.5792 | 0.7314 | 92 | 0.1588 | 0.2375 |
+| `docling` | 0.6520 | 0.8434 | 0.6406 | 0.6141 | 92 | 0.3166 | 0.4273 |
+| `marker` | 0.6398 | 0.7972 | 0.5581 | 0.6718 | 92 | 0.2490 | 0.3260 |
+| `deepseek_ocr` | 0.6391 | 0.8065 | 0.5767 | 0.6519 | 92 | 0.2941 | 0.3798 |
+| `paddleocr_vl` | 0.6362 | 0.8032 | 0.5512 | 0.6689 | 92 | 0.2490 | 0.2499 |
+| `glm_ocr` | 0.5173 | 0.3794 | 0.4646 | 0.5979 | 92 | 0.3209 | 0.3753 |
+
+### Tables
+
+Reference-cell value credit against accepted gold, including blanks and partial
+text matches. Logical row/column associations matter; compatible reflow is allowed.
+Extras are separate diagnostics. Shipping uses the better whole-page gold/original
+reference score for every engine.
+
+| Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages | Strict F1 ↑ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `textract_structured` | 0.7896 | 0.7872 | 0.7883 | 0.8064 | 0.7409 | 42 | 0.5729 |
+| `claude_sonnet_4_6` | 0.7552 | 0.7587 | 0.9299 | 0.6681 | 0.8422 | 42 | 0.6505 |
+| `qwen3_vl` | 0.7368 | 0.7420 | 0.7459 | 0.8036 | 0.5273 | 42 | 0.6261 |
+| `mistral_ocr_4` | 0.7301 | 0.7324 | 0.7309 | 0.6718 | 0.9042 | 42 | 0.5886 |
+| `gemini_flash` | 0.7233 | 0.7212 | 0.8156 | 0.7216 | 0.6359 | 42 | 0.6384 |
+| `paddleocr_vl` | 0.7204 | 0.7205 | 0.6781 | 0.7120 | 0.7879 | 42 | 0.5950 |
+| `llamaparse` | 0.6449 | 0.6503 | 0.7793 | 0.6936 | 0.3643 | 42 | 0.5480 |
+| `mineru` | 0.6304 | 0.6300 | 0.6107 | 0.6080 | 0.7175 | 42 | 0.5345 |
+| `glm_ocr` | 0.6288 | 0.6283 | 0.6416 | 0.6264 | 0.6232 | 42 | 0.5563 |
+| `deepseek_ocr` | 0.6118 | 0.6139 | 0.7792 | 0.5847 | 0.5256 | 42 | 0.5288 |
+| `docling` | 0.5472 | 0.5472 | 0.5251 | 0.5798 | 0.4713 | 42 | 0.4967 |
+| `marker` | 0.5401 | 0.5396 | 0.5276 | 0.5098 | 0.6436 | 42 | 0.3719 |
+
+### Key/value extraction
+
+Correct values under eligible printed labels. Exact/cached mappings come first;
+ambiguous wording or split values use contextual judge decisions, cached for reuse.
+Missing decisions stay pending. Blank-inclusive headline; extras are diagnostic.
+
+| Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages |
+| --- | --- | --- | --- | --- | --- | --- |
+| `textract_structured` | 0.7829 | 0.7840 | 0.8502 | 0.7943 | 0.7291 | 62 |
+| `claude_sonnet_4_6` | 0.7752 | 0.7902 | 0.7864 | 0.7960 | 0.7332 | 65 |
+| `qwen3_vl` | 0.6196 | 0.6335 | 0.6669 | 0.5498 | 0.7182 | 65 |
+| `gemini_flash` | 0.5086 | 0.5185 | 0.4923 | 0.4320 | 0.6507 | 63 |
+
+### Supplied-schema extraction
+
+Correct values under exact requested keys, penalizing extra/duplicate keys. Every
+engine receives the same frozen sample: 3,316 fields across 65 pages. No judge.
+
+| Engine | Overall ↑ | Easy | Medium | Hard | Pages | Errors |
+| --- | --- | --- | --- | --- | --- | --- |
+| `gemini_flash` | 0.9679 | 0.9843 | 0.9489 | 0.9930 | 64 | 1 |
+| `claude_sonnet_4_6` | 0.9597 | 0.9858 | 0.9409 | 0.9796 | 65 | 0 |
+| `llamaparse` | 0.8998 | 0.9398 | 0.9162 | 0.8512 | 65 | 0 |
+| `mistral_ocr_4` | 0.8635 | 0.9371 | 0.8472 | 0.8554 | 65 | 0 |
+| `qwen3_vl` | 0.8591 | 0.9140 | 0.8254 | 0.8906 | 65 | 0 |
+| `glm_ocr` | 0.6660 | 0.7883 | 0.6342 | 0.6607 | 65 | 0 |
+| `deepseek_ocr` | 0.1604 | 0.3236 | 0.1429 | 0.1094 | 64 | 1 |
+
+### Geometry
+
+Located reference-unit recall: text matches and each box contains the other’s
+centre. Receipts use lines; FUNSD/financial tables use words. Coarse boxes remain
+coarse. Precision/F1 penalize extra boxes; CER/WER use the returned box text.
+
+| Engine | Overall ↑ | Easy | Medium | Hard | Pages | F1 ↑ | CER ↓ | WER ↓ | Errors |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `textract_text` | 0.9476 | 0.9936 | — | 0.9246 | 17 | 0.9369 | 0.0388 | 0.1358 | 0 |
+| `textract_structured` | 0.9474 | 0.9936 | — | 0.9243 | 17 | 0.9370 | 0.0387 | 0.1355 | 0 |
+| `paddleocr_ppocrv5` | 0.8507 | 0.9601 | — | 0.7959 | 17 | 0.7776 | 0.1046 | 0.7023 | 0 |
+| `tesseract` | 0.7956 | 0.8286 | — | 0.7791 | 17 | 0.8166 | 0.1671 | 0.3582 | 0 |
+| `gemini_flash` | 0.5884 | 0.9020 | — | 0.4315 | 17 | 0.5944 | 0.1534 | 0.2532 | 0 |
+| `marker` | 0.2770 | 0.5341 | — | 0.0198 | 9 | 0.3194 | 0.5563 | 0.6088 | 8 |
+| `claude_sonnet_4_6` | 0.1525 | 0.0081 | — | 0.2248 | 17 | 0.1503 | 0.1186 | 0.2064 | 0 |
+| `mineru_pipeline` | 0.1132 | 0.3059 | — | 0.0169 | 17 | 0.1452 | 0.2088 | 0.3155 | 0 |
+| `mineru` | 0.1130 | 0.3078 | — | 0.0157 | 17 | 0.1473 | 0.1478 | 0.2848 | 0 |
+| `deepseek_ocr` | 0.0806 | 0.2262 | — | 0.0077 | 17 | 0.1161 | 0.0916 | 0.1825 | 0 |
+| `paddleocr_vl` | 0.0564 | 0.1388 | — | 0.0152 | 17 | 0.0820 | 0.0813 | 0.1764 | 0 |
+| `qwen3_vl` | 0.0052 | 0.0142 | — | 0.0007 | 17 | 0.0057 | 0.5342 | 0.6834 | 0 |
+
+`mineru_pipeline` mixes line and whole-table boxes. `deepseek_ocr`, `mineru` and
+`paddleocr_vl` return layout blocks; their low word-location scores are shown.
+
+## Documents
+
+Single-page images from public datasets. Ground-truth sidecars and accepted
+references are committed under `documents/`; only images are downloaded.
+Text references: **63 human + 19 model-verified** pages. The remaining **11** use
+separate judged-text estimates. Counts below show reference coverage.
+
+| Tier | Document family | Pages | Text | Judged | Markdown | Tables | KV | Schema | Geometry |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| easy | invoice | 6 | 6 | — | 6 | 6 | 6 | 6 | — |
+| easy | receipt | 6 | 6 | — | 6 | 5 | 6 | 6 | 6 |
+| medium | bank_statement | 5 | 5 | — | 5 | 5 | 5 | 5 | — |
+| medium | lease | 5 | 5 | — | 5 | — | 5 | 5 | — |
+| medium | medical | 5 | 5 | — | 5 | 1 | 5 | 5 | — |
+| medium | payslip | 5 | 5 | — | 5 | 5 | 5 | 5 | — |
+| medium | photo_receipt | 5 | 5 | — | 5 | 2 | 5 | 5 | — |
+| medium | shipping | 5 | 5 | — | 5 | 5 | 5 | 5 | — |
+| medium | tax_form | 5 | 5 | — | 5 | 5 | 5 | 5 | — |
+| hard | chart | 5 | 5 | — | 5 | — | 5 | 5 | — |
+| hard | financial_table | 5 | 5 | — | 5 | 5 | 5 | 5 | 5 |
+| hard | form | 6 | 6 | — | 6 | 3 | 6 | 6 | 6 |
+| hard | handwritten | 6 | 6 | — | 6 | — | — | — | — |
+| hard | legal | 6 | 6 | — | 6 | — | — | — | — |
+| hard | newspaper | 6 | — | 6 | 5 | — | — | — | — |
+| hard | report | 6 | 1 | 5 | 6 | — | — | — | — |
+| hard | scanned_legacy | 6 | 6 | — | 6 | — | 2 | 2 | — |
+
+Source IDs, image hashes and selection are in `documents/manifest.json`.
+[Dataset attribution and licences](docs/documents-and-licensing.md).
+
+## Cost and latency
+
+The two rankings below use the **same 82 text-scored pages per engine**, with the
+actual pass used for text. Costs are recorded USD/page, excluding startup,
+reference/judge work and failed calls. Local CPU cost is unpriced (shown as $0).
+Modal seconds/page are batch-amortized; API/local timings are per-call. Additional
+schema, KV and geometry passes have their own cost/latency in the full report.
+
+### Cost — lowest first
+
+| Rank | Engine | USD/page ↓ | Seconds/page ↓ |
+| --- | --- | --- | --- |
+| 1 | `docling` | 0.000000 | 15.60 |
+| 2 | `tesseract` | 0.000000 | 2.38 |
+| 3 | `glm_ocr` | 0.000540 | 1.76 |
+| 4 | `deepseek_ocr` | 0.000749 | 1.08 |
+| 5 | `mineru` | 0.000782 | 1.13 |
+| 6 | `paddleocr_vl` | 0.000949 | 1.37 |
+| 7 | `marker` | 0.001173 | 1.69 |
+| 8 | `gemini_flash` | 0.001251 | 4.06 |
+| 9 | `textract_text` | 0.001500 | 4.73 |
+| 10 | `qwen3_vl` | 0.003734 | 5.38 |
+| 11 | `llamaparse` | 0.003750 | 21.88 |
+| 12 | `mistral_ocr_4` | 0.004000 | 3.85 |
+| 13 | `claude_sonnet_4_6` | 0.015129 | 18.27 |
+| 14 | `textract_structured` | 0.065000 | 7.08 |
+
+### Time — fastest first
+
+| Rank | Engine | USD/page ↓ | Seconds/page ↓ |
+| --- | --- | --- | --- |
+| 1 | `deepseek_ocr` | 0.000749 | 1.08 |
+| 2 | `mineru` | 0.000782 | 1.13 |
+| 3 | `paddleocr_vl` | 0.000949 | 1.37 |
+| 4 | `marker` | 0.001173 | 1.69 |
+| 5 | `glm_ocr` | 0.000540 | 1.76 |
+| 6 | `tesseract` | 0.000000 | 2.38 |
+| 7 | `mistral_ocr_4` | 0.004000 | 3.85 |
+| 8 | `gemini_flash` | 0.001251 | 4.06 |
+| 9 | `textract_text` | 0.001500 | 4.73 |
+| 10 | `qwen3_vl` | 0.003734 | 5.38 |
+| 11 | `textract_structured` | 0.065000 | 7.08 |
+| 12 | `docling` | 0.000000 | 15.60 |
+| 13 | `claude_sonnet_4_6` | 0.015129 | 18.27 |
+| 14 | `llamaparse` | 0.003750 | 21.88 |
+
+**Geometry-only configurations** (17 pages each; cost sorted):
+
+| Engine | USD/page ↓ | Seconds/page ↓ |
 | --- | --- | --- |
-| `text` | Fraction of distinct normalized reference tokens found | Coverage ignores extra/repeated words and order. CER/WER measure character/word insertions, deletions and substitutions; word precision/recall/F1 show excess or missing text. No judge. |
-| `markdown` | `(correct + 0.5 × partial) / reference elements` | Locate full/partial content, then check actual Markdown/HTML types. Bold text is not a heading. Disjoint spans can share a paragraph; text cannot earn credit twice. Rendered-text CER/WER are separate from structure. |
-| `tables` | Reference value credit divided by reference cells, including blanks | Exact normalized values earn 1; partial text earns similarity ≥0.5; wrong numeric values earn 0. Logical sections may span physical tables; labels and header/unit bands establish item and column associations, including combined cells. Extras do not reduce the headline; strict cell F1, extra-cell rate and structure similarity remain diagnostics. |
-| `key_value` | Correct values divided by eligible printed-label reference fields | Exact/cached key mappings first. Full/partial value overlap nominates ambiguous or split-field candidates for a contextual judge; overlap alone never awards credit. Approved mappings are cached. Missing required decisions remain pending. |
-| `schema` | Correct values divided by requested fields plus unexpected/duplicate fields | Each engine receives the same frozen schema field sample. Exact supplied keys, types and values matter. Changing requested keys requires new extraction, not just rescoring. |
-| `geometry` | Correctly located reference units divided by reference units | Text matching and mutual-center box containment establish location. Precision/F1 expose extra boxes; box-text CER/WER measure recognition. The report shows actual returned boxes, not transcription from another pass. |
+| `paddleocr_ppocrv5` | 0.000268 | 0.88 |
+| `mineru_pipeline` | 0.000430 | 2.62 |
 
-Markdown references are cached, model-authored image catalogues, with reviewed
-repairs; scoring the engines against them is code-based. There are 92 catalogues
-for 93 pages. Full-page block/order diagnostics require independent structural
-references and can be N/A even when the checklist headline is available.
+## Engines and versions tested
 
-Tables use accepted gold references. For shipping, score against **both whole-page
-gold and original references and take the higher value score** for every engine.
-Do not mix the best individual cells from different references. Items and columns
-must remain associated: an identical subtotal cannot satisfy a missing tax cell.
-The span-aware structure metric is a custom diagnostic, not official PubTabNet TEDS.
+These are **recorded run versions**, not inferred from today's package releases.
+Aliases such as `latest` remain unpinned where the capture did not record an
+immutable version. Exact prompts, task options and responses are in
+`results/current.zip` and the evidence report.
 
-KV and schema share accepted underlying keys/values, but have different task
-selection: schema uses a fixed sample; KV excludes invented/unprinted labels and
-uncertain label assignments. The KV review overlay does not change schema gold.
-Judge-approved split-value groups require full value coverage and cannot reuse
-returned fields. Currency symbols normalize without deleting decimal signs or
-identifier digits. Extra KV fields are diagnostic; schema extras affect its score.
+| Engine ID | Recorded model/version | Configuration |
+| --- | --- | --- |
+| `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; dedicated schema/KV/Markdown and pixel-frame geometry passes |
+| `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1) | vLLM, Modal A100-80GB |
+| `docling` | `docling-latest` (exact release unrecorded) | Local CPU document pipeline |
+| `gemini_flash` | `gemini-3.1-flash-lite` | Google API |
+| `glm_ocr` | `zai-org/GLM-OCR` | vLLM, Modal A10 |
+| `llamaparse` | `llamaparse-latest`; `llama-extract` for schema | Hosted Parse/Extract APIs |
+| `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
+| `mineru` | `MinerU2.5-2509-1.2B` | vLLM native batch, Modal A100-80GB |
+| `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
+| `mistral_ocr_4` | `mistral-ocr-latest` conversion; `mistral-ocr-4-0` schema | Mistral OCR/Annotations API |
+| `paddleocr_ppocrv5` | PP-OCRv5 server det `ca867c89` / rec `b26c3587`; PaddleOCR `3.7.0`; Paddle GPU `3.2.1` | Modal A10; geometry only |
+| `paddleocr_vl` | `PaddleOCR-VL@7fa00a8c55b7`, pipeline v1 | Layout + vLLM recognition, Modal A100-80GB; not VL 1.6 |
+| `qwen3_vl` | `Qwen/Qwen3-VL-8B-Instruct` | vLLM, Modal A100-80GB |
+| `tesseract` | `5.5.2` | Local CPU |
+| `textract_structured` | `aws-textract-analyze-document` | AWS FORMS/TABLES; no supplied-schema interface |
+| `textract_text` | `aws-textract-detect-document-text` | AWS text/word detection |
 
-Geometry covers 17 pages, using lines for SROIE and words for FUNSD/SynFinTabs.
-Layout-only outputs also compete, explicitly labeled; they are not converted
-into invented word boxes. Reviewed annotated-region scope limits precision;
-unannotated text within that region can still affect it.
+**Available but unmeasured:** TeleOCR, RapidOCR, OvisOCR2, PaddleOCR-VL 1.6,
+DeepSeek-OCR-2, Surya OCR 2, MinerU 4 Standard, Mistral OCR 4.1, Google Document
+OCR, Mathpix, OpenDoc, LightOnOCR 2, Apple Vision, Chandra OCR 2, dots.mocr and
+Datalab. Their IDs, model pins, task routes, initial GPU choices and unresolved
+runtime checks are in [the engine guide](docs/engine-integrations.md).
 
-See [scoring-design.md](docs/scoring-design.md) for precise rules and limitations.
+**Comparison limits:** historical default table/Markdown prompts vary; the saved
+Markdown coverage was completed with dedicated calls where needed. Sonnet's 17
+geometry calls use the updated pixel prompt. Output-cap stops and provider errors
+remain recorded. Reference omissions and different output granularity can affect
+scores; inspect same-page evidence before attributing a loss to recognition.
 
-## Full scores and consistently low-scoring pages
+## Run the benchmark yourself
 
-The primary score averages pages within each document type, then gives each
-represented type equal weight. Errors, missing references and pending verdicts
-are excluded, with counts shown. Different coverage can make engine averages
-incomparable; inspect the same-page evidence too.
-
-A separate sensitivity comparison removes a **page/leg case** only if at least
-three engines have scored it, every scored engine is at or below **0.25**, and
-there are no failed or pending participants. Engines with no applicable output
-are not treated as zeros. The cases are selected using the entire saved cohort,
-not the current display filters, and removed identically for every engine.
-Full and remaining page counts and lost document types are disclosed. If nothing
-remains, the alternative is N/A. Cost and latency are never reduced by this filter.
-
-This does **not** prove that a page is an outlier or that its reference is wrong.
-Hard images, missing reference text, faulty catalogues, prompt choices and scorer
-limitations can all produce low scores. Human-accepted “gold” also can contain
-mistakes. The alternative is a sensitivity check, not a replacement ranking.
-
-## Cost, latency and known comparison limits
-
-Costs attach to **inference calls**, not each leg that reuses a call. Reports show
-successful primary-pass cost/latency per page and all-pass cost per page. Modal
-figures use saved batch GPU timing/rates, with steady-state values where recorded;
-they are estimates, not invoices. Startup/setup, failed-call charges and reference
-or synonym judging are not included in those deployment estimates. Inspect per-pass
-coverage: differently tasked calls are not interchangeable. Historical model aliases
-and rates describe the saved run, not guaranteed current vendor behavior/pricing.
-
-There are 82 usable text-reference pages; 11 unreliable silver-text pages are
-excluded. Reading order, punctuation and incomplete references can raise CER/WER
-without proving a recognition error. Saved silver-document judge estimates appear in a separate comparison; they
-are not blended into the six leg scores or CER/WER.
-
-All 11 participating Markdown engines now score the same 92 cached-reference
-pages, after filling 104 missing outputs (run `20261007T121019Z`). `newspaper_000`
-has no usable Markdown reference and is excluded for every engine. Four added
-GLM/Qwen responses hit their existing output caps; saved stop reasons remain
-visible. Equal coverage does not remove output-limit or prompt limitations.
-
-Historical default prompts were not uniformly dedicated Markdown/table requests.
-Gemini's old default did not explicitly request Markdown; Sonnet requested structure
-but not a dedicated Markdown-only control. These fairness limits remain disclosed.
-Sonnet geometry was rerun on all 17 pages with the known-frame pixel-coordinate
-prompt (run `20261007T113310Z`): overall location recall is 0.1525, versus 0.0324
-before. All responses completed without truncation; receipt/form localization
-remains weak. Further DeepSeek/prompt/backend controls remain unmeasured.
-
-## Re-evaluate saved calls without spending
-
-Download the corpus first. Then:
+After the installation above:
 
 ```bash
-python run_benchmark.py --rescore current --skip-judge
-# Read the NEW_TIMESTAMP printed by the rescore.
-python run_benchmark.py --report NEW_TIMESTAMP
-python scripts/build_evidence_report.py NEW_TIMESTAMP
+cp .env.example .env
+# Add credentials only for your chosen engines.
+python scripts/download_data.py        # source images; preserves committed GT
 
-# Publish the reviewed result and its exact source calls as the single bundle.
-python scripts/publish_results.py NEW_TIMESTAMP
+# Preview the selected experiment without calling engines.
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --dry-run
+
+# Run those engines; this can incur provider/Modal charges.
+python run_benchmark.py --engines mistral_ocr_4 --legs text,markdown,tables --skip-judge
+
+# Use the timestamp printed by the run.
+python run_benchmark.py --report RUN_TIMESTAMP
+python scripts/build_evidence_report.py RUN_TIMESTAMP
 ```
 
-Publishing verifies file hashes and atomically replaces `results/current.zip`.
-It also retains the shared reference catalogues and cached KV judge decisions
-needed for offline scoring. It does not make model calls or delete your local
-working files. After verifying publication, working `results/runs`,
-`results/ocr_outputs`, logs and CSV summaries can be removed; they are ignored.
-The archive retains original source-call identifiers for provenance, not multiple
-public leaderboards. Source paths are rebased when the repository moves.
+`--skip-judge` prevents new evaluation judge calls; OCR inference still runs.
+For KV with new wording, cached decisions are reused and uncached reviews remain
+pending. Omit the flag to enable needed contextual judging; set
+`OCR_KV_JUDGE_BUDGET_USD` to your allowance.
 
-`--skip-judge` disables new judging, including KV, but **does not disable OCR
-inference** when used in an engine run. Existing cache decisions remain usable;
-new unresolved KV decisions stay pending. Without the flag, KV may pay for a
-contextual review when needed; `OCR_KV_JUDGE_BUDGET_USD` limits the planning
-reserve (default $2). Failed paid reviews are journaled, not blindly retried.
-
-## Run engines
-
-Install only the external system tools your selected engines need; Tesseract
-requires its system binary. API credentials belong in `.env` (see `.env.example`).
-Use explicit engine and leg selections:
+### Choose engines and pages
 
 ```bash
-python run_benchmark.py --check
-python run_benchmark.py --engines mistral_ocr_4 --tiers easy --legs text --estimate
-# This performs inference and can spend money:
-python run_benchmark.py --engines mistral_ocr_4 --tiers easy --legs text --skip-judge
+# Multiple engines, selected difficulty and legs.
+python run_benchmark.py --engines tesseract,docling --tiers easy --legs text,tables --skip-judge
 
-# Collect first, evaluate later:
-python run_benchmark.py --engines gemini_flash --legs schema --collect-only
-python run_benchmark.py --score SAVED_TIMESTAMP --skip-judge
+# One specific page; inspect the plan first.
+python run_benchmark.py --engines claude_sonnet_4_6,gemini_flash --docs invoice_000 --legs schema --dry-run
+
+# Collect outputs first; evaluate them separately.
+python run_benchmark.py --engines rapidocr --collect-only
+python run_benchmark.py --score RUN_TIMESTAMP --skip-judge
 ```
 
-For Modal, authenticate and deploy only the chosen app. Smoke tests run inference
-unless explicitly skipped:
+Use comma-separated engine IDs from `engines.py` or the engine guide. Available
+legs: `text,markdown,tables,key_value,schema,geometry`. Omitted engine/leg flags
+use the registry defaults. Tesseract needs its system binary; Apple Vision needs
+macOS. Cloud engines use the credentials listed in `.env.example`.
+
+For a Modal engine, deploy its app before running it:
 
 ```bash
 modal setup
 python scripts/setup_modal.py
-python scripts/deploy_modal.py --apps glm_ocr --skip-smoke
+python scripts/deploy_modal.py --apps rapidocr --skip-smoke
 ```
 
-For an extension, collect the new engines, then combine their calls with the
-published baseline in one rescore:
-
-```bash
-python run_benchmark.py --engines rapidocr --collect-only
-python run_benchmark.py --rescore current,NEW_TIMESTAMP --skip-judge
-```
-
-Later supplied runs replace earlier answers for overlapping engine/page/leg
-combinations, including failures. Inspect new coverage and provenance before
-publishing. `--dry-run`, `--docs`, `--resume` and `--rerun-errors` are described
-by `python run_benchmark.py --help`. Resuming/retrying can spend money.
-
-## Repository layout
-
-| Path | Purpose |
-| --- | --- |
-| `engines.py` | Registry of interfaces, task support and configuration |
-| `runners/` | Required runtime adapters that call APIs, local engines and Modal |
-| `modal_apps/` | Deployable inference applications, including unrun integrations |
-| `evaluation/` | Shared task planning, reference loading, scoring and reporting |
-| `scripts/` | Corpus download, deployment, publishing and HTML reporting |
-| `documents/` | Corpus metadata and accepted references; source images download separately |
-| `results/current.zip` | One published score set, inference evidence and reusable judge/reference caches |
-| `results/reports/` | Local HTML only; ignored by Git |
-
-Accepted references include 42 table gold files, 65 shared structured gold files,
-five original shipping alternatives, the frozen schema sample and KV label-review
-overlay. Images and original sidecars come from
-[the corpus dataset](https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark);
-the downloader verifies manifest hashes and refuses conflicting overwrites.
-See [sources and licences](docs/documents-and-licensing.md).
-
-Add engines through `runners/base.py` and `engines.py`, declaring actual native or
-prompted capabilities. Reuse one conversion across supported legs. Never add a
-second model to infer missing structure and attribute it to OCR. Unrun integration
-recipes, GPU assumptions and unresolved checks are in
-[engine integrations](docs/engine-integrations.md). Development scratch,
-superseded exports and historical test scripts are not part of the published tree.
+Deployments and smoke inference can incur charges. `--skip-smoke` skips inference,
+not the build. For engine configuration and GPU requirements, use
+[the engine guide](docs/engine-integrations.md); for scoring details, use
+[the scoring design](docs/scoring-design.md).

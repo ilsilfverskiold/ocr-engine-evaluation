@@ -1,0 +1,319 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 3,
+  "dataset_offset": 112,
+  "doc_type": "chart",
+  "note": "The getomni schema asks for one string (the largest employment category) and a four-row male/female series rounded to the nearest thousand — thirteen leaf values, and the rounding erases most of the difficulty. The page actually carries two full stacked-bar figures: Figure 20 with six employment-level series across four years, and Figure 21 with six age bands x two genders x four years plus a per-row total. Extended to cover both figures in full, plus the figure titles, chart type, y-axis maxima and printed axis labels, the legend labels verbatim (en dashes, not hyphens), the F=Female / M=Male key, and the page number and report footer. Provenance is unusual for this document and worth stating plainly: no numeric value is printed anywhere on the page — every bar value must come from either the chart geometry or the dataset's own human-authored table annotation. The series values here are taken from that annotation (`chart_003_gt.txt` / `chart_003_gt.json`, which the dataset labels 'human-authored markdown GT'), not read off pixels by me, so they are recorded under dataset_human. Everything that is literally printed on the page — titles, axis labels, legend text, footer — was verified against the 14 saved engine outputs and sits under model_verified; the legend and axis strings corroborate at 6-9 of 14 because half the engines drop chart furniture entirely, which is exactly the behaviour this document should be penalising. The dataset's 'topWorkforceSector' and 'workforceByGender' are preserved unchanged, including its rounded thousands, even though the unrounded totals (e.g. 8,200 male in 2020) are also present in 'ageAndGenderBreakdown'.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": [
+      "topWorkforceSector", "workforceByGender",
+      "employmentLevelBreakdown", "ageAndGenderBreakdown"
+    ],
+    "model_verified": [
+      "figures", "pageNumber", "documentFooter"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "title": "Workforce By Employment & Gender",
+    "required": ["topWorkforceSector", "workforceByGender"],
+    "properties": {
+      "figures": {
+        "type": "array",
+        "description": "One entry per figure printed on the page, in page order",
+        "items": {
+          "type": "object",
+          "properties": {
+            "figureNumber": { "type": "string", "description": "Figure label as printed, e.g. 'Figure 20'" },
+            "title": { "type": "string", "description": "Figure title as printed, excluding the figure label" },
+            "chartType": { "type": "string" },
+            "yAxisMax": { "type": "number", "description": "Highest printed y-axis tick" },
+            "yAxisLabels": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Y-axis tick labels as printed, bottom to top"
+            },
+            "xAxisLabels": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "X-axis category labels as printed, left to right"
+            },
+            "legend": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Legend entries as printed, in legend order"
+            },
+            "legendNote": { "type": ["string", "null"], "description": "Any key printed beneath the legend, null if absent" }
+          }
+        }
+      },
+      "employmentLevelBreakdown": {
+        "type": "array",
+        "description": "Figure 20: headcount for each employment level in each year",
+        "items": {
+          "type": "object",
+          "required": ["level"],
+          "properties": {
+            "level": { "type": "string" },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "year": { "type": "number" },
+                  "headcount": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ageAndGenderBreakdown": {
+        "type": "array",
+        "description": "Figure 21: headcount by age band for each year and gender, one entry per bar",
+        "items": {
+          "type": "object",
+          "required": ["year", "gender"],
+          "properties": {
+            "year": { "type": "number" },
+            "gender": { "type": "string" },
+            "bands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ageBand": { "type": "string", "description": "Age band label as printed in the legend" },
+                  "headcount": { "type": "number" }
+                }
+              }
+            },
+            "total": { "type": "number" }
+          }
+        }
+      },
+      "workforceByGender": {
+        "type": "array",
+        "description": "Data on the workforce split by gender, listed by year. Round all numbers to the nearest thousand.",
+        "items": {
+          "type": "object",
+          "required": ["year", "male", "female"],
+          "properties": {
+            "male": { "type": "number", "description": "Number of male employees in that year rounded to nearest thousand (i.e. 1,234 should be 1000)." },
+            "year": { "type": "number", "description": "Four-digit year" },
+            "female": { "type": "number", "description": "Number of female employees in that year rounded to nearest thousand (i.e. 8,904 should be 9000)." }
+          }
+        }
+      },
+      "topWorkforceSector": {
+        "type": "string",
+        "description": "The largest employment category (e.g. Sales, Operations, Finance, etc.)"
+      },
+      "pageNumber": { "type": "string" },
+      "documentFooter": { "type": "string" }
+    }
+  },
+  "true_json": {
+    "figures": [
+      {
+        "figureNumber": "Figure 20",
+        "title": "Global Workforce by Employment Level",
+        "chartType": "stacked bar",
+        "yAxisMax": 12000,
+        "yAxisLabels": ["0", "2,000", "4,000", "6,000", "8,000", "10,000", "12,000"],
+        "xAxisLabels": ["2020", "2019", "2018", "2017"],
+        "legend": [
+          "Executive & Senior Management",
+          "Management",
+          "Professional",
+          "Professional Support",
+          "Administration",
+          "Operations"
+        ],
+        "legendNote": null
+      },
+      {
+        "figureNumber": "Figure 21",
+        "title": "Global Workforce by Age and Gender",
+        "chartType": "stacked bar",
+        "yAxisMax": 10000,
+        "yAxisLabels": ["0", "2,000", "4,000", "6,000", "8,000", "10,000"],
+        "xAxisLabels": ["F", "M", "2020", "F", "M", "2019", "F", "M", "2018", "F", "M", "2017"],
+        "legend": ["0–24", "25–34", "35–44", "45–54", "55–64", "65+"],
+        "legendNote": "F=Female    M=Male"
+      }
+    ],
+    "employmentLevelBreakdown": [
+      {
+        "level": "Executive & Senior Management",
+        "values": [
+          { "year": 2020, "headcount": 400 },
+          { "year": 2019, "headcount": 400 },
+          { "year": 2018, "headcount": 400 },
+          { "year": 2017, "headcount": 400 }
+        ]
+      },
+      {
+        "level": "Management",
+        "values": [
+          { "year": 2020, "headcount": 1000 },
+          { "year": 2019, "headcount": 1000 },
+          { "year": 2018, "headcount": 1000 },
+          { "year": 2017, "headcount": 1000 }
+        ]
+      },
+      {
+        "level": "Professional",
+        "values": [
+          { "year": 2020, "headcount": 1500 },
+          { "year": 2019, "headcount": 1500 },
+          { "year": 2018, "headcount": 1500 },
+          { "year": 2017, "headcount": 1500 }
+        ]
+      },
+      {
+        "level": "Professional Support",
+        "values": [
+          { "year": 2020, "headcount": 1000 },
+          { "year": 2019, "headcount": 1000 },
+          { "year": 2018, "headcount": 1000 },
+          { "year": 2017, "headcount": 1000 }
+        ]
+      },
+      {
+        "level": "Administration",
+        "values": [
+          { "year": 2020, "headcount": 500 },
+          { "year": 2019, "headcount": 500 },
+          { "year": 2018, "headcount": 500 },
+          { "year": 2017, "headcount": 500 }
+        ]
+      },
+      {
+        "level": "Operations",
+        "values": [
+          { "year": 2020, "headcount": 5500 },
+          { "year": 2019, "headcount": 5500 },
+          { "year": 2018, "headcount": 5500 },
+          { "year": 2017, "headcount": 5500 }
+        ]
+      }
+    ],
+    "ageAndGenderBreakdown": [
+      {
+        "year": 2020,
+        "gender": "Female",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 100 },
+          { "ageBand": "25–34", "headcount": 600 },
+          { "ageBand": "35–44", "headcount": 400 },
+          { "ageBand": "45–54", "headcount": 300 },
+          { "ageBand": "55–64", "headcount": 300 },
+          { "ageBand": "65+", "headcount": 200 }
+        ],
+        "total": 1900
+      },
+      {
+        "year": 2020,
+        "gender": "Male",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 200 },
+          { "ageBand": "25–34", "headcount": 1500 },
+          { "ageBand": "35–44", "headcount": 1800 },
+          { "ageBand": "45–54", "headcount": 1300 },
+          { "ageBand": "55–64", "headcount": 1200 },
+          { "ageBand": "65+", "headcount": 800 }
+        ],
+        "total": 8200
+      },
+      {
+        "year": 2019,
+        "gender": "Female",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 100 },
+          { "ageBand": "25–34", "headcount": 500 },
+          { "ageBand": "35–44", "headcount": 300 },
+          { "ageBand": "45–54", "headcount": 300 },
+          { "ageBand": "55–64", "headcount": 300 },
+          { "ageBand": "65+", "headcount": 200 }
+        ],
+        "total": 1700
+      },
+      {
+        "year": 2019,
+        "gender": "Male",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 200 },
+          { "ageBand": "25–34", "headcount": 1600 },
+          { "ageBand": "35–44", "headcount": 1700 },
+          { "ageBand": "45–54", "headcount": 1300 },
+          { "ageBand": "55–64", "headcount": 1200 },
+          { "ageBand": "65+", "headcount": 800 }
+        ],
+        "total": 8300
+      },
+      {
+        "year": 2018,
+        "gender": "Female",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 100 },
+          { "ageBand": "25–34", "headcount": 600 },
+          { "ageBand": "35–44", "headcount": 300 },
+          { "ageBand": "45–54", "headcount": 300 },
+          { "ageBand": "55–64", "headcount": 300 },
+          { "ageBand": "65+", "headcount": 200 }
+        ],
+        "total": 1800
+      },
+      {
+        "year": 2018,
+        "gender": "Male",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 200 },
+          { "ageBand": "25–34", "headcount": 1600 },
+          { "ageBand": "35–44", "headcount": 1800 },
+          { "ageBand": "45–54", "headcount": 1400 },
+          { "ageBand": "55–64", "headcount": 1300 },
+          { "ageBand": "65+", "headcount": 800 }
+        ],
+        "total": 8400
+      },
+      {
+        "year": 2017,
+        "gender": "Female",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 100 },
+          { "ageBand": "25–34", "headcount": 400 },
+          { "ageBand": "35–44", "headcount": 300 },
+          { "ageBand": "45–54", "headcount": 300 },
+          { "ageBand": "55–64", "headcount": 300 },
+          { "ageBand": "65+", "headcount": 200 }
+        ],
+        "total": 1600
+      },
+      {
+        "year": 2017,
+        "gender": "Male",
+        "bands": [
+          { "ageBand": "0–24", "headcount": 200 },
+          { "ageBand": "25–34", "headcount": 1500 },
+          { "ageBand": "35–44", "headcount": 1700 },
+          { "ageBand": "45–54", "headcount": 1300 },
+          { "ageBand": "55–64", "headcount": 1200 },
+          { "ageBand": "65+", "headcount": 800 }
+        ],
+        "total": 8200
+      }
+    ],
+    "workforceByGender": [
+      { "male": 8000, "year": 2020, "female": 2000 },
+      { "male": 8000, "year": 2019, "female": 2000 },
+      { "male": 8000, "year": 2018, "female": 2000 },
+      { "male": 8000, "year": 2017, "female": 2000 }
+    ],
+    "topWorkforceSector": "Operations",
+    "pageNumber": "84",
+    "documentFooter": "Teck 2020 Sustainability Report | Forward Together"
+  }
+}

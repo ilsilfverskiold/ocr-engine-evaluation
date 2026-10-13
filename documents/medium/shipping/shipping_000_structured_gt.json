@@ -1,0 +1,348 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 0,
+  "dataset_offset": 24,
+  "doc_type": "shipping",
+  "note": "The getomni schema extracts only the single most recent shipment out of the eight printed on this photographed FedEx fiscal invoice, and for that one shipment it keeps only the charge amounts, dropping the VAT/Code and Gross Value columns. That leaves roughly seven eighths of the page untested. Extended with the invoice header block (title, carrier, document number, page) and a full 'shipments' array: one object per printed table row, each carrying shipment number, reference number, date, both parties split into company/address/city/zipCode, service type, weight, shipment count, base charge, and every additional-charge line with all three of its columns. The dataset's own 'issueDate', 'clientNumber' and 'mostRecentShipment' object are preserved byte-for-byte; 'shipments[7]' is the same shipment seen in full. Every added value corroborated against the 14 saved engine outputs (most at 10-14/14). Judgement calls: (1) 'documentNumber' is recorded as '7JEZYO7MSY' per the dataset's own text annotation; at this photo resolution the sixth glyph is not separable as letter O from digit 0 and engines split roughly evenly between the two, so it is a legitimately hard field rather than an unverified one. (2) Reference number is blank for five rows and recorded as null there, matching how the dataset itself handles the field. (3) 'Rosenbaum, Boehm And Franey' and 'Mcclure, Blick And Frami' fall below the one-third engine threshold as whole strings only because most engines break them at the cell line wrap; both are clearly legible on the page and present in the dataset text sidecar, and the second is the dataset's own recipient value.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["issueDate", "clientNumber", "mostRecentShipment"],
+    "model_verified": ["title", "carrier", "documentNumber", "page", "shipments"]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "Document title as printed" },
+      "carrier": { "type": "string", "description": "Carrier whose logo appears on the invoice" },
+      "documentNumber": { "type": "string", "description": "Unique identifier for the invoice" },
+      "clientNumber": { "type": "string", "description": "Unique identifier for the client" },
+      "issueDate": { "type": "string", "description": "Date the invoice was issued" },
+      "page": { "type": "string", "description": "Page indicator as printed in the header block" },
+      "shipments": {
+        "type": "array",
+        "description": "Every shipment row printed in the table, in page order",
+        "items": {
+          "type": "object",
+          "required": ["shipmentNumber"],
+          "properties": {
+            "shipmentNumber": { "type": "string" },
+            "referenceNumber": { "type": ["string", "null"], "description": "Sender / reference number, null when the cell is blank" },
+            "date": { "type": "string" },
+            "sender": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "recipient": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "typeOfService": { "type": "string" },
+            "weightInKg": { "type": "number" },
+            "numberOfShipments": { "type": "number" },
+            "baseCharge": { "type": "number" },
+            "additionalCharges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["description"],
+                "properties": {
+                  "description": { "type": "string" },
+                  "amount": { "type": "number" },
+                  "vat": { "type": "number", "description": "Value from the VAT / Code column" },
+                  "grossValue": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "mostRecentShipment": {
+        "type": "object",
+        "required": ["shipmentNumber"],
+        "description": "Shipment with the most recent date (closest to today's date), always the last item in the list",
+        "properties": {
+          "sender": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "city": { "type": "string", "description": "City of the sender as it appears, excluding zip code" },
+              "address": { "type": "string", "description": "Street address of the sender as it appears, only including number and street" },
+              "company": { "type": "string", "description": "Sender's company name as it appears" },
+              "zipCode": { "type": "string", "description": "Zip code of the sender as it appears" }
+            }
+          },
+          "recipient": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "address": { "type": "string", "description": "Street address of the recipient as it appears, only including number and street" },
+              "company": { "type": "string", "description": "Recipient's company name as it appears" }
+            }
+          },
+          "weightInKg": { "type": "number", "description": "Weight of the shipment in kilograms" },
+          "shipmentNumber": { "type": "string", "description": "Unique identifier for the shipment" },
+          "referenceNumber": { "type": "string", "description": "Reference number for the shipment, must return null if not provided" },
+          "additionalCharges": {
+            "type": "array",
+            "description": "Details of additional charges applied to the shipment",
+            "items": {
+              "type": "object",
+              "required": ["description"],
+              "properties": {
+                "amount": { "type": "number", "description": "Amount of the additional charge" },
+                "description": { "type": "string", "description": "Description of the additional charge as it appears" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "true_json": {
+    "title": "Fiscal Invoice",
+    "carrier": "FedEx",
+    "documentNumber": "7JEZYO7MSY",
+    "clientNumber": "166236947",
+    "issueDate": "03-11-1993",
+    "page": "50 of 56",
+    "shipments": [
+      {
+        "shipmentNumber": "0715547543",
+        "referenceNumber": null,
+        "date": "10-20-1952",
+        "sender": {
+          "company": "Runolfsson, Bernier And Rau",
+          "address": "531 Alexis Camp",
+          "city": "Yuma",
+          "zipCode": "14256"
+        },
+        "recipient": {
+          "company": "Rosenbaum, Boehm And Franey",
+          "address": "790 Abernathy Oval",
+          "city": "Spokane Valley",
+          "zipCode": "51148-7339"
+        },
+        "typeOfService": "Economy Select",
+        "weightInKg": 29.5,
+        "numberOfShipments": 8,
+        "baseCharge": 134.24,
+        "additionalCharges": [
+          { "description": "Export Surcharge", "amount": 2.11, "vat": 1.52, "grossValue": 37.74 },
+          { "description": "Seasonal Surcharge", "amount": 1.03, "vat": 2.63, "grossValue": 24.76 },
+          { "description": "Dangerous Goods Handling Fee", "amount": 3.55, "vat": 2.66, "grossValue": 47.11 },
+          { "description": "Weekend Delivery Fee", "amount": 9.91, "vat": 0.73, "grossValue": 17.49 },
+          { "description": "Export Surcharge", "amount": 4.27, "vat": 1.6, "grossValue": 11.21 }
+        ]
+      },
+      {
+        "shipmentNumber": "5357425199",
+        "referenceNumber": null,
+        "date": "10-22-1957",
+        "sender": {
+          "company": "Roob LLC",
+          "address": "841 Archibald Vista",
+          "city": "Rhiannonberg",
+          "zipCode": "46574"
+        },
+        "recipient": {
+          "company": "Kovacek LLC",
+          "address": "71713 Windmill Lane",
+          "city": "Weldonstead",
+          "zipCode": "76436"
+        },
+        "typeOfService": "Express Worldwide",
+        "weightInKg": 43.7,
+        "numberOfShipments": 8,
+        "baseCharge": 41.38,
+        "additionalCharges": [
+          { "description": "Dangerous Goods Handling Fee", "amount": 9.77, "vat": 2.78, "grossValue": 42.95 },
+          { "description": "Export Surcharge", "amount": 7.91, "vat": 1.58, "grossValue": 24.37 }
+        ]
+      },
+      {
+        "shipmentNumber": "9632670905",
+        "referenceNumber": "SMYKMGQZMT",
+        "date": "12-20-1958",
+        "sender": {
+          "company": "Marquardt Inc",
+          "address": "6024 Quinten Union",
+          "city": "Fort Fabianfort",
+          "zipCode": "88222-7411"
+        },
+        "recipient": {
+          "company": "Franecki LLC",
+          "address": "71386 Bosco Crescent",
+          "city": "New Jammiechester",
+          "zipCode": "91281"
+        },
+        "typeOfService": "Express Worldwide",
+        "weightInKg": 17.9,
+        "numberOfShipments": 5,
+        "baseCharge": 69.1,
+        "additionalCharges": [
+          { "description": "Express Handling Fee", "amount": 8.54, "vat": 0.63, "grossValue": 17.33 },
+          { "description": "Special Handling Fee", "amount": 6.62, "vat": 0.63, "grossValue": 20.87 },
+          { "description": "Insurance Premium", "amount": 4.19, "vat": 3.11, "grossValue": 25.94 }
+        ]
+      },
+      {
+        "shipmentNumber": "4512431216",
+        "referenceNumber": "THQSWK2C77",
+        "date": "06-19-1966",
+        "sender": {
+          "company": "O'reilly, Schulist And Block",
+          "address": "89531 Libbie Passage",
+          "city": "Rio Rancho",
+          "zipCode": "76292-9418"
+        },
+        "recipient": {
+          "company": "Reilly, Greenholt And Pfannerstill",
+          "address": "3693 Kessler Centers",
+          "city": "Otiliaville",
+          "zipCode": "07772"
+        },
+        "typeOfService": "Economy Select",
+        "weightInKg": 13.3,
+        "numberOfShipments": 3,
+        "baseCharge": 35.55,
+        "additionalCharges": [
+          { "description": "Signature Confirmation Fee", "amount": 9.48, "vat": 2.94, "grossValue": 22.18 }
+        ]
+      },
+      {
+        "shipmentNumber": "8041910202",
+        "referenceNumber": null,
+        "date": "10-30-1976",
+        "sender": {
+          "company": "Jenkins, Yost And Bauch",
+          "address": "633 Landen Drive",
+          "city": "Domenicaland",
+          "zipCode": "58844"
+        },
+        "recipient": {
+          "company": "Skiles, Mueller And Boyle",
+          "address": "9008 Thiel Loaf",
+          "city": "New Winfield",
+          "zipCode": "64383-0397"
+        },
+        "typeOfService": "Domestic Priority",
+        "weightInKg": 5.5,
+        "numberOfShipments": 10,
+        "baseCharge": 193.31,
+        "additionalCharges": [
+          { "description": "Fragile Item Fee", "amount": 7.53, "vat": 3.23, "grossValue": 14.83 },
+          { "description": "Declared Value Charge", "amount": 3.76, "vat": 1.27, "grossValue": 21.89 },
+          { "description": "Export Surcharge", "amount": 2.77, "vat": 4.63, "grossValue": 43.71 }
+        ]
+      },
+      {
+        "shipmentNumber": "0682370779",
+        "referenceNumber": null,
+        "date": "03-17-1992",
+        "sender": {
+          "company": "Funk - Kiehn",
+          "address": "3421 Meta Heights",
+          "city": "Isobelfield",
+          "zipCode": "69550-3968"
+        },
+        "recipient": {
+          "company": "Hamill - Green",
+          "address": "1811 Stanley Street",
+          "city": "Fort Jaydeshire",
+          "zipCode": "80569-3971"
+        },
+        "typeOfService": "Domestic Priority",
+        "weightInKg": 34.5,
+        "numberOfShipments": 2,
+        "baseCharge": 128.61,
+        "additionalCharges": [
+          { "description": "Export Surcharge", "amount": 8.7, "vat": 3.47, "grossValue": 45.9 },
+          { "description": "Holiday Delivery Fee", "amount": 5.22, "vat": 4.29, "grossValue": 27.98 }
+        ]
+      },
+      {
+        "shipmentNumber": "2422145727",
+        "referenceNumber": "EVCFDZSJRM",
+        "date": "10-29-1997",
+        "sender": {
+          "company": "Vonrueden, Lehner And Kunze",
+          "address": "81390 Vandervort Plaza",
+          "city": "South Maiyaborough",
+          "zipCode": "44444-6420"
+        },
+        "recipient": {
+          "company": "Heidenreich - Wuckert",
+          "address": "66845 Johnny Via",
+          "city": "Ernserburgh",
+          "zipCode": "40906"
+        },
+        "typeOfService": "Economy Select",
+        "weightInKg": 27.4,
+        "numberOfShipments": 6,
+        "baseCharge": 29.92,
+        "additionalCharges": [
+          { "description": "Declared Value Charge", "amount": 4.84, "vat": 4.92, "grossValue": 16.51 }
+        ]
+      },
+      {
+        "shipmentNumber": "0431981981",
+        "referenceNumber": null,
+        "date": "06-08-1998",
+        "sender": {
+          "company": "Durgan Group",
+          "address": "1349 Barton Parkways",
+          "city": "North Sammiefurt",
+          "zipCode": "88126"
+        },
+        "recipient": {
+          "company": "Mcclure, Blick And Frami",
+          "address": "7051 E Front Street",
+          "city": "Wellington",
+          "zipCode": "40549-8277"
+        },
+        "typeOfService": "Economy Select",
+        "weightInKg": 6.4,
+        "numberOfShipments": 8,
+        "baseCharge": 183.13,
+        "additionalCharges": [
+          { "description": "Peak Season Surcharge", "amount": 6.23, "vat": 0.92, "grossValue": 40.31 },
+          { "description": "Repacking Fee", "amount": 2.35, "vat": 2.92, "grossValue": 10.41 },
+          { "description": "Address Correction Fee", "amount": 3.58, "vat": 1.85, "grossValue": 25.52 },
+          { "description": "Perishable Item Surcharge", "amount": 9.72, "vat": 4.01, "grossValue": 36.56 }
+        ]
+      }
+    ],
+    "mostRecentShipment": {
+      "sender": {
+        "city": "North Sammiefurt",
+        "address": "1349 Barton Parkways",
+        "company": "Durgan Group",
+        "zipCode": "88126"
+      },
+      "recipient": {
+        "address": "7051 E Front Street",
+        "company": "Mcclure, Blick And Frami"
+      },
+      "weightInKg": 6.4,
+      "shipmentNumber": "0431981981",
+      "referenceNumber": null,
+      "additionalCharges": [
+        { "amount": 6.23, "description": "Peak Season Surcharge" },
+        { "amount": 2.35, "description": "Repacking Fee" },
+        { "amount": 3.58, "description": "Address Correction Fee" },
+        { "amount": 9.72, "description": "Perishable Item Surcharge" }
+      ]
+    }
+  }
+}

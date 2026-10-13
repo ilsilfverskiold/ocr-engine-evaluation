@@ -1,0 +1,191 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 0,
+  "dataset_offset": 312,
+  "doc_type": "bank_statement",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "tableData": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "etfName": {
+              "type": "string",
+              "description": ""
+            },
+            "assetClass": {
+              "type": "string",
+              "description": ""
+            }
+          }
+        }
+      },
+      "accountInfo": {
+        "type": "object",
+        "properties": {
+          "autoReinvest": {
+            "enum": [
+              "YES",
+              "NO"
+            ],
+            "type": "string",
+            "description": "Automatically reinvest dividends"
+          }
+        },
+        "description": "Summary of account settings and investment elections"
+      },
+      "institution": {
+        "type": "string",
+        "description": "Name of the financial institution"
+      },
+      "portfolioSummary": {
+        "type": "object",
+        "properties": {
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "description",
+                "currentPeriod",
+                "yearToDate"
+              ],
+              "properties": {
+                "yearToDate": {
+                  "type": "number",
+                  "description": "Amount recorded year to date"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the change"
+                },
+                "currentPeriod": {
+                  "type": "number",
+                  "description": "Amount recorded during the current period"
+                }
+              }
+            },
+            "description": "Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list."
+          },
+          "ytdEndingBalance": {
+            "type": "number",
+            "description": "The year to date ending balance of the portfolio"
+          },
+          "currentPeriodEndingBalance": {
+            "type": "number",
+            "description": "The current ending balance of the portfolio"
+          }
+        },
+        "description": "Overview of the portfolio with balances and changes"
+      }
+    }
+  },
+  "true_json": {
+    "tableData": [
+      {
+        "etfName": "Technology Select Sector SPDR Fund",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Information Technology ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "SPDR S&P 500 ETF Trust",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Growth ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Invesco QQQ Trust Series I",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core S&P 500 ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Total International Stock ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard FTSE Emerging Markets ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core MSCI Emerging Markets ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core S&P Mid-Cap ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Total Stock Market ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core MSCI EAFE ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Value ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard S&P 500 ETF",
+        "assetClass": "Equity"
+      }
+    ],
+    "accountInfo": {
+      "autoReinvest": "YES"
+    },
+    "institution": "Jefferies",
+    "portfolioSummary": {
+      "changes": [
+        {
+          "yearToDate": -73579.95,
+          "description": "Account Transfers Out",
+          "currentPeriod": 0
+        },
+        {
+          "yearToDate": 14691.25,
+          "description": "Dividends",
+          "currentPeriod": 0
+        },
+        {
+          "yearToDate": -217594.4,
+          "description": "Aggregate Portfolio Movement",
+          "currentPeriod": -25497.13
+        },
+        {
+          "yearToDate": 89254.6,
+          "description": "Additional Deposits",
+          "currentPeriod": 70374.61
+        },
+        {
+          "yearToDate": -50150.55,
+          "description": "Performance Fees",
+          "currentPeriod": -9514.72
+        },
+        {
+          "yearToDate": 123685,
+          "description": "Capital Appreciation",
+          "currentPeriod": 34310.9
+        },
+        {
+          "yearToDate": -27602.05,
+          "description": "Other",
+          "currentPeriod": -1125.55
+        }
+      ],
+      "ytdEndingBalance": 634902.9,
+      "currentPeriodEndingBalance": 706538.11
+    }
+  }
+}

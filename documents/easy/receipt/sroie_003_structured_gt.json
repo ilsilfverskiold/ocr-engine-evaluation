@@ -1,0 +1,83 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 8,
+  "dataset_offset": 8,
+  "doc_type": "receipt",
+  "note": "Extended from the four SROIE Task 3 targets (company, date, address, total) to every extractable value on the page: company registration number, GST ID, time, cashier id, receipt number, both printed item rows, the quantity total and the full cash/change/GST ladder. All added values corroborated by 9-14 of the 14 saved engine outputs. Judgement calls: (1) the item block prints two rows — a description-only row '20X30 BEG 1KG91X30)' carrying no qty/price/amount, followed by the priced row '20X30 1KG' — both are kept as separate objects with nulls for the absent cells, so an engine that collapses or invents cells is penalised; (2) the GST label at the foot is partly obscured by a smudge on the paper and reads 'G[ST] 6% Included In Total', so only the value 0.45 and the legible fragment are recorded, in 'gst_included_in_total'; (3) 'Goods Sold Only Exchangable' is the page's own spelling and is kept verbatim.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["company", "date", "address", "total"],
+    "model_verified": [
+      "registration_no", "tel", "document_type", "gst_id_no", "time",
+      "cashier", "receipt_no", "items", "total_qty", "cash", "change",
+      "gst_included_in_total", "footer_note"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "registration_no": { "type": "string" },
+      "address": { "type": "string" },
+      "tel": { "type": "string" },
+      "document_type": { "type": "string" },
+      "gst_id_no": { "type": "string" },
+      "date": { "type": "string" },
+      "time": { "type": "string" },
+      "cashier": { "type": "string" },
+      "receipt_no": { "type": "string" },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "description": { "type": "string" },
+            "qty": { "type": ["string", "null"] },
+            "price": { "type": ["string", "null"] },
+            "amount": { "type": ["string", "null"] }
+          }
+        }
+      },
+      "total_qty": { "type": "string" },
+      "total": { "type": "string" },
+      "cash": { "type": "string" },
+      "change": { "type": "string" },
+      "gst_included_in_total": { "type": "string" },
+      "footer_note": { "type": "string" }
+    },
+    "required": ["company", "date", "address", "total"]
+  },
+  "true_json": {
+    "company": "SWC ENTERPRISE SDN BHD",
+    "registration_no": "1125830-V",
+    "address": "NO. 5-7, JALAN MAHAGONI 7/1, SEKYSEN 4, BANDAR UTAMA, 44300 BATANG KALI, SELANGOR.",
+    "tel": "03-6057 1377",
+    "document_type": "TAX INVOICE",
+    "gst_id_no": "002017808384",
+    "date": "08/01/2018",
+    "time": "11:07:06",
+    "cashier": "123",
+    "receipt_no": "0100080332",
+    "items": [
+      {
+        "description": "20X30 BEG 1KG91X30)",
+        "qty": null,
+        "price": null,
+        "amount": null
+      },
+      {
+        "description": "20X30 1KG",
+        "qty": "1",
+        "price": "8.00",
+        "amount": "8.00"
+      }
+    ],
+    "total_qty": "1",
+    "total": "8.00",
+    "cash": "10.00",
+    "change": "2.00",
+    "gst_included_in_total": "0.45",
+    "footer_note": "Thank You ! Please Come Again ! Goods Sold Only Exchangable Within 3 Days !"
+  }
+}

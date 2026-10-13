@@ -1,0 +1,127 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 14,
+  "dataset_offset": 14,
+  "doc_type": "receipt",
+  "note": "Extended from the four SROIE Task 3 targets (company, date, address, total) to every extractable value on this restaurant bill: phone, GST registration, bill number, full timestamp, cashier, table, the four ordered lines with unit price and tax code, and the whole totals ladder including the service charge and the GST summary row. All values corroborated by 8-14 of the 14 saved engine outputs. Judgement calls: (1) each item prints its unit price inline after an '@'; the price is split out into 'unit_price' and the description kept without it, matching the item shape used for sroie_000. (2) The fourth line prints 'GARLIC CHAHAN @' with no price and the annotation '[T A]' wrapped across two lines to the right; 'unit_price' is null there and the annotation is preserved verbatim in the item's 'note'. (3) The page prints both a 'Grand Total' and a 'Net Total' line at 53.00; the dataset's 'total' is the Grand Total, and 'net_total' is recorded separately because it is a separately printed line. The 46.00 'Total :' line is recorded as 'subtotal'. (4) Handwriting above the letterhead ('Jeff Pro 2pax S.' plus a scribble) and a handwritten 'M' beside the GST summary are marginalia added after printing, not receipt fields, and are excluded.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["company", "date", "address", "total"],
+    "model_verified": [
+      "tel", "gst_reg_no", "bill_no", "datetime", "cashier", "table_no",
+      "items", "total_qty", "subtotal", "discount", "service_charge_rate",
+      "service_charge", "gst", "net_total", "gst_summary"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "address": { "type": "string" },
+      "tel": { "type": "string" },
+      "gst_reg_no": { "type": "string" },
+      "bill_no": { "type": "string" },
+      "date": { "type": "string" },
+      "datetime": { "type": "string" },
+      "cashier": { "type": "string" },
+      "table_no": { "type": "string" },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "qty": { "type": "string" },
+            "description": { "type": "string" },
+            "unit_price": { "type": ["string", "null"] },
+            "amount": { "type": "string" },
+            "tax_code": { "type": "string" },
+            "note": { "type": ["string", "null"] }
+          }
+        }
+      },
+      "total_qty": { "type": "string" },
+      "subtotal": { "type": "string" },
+      "discount": { "type": "string" },
+      "service_charge_rate": { "type": "string" },
+      "service_charge": { "type": "string" },
+      "gst": { "type": "string" },
+      "total": { "type": "string" },
+      "net_total": { "type": "string" },
+      "gst_summary": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tax_code": { "type": "string" },
+            "percent": { "type": "string" },
+            "amount": { "type": "string" },
+            "tax": { "type": "string" }
+          }
+        }
+      }
+    },
+    "required": ["company", "date", "address", "total"]
+  },
+  "true_json": {
+    "company": "UROKO JAPANESE CUISINE SDN BHD",
+    "address": "22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR.",
+    "tel": "03-7932 1023/0191",
+    "gst_reg_no": "001126838272",
+    "bill_no": "01H-25029",
+    "date": "20/03/2018",
+    "datetime": "20/03/2018 6:41:02 PM",
+    "cashier": "RESAN",
+    "table_no": "S09",
+    "items": [
+      {
+        "qty": "1",
+        "description": "KO NABE INANIWA UDON",
+        "unit_price": "24.00",
+        "amount": "24.00",
+        "tax_code": "SR",
+        "note": null
+      },
+      {
+        "qty": "1",
+        "description": "GREEN TEA",
+        "unit_price": "1.00",
+        "amount": "1.00",
+        "tax_code": "SR",
+        "note": null
+      },
+      {
+        "qty": "1",
+        "description": "GYOZA 5pcs",
+        "unit_price": "15.00",
+        "amount": "15.00",
+        "tax_code": "SR",
+        "note": null
+      },
+      {
+        "qty": "1",
+        "description": "GARLIC CHAHAN",
+        "unit_price": null,
+        "amount": "6.00",
+        "tax_code": "SR",
+        "note": "[T A]"
+      }
+    ],
+    "total_qty": "4",
+    "subtotal": "46.00",
+    "discount": "(.00)",
+    "service_charge_rate": "10.00%",
+    "service_charge": "4.00",
+    "gst": "3.00",
+    "total": "53.00",
+    "net_total": "53.00",
+    "gst_summary": [
+      {
+        "tax_code": "SR",
+        "percent": "6.00",
+        "amount": "50.00",
+        "tax": "3.00"
+      }
+    ]
+  }
+}

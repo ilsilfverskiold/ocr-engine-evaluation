@@ -3,10 +3,10 @@
 Catalogues are supplied in results/current.zip. Scoring never generates them.
 """
 from __future__ import annotations
-import hashlib
 import json
 from pathlib import Path
 from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists
+from evaluation.artifacts import source_image_hash as source_hash
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,9 +23,6 @@ SCHEMA = {'type': 'object', 'required': ['items'], 'properties': {'items': {
     'required': ['type', 'content', 'confident', 'notes'], 'properties': {
         'type': {'type': 'string', 'enum': TYPES}, 'content': {'type': 'string'},
         'confident': {'type': 'boolean'}, 'notes': {'type': 'string'}}}}}}
-
-def source_hash(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def validate(data):
     import jsonschema

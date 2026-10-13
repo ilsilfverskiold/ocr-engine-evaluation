@@ -1,0 +1,255 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 4,
+  "dataset_offset": 856,
+  "doc_type": "medical",
+  "json_schema": {
+    "type": "object",
+    "required": [
+      "firstName",
+      "lastName",
+      "address"
+    ],
+    "properties": {
+      "dob": {
+        "type": "string",
+        "description": "Patient's date of birth as it appears"
+      },
+      "city": {
+        "type": "string",
+        "description": "Patient's city as it appears"
+      },
+      "phone": {
+        "type": "string",
+        "description": "Patient's phone number as it appears"
+      },
+      "address": {
+        "type": "string",
+        "description": "Street address of the patient as it appears, only including number and street"
+      },
+      "lastName": {
+        "type": "string",
+        "description": "Patient's last name"
+      },
+      "firstName": {
+        "type": "string",
+        "description": "Patient's first name"
+      },
+      "spouseName": {
+        "type": "string",
+        "description": "Spouse's name"
+      },
+      "spousePhone": {
+        "type": "string",
+        "description": "Spouse's phone number as it appear"
+      },
+      "maritalStatus": {
+        "emum": [
+          "Single",
+          "Married",
+          "Divorced",
+          "Separated",
+          "Widowed"
+        ],
+        "type": "string",
+        "description": "Patient's marital status"
+      },
+      "isHospitalized": {
+        "type": "boolean",
+        "description": "Indicates if patient has been hospitalized in the past year, must return true or false"
+      },
+      "reviewOfSymptoms": {
+        "type": "object",
+        "properties": {
+          "fever": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced a fever, must return true or false"
+          },
+          "chills": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced chills, must return true or false"
+          },
+          "eyePain": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced eye pain, must return true or false"
+          },
+          "fatigue": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced fatigue, must return true or false"
+          },
+          "calfPain": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced calf pain, must return true or false"
+          },
+          "blackOuts": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced blackouts, must return true or false"
+          },
+          "headaches": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced headaches, must return true or false"
+          },
+          "musclePain": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced muscle pain, must return true or false"
+          },
+          "blurredVision": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced blurred vision, must return true or false"
+          },
+          "excessiveBruising": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced excessive bruising, must return true or false"
+          },
+          "shortnessOfBreath": {
+            "type": "boolean",
+            "description": "Indicates if patient has experienced shortness of breath, must return true or false"
+          },
+          "tuberculosisExposure": {
+            "type": "boolean",
+            "description": "Indicates if patient has been exposed to tuberculosis, must return true or false"
+          },
+          "difficultyEmptyingBowelOrBladder": {
+            "type": "boolean",
+            "description": "Indicates if patient has difficulty emptying their bowel or bladder, must return true or false"
+          }
+        },
+        "description": "Indicates if specific symptoms are present or not"
+      },
+      "previousHealthHistory": {
+        "type": "object",
+        "required": [
+          "primaryCarePhysician"
+        ],
+        "properties": {
+          "lastSeenDate": {
+            "type": "string",
+            "description": "Date last seen by physician"
+          },
+          "prescriptionDrugs": {
+            "type": "object",
+            "properties": {
+              "other": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of other prescription drugs that patient uses, must return null if not provided"
+              },
+              "insulin": {
+                "type": "boolean",
+                "description": "Indicates if patient uses insulin, must return true or false"
+              },
+              "painPills": {
+                "type": "boolean",
+                "description": "Indicates if patient uses pain pills, must return true or false"
+              },
+              "muscleRelaxers": {
+                "type": "boolean",
+                "description": "Indicates if patient uses muscle relaxers, must return true or false"
+              },
+              "antidepressants": {
+                "type": "boolean",
+                "description": "Indicates if patient uses antidepressants, must return true or false"
+              },
+              "antiInflammatory": {
+                "type": "boolean",
+                "description": "Indicates if patient uses anti-inflammatories, must return true or false"
+              },
+              "birthControlPills": {
+                "type": "boolean",
+                "description": "Indicates if patient uses birth control, must return true or false"
+              },
+              "bloodPressureMedication": {
+                "type": "boolean",
+                "description": "Indicates if patient uses blood pressure medication, must return true or false"
+              }
+            },
+            "description": "Details of prescription drugs currently taken"
+          },
+          "accidentsOrInjuries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of accidents or injuries that patient has experienced, must return null if not provided"
+          },
+          "overTheCounterDrugs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of over-the-counter drugs that patient uses, must return null if not provided"
+          },
+          "primaryCarePhysician": {
+            "type": "string",
+            "description": "Name of primary care physician"
+          },
+          "vitaminsOrSupplements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of vitamins or supplements that patient takes, must return null if not provided"
+          },
+          "receivedChiropracticCare": {
+            "type": "boolean",
+            "description": "Indicates if patient received chiropractic care, must return true or false"
+          }
+        },
+        "description": "Details of patient's previous health history"
+      }
+    }
+  },
+  "true_json": {
+    "dob": "July 20, 1972",
+    "city": "Waimanalo",
+    "phone": "603 916-8665",
+    "address": "7098 West Eagle St",
+    "lastName": "Miller",
+    "firstName": "Daniel",
+    "spouseName": null,
+    "spousePhone": null,
+    "maritalStatus": "Widowed",
+    "isHospitalized": false,
+    "reviewOfSymptoms": {
+      "fever": true,
+      "chills": true,
+      "eyePain": false,
+      "fatigue": true,
+      "calfPain": false,
+      "blackOuts": false,
+      "headaches": true,
+      "musclePain": false,
+      "blurredVision": true,
+      "excessiveBruising": true,
+      "shortnessOfBreath": true,
+      "tuberculosisExposure": false,
+      "difficultyEmptyingBowelOrBladder": true
+    },
+    "previousHealthHistory": {
+      "lastSeenDate": "08/30/1958",
+      "prescriptionDrugs": {
+        "other": [
+          "amoxicillin"
+        ],
+        "insulin": true,
+        "painPills": false,
+        "muscleRelaxers": true,
+        "antidepressants": false,
+        "antiInflammatory": false,
+        "birthControlPills": true,
+        "bloodPressureMedication": true
+      },
+      "accidentsOrInjuries": null,
+      "overTheCounterDrugs": null,
+      "primaryCarePhysician": "Dr. Emily Anderson",
+      "vitaminsOrSupplements": [
+        "resveratrol",
+        "vitamin b3"
+      ],
+      "receivedChiropracticCare": true
+    }
+  }
+}

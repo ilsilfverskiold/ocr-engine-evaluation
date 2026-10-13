@@ -1,0 +1,207 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 4,
+  "dataset_offset": 76,
+  "doc_type": "bank_statement",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "tableData": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "etfName": {
+              "type": "string",
+              "description": ""
+            },
+            "assetClass": {
+              "type": "string",
+              "description": ""
+            }
+          }
+        }
+      },
+      "accountInfo": {
+        "type": "object",
+        "properties": {
+          "autoReinvest": {
+            "enum": [
+              "YES",
+              "NO"
+            ],
+            "type": "string",
+            "description": "Automatically reinvest dividends"
+          },
+          "partialShares": {
+            "enum": [
+              "YES",
+              "NO"
+            ],
+            "type": "string",
+            "description": "Allow purchase of fractional shares"
+          }
+        },
+        "description": "Summary of account settings and investment elections"
+      },
+      "clientServices": {
+        "type": "object",
+        "properties": {
+          "contactInfo": {
+            "type": "string",
+            "description": "Phone number of the client representative"
+          },
+          "consultantId": {
+            "type": "string",
+            "description": "Client representative id"
+          },
+          "consultantName": {
+            "type": "string",
+            "description": "Full name of the client representative"
+          }
+        },
+        "description": "Client representative"
+      },
+      "portfolioSummary": {
+        "type": "object",
+        "properties": {
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "description",
+                "currentPeriod",
+                "yearToDate"
+              ],
+              "properties": {
+                "yearToDate": {
+                  "type": "number",
+                  "description": "Amount recorded year to date"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the change"
+                },
+                "currentPeriod": {
+                  "type": "number",
+                  "description": "Amount recorded during the current period"
+                }
+              }
+            },
+            "description": "Summary of portfolio changes. Include only changes. Do not include starting and ending balance in this list."
+          },
+          "ytdEndingBalance": {
+            "type": "number",
+            "description": "The year to date ending balance of the portfolio"
+          },
+          "ytdBeginningBalance": {
+            "type": "number",
+            "description": "The year to date starting balance of the portfolio"
+          }
+        },
+        "description": "Overview of the portfolio with balances and changes"
+      }
+    }
+  },
+  "true_json": {
+    "tableData": [
+      {
+        "etfName": "Vanguard FTSE Emerging Markets ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core S&P 500 ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Russell 1000 Growth ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core S&P Mid-Cap ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "SPDR S&P 500 ETF Trust",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "iShares Core MSCI Emerging Markets ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard S&P 500 ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Total Stock Market ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Vanguard Total International Stock ETF",
+        "assetClass": "Equity"
+      },
+      {
+        "etfName": "Invesco QQQ Trust Series I",
+        "assetClass": "Equity"
+      }
+    ],
+    "accountInfo": {
+      "autoReinvest": "NO",
+      "partialShares": "NO"
+    },
+    "clientServices": {
+      "contactInfo": "(336) 697-2409",
+      "consultantId": "qxZy2Nywh",
+      "consultantName": "Genevieve O'Conner"
+    },
+    "portfolioSummary": {
+      "changes": [
+        {
+          "yearToDate": -61435.55,
+          "description": "Management Fees",
+          "currentPeriod": -13694.95
+        },
+        {
+          "yearToDate": 283135.4,
+          "description": "Deposits",
+          "currentPeriod": 188113.59
+        },
+        {
+          "yearToDate": -203912.6,
+          "description": "Comprehensive Portfolio Change",
+          "currentPeriod": -11169.71
+        },
+        {
+          "yearToDate": 65100.7,
+          "description": "Portfolio Rebalancing",
+          "currentPeriod": 53043.55
+        },
+        {
+          "yearToDate": -72903.3,
+          "description": "Other Expenditures (Gains)",
+          "currentPeriod": -20271.65
+        },
+        {
+          "yearToDate": 68005.4,
+          "description": "Realized Capital Gains",
+          "currentPeriod": 64479.13
+        },
+        {
+          "yearToDate": 15887.05,
+          "description": "Interest Earnings",
+          "currentPeriod": 8032.55
+        },
+        {
+          "yearToDate": -27190.8,
+          "description": "Redemptions",
+          "currentPeriod": 0
+        }
+      ],
+      "ytdEndingBalance": 140029.3,
+      "ytdBeginningBalance": 73343
+    }
+  }
+}

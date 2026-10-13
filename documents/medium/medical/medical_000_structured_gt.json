@@ -1,0 +1,234 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 0,
+  "dataset_offset": 601,
+  "doc_type": "medical",
+  "json_schema": {
+    "type": "object",
+    "required": [
+      "firstName",
+      "lastName",
+      "address"
+    ],
+    "properties": {
+      "dob": {
+        "type": "string",
+        "description": "Patient's date of birth as it appears"
+      },
+      "zip": {
+        "type": "string",
+        "description": "Patient's ZIP code as it appears"
+      },
+      "city": {
+        "type": "string",
+        "description": "Patient's city as it appears"
+      },
+      "address": {
+        "type": "string",
+        "description": "Street address of the patient as it appears, only including number and street"
+      },
+      "lastName": {
+        "type": "string",
+        "description": "Patient's last name"
+      },
+      "firstName": {
+        "type": "string",
+        "description": "Patient's first name"
+      },
+      "spousePhone": {
+        "type": "string",
+        "description": "Spouse's phone number as it appear"
+      },
+      "maritalStatus": {
+        "emum": [
+          "Single",
+          "Married",
+          "Divorced",
+          "Separated",
+          "Widowed"
+        ],
+        "type": "string",
+        "description": "Patient's marital status"
+      },
+      "previousHealthHistory": {
+        "type": "object",
+        "required": [
+          "primaryCarePhysician"
+        ],
+        "properties": {
+          "lastSeenDate": {
+            "type": "string",
+            "description": "Date last seen by physician"
+          },
+          "prescriptionDrugs": {
+            "type": "object",
+            "properties": {
+              "other": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of other prescription drugs that patient uses, must return null if not provided"
+              },
+              "insulin": {
+                "type": "boolean",
+                "description": "Indicates if patient uses insulin, must return true or false"
+              },
+              "dietPills": {
+                "type": "boolean",
+                "description": "Indicates if patient uses diet pills, must return true or false"
+              },
+              "painPills": {
+                "type": "boolean",
+                "description": "Indicates if patient uses pain pills, must return true or false"
+              },
+              "muscleRelaxers": {
+                "type": "boolean",
+                "description": "Indicates if patient uses muscle relaxers, must return true or false"
+              },
+              "antidepressants": {
+                "type": "boolean",
+                "description": "Indicates if patient uses antidepressants, must return true or false"
+              },
+              "antiInflammatory": {
+                "type": "boolean",
+                "description": "Indicates if patient uses anti-inflammatories, must return true or false"
+              },
+              "birthControlPills": {
+                "type": "boolean",
+                "description": "Indicates if patient uses birth control, must return true or false"
+              },
+              "bloodSugarMedication": {
+                "type": "boolean",
+                "description": "Indicates if patient uses blood sugar medication, must return true or false"
+              },
+              "bloodPressureMedication": {
+                "type": "boolean",
+                "description": "Indicates if patient uses blood pressure medication, must return true or false"
+              }
+            },
+            "description": "Details of prescription drugs currently taken"
+          },
+          "accidentsOrInjuries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of accidents or injuries that patient has experienced, must return null if not provided"
+          },
+          "overTheCounterDrugs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of over-the-counter drugs that patient uses, must return null if not provided"
+          },
+          "primaryCarePhysician": {
+            "type": "string",
+            "description": "Name of primary care physician"
+          },
+          "vitaminsOrSupplements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of vitamins or supplements that patient takes, must return null if not provided"
+          },
+          "receivedAcupunctureCare": {
+            "type": "boolean",
+            "description": "Indicates if patient received acupuncture care, must return true or false"
+          },
+          "receivedChiropracticCare": {
+            "type": "boolean",
+            "description": "Indicates if patient received chiropractic care, must return true or false"
+          }
+        },
+        "description": "Details of patient's previous health history"
+      },
+      "financialResponsibility": {
+        "type": "object",
+        "properties": {
+          "patientSignature": {
+            "type": "object",
+            "required": [
+              "isSigned"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "description": "Date the patient signed the form"
+              },
+              "isSigned": {
+                "type": "boolean",
+                "description": "Indicates if the patient has signed the form, must return true or false"
+              }
+            },
+            "description": "Details of the patient's signature"
+          },
+          "insuranceCompanyDetails": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the insurance"
+              }
+            },
+            "description": "Details of the patient's insurance"
+          }
+        },
+        "description": "Details of financial responsibility for the patient"
+      }
+    }
+  },
+  "true_json": {
+    "dob": "November 2, 1997",
+    "zip": "97394",
+    "city": "Waldport",
+    "address": "9665A Otter Dr",
+    "lastName": "Smith",
+    "firstName": "Jessica",
+    "spousePhone": null,
+    "maritalStatus": "Separated",
+    "previousHealthHistory": {
+      "lastSeenDate": "03/29/1959",
+      "prescriptionDrugs": {
+        "other": null,
+        "insulin": true,
+        "dietPills": true,
+        "painPills": false,
+        "muscleRelaxers": false,
+        "antidepressants": false,
+        "antiInflammatory": true,
+        "birthControlPills": false,
+        "bloodSugarMedication": true,
+        "bloodPressureMedication": false
+      },
+      "accidentsOrInjuries": [
+        "dog bite"
+      ],
+      "overTheCounterDrugs": [
+        "monistat",
+        "motrin"
+      ],
+      "primaryCarePhysician": "Dr. Emily Brown",
+      "vitaminsOrSupplements": [
+        "vitamin b3"
+      ],
+      "receivedAcupunctureCare": false,
+      "receivedChiropracticCare": false
+    },
+    "financialResponsibility": {
+      "patientSignature": {
+        "date": "10/30/1957",
+        "isSigned": true
+      },
+      "insuranceCompanyDetails": {
+        "name": "Priority Health"
+      }
+    }
+  }
+}

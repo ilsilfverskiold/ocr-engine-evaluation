@@ -1,0 +1,242 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 2,
+  "dataset_offset": 2,
+  "doc_type": "receipt",
+  "note": "Extended from the four SROIE Task 3 targets (company, date, address, total) to every extractable value on the page. The four-field schema is too thin to separate engines; the added fields (registration no, GST no, receipt no, per-row line items, the GST summary block and the tender/change block) are where OCR actually diverges. All added values corroborated against the 14 saved engine outputs and re-checked against a magnified crop of the page. Two places where the text sidecar `sroie_001_gt.txt` disagrees with the image: it renders the registration number as 'JM0326955-V' and the GST number as '000800689824'; the magnified page reads 'JM0325955-V' and '000800589824', and 10 and 11 engines respectively agree, so the image reading is used here (the text sidecar itself is untouched). 'salesperson' is printed with an empty value on the page and is recorded as null. A handwritten annotation column between the item code and Qty ('1809', 'GA', 'G8') is deliberately excluded: it is marginalia, not a printed field, and engine readings of it do not converge. CORRECTION (human review): the GST number was changed by the annotator to '000800589824'; the reviewer read the page as '000800689824' and that value is restored. The registration number correction to 'JM0325955-V' was reviewed and confirmed correct.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": [
+      "company",
+      "date",
+      "address",
+      "total"
+    ],
+    "model_verified": [
+      "registration_no",
+      "tel",
+      "fax",
+      "gst_no",
+      "document_type",
+      "receipt_no",
+      "bill_to",
+      "salesperson",
+      "cashier",
+      "time",
+      "items",
+      "total_qty",
+      "sub_total_excluding_gst",
+      "discount",
+      "total_gst",
+      "rounding",
+      "cash",
+      "change",
+      "gst_summary"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": {
+        "type": "string"
+      },
+      "registration_no": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      },
+      "tel": {
+        "type": "string"
+      },
+      "fax": {
+        "type": "string"
+      },
+      "gst_no": {
+        "type": "string"
+      },
+      "document_type": {
+        "type": "string"
+      },
+      "receipt_no": {
+        "type": "string"
+      },
+      "bill_to": {
+        "type": "string"
+      },
+      "salesperson": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "cashier": {
+        "type": "string"
+      },
+      "date": {
+        "type": "string"
+      },
+      "time": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tax_code": {
+              "type": "string"
+            },
+            "qty": {
+              "type": "string"
+            },
+            "rsp": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "total_qty": {
+        "type": "string"
+      },
+      "sub_total_excluding_gst": {
+        "type": "string"
+      },
+      "discount": {
+        "type": "string"
+      },
+      "total_gst": {
+        "type": "string"
+      },
+      "rounding": {
+        "type": "string"
+      },
+      "total": {
+        "type": "string"
+      },
+      "cash": {
+        "type": "string"
+      },
+      "change": {
+        "type": "string"
+      },
+      "gst_summary": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "tax_code": {
+              "type": "string"
+            },
+            "percent": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string"
+            },
+            "gst": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "company",
+      "date",
+      "address",
+      "total"
+    ]
+  },
+  "true_json": {
+    "company": "PERNIAGAAN ZHENG HUI",
+    "registration_no": "JM0325955-V",
+    "address": "NO.59 JALAN PERMAS 9/5 BANDAR BARU PERMAS JAYA 81750 JOHOR BAHRU",
+    "tel": "07-386 7524",
+    "fax": "07-386 3793",
+    "gst_no": "000800689824",
+    "document_type": "SIMPLIFIED TAX INVOICE",
+    "receipt_no": "CS00082258",
+    "bill_to": "GOGIANT ENGINEERING (M) SDN BHD",
+    "salesperson": null,
+    "cashier": "USER",
+    "date": "09/02/2018",
+    "time": "08:32:00",
+    "items": [
+      {
+        "code": "6783",
+        "description": "CERAMIC CAP",
+        "tax_code": "SR",
+        "qty": "5",
+        "rsp": "3.50",
+        "amount": "17.50"
+      },
+      {
+        "code": "2954",
+        "description": "S/STEEL 1/2\" STREET ELBOW",
+        "tax_code": "SR",
+        "qty": "30",
+        "rsp": "3.80",
+        "amount": "114.00"
+      },
+      {
+        "code": "1760",
+        "description": "2.4MM STARWELD RED HEAD TUNGSTEN ROD",
+        "tax_code": "SR",
+        "qty": "1",
+        "rsp": "55.00",
+        "amount": "55.00"
+      },
+      {
+        "code": "3496",
+        "description": "ESICUT 4\" CUTTING DISC (1BOX)-50PCS",
+        "tax_code": "SR",
+        "qty": "3",
+        "rsp": "33.00",
+        "amount": "99.00"
+      },
+      {
+        "code": "2460",
+        "description": "WELDRO PICKLING GEL 1KG",
+        "tax_code": "SR",
+        "qty": "2",
+        "rsp": "43.00",
+        "amount": "86.00"
+      },
+      {
+        "code": "9428",
+        "description": "13.5\" WELDING GLOVE - GREEN (GS)",
+        "tax_code": "SR",
+        "qty": "4",
+        "rsp": "10.00",
+        "amount": "40.00"
+      }
+    ],
+    "total_qty": "45",
+    "sub_total_excluding_gst": "411.50",
+    "discount": "0.00",
+    "total_gst": "24.69",
+    "rounding": "0.01",
+    "total": "436.20",
+    "cash": "436.20",
+    "change": "0.00",
+    "gst_summary": [
+      {
+        "tax_code": "SR",
+        "percent": "6",
+        "amount": "411.50",
+        "gst": "24.69"
+      }
+    ]
+  }
+}

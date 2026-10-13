@@ -1,0 +1,158 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 2,
+  "dataset_offset": 12,
+  "doc_type": "lease",
+  "json_schema": {
+    "type": "object",
+    "required": [
+      "date",
+      "lessor",
+      "lessee",
+      "premises",
+      "lease",
+      "rent"
+    ],
+    "properties": {
+      "date": {
+        "type": "string",
+        "format": "date",
+        "description": "Date of the lease, formatted as YYYY-MM-DD"
+      },
+      "rent": {
+        "type": "object",
+        "required": [
+          "monthlyAmount",
+          "securityDeposit"
+        ],
+        "properties": {
+          "monthlyAmount": {
+            "type": "number"
+          },
+          "securityDeposit": {
+            "type": "number"
+          }
+        }
+      },
+      "lease": {
+        "type": "object",
+        "required": [
+          "years",
+          "months",
+          "startDate",
+          "endDate"
+        ],
+        "properties": {
+          "years": {
+            "type": "number"
+          },
+          "months": {
+            "type": "number"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "End date of the lease, formatted as YYYY-MM-DD"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date of the lease, formatted as YYYY-MM-DD"
+          }
+        }
+      },
+      "lessee": {
+        "type": "object",
+        "required": [
+          "name",
+          "streetAddress",
+          "state"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          }
+        }
+      },
+      "lessor": {
+        "type": "object",
+        "required": [
+          "name",
+          "streetAddress",
+          "state"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          }
+        }
+      },
+      "premises": {
+        "type": "object",
+        "required": [
+          "squareFeet",
+          "spaceType",
+          "streetAddress"
+        ],
+        "properties": {
+          "spaceType": {
+            "enum": [
+              "Office Space",
+              "Retail Space",
+              "Warehouse",
+              "Industrial Space"
+            ],
+            "type": "string"
+          },
+          "squareFeet": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "true_json": {
+    "date": "2025-05-11",
+    "rent": {
+      "monthlyAmount": 3400,
+      "securityDeposit": 2089
+    },
+    "lease": {
+      "years": 2,
+      "months": 10,
+      "endDate": "2028-03-11",
+      "startDate": "2025-05-11"
+    },
+    "lessee": {
+      "name": "Lemke Inc",
+      "state": "California",
+      "streetAddress": "152 Letitia Landing"
+    },
+    "lessor": {
+      "name": "Jackie Gerhold",
+      "state": "California",
+      "streetAddress": "653 Woodside Road"
+    },
+    "premises": {
+      "spaceType": "Office Space",
+      "squareFeet": "9388",
+      "streetAddress": "17803 Gorczany Throughway"
+    }
+  }
+}

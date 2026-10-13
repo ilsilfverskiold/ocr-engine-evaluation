@@ -1,0 +1,66 @@
+{
+  "dataset": "jsdnrs/ICDAR2019-SROIE",
+  "split": "test",
+  "manifest_index": 11,
+  "dataset_offset": 11,
+  "doc_type": "receipt",
+  "note": "Extended from the four SROIE Task 3 targets (company, date, address, total) to every extractable value on this car-park exit ticket. The four-field schema captures almost nothing of what a parking-ticket pipeline needs; added the GST number, telephone, terminal/receipt code, the 14-character receipt number, the entry/exit timestamp pair, the duration and its printed format mask, the payment kind and the fee/GST/amount breakdown. All values corroborated by 11-14 of the 14 saved engine outputs. Judgement calls: (1) the ticket prints entry and exit as separate date+time pairs, so they are split into four fields rather than folded into the single dataset 'date'; the dataset value '23.03.18' is preserved unchanged as 'date'. (2) 'park_duration_format' is the literal mask 'D:HH:MM' printed on the page, kept because it is printed text a reader must not confuse with a value. (3) The bold '3180301' at the very top sits on the white scan background above the paper edge, not on the receipt; it is an archival label, so it is excluded — as is the equivalent annotation on sroie_001.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["company", "date", "address", "total"],
+    "model_verified": [
+      "gst_no", "tel_no", "receipt_code", "receipt_number", "entry_date",
+      "entry_time", "exit_date", "exit_time", "park_duration_format",
+      "park_duration", "kind_of_payment", "currency", "parking_fee",
+      "add_gst", "rate_note", "footer_note"
+    ]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" },
+      "address": { "type": "string" },
+      "gst_no": { "type": "string" },
+      "tel_no": { "type": "string" },
+      "receipt_code": { "type": "string" },
+      "receipt_number": { "type": "string" },
+      "entry_date": { "type": "string" },
+      "entry_time": { "type": "string" },
+      "exit_date": { "type": "string" },
+      "exit_time": { "type": "string" },
+      "park_duration_format": { "type": "string" },
+      "park_duration": { "type": "string" },
+      "kind_of_payment": { "type": "string" },
+      "currency": { "type": "string" },
+      "parking_fee": { "type": "string" },
+      "add_gst": { "type": "string" },
+      "total": { "type": "string" },
+      "rate_note": { "type": "string" },
+      "date": { "type": "string" },
+      "footer_note": { "type": "string" }
+    },
+    "required": ["company", "date", "address", "total"]
+  },
+  "true_json": {
+    "company": "SECURE PARKING CORPORATION S/B",
+    "address": "RIVERWALK VILLAGE BATU 3, JALAN IPOH 51200 KL.",
+    "gst_no": "000296652800",
+    "tel_no": "1300881698",
+    "receipt_code": "C13",
+    "receipt_number": "K0131800235697",
+    "entry_date": "23.03.18",
+    "entry_time": "14:59",
+    "exit_date": "23.03.18",
+    "exit_time": "15:27",
+    "park_duration_format": "D:HH:MM",
+    "park_duration": "0:00:28",
+    "kind_of_payment": "CASH",
+    "currency": "RM",
+    "parking_fee": "0.94",
+    "add_gst": "0.06",
+    "total": "1.00",
+    "rate_note": "*Rate incl. 6% GST",
+    "date": "23.03.18",
+    "footer_note": "THANK YOU FOR YOUR VISIT"
+  }
+}

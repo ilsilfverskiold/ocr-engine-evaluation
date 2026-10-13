@@ -1,0 +1,226 @@
+{
+  "dataset": "getomni-ai/ocr-benchmark",
+  "split": "test",
+  "manifest_index": 4,
+  "dataset_offset": 26,
+  "doc_type": "shipping",
+  "note": "The getomni schema keeps the three header identifiers and one shipment out of the three printed, and even for that shipment it omits the reference number, service type and base charge. Extended with the remaining header values (title, carrier, page) and a 'shipments' array covering all three printed rows with every column of the table, including each additional-charge line's amount, VAT/Code and gross value. The dataset's 'issueDate', 'clientNumber', 'documentNumber' and 'mostRecentShipment' are preserved unchanged; 'shipments[2]' is that shipment recorded in full, and it is the row that carries the reference number 'WH4EHYLISO' the dataset left out. All added values corroborated against the 14 saved engine outputs. Judgement calls: (1) reference number is blank on the first two rows and recorded as null; (2) the weight 40 is printed without a decimal and kept that way; (3) 'FORT DELLAFURT, 76630-3695' sits at 3 of 14 as a whole string only because most engines wrap that cell — the zip code half of it is the dataset's own recipient zipCode, so the reading is not in doubt; (4) the table has a long tail of blank ruled rows below the third shipment, which carry no data and are not represented.",
+  "extended_annotator": "claude-opus-5",
+  "field_provenance": {
+    "dataset_human": ["issueDate", "clientNumber", "documentNumber", "mostRecentShipment"],
+    "model_verified": ["title", "carrier", "page", "pageFooter", "shipments"]
+  },
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "Document title as printed" },
+      "carrier": { "type": "string", "description": "Carrier whose logo appears on the invoice" },
+      "documentNumber": { "type": "string", "description": "Unique identifier for the invoice" },
+      "clientNumber": { "type": "string", "description": "Unique identifier for the client" },
+      "issueDate": { "type": "string", "description": "Date the invoice was issued" },
+      "page": { "type": "string", "description": "Page indicator in the header block" },
+      "pageFooter": { "type": "string", "description": "Page indicator printed at the foot of the page" },
+      "shipments": {
+        "type": "array",
+        "description": "Every shipment row printed in the table, in page order",
+        "items": {
+          "type": "object",
+          "required": ["shipmentNumber"],
+          "properties": {
+            "shipmentNumber": { "type": "string" },
+            "referenceNumber": { "type": ["string", "null"] },
+            "date": { "type": "string" },
+            "sender": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "recipient": {
+              "type": "object",
+              "properties": {
+                "company": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "zipCode": { "type": "string" }
+              }
+            },
+            "typeOfService": { "type": "string" },
+            "weightInKg": { "type": "number" },
+            "numberOfShipments": { "type": "number" },
+            "baseCharge": { "type": "number" },
+            "additionalCharges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["description"],
+                "properties": {
+                  "description": { "type": "string" },
+                  "amount": { "type": "number" },
+                  "vat": { "type": "number", "description": "Value from the VAT / Code column" },
+                  "grossValue": { "type": "number" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "mostRecentShipment": {
+        "type": "object",
+        "required": ["shipmentNumber"],
+        "description": "Shipment with the most recent date (closest to today's date), always the last item in the list",
+        "properties": {
+          "sender": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "city": { "type": "string", "description": "City of the sender as it appears, excluding zip code" },
+              "address": { "type": "string", "description": "Street address of the sender as it appears, only including number and street" },
+              "company": { "type": "string", "description": "Sender's company name as it appears" }
+            }
+          },
+          "recipient": {
+            "type": "object",
+            "required": ["company"],
+            "properties": {
+              "address": { "type": "string", "description": "Street address of the recipient as it appears, only including number and street" },
+              "company": { "type": "string", "description": "Recipient's company name as it appears" },
+              "zipCode": { "type": "string", "description": "Zip code of the recipient as it appears" }
+            }
+          },
+          "weightInKg": { "type": "number", "description": "Weight of the shipment in kilograms" },
+          "shipmentNumber": { "type": "string", "description": "Unique identifier for the shipment" },
+          "additionalCharges": {
+            "type": "array",
+            "description": "Details of additional charges applied to the shipment",
+            "items": {
+              "type": "object",
+              "required": ["description"],
+              "properties": {
+                "amount": { "type": "number", "description": "Amount of the additional charge" },
+                "totalVAT": { "type": "number", "description": "Total VAT applied to the additional charge" },
+                "grossValue": { "type": "number", "description": "Gross value of the charge, including VAT" },
+                "description": { "type": "string", "description": "Description of the additional charge as it appears" }
+              }
+            }
+          },
+          "numberOfShipments": { "type": "number", "description": "Total number of shipments" }
+        }
+      }
+    }
+  },
+  "true_json": {
+    "title": "VAT BILLING RECEIPT",
+    "carrier": "UPS",
+    "documentNumber": "GOBLH2SNVT",
+    "clientNumber": "419355310",
+    "issueDate": "07-07-2004",
+    "page": "43 of 75",
+    "pageFooter": "Page 43",
+    "shipments": [
+      {
+        "shipmentNumber": "7783076164",
+        "referenceNumber": null,
+        "date": "09-21-1963",
+        "sender": {
+          "company": "POUROS - KSHLERIN",
+          "address": "2477 Bernhard Junctions",
+          "city": "EAST DARIOFURT",
+          "zipCode": "55052-4067"
+        },
+        "recipient": {
+          "company": "HANE, HEGMANN AND JASKOLSKI",
+          "address": "54816 N Jefferson Street",
+          "city": "COSTA MESA",
+          "zipCode": "33645-7445"
+        },
+        "typeOfService": "EXPRESS WORLDWIDE",
+        "weightInKg": 40,
+        "numberOfShipments": 7,
+        "baseCharge": 78.51,
+        "additionalCharges": [
+          { "description": "HANDLING CHARGE", "amount": 7.4, "vat": 0.99, "grossValue": 11.47 },
+          { "description": "REMOTE AREA SURCHARGE", "amount": 8.44, "vat": 0.85, "grossValue": 28.31 },
+          { "description": "STORAGE FEE", "amount": 3.42, "vat": 0.91, "grossValue": 21.52 },
+          { "description": "FUEL EFFICIENCY LEVY", "amount": 2.97, "vat": 3.13, "grossValue": 21.19 },
+          { "description": "OUT-OF-HOURS DELIVERY FEE", "amount": 6.03, "vat": 4.95, "grossValue": 47.74 }
+        ]
+      },
+      {
+        "shipmentNumber": "3615423843",
+        "referenceNumber": null,
+        "date": "08-14-1982",
+        "sender": {
+          "company": "BAYER, CORMIER AND TERRY",
+          "address": "2922 Mante Key",
+          "city": "NEW NORWOOD",
+          "zipCode": "23585-4721"
+        },
+        "recipient": {
+          "company": "SCHOWALTER, STEHR AND GUSIKOWSKI",
+          "address": "551 St John's Road",
+          "city": "PORT KENNEDYWORTH",
+          "zipCode": "27259-2342"
+        },
+        "typeOfService": "ECONOMY SELECT",
+        "weightInKg": 7.5,
+        "numberOfShipments": 4,
+        "baseCharge": 199.78,
+        "additionalCharges": [
+          { "description": "EXPRESS HANDLING FEE", "amount": 9.52, "vat": 2.13, "grossValue": 34.57 },
+          { "description": "CUSTOMS DUTY", "amount": 2.23, "vat": 2.52, "grossValue": 43.92 },
+          { "description": "WEEKEND DELIVERY FEE", "amount": 8.08, "vat": 3.34, "grossValue": 49.37 },
+          { "description": "SECURITY SURCHARGE", "amount": 5.08, "vat": 1.94, "grossValue": 23.41 },
+          { "description": "OVERSIZED PACKAGE FEE", "amount": 6.4, "vat": 2.36, "grossValue": 14.36 }
+        ]
+      },
+      {
+        "shipmentNumber": "0199849294",
+        "referenceNumber": "WH4EHYLISO",
+        "date": "01-13-1987",
+        "sender": {
+          "company": "WEST - HUDSON",
+          "address": "1611 Liberty Street",
+          "city": "CLINTFORT",
+          "zipCode": "29805-0058"
+        },
+        "recipient": {
+          "company": "BEIER LLC",
+          "address": "527 Emard Common",
+          "city": "FORT DELLAFURT",
+          "zipCode": "76630-3695"
+        },
+        "typeOfService": "DOMESTIC PRIORITY",
+        "weightInKg": 10.1,
+        "numberOfShipments": 9,
+        "baseCharge": 85.85,
+        "additionalCharges": [
+          { "description": "LATE PAYMENT PENALTY", "amount": 2.84, "vat": 3.2, "grossValue": 27.94 },
+          { "description": "URBAN CONGESTION CHARGE", "amount": 9.16, "vat": 1.66, "grossValue": 14.27 }
+        ]
+      }
+    ],
+    "mostRecentShipment": {
+      "sender": {
+        "city": "CLINTFORT",
+        "address": "1611 Liberty Street",
+        "company": "WEST - HUDSON"
+      },
+      "recipient": {
+        "address": "527 Emard Common",
+        "company": "BEIER LLC",
+        "zipCode": "76630-3695"
+      },
+      "weightInKg": 10.1,
+      "shipmentNumber": "0199849294",
+      "additionalCharges": [
+        { "amount": 2.84, "totalVAT": 3.2, "grossValue": 27.94, "description": "LATE PAYMENT PENALTY" },
+        { "amount": 9.16, "totalVAT": 1.66, "grossValue": 14.27, "description": "URBAN CONGESTION CHARGE" }
+      ],
+      "numberOfShipments": 9
+    }
+  }
+}
