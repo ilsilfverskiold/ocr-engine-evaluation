@@ -36,7 +36,7 @@ from typing import Any
 from evaluation.ground_truth import GroundTruth
 
 BBox = tuple[float, float, float, float]
-SCORER_VERSION = "geometry-v7 (2026-10-07; include returned layout boxes without inventing words)"
+SCORER_VERSION = "geometry-v8 (2026-10-13; declared granularity/frame, invalid-coordinate penalties)"
 
 
 @dataclass
@@ -284,6 +284,9 @@ def parse_word_boxes(value: Any) -> list[dict[str, Any]] | None:
         if coords is None:
             continue
         word = {"text": str(text), "bbox": coords}
+        for key in ("granularity", "block_type"):
+            if key in item:
+                word[key] = item[key]
         repair = item.get("_geometry_syntax_repair") or item.get("syntax_repair")
         if repair:
             word["syntax_repair"] = repair
@@ -435,6 +438,14 @@ def score_geometry(
     all_scored_boxes = pred_words
     excluded_predictions = [w for w in pred_words if not in_scope(w["bbox"])]
     pred_words = [w for w in pred_words if in_scope(w["bbox"])]
+    # Keep these boxes in the evidence and their text in CER/WER, but an
+    # impossible/out-of-frame rectangle cannot earn location credit. Counting
+    # it once in the prediction denominator also prevents free malformed extras.
+    invalid_geometry = [w for w in pred_words
+                        if not _valid_normalized_box(w["bbox"])]
+    invalid += len(invalid_geometry)
+    invalid_text.extend(str(w["text"]) for w in invalid_geometry)
+    pred_words = [w for w in pred_words if _valid_normalized_box(w["bbox"])]
 
     if granularity == "line":
         pred_units = merge_words_into_lines(pred_words)
@@ -537,10 +548,15 @@ def line_level_score(ref_words: list[dict], pred_words: list[dict]) -> tuple[flo
     return round(located / len(ref_lines), 4), len(ref_lines)
 
 
+def _valid_normalized_box(box: BBox) -> bool:
+    return (all(0 <= c <= 1 for c in box)
+            and box[0] < box[2] and box[1] < box[3])
+
+
 def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) -> GeometryScore:
     """Layout parsers (mineru, paddleocr_vl, deepseek_ocr) return one box per
-    paragraph/title/table, never per word. They are NOT APPLICABLE on the
-    word leg; this diagnostic says whether their regions sit on the text: a
+    paragraph/title/table, never per word. The caller scores those actual
+    boxes in the headline too; this separate diagnostic asks whether a
     reference word/line is located when some block's text contains it and
     the block's box contains its centre. Reported with words-per-box so a
     paragraph-level 0.95 is never read as word geometry.
@@ -550,7 +566,8 @@ def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) ->
     ref_words = [w for w in (parse_word_boxes(reference) or []) if normalize_word(w["text"])]
     if not ref_words:
         return GeometryScore(applicable=False, reason="word-box reference is empty")
-    blocks = [b for b in (blocks or []) if b.get("bbox") and str(b.get("text") or "").strip()]
+    blocks = [b for b in (parse_word_boxes(blocks) or [])
+              if _valid_normalized_box(b["bbox"]) and str(b.get("text") or "").strip()]
     if not blocks:
         return GeometryScore(applicable=False, reason="block engine: no blocks returned",
                              reference_words=len(ref_words), parse_ok=False)
@@ -578,7 +595,7 @@ def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) ->
     wpb = sorted(len(str(b["text"]).split()) for b in blocks)[len(blocks) // 2]
     return GeometryScore(
         applicable=False,
-        reason="block-level boxes (one per paragraph/title/table): not a word-box engine; see geometry_block_score",
+        reason="coarse text-region coverage diagnostic; actual boxes are scored separately in the headline",
         reference_words=len(ref_words),
         predicted_words=len(blocks),
         block_score=round(located / len(ref_words), 4),

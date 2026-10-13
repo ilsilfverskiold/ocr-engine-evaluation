@@ -153,8 +153,7 @@ def _normalise_box(box, width: int, height: int):
         x0, x1 = x1, x0
     if y1 < y0:
         y0, y1 = y1, y0
-    clamp = lambda v: min(max(v, 0.0), 1.0)  # noqa: E731
-    return [clamp(x0 / width), clamp(y0 / height), clamp(x1 / width), clamp(y1 / height)]
+    return [x0 / width, y0 / height, x1 / width, y1 / height]
 
 
 def _html_to_text(value: str) -> str:
@@ -435,6 +434,7 @@ class OpenDocInference:
         if regions:
             structured["text_regions"] = regions
             structured["geometry_granularity"] = "block"
+            structured["geometry_coordinates"] = "normalized_xyxy"
 
         return {
             "raw_text": markdown,

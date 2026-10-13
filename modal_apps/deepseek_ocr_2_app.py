@@ -237,7 +237,7 @@ def _parse_grounding(raw: str) -> tuple[str, dict]:
             for box in boxes:
                 if isinstance(box, (list, tuple)) and len(box) == 4:
                     try:
-                        x0, y0, x1, y1 = (min(1.0, max(0.0, float(v) / GROUNDING_COORD_MAX))
+                        x0, y0, x1, y1 = (float(v) / GROUNDING_COORD_MAX
                                           for v in box)
                     except (TypeError, ValueError):
                         continue
@@ -272,6 +272,7 @@ def _parse_grounding(raw: str) -> tuple[str, dict]:
     if text_regions:
         structured["text_regions"] = text_regions
         structured["geometry_granularity"] = "block"
+        structured["geometry_coordinates"] = "normalized_xyxy"
         structured["geometry_source"] = (
             "grounding <|det|> boxes, 0-999 of the original page, /999; "
             "region-level layout blocks, not words or lines")

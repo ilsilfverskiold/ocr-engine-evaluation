@@ -207,12 +207,11 @@ def _norm_poly(polygon, width: float, height: float):
         ys = [float(p[1]) for p in polygon]
     except (TypeError, ValueError, IndexError):
         return None, None
-    clamp = lambda v: min(1.0, max(0.0, v))  # noqa: E731
-    bbox = [clamp(min(xs) / width), clamp(min(ys) / height),
-            clamp(max(xs) / width), clamp(max(ys) / height)]
+    bbox = [min(xs) / width, min(ys) / height,
+            max(xs) / width, max(ys) / height]
     if bbox[2] <= bbox[0] or bbox[3] <= bbox[1]:
         return None, None
-    poly = [[clamp(x / width), clamp(y / height)] for x, y in zip(xs, ys)]
+    poly = [[x / width, y / height] for x, y in zip(xs, ys)]
     return bbox, poly
 
 
@@ -581,6 +580,7 @@ class SuryaOCR2Inference:
         if text_regions:
             structured["text_regions"] = text_regions
             structured["geometry_granularity"] = "block"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         error = None
         if not page.blocks and full_call is not None and full_call.get("error"):
             error = "GenerationError: full-page request failed and no fallback blocks"

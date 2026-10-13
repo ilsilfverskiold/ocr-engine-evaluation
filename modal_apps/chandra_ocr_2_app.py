@@ -153,8 +153,7 @@ def _norm_bbox(bbox, width: float, height: float):
         x0, y0, x1, y1 = (float(v) for v in bbox)
     except (TypeError, ValueError):
         return None
-    clamp = lambda v: min(1.0, max(0.0, v))  # noqa: E731
-    out = [clamp(x0 / width), clamp(y0 / height), clamp(x1 / width), clamp(y1 / height)]
+    out = [x0 / width, y0 / height, x1 / width, y1 / height]
     if out[2] - out[0] <= 0.001 or out[3] - out[1] <= 0.001:
         return None
     return out
@@ -411,6 +410,7 @@ class ChandraOCR2Inference:
         if text_regions:
             structured["text_regions"] = text_regions
             structured["geometry_granularity"] = "block"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         if image_blocks:
             structured["image_blocks"] = image_blocks
         error = None

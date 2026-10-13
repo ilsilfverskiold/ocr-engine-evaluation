@@ -248,11 +248,15 @@ class MathpixRunner(OCRRunner):
                 # a rotated frame would be silently mis-scored, so they are
                 # withheld from the scorer rather than guessed back.
                 structured["words_unmapped_rotated"] = words
+                structured["geometry_error"] = (
+                    f"Mathpix returned rotated geometry ({rotation} degrees); "
+                    "coordinate frame is not verified")
                 structured["geometry_note"] = (
                     f"auto_rotate_degrees={rotation}: word boxes withheld")
             elif words:
                 structured["words"] = words
                 structured["geometry_granularity"] = "word"
+                structured["geometry_coordinates"] = "normalized_xyxy"
             if other:
                 structured["word_data_other"] = other
         else:

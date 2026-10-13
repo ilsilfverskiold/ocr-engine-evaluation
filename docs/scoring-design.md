@@ -291,6 +291,15 @@ or axis swapping is applied to these known-frame results. Geometry requests use
 temperature 0, a 32,768-token cap and streaming; stop reasons remain visible.
 The exact saved call determines which recipe a report describes.
 
+The [2026-10-13 integration audit](geometry-audit-2026-10-13.md) makes new
+adapters' declared granularity/frame authoritative. Block outputs retain their
+actual boxes; mixed MinerU line/table regions retain their individual types and
+render native table HTML to text. Normalized coordinates are not clipped or
+scaled a second time. Finite out-of-frame, reversed and zero-area rectangles
+receive no location credit and count as invalid predictions; their text and
+boxes remain in the evidence. An unresolved provider coordinate frame is an
+adapter error, not a zero inferred from its prose output.
+
 Coordinate-frame conversions must be explicit and recorded. Keep source image,
 returned text/box associations, matched/misplaced/missing/extra overlays and
 invalid-box counts. Corpus precision/F1 and box-text errors use the rectangular

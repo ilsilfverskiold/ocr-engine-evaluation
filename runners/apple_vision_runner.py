@@ -107,10 +107,12 @@ class AppleVisionRunner(OCRRunner):
         if words:
             structured["words"] = words
             structured["geometry_granularity"] = "word"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         elif lines:
             structured["text_regions"] = [
                 {"text": l["text"], "bbox": l["bbox"], "poly": l.get("poly")} for l in lines]
             structured["geometry_granularity"] = "line"
+            structured["geometry_coordinates"] = "normalized_xyxy"
 
         request = reply.get("request") or {}
         model_version = (

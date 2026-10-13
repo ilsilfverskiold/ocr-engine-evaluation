@@ -376,8 +376,8 @@ def _convert_layout(raw: str, orig_w: int, orig_h: int) -> tuple[str, dict]:
         if isinstance(bbox_px, (list, tuple)) and len(bbox_px) == 4:
             try:
                 x0, y0, x1, y1 = (float(v) for v in bbox_px)
-                bbox = [min(1.0, max(0.0, x0 / input_w)), min(1.0, max(0.0, y0 / input_h)),
-                        min(1.0, max(0.0, x1 / input_w)), min(1.0, max(0.0, y1 / input_h))]
+                bbox = [x0 / input_w, y0 / input_h,
+                        x1 / input_w, y1 / input_h]
             except (TypeError, ValueError):
                 bbox = None
         layout_blocks.append({"label": category, "bbox": bbox, "bbox_model_px": bbox_px,
@@ -402,6 +402,7 @@ def _convert_layout(raw: str, orig_w: int, orig_h: int) -> tuple[str, dict]:
     if text_regions:
         structured["text_regions"] = text_regions
         structured["geometry_granularity"] = "block"
+        structured["geometry_coordinates"] = "normalized_xyxy"
         structured["geometry_source"] = "prompt_layout_all_en cell bboxes (layout blocks)"
     return "\n\n".join(md_items), structured
 

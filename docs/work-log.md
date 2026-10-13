@@ -376,3 +376,21 @@ new geometry pass) were unchanged. Regenerated both reports and verified the
 canonical bundle hashes. The manifest preserves the exact per-engine plans,
 source-run IDs, output audit and before/after coverage. Intermediate calls,
 runs and temporary audit scripts were removed after publication.
+
+
+## Geometry contract corrections — 2026-10-13
+
+Implemented the follow-up in `docs/geometry-audit-2026-10-13.md`: metadata-driven
+block dispatch, preserved line/word labels, explicit normalized frames in the
+13 new geometry adapters, unclipped extents in six conversions, invalid-coordinate
+penalties, mixed MinerU line/table labeling and native HTML-to-text conversion,
+and an explicit error for unresolved Mathpix rotation. No paid calls.
+
+Ten offline regression tests pass. Replayed all 196 saved successful geometry
+results for invalid-coordinate effects and all 17 MinerU pipeline source calls
+for the adapter correction. Only one location headline changes (fintab_002,
+0.0488 to 0.0122); nine MinerU pages have corrected mixed granularity and table
+box-text errors. All 17 Sonnet calls already record the updated pixel recipe.
+The published ZIP/reports remain unchanged; an offline cohort rescore is needed
+for publication. Scratch files remain under /private/tmp. Source/GPU audit edits
+in the shared workspace were preserved and are outside this commit.

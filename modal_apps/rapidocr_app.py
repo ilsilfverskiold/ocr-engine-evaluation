@@ -333,10 +333,12 @@ class RapidOCRInference:
         if words and lines_with_words == len(lines):
             structured["words"] = words
             structured["geometry_granularity"] = "word"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         elif lines:
             structured["text_regions"] = [{k: l[k] for k in ("text", "bbox", "poly")}
                                           for l in lines]
             structured["geometry_granularity"] = "line"
+            structured["geometry_coordinates"] = "normalized_xyxy"
             if words:
                 structured["partial_word_boxes"] = words
 

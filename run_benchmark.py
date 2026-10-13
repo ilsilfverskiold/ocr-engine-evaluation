@@ -556,6 +556,9 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
         from evaluation.geometry_leg import score_geometry, score_blocks
         so = structured_output or {}
         spec = ENGINES[engine]
+        if so.get("geometry_error") or "words_unmapped_rotated" in so:
+            raise RuntimeError(so.get("geometry_error") or
+                               "geometry coordinate frame unresolved after provider rotation")
         # Score the actual returned boxes even when their granularity is coarse.
         # Do not manufacture word boxes by dividing layout regions.
         # Each adapter reads what the engine actually stored (the run's own
@@ -572,7 +575,19 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             result.prediction_granularity = "layout_block"
             result.reason = "actual layout boxes scored against reference units; no synthetic word boxes"
             return result
-        if engine == "marker":
+        prediction_granularity = so.get("geometry_granularity") or "word_or_line"
+        if engine == "mineru_pipeline":
+            # Its native lines can contain a whole HTML table. Recover the
+            # saved type information as well as supporting future captures.
+            regions = so.get("lines") or so.get("text_regions") or []
+            regions = [{**r, "granularity": ("block" if
+                        "table" in str(r.get("block_type", "")) or
+                        "<table" in str(r.get("text", "")).lower() else "line")}
+                       for r in regions]
+            predicted = _strip_html_regions(regions)
+            prediction_granularity = ("mixed_line_block" if any(
+                r["granularity"] == "block" for r in regions) else "line")
+        elif engine == "marker":
             # marker's regions are lines/spans; the run left HTML tags in
             # their text (<h2>…</h2>, <table>…), which broke text matching.
             predicted = _strip_html_regions(so.get("text_regions") or [])
@@ -589,8 +604,11 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             # pipeline failure, never a 0.0 (paddle, run 20260810).
             raise RuntimeError("native geometry engine returned no boxes to score "
                                "(adapter/pipeline failure, not an engine score)")
-        return score_geometry(predicted, gt, infer_axis_order=(engine == "gemini_flash"),
-                              infer_scale=not bool(so.get("geometry_coordinates")))
+        result = score_geometry(predicted, gt, infer_axis_order=(engine == "gemini_flash"),
+                                infer_scale=(engine != "mineru_pipeline" and
+                                             not bool(so.get("geometry_coordinates"))))
+        result.prediction_granularity = prediction_granularity
+        return result
     raise ValueError(f"No scorer for leg {leg!r}")
 
 
@@ -609,6 +627,11 @@ def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
     the run stored; None for every other engine."""
     import re as _re
     from evaluation.metrics import _markdown_to_plain
+    # Modern adapters declare their output contract. Do not require every new
+    # engine to be added to the legacy recovery list below. Keep the adapter's
+    # text/box association; its text_regions already exclude picture regions.
+    if so.get("geometry_granularity") in ("block", "layout_block"):
+        return list(so.get("text_regions") or [])
     if engine not in BLOCK_GEOMETRY_ENGINES:
         return None
     if engine == "deepseek_ocr":
@@ -641,7 +664,7 @@ def _strip_html_regions(regions: list[dict]) -> list[dict]:
             except Exception:
                 pass
         if r.get("bbox") and t.strip():
-            out.append({"text": t, "bbox": r["bbox"]})
+            out.append({**r, "text": t, "bbox": r["bbox"]})
     return out
 
 

@@ -321,8 +321,11 @@ class MinerUPipelineInference:
                     "markdown": markdown,
                     "layout_blocks": layout,
                     "discarded_blocks": discarded,
-                    "text_regions": [{"text": l["text"], "bbox": l["bbox"]} for l in lines],
-                    "geometry_granularity": "line",
+                    "text_regions": [dict(l) for l in lines],
+                    "geometry_granularity": ("mixed_line_block" if any(
+                        "table" in l.get("block_type", "") or "<table" in l["text"].lower()
+                        for l in lines) else "line"),
+                    "geometry_coordinates": "normalized_xyxy",
                     "lines": lines,
                     "spans": spans,
                     "page_size": [page_w, page_h],

@@ -248,6 +248,7 @@ class MistralOCR41Runner(MistralOCRRunner):
             # Paragraph/block boxes — never reported as words.
             structured["text_regions"] = regions
             structured["geometry_granularity"] = "block"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         if unplaced_all:
             structured["tables_appended_unplaced"] = unplaced_all
 

@@ -253,6 +253,7 @@ class GoogleDocumentOCRRunner(OCRRunner):
         if words:
             structured["words"] = words
             structured["geometry_granularity"] = "word"
+            structured["geometry_coordinates"] = "normalized_xyxy"
         if lines:
             structured["lines"] = lines
 

@@ -307,6 +307,7 @@ def _middle_to_structured(result, markdown_default: str,
     if regions:
         structured["text_regions"] = regions
         structured["geometry_granularity"] = "block"
+        structured["geometry_coordinates"] = "normalized_xyxy"
     w, h = image_size
     # from_image writes the page at 200 dpi (w*72/200 pt); rendering at 200 dpi
     # restores w x h unless the long edge exceeds 3500 px, where it is capped.

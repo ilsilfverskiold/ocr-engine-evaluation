@@ -181,6 +181,7 @@ def _blocks_to_structured(page_blocks: list[list[dict]]) -> dict:
     if regions:
         structured["text_regions"] = regions
         structured["geometry_granularity"] = "block"
+        structured["geometry_coordinates"] = "normalized_xyxy"
     return structured
 
 
