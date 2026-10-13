@@ -3,7 +3,7 @@
 Compare OCR engines on text, Markdown, tables, key/value extraction, supplied
 schemas and geometry. **93 pages · 16 measured engine configurations.**
 
-## Open the saved report
+## Run the saved benchmakr
 
 ```bash
 python -m venv .venv
