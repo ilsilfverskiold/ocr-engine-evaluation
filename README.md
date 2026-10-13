@@ -245,6 +245,9 @@ invoices**. Modal figures cover GPU processing only; local CPU expense is unpric
 Startup, idle time, storage, evaluation judges, failed calls, retries, taxes and
 subscriptions are excluded. Modal seconds/page are batch-amortized throughput;
 API/local timings are per-call.
+**Modal startup and shutdown are deliberately excluded from the per-page rate:**
+they are shared session overhead, so multiplying by thousands of pages must not
+multiply that overhead by thousands too.
 
 ### Cost and volume estimates — lowest first
 
@@ -311,10 +314,12 @@ are lower bounds on hosting expense; local engines have no priced estimate.
 
 ### What changes at scale
 
-**GPU hosting:** add CPU and RAM charges, model loading and billed container idle
-time to the GPU processing estimates. A useful estimate is
-`(processing seconds + startup seconds + idle seconds) × container rate`;
-CPU/RAM usage was not recorded, so a complete historical bill cannot be reconstructed.
+**GPU hosting:** the volume table uses
+`pages × processing-only GPU cost/page`. If estimating a complete deployment bill,
+add startup and shutdown/idle GPU charges **once per actual container session**,
+plus CPU/RAM charges. Do not multiply a small test run's startup-inclusive
+per-page average by the production page count. CPU/RAM usage was not recorded,
+so a complete historical bill cannot be reconstructed.
 As an illustration, a 190.8-second DeepSeek startup plus the configured 30-second
 shutdown delay adds about **$0.153 in GPU charges per container session**: $0.00153
 per page over 100 pages, or $0.0000153 over 10,000. Multiple containers repeat that
