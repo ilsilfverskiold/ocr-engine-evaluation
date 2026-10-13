@@ -1,7 +1,7 @@
 # OCR Benchmark
 
 Compare OCR engines on text, Markdown, tables, key/value extraction, supplied
-schemas and geometry. **93 pages · 16 measured engine configurations.**
+schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
@@ -187,7 +187,7 @@ Source IDs, image hashes and selection are in `documents/manifest.json`.
 Based on the same **82 text-scored pages per engine**, scaled to the same document
 mix. Costs cover one inference pass. **Modal startup/shutdown is excluded**;
 Modal prices cover GPU processing only, and local CPU cost is unpriced.
-[Pricing sources and assumptions](docs/scoring-design.md#pricing-audit).
+[Pricing sources and assumptions](docs/engines-and-pricing.md#pricing-audit).
 
 ### Cost — lowest first
 
@@ -266,7 +266,7 @@ These two configurations were measured on 17 pages, separately from text OCR.
 | `textract_structured` | AnalyzeDocument 1.0 | AWS TABLES + FORMS |
 | `textract_text` | DetectDocumentText 1.0 | AWS text detection |
 
-[Full version evidence, dependencies and limitations](docs/scoring-design.md#engine-versions-and-provenance).
+[Full version evidence, dependencies and limitations](docs/engines-and-pricing.md#engine-versions-and-provenance).
 
 ## View the published results
 

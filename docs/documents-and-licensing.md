@@ -1,4 +1,4 @@
-# The document corpus: provenance, attribution, and licensing
+# Documents, references and licensing
 
 The benchmark uses **93 test documents**, each as a single-page image with a
 ground-truth sidecar (`<stem>_gt.txt`, plus `<stem>_gt.json` with table HTML
@@ -36,19 +36,19 @@ benchmark; several contain reviewed repairs that differ from upstream datasets.
 
 | Source dataset | Docs | Used for | License | GT provenance |
 |---|---|---|---|---|
-| [jsdnrs/ICDAR2019-SROIE](https://huggingface.co/datasets/jsdnrs/ICDAR2019-SROIE) (ICDAR 2019 SROIE competition) | 6 | easy/receipt | **CC-BY-4.0** — attribution: ICDAR 2019 Robust Reading Challenge on Scanned Receipts OCR and Information Extraction (SROIE), Huang et al. | Dataset word annotations (human) |
+| [jsdnrs/ICDAR2019-SROIE](https://huggingface.co/datasets/jsdnrs/ICDAR2019-SROIE) (ICDAR 2019 SROIE competition) | 6 | easy/receipt | **CC-BY-4.0** — attribution: ICDAR 2019 Robust Reading Challenge on Scanned Receipts OCR and Information Extraction (SROIE), Huang et al. | Dataset line annotations (human) |
 | [mychen76/invoices-and-receipts_ocr_v1](https://huggingface.co/datasets/mychen76/invoices-and-receipts_ocr_v1) | 6 | easy/invoice | **None declared** on the dataset card | `parsed_data` field values (human-labeled) |
 | [getomni-ai/ocr-benchmark](https://huggingface.co/datasets/getomni-ai/ocr-benchmark) (OmniAI OCR Benchmark) | 40 | all 7 medium types + hard/chart | **MIT** | `true_markdown_output` (human-annotated markdown) |
 | [nielsr/funsd](https://huggingface.co/datasets/nielsr/funsd) (FUNSD, Jaume et al. 2019) | 6 | hard/form | **Upstream FUNSD terms: non-commercial research/educational use** | Word annotations reordered by bounding box (human) |
 | [Teklia/IAM-line](https://huggingface.co/datasets/Teklia/IAM-line) (IAM Handwriting Database, FKI/University of Bern) | 6 | hard/handwritten (15 lines collaged per page) | Card says MIT, but the **underlying IAM database terms are registration-required, non-commercial research** — we treat IAM's original terms as governing | Line transcriptions (human) |
 | [pixparse/idl-wds](https://huggingface.co/datasets/pixparse/idl-wds) (UCSF Industry Documents Library) | 6 | hard/scanned_legacy | **Custom "idl-train" license** (see the dataset card) | The library's bundled legacy OCR annotations, page-1 text only (machine-generated but page-accurate) |
 | [ethanbradley/synfintabs](https://huggingface.co/datasets/ethanbradley/synfintabs) (SynFinTabs) | 5 | hard/financial_table | **MIT** | Exact synthetic cell text; `table_html` from the dataset's own `representations` |
-| [nielsr/rvl_cdip_10_examples_per_class](https://huggingface.co/datasets/nielsr/rvl_cdip_10_examples_per_class) (RVL-CDIP, Harley et al.; from IIT-CDIP / UCSF tobacco-litigation documents) | 18 | hard/legal, hard/newspaper, hard/report | **RVL-CDIP terms: research use** | **Silver** — Tesseract run at corpus-build time; judge-only evaluation |
+| [nielsr/rvl_cdip_10_examples_per_class](https://huggingface.co/datasets/nielsr/rvl_cdip_10_examples_per_class) (RVL-CDIP, Harley et al.; from IIT-CDIP / UCSF tobacco-litigation documents) | 18 | hard/legal, hard/newspaper, hard/report | **RVL-CDIP terms: research use** | Source OCR references; 7 pages enter deterministic text, 11 use judged text |
 
 ### Honest statement on the restricted datasets
 
 FUNSD, IAM, and RVL-CDIP (30 of the 93 documents) carry research-use or
-non-commercial restrictions, and two more sources declare no license at all.
+non-commercial restrictions, and the invoice dataset card declares no license.
 This repository redistributes small excerpts (5–18 images per dataset) solely
 for reproducible research benchmarking, with full attribution above, which we
 believe is consistent with the spirit of those terms — but it has not been
@@ -58,28 +58,19 @@ individually cleared with each rights holder:
   or contact the maintainer; it will be removed promptly.
 - **If you use this benchmark commercially**, note that the research-use
   restrictions attach to those documents, not to this repo's MIT-licensed
-  code. The easy/medium tiers (getomni-ai, SROIE) plus SynFinTabs — 57 docs —
+  code. The easy/medium tiers (getomni-ai, SROIE) plus SynFinTabs — 51 docs —
   are under permissive licenses (MIT / CC-BY-4.0).
 
-## Structured-extraction ground truth (JSON sidecars)
+## Structured references
 
-65 documents additionally carry a `<stem>_structured_gt.json` sidecar for the
-schema and key_value legs:
+The active targets for 65 pages are accepted records in
+`documents/structured_references/gold/`. Each contains `true_json`, `json_schema`,
+exclusions, aliases and source-image identity. They override adjacent
+`<stem>_structured_gt.json` sidecars. KV applies the printed-label review;
+schema uses the frozen shared field sample. See [field selection](scoring-design.md#shared-structured-references).
 
-| Source | Docs | What the sidecar contains |
-|---|---|---|
-| getomni-ai/ocr-benchmark | 40 | The dataset's own human-annotated `json_schema` + `true_json_output` per document |
-| mychen76 invoices | 6 | `parsed_data` JSON: header fields, line items, summary totals |
-| SROIE receipts | 6 | The SROIE task-2 entities: company, date, address, total |
-| FUNSD forms | 6 | **Hand-labeled** key-value pairs (this repo's own annotation — the HF version has no key→value linking) |
-| SynFinTabs financial tables | 5 | Column/row records from the dataset's own `representations` |
-| Scanned-legacy memos | 2 | **Hand-labeled** memo header fields (TO/FROM/DATE/SUBJECT/CC) |
-
-Format: `{dataset, split, manifest_index, dataset_offset, doc_type,
-json_schema, true_json}` (hand-labeled files use `"dataset": "hand-labeled"`
-and carry a `note` explaining document-specific judgment calls). The FUNSD and scanned-legacy sidecars are hand-labelled and are not
-regenerable; the handwriting and RVL-CDIP silver docs have nothing
-schema-shaped to extract.
+Table gold is separate, under `documents/table_references/gold/`. Shipping also
+compares the frozen original table reference; other scored pages use accepted gold.
 
 ## Ground-truth provenance summary
 
@@ -102,17 +93,20 @@ for the photo_receipt type. IAM pages are collages of 15 consecutive dataset
 line-images on a white canvas, so each "page" is genuine handwriting with a
 known-exact transcript.
 
-## Adding your own documents
+## Adding documents
 
-1. Drop the image under `documents/<tier>/<doc_type>/` (create the type folder
-   freely — tiers must be `easy`/`medium`/`hard`).
-2. Write `<stem>_gt.txt` next to it (plain text; markdown if structure
-   matters). For tables, a `<stem>_gt.json` with `plain_text` and `table_html`
-   keys enables TEDS.
-3. If the GT is machine-generated or partial, add the doc type or stem to the
-   silver sets in `evaluation/ground_truth.py` so text metrics don't lie.
-4. Re-run — discovery is automatic (any `.png/.jpg/.jpeg` not ending in
-   `_gt`).
+Place images under `documents/<tier>/<doc_type>/`. The loader requires a matching
+`<stem>_gt.txt` or `<stem>_gt.json`; when both exist their text must agree. JSON
+references may include `plain_text` and `table_html`. Other legs need their own
+references: Markdown catalogues, structured keys/schema, or text/box annotations.
+A missing leg reference is N/A, not zero. Table structure diagnostics are custom
+metrics, not the official PubTabNet TEDS implementation.
 
-Please only contribute documents whose license permits redistribution, and add
-them to the attribution table above.
+Register provenance and image hashes in `documents/manifest.json` and classify
+text-reference reliability in `documents/gt_provenance.json`. Accepted gold,
+label reviews and schema samples are bound to reference/image identities;
+update them when those identities change. Discovery finds images automatically,
+but does not generate references or approve them.
+
+Only contribute documents whose terms permit redistribution, and include source
+attribution. The repository's code license does not replace dataset terms.
