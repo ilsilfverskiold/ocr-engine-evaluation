@@ -3,9 +3,18 @@
 Six legs measure text, Markdown, tables, key-value extraction, supplied-schema
 extraction and geometry. The silver-document judge is a separate estimate.
 
-The published bundle records exact scorer versions, source calls and coverage.
-Current table scoring is `gold-table-values-v4-sections`; Markdown uses
-`markdown-structure-v3-spans-reflow`. Offline reporting never changes scores.
+Checked against the current scorer code and published run `20261013T081846Z`
+on October 13, 2026. Active scorer versions are:
+
+| Leg | Scorer |
+| --- | --- |
+| Markdown | `markdown-structure-v3-spans-reflow` |
+| Tables | `gold-table-values-v4-sections` |
+| KV | `shared-fields-v8-identifiers-native-checkboxes` |
+| Schema | `shared-fields-v1` |
+| Geometry | `geometry-v8` |
+
+The published bundle records source calls and coverage. Offline reporting never changes scores.
 See the [README](../README.md) for commands, current limitations and coverage.
 
 ## Prompts and provenance
@@ -16,8 +25,9 @@ models and the supported vendor extraction interface where available. An engine
 with a prompt interface competes even if it performs poorly; a fixed interface
 that cannot supply the requested output is N/A.
 
-Saved calls retain the exact request, model, schema, raw answer, native structured
-payload, costs and transformations. Dedicated Markdown/table controls must be
+Current calls retain the request, model, schema, raw answer, native structured
+payload, costs and transformations. Some historical calls omit prompts or exact
+model versions; recovered configuration is labeled as such. Dedicated Markdown/table controls must be
 identified separately from the older default transcription. Investigate input,
 prompt, adapter and reference defects before attributing low scores to a model.
 Do not use a second model to manufacture missing structure and credit it to OCR.
@@ -26,7 +36,7 @@ Do not use a second model to manufacture missing structure and credit it to OCR.
 
 Default transcription is rendered to plain text; HTML entities, Markdown syntax
 and layout whitespace are normalized consistently on both sides. Unicode NFKC,
-case folding and whitespace normalization precede comparison.
+lowercasing and whitespace normalization precede comparison.
 
 - **Coverage:** fraction of unique reference tokens found in the output. This
   does not penalize repetitions, extra words or wrong reading order.
@@ -171,9 +181,10 @@ original separately. Select the higher reference value score, preferring gold on
 retain both comparisons. Never choose individual cells from different references.
 This policy applies to every engine.
 
-Promptable engines receive an explicit table-only request allowing Markdown for
-simple grids and HTML for spans. Native pipelines retain their documented table
-interface. The accepted human references retain review notes for table scope and ambiguous
+The current planner supplies an explicit table-only request when the engine's
+registry configuration selects a prompted table pass, allowing Markdown for
+simple grids and HTML for spans. Native pipelines use their conversion output.
+The accepted human references retain review notes for table scope and ambiguous
 glyphs. Historical default answers are still scored from their saved table output;
 dedicated table-only controls have not been run.
 
@@ -235,7 +246,9 @@ become credit through a cached synonym.
 The shared path is `evaluation/keyvalue_leg.py` → `kv_value_groups.py`, using
 `kv_value_judge.py` for legacy-cache compatibility, budget control and journaling.
 Live runs, saved scoring and rescoring use the same path. `--skip-judge` makes no
-new calls; required uncached reviews stay pending and scores remain provisional.
+new judge calls; required uncached reviews stay pending. A page with pending
+review has no headline score and is excluded from the mean; its provisional
+calculation remains available as a diagnostic. This flag does not disable OCR inference.
 Paid replies are saved and never automatically retried. Existing but ineligible
 selected components, incomplete coverage and output reuse reject the proposed
 field match while retaining other valid batch decisions. Invented IDs or malformed
@@ -244,9 +257,10 @@ when later aliases change batch composition, avoiding duplicate payment.
 
 KV headline remains `(correct + blank_ok) / selected fields`. Extra pairs are
 visible but do not directly penalize incomplete-reference pages. Native Textract
-uses FORMS and native table fields. All structured reference fields participate (including array leaves);
-old printed-pair flags no longer remove fields. The same explicit human field
-exclusions apply to KV and schema.
+uses FORMS and native table fields. Fields, including array leaves, are eligible
+after shared gold exclusions and the additional KV printed-label review above.
+Legacy printed-pair flags are not used. Schema uses its frozen sample and shared
+gold exclusions; the KV-only label review does not change its requested fields.
 
 **Schema:** supply the current answer-free schema and require its literal keys.
 Changed or unrecorded saved request contracts require a new extraction; they are
@@ -332,7 +346,9 @@ showing that difference. Schema rerun requirements are not engine failures.
 
 Costs attach to inference passes. A shared conversion serving several legs is
 paid once; do not sum its copied per-leg costs. Modal batches report one measured
-GPU interval, GPU type, startup and amortized document costs. No model upgrades
+GPU interval, GPU type, startup and amortized document costs. Per-page cost and
+latency exclude startup/shutdown; volume projections multiply processing-only
+means, not session overhead. No model upgrades
 or GPU changes are implicit in a scorer update.
 
 `python run_benchmark.py --rescore <source-run> --skip-judge` replays saved calls
