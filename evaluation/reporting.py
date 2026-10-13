@@ -76,7 +76,7 @@ EXTRA_METRICS = {
 METHOD = {
     'text': 'Distinct-token coverage; CER/WER measure sequence errors separately.',
     'markdown': 'Correct structure + half partial credit per reference element; text fidelity is separate.',
-    'tables': 'Reference value credit, including blanks. Extras are diagnostic, not a headline penalty.',
+    'tables': 'Reference value credit, including blanks and partial text matches. Labels and headers align supported split, merged or reordered fields; identical physical grids are not required. Extras, strict F1 and structure are separate diagnostics.',
     'key_value': 'Correct values / printed-label fields. Unmapped is a count of returned keys per page.',
     'schema': 'Correct values / (requested fields + unexpected fields). Same frozen field sample.',
     'geometry': 'Located reference-unit recall. Word/line units and layout-only predictions remain distinct.',
