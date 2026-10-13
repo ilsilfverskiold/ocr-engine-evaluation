@@ -76,11 +76,13 @@ for r in rows:
  if r['leg']=='markdown':
   item['engine_note']='Structure and text fidelity are separate. Inspect the matched block type and content; bold text cannot satisfy a heading.'
   if e=='gemini_flash' and p=='default':
-   item['engine_note']='Historical default transcription request did not explicitly ask for Markdown. This is a prompt-fairness limitation; a dedicated Markdown control is deferred.'
+   item['engine_note']='Scored from the default transcription request, which asks for Markdown tables but not a complete Markdown conversion. The exact request is shown below.'
   elif e=='claude_sonnet_4_6' and p=='default':
-   item['engine_note']='The historical default request asked to preserve structure but was not a dedicated Markdown-only control. The exact recovered request is shown below.'
+   item['engine_note']='Scored from the default transcription request rather than the dedicated Markdown request. The exact recovered request is shown below.'
  if r['leg']=='tables':
-  item['engine_note']='Compare the returned logical cells with the selected reference and inspect missing, wrong and extra cells. A table-only control has not been run for historical general-model default answers.'
+  item['engine_note']='Compare the returned logical cells with the selected reference and inspect missing, wrong and extra cells.'
+  if e in ('claude_sonnet_4_6','gemini_flash'):
+   item['engine_note'] += (' This answer uses the dedicated table-extraction request.' if p=='tables' else ' This answer uses the default transcription request.')
  if r['leg']=='geometry':
   item['engine_note']='Location is evaluated from the returned text/box pairs displayed here. Transcription from another pass is not evidence for geometry.'
   frame=c['structured'].get('geometry_frame')
