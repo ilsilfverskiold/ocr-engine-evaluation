@@ -25,6 +25,22 @@
           "value": "0715547543",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 10,
+              "key": "0715547543 — Shipment Number",
+              "value": "0715547543"
+            }
+          ],
+          "reason": "Output ID 10 provides the complete and correct shipment number.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
+        }
       ]
     },
     "Shipment 1 — Sender / Reference Number": {
@@ -71,6 +87,22 @@
           "value": "10-20-1952",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 12,
+              "key": "0715547543 — Date",
+              "value": "10-20-1952"
+            }
+          ],
+          "reason": "Output ID 12 provides the complete and correct shipment date.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
+        }
       ]
     },
     "Shipment 1 — Dispatch Station / Sender": {
@@ -106,6 +138,30 @@
           ],
           "reason": "Complete value extracted by combining three output fragments.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 26,
+              "key": "Dispatch Station / Sender",
+              "value": "Runolfsson. Bernier And Rau"
+            },
+            {
+              "output_id": 39,
+              "key": "Dispatch Station / Sender",
+              "value": "531 Alexis Camp"
+            },
+            {
+              "output_id": 52,
+              "key": "Dispatch Station / Sender",
+              "value": "Yuma, 14256"
+            }
+          ],
+          "reason": "These three output IDs combine to form the complete and correct sender address.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -145,6 +201,43 @@
               "value": "Rosenbaum, Boehm And Francy 790 Abernathy Oval Spokane Valley, 51148-7339"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 40,
+              "key": "Receiving Station / Recipient",
+              "value": "790 Abernathy Oval"
+            },
+            {
+              "output_id": 53,
+              "key": "Receiving Station / Recipient",
+              "value": "Spokane Valley, 51148-7339"
+            }
+          ],
+          "reason": "These three output IDs combine to form the complete and correct recipient address.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 27,
+              "key": "Receiving Station / Recipient",
+              "value": "Rosenbaum, Boehm And Francy"
+            },
+            {
+              "output_id": 40,
+              "key": "Receiving Station / Recipient",
+              "value": "790 Abernathy Oval"
+            },
+            {
+              "output_id": 53,
+              "key": "Receiving Station / Recipient",
+              "value": "Spokane Valley, 51148-7339"
+            }
+          ]
         }
       ]
     },
@@ -161,6 +254,22 @@
           "value": "Economy Select",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "0715547543 — Type of Service / Charge",
+              "value": "Economy Select"
+            }
+          ],
+          "reason": "Output ID 15 provides the complete and correct type of service.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
+        }
       ]
     },
     "Shipment 1 — Weight in Kg": {
@@ -175,6 +284,22 @@
           "key": "Weight in Kg_1",
           "value": "29.5",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "0715547543 — Weight in Kg",
+              "value": "29.5"
+            }
+          ],
+          "reason": "Output ID 16 provides the complete and correct weight in Kg.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -191,6 +316,22 @@
           "value": "8",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "0715547543 — Number of Shipments",
+              "value": "8"
+            }
+          ],
+          "reason": "Output ID 17 provides the complete and correct number of shipments.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
+        }
       ]
     },
     "Shipment 1 — Base Charge": {
@@ -205,6 +346,22 @@
           "key": "Base Charge_1",
           "value": "134.24",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 18,
+              "key": "0715547543 — Base Charge",
+              "value": "134.24"
+            }
+          ],
+          "reason": "Output ID 18 provides the complete and correct base charge.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -282,6 +439,20 @@
           ],
           "reason": "Value '2.11' is the first item in the multi-line additional charges list.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 20,
+              "key": "0715547543 — Additional Charges",
+              "value": "2.11"
+            }
+          ],
+          "reason": "Output ID 20 provides the complete and correct additional charge amount.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -313,6 +484,20 @@
           ],
           "reason": "Value '1.52' is the first item in the multi-line VAT/Code list.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 21,
+              "key": "0715547543 — VAT/Code",
+              "value": "1.52"
+            }
+          ],
+          "reason": "Output ID 21 provides the complete and correct VAT/Code.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -344,6 +529,20 @@
           ],
           "reason": "Value '37.74' is the first item in the multi-line gross value list.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "0715547543 — Gross Value",
+              "value": "37.74"
+            }
+          ],
+          "reason": "Output ID 22 provides the complete and correct gross value.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -848,6 +1047,68 @@
           ],
           "reason": "All candidate output IDs are already assigned to other fields.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 19,
+              "key": "0715547543 — Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 97,
+              "key": "Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 201,
+              "key": "Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 214,
+              "key": "0682370779 — Description of Additional Charges",
+              "value": "Export Surcharge Holiday Delivery Fee"
+            },
+            {
+              "output_id": 292,
+              "key": "0715547543 — Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 344,
+              "key": "0715547543 — Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 370,
+              "key": "5357425199 — Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 474,
+              "key": "8041910202 — Description of Additional Charges",
+              "value": "Export Surcharge"
+            },
+            {
+              "output_id": 487,
+              "key": "0682370779 — Description of Additional Charges",
+              "value": "Export Surcharge Holiday Delivery Fee"
+            }
+          ],
+          "reason": "Output ID 71 provides the complete and correct description of additional charges.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 71,
+              "key": "Description of Additional Charges",
+              "value": "Export Surcharge"
+            }
+          ]
         }
       ]
     },
@@ -970,6 +1231,22 @@
           "key": "Shipment Number",
           "value": "5357425199",
           "request_id": "a792bed168c692f33d24dca018034047050788b931479cdfae623bf55c1d9d14"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 75,
+              "key": "5357425199 — Shipment Number",
+              "value": "5357425199"
+            }
+          ],
+          "reason": "Output ID 75 provides the complete and correct shipment number.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1828,6 +2105,20 @@
           ],
           "reason": "Reference value is null, and no output ID represents a null value.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 76,
+              "key": "5357425199 — Sender Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 76 is an empty field with the correct key and owner.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1843,6 +2134,22 @@
           "key": "Date_2",
           "value": "10-22-1957",
           "request_id": "2de8c237a27865456298d1d054c03176ffbbaeeb7ba365cb452a80527b3ff498"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 77,
+              "key": "5357425199 — Date",
+              "value": "10-22-1957"
+            }
+          ],
+          "reason": "Output ID 77 provides the complete and correct shipment date.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1923,6 +2230,20 @@
           ],
           "reason": "The value 'Express Worldwide' is correctly extracted for Shipment 2.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 80,
+              "key": "5357425199 — Type of Service / Charge",
+              "value": "Express Worldwide"
+            }
+          ],
+          "reason": "Output ID 80 provides the complete and correct type of service.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1938,6 +2259,22 @@
           "key": "Weight in Kg_2",
           "value": "43.7",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 81,
+              "key": "5357425199 — Weight in Kg",
+              "value": "43.7"
+            }
+          ],
+          "reason": "Output ID 81 provides the complete and correct weight in Kg.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1978,6 +2315,20 @@
           ],
           "reason": "The value '8' is correctly extracted for Shipment 2's number of shipments.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 82,
+              "key": "5357425199 — Number of Shipments",
+              "value": "8"
+            }
+          ],
+          "reason": "Output ID 82 provides the complete and correct number of shipments.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -1993,6 +2344,22 @@
           "key": "Base Charge_2",
           "value": "41.38",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 83,
+              "key": "5357425199 — Base Charge",
+              "value": "41.38"
+            }
+          ],
+          "reason": "Output ID 83 provides the complete and correct base charge.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2038,6 +2405,20 @@
           ],
           "reason": "All candidate output IDs are already assigned to other fields.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 84,
+              "key": "5357425199 — Description of Additional Charges",
+              "value": "Dangerous Goods Handling Fee"
+            }
+          ],
+          "reason": "Output ID 84 provides the complete and correct description of additional charges.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2053,6 +2434,22 @@
           "key": "Additional Charges_2a",
           "value": "9.77",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 85,
+              "key": "5357425199 — Additional Charges",
+              "value": "9.77"
+            }
+          ],
+          "reason": "Output ID 85 provides the complete and correct additional charge amount.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2084,6 +2481,20 @@
           ],
           "reason": "Value '2.78' is the first item in the multi-line VAT/Code list for Shipment 2.",
           "request_id": "e752495c541132f99814a8333398c8ea9b897cf69f5f7155d7a7e39691696bae"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 86,
+              "key": "5357425199 — VAT/Code",
+              "value": "2.78"
+            }
+          ],
+          "reason": "Output ID 86 provides the complete and correct VAT/Code.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2115,6 +2526,20 @@
           ],
           "reason": "The value '42.95' from output 31 correctly matches the first additional charge gross value.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 87,
+              "key": "5357425199 — Gross Value",
+              "value": "42.95"
+            }
+          ],
+          "reason": "Output ID 87 provides the complete and correct gross value.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2155,6 +2580,20 @@
           ],
           "reason": "The value 'Export Surcharge' from output 28 correctly matches the second additional charge description.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 97,
+              "key": "Description of Additional Charges",
+              "value": "Export Surcharge"
+            }
+          ],
+          "reason": "Output ID 97 provides the complete and correct description of additional charges.",
+          "request_id": "1ef7cfd6bca1fba83b114941d4c57fd6f0249b2a860d08ebb748f525f87957c9"
         }
       ]
     },
@@ -2251,6 +2690,22 @@
           "value": "9632670905",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 101,
+              "key": "9632670905 — Shipment Number",
+              "value": "9632670905"
+            }
+          ],
+          "reason": "Output ID 101 correctly provides the shipment number for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 3 — Sender / Reference Number": {
@@ -2271,6 +2726,22 @@
           "value": "SMYKMGQZMT",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 102,
+              "key": "9632670905 — Sender Reference Number",
+              "value": "SMYKMGQZMT"
+            }
+          ],
+          "reason": "Output ID 102 correctly provides the sender reference number for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 3 — Date": {
@@ -2285,6 +2756,22 @@
           "key": "Date_3",
           "value": "12-20-1958",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 103,
+              "key": "9632670905 — Date",
+              "value": "12-20-1958"
+            }
+          ],
+          "reason": "Output ID 103 correctly provides the date for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2316,6 +2803,20 @@
           ],
           "reason": "Complete value extracted from a single output ID.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 377,
+              "key": "9632670905 — Dispatch Station / Sender",
+              "value": "Marquardt Inc 6024 Quinten Union Fort Fabianfort, 88222-7411"
+            }
+          ],
+          "reason": "Output ID 377 correctly provides the complete dispatch station/sender for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2336,6 +2837,22 @@
           "key": "Receiving Station / Recipient",
           "value": "Franecki LLC\n71386 Bosco Crescent\nNew Jammiechester,\n91281",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 378,
+              "key": "9632670905 — Receiving Station / Recipient",
+              "value": "Franecki LLC 71386 Bosco Crescent New Jammiechester, 91281"
+            }
+          ],
+          "reason": "Output ID 378 correctly provides the complete receiving station/recipient for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2376,6 +2893,20 @@
           ],
           "reason": "Output 37 key and value perfectly match the reference for Shipment 3 service type.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 106,
+              "key": "9632670905 — Type of Service / Charge",
+              "value": "Express Worldwide"
+            }
+          ],
+          "reason": "Output ID 106 correctly provides the type of service/charge for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2392,6 +2923,22 @@
           "value": "17.9",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 107,
+              "key": "9632670905 — Weight in Kg",
+              "value": "17.9"
+            }
+          ],
+          "reason": "Output ID 107 correctly provides the weight in Kg for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 3 — Number of Shipments": {
@@ -2407,6 +2954,22 @@
           "value": "5",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 108,
+              "key": "9632670905 — Number of Shipments",
+              "value": "5"
+            }
+          ],
+          "reason": "Output ID 108 correctly provides the number of shipments for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 3 — Base Charge": {
@@ -2421,6 +2984,22 @@
           "key": "Base Charge_3",
           "value": "69.1",
           "request_id": "9642a69317d4e3a36c0346869323d6e544cd2ceed92449a7129a7bf6f7818ec8"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 109,
+              "key": "9632670905 — Base Charge",
+              "value": "69.1"
+            }
+          ],
+          "reason": "Output ID 109 correctly provides the base charge for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2452,6 +3031,20 @@
           ],
           "reason": "The value 'Express Handling Fee' from output 41 correctly matches the first additional charge description.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 110,
+              "key": "9632670905 — Description of Additional Charges",
+              "value": "Express Handling Fee"
+            }
+          ],
+          "reason": "Output ID 110 correctly provides the description of additional charge 1 for Shipment 3.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2518,6 +3111,20 @@
           ],
           "reason": "The value '0.63' from output 43 correctly matches the first additional charge VAT code.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 112,
+              "key": "9632670905 — VAT/Code",
+              "value": "0.63"
+            }
+          ],
+          "reason": "Output ID 112 correctly provides the VAT/Code for Shipment 3 additional charge 1.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2549,6 +3156,20 @@
           ],
           "reason": "The value '17.33' from output 44 correctly matches the first additional charge gross value.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 113,
+              "key": "9632670905 — Gross Value",
+              "value": "17.33"
+            }
+          ],
+          "reason": "Output ID 113 correctly provides the gross value for Shipment 3 additional charge 1.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2675,6 +3296,20 @@
               "value": "0.63\n0.63\n3.11"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 125,
+              "key": "VAT/Code",
+              "value": "0.63"
+            }
+          ],
+          "reason": "Output ID 125 correctly provides the VAT/Code for Shipment 3 additional charge 2.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2886,6 +3521,22 @@
           "value": "4512431216",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 153,
+              "key": "4512431216 — Shipment Number",
+              "value": "4512431216"
+            }
+          ],
+          "reason": "Output ID 153 correctly provides the shipment number for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Sender / Reference Number": {
@@ -2906,6 +3557,22 @@
           "value": "THQSWK2C77",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 154,
+              "key": "4512431216 — Sender Reference Number",
+              "value": "THQSWK2C77"
+            }
+          ],
+          "reason": "Output ID 154 correctly provides the sender reference number for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Date": {
@@ -2920,6 +3587,22 @@
           "key": "Date_4",
           "value": "06-19-1966",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 155,
+              "key": "4512431216 — Date",
+              "value": "06-19-1966"
+            }
+          ],
+          "reason": "Output ID 155 correctly provides the date for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2941,6 +3624,22 @@
           "value": "O'reilly, Schulist And Block\n89531 Libbie Passage\nRio Rancho, 76292-9418",
           "request_id": "c9cdd67d66cc723b7b12783d3c93434e55c0d830c3de648d8532f9fab4d4d406"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 156,
+              "key": "4512431216 — Dispatch Station / Sender",
+              "value": "O'reilly, Schulist And Block 89531 Libbie Passage Rio Rancho, 76292- 9418"
+            }
+          ],
+          "reason": "Output ID 156 correctly provides the complete dispatch station/sender for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Receiving Station / Recipient": {
@@ -2955,6 +3654,22 @@
           "key": "Receiving Station / Recipient",
           "value": "Reilly, Greenholt And Pfannerstill\n3693 Kessler Centers\nOtiliaville, 07772",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 157,
+              "key": "4512431216 — Receiving Station / Recipient",
+              "value": "Reilly. Greenholt And Pfannerstill 3693 Kessler Centers Otiliaville, 07772"
+            }
+          ],
+          "reason": "Output ID 157 correctly provides the complete receiving station/recipient for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -2995,6 +3710,20 @@
           ],
           "reason": "Output 50 key and value perfectly match the reference for Shipment 4 service type.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 158,
+              "key": "4512431216 — Type of Service / Charge",
+              "value": "Economy Select"
+            }
+          ],
+          "reason": "Output ID 158 correctly provides the type of service/charge for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -3011,6 +3740,22 @@
           "value": "13.3",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 159,
+              "key": "4512431216 — Weight in Kg",
+              "value": "13.3"
+            }
+          ],
+          "reason": "Output ID 159 correctly provides the weight in Kg for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Number of Shipments": {
@@ -3025,6 +3770,22 @@
           "key": "Number of Shipments_4",
           "value": "3",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 160,
+              "key": "4512431216 — Number of Shipments",
+              "value": "3"
+            }
+          ],
+          "reason": "Output ID 160 correctly provides the number of shipments for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -3041,6 +3802,22 @@
           "value": "35.55",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 161,
+              "key": "4512431216 — Base Charge",
+              "value": "35.55"
+            }
+          ],
+          "reason": "Output ID 161 correctly provides the base charge for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Additional charge 1 — Description of Additional Charges": {
@@ -3056,6 +3833,22 @@
           "value": "Signature Confirmation Fee",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 162,
+              "key": "4512431216 — Description of Additional Charges",
+              "value": "Signature Confirmation Fee"
+            }
+          ],
+          "reason": "Output ID 162 correctly provides the description of additional charge 1 for Shipment 4.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
+        }
       ]
     },
     "Shipment 4 — Additional charge 1 — Additional Charges": {
@@ -3065,6 +3858,22 @@
           "key": "Additional Charges",
           "value": "9.48",
           "request_id": "1101a9d3df3f58b5355037b18616640b0c91a303c5260b68a5eadc4e4b76894f"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 163,
+              "key": "4512431216 — Additional Charges",
+              "value": "9.48"
+            }
+          ],
+          "reason": "Output ID 163 correctly provides the additional charges for Shipment 4 additional charge 1.",
+          "request_id": "a2b67aa15c4e44ddf3e1e3453ecc91c1849f82325415a445fb0d9d250d27d1c1"
         }
       ]
     },
@@ -3086,6 +3895,22 @@
           "value": "2.94",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 164,
+              "key": "4512431216 — VAT/Code",
+              "value": "2.94"
+            }
+          ],
+          "reason": "Output ID 164 provides the complete and correct VAT/Code for Shipment 4, Additional Charge 1.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 4 — Additional charge 1 — Gross Value": {
@@ -3101,6 +3926,22 @@
           "value": "22.18",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 165,
+              "key": "4512431216 — Gross Value",
+              "value": "22.18"
+            }
+          ],
+          "reason": "Output ID 165 provides the complete and correct Gross Value for Shipment 4, Additional Charge 1.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 5 — Shipment Number": {
@@ -3110,6 +3951,22 @@
           "key": "Shipment Number",
           "value": "8041910202",
           "request_id": "1101a9d3df3f58b5355037b18616640b0c91a303c5260b68a5eadc4e4b76894f"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 166,
+              "key": "8041910202 — Shipment Number",
+              "value": "8041910202"
+            }
+          ],
+          "reason": "Output ID 166 provides the complete and correct Shipment Number for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -3968,6 +4825,20 @@
           ],
           "reason": "Reference value is null, and no output ID represents a null value.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 167,
+              "key": "8041910202 — Sender Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 167 is an empty field matching the expected null value for this field.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -3983,6 +4854,22 @@
           "key": "Date_5",
           "value": "10-30-1976",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 168,
+              "key": "8041910202 — Date",
+              "value": "10-30-1976"
+            }
+          ],
+          "reason": "Output ID 168 provides the complete and correct Date for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4014,6 +4901,25 @@
           ],
           "reason": "Complete value extracted by combining two output fragments.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 182,
+              "key": "Dispatch Station / Sender",
+              "value": "Jenkins, Yost And Bauch"
+            },
+            {
+              "output_id": 195,
+              "key": "Dispatch Station / Sender",
+              "value": "633 Landen Drive Domenicaland, 58844"
+            }
+          ],
+          "reason": "Output IDs 182 and 195 combine to form the complete Dispatch Station / Sender.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4050,6 +4956,25 @@
           ],
           "reason": "Complete value extracted by combining two output fragments.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 183,
+              "key": "Receiving Station / Recipient",
+              "value": "Skiles, Mueller And Boyle"
+            },
+            {
+              "output_id": 196,
+              "key": "Receiving Station / Recipient",
+              "value": "9008 Thiel Loaf New Winfield, 64383-0397"
+            }
+          ],
+          "reason": "Output IDs 183 and 196 combine to form the complete Receiving Station / Recipient.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4066,6 +4991,22 @@
           "value": "Domestic Priority",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 171,
+              "key": "8041910202 — Type of Service / Charge",
+              "value": "Domestic Priority"
+            }
+          ],
+          "reason": "Output ID 171 provides the complete and correct Type of Service / Charge for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 5 — Weight in Kg": {
@@ -4080,6 +5021,22 @@
           "key": "Weight in Kg_5",
           "value": "5.5",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 172,
+              "key": "8041910202 — Weight in Kg",
+              "value": "5.5"
+            }
+          ],
+          "reason": "Output ID 172 provides the complete and correct Weight in Kg for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4096,6 +5053,22 @@
           "value": "10",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 173,
+              "key": "8041910202 — Number of Shipments",
+              "value": "10"
+            }
+          ],
+          "reason": "Output ID 173 provides the complete and correct Number of Shipments for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 5 — Base Charge": {
@@ -4110,6 +5083,22 @@
           "key": "Base Charge_5",
           "value": "193.31",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 174,
+              "key": "8041910202 — Base Charge",
+              "value": "193.31"
+            }
+          ],
+          "reason": "Output ID 174 provides the complete and correct Base Charge for Shipment 5.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4141,6 +5130,20 @@
           ],
           "reason": "The value 'Fragile Item Fee' from output 67 correctly matches the first additional charge description.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 175,
+              "key": "8041910202 — Description of Additional Charges",
+              "value": "Fragile Item Fee"
+            }
+          ],
+          "reason": "Output ID 175 provides the complete and correct Description of Additional Charges.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4198,6 +5201,20 @@
           ],
           "reason": "The value '3.23' from output 69 correctly matches the first additional charge VAT code.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 177,
+              "key": "8041910202 — VAT/Code",
+              "value": "3.23"
+            }
+          ],
+          "reason": "Output ID 177 provides the complete and correct VAT/Code for Shipment 5, Additional Charge 1.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4229,6 +5246,20 @@
           ],
           "reason": "The value '14.83' from output 70 correctly matches the first additional charge gross value.",
           "request_id": "8c95b86e3d495f7d957c05ca501fe61479f6114efc719648c001379c3c9ae153"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 178,
+              "key": "8041910202 — Gross Value",
+              "value": "14.83"
+            }
+          ],
+          "reason": "Output ID 178 provides the complete and correct Gross Value for Shipment 5, Additional Charge 1.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4390,6 +5421,20 @@
               "value": "Fragile Item Fee\nDeclared Value Charge\nExport Surcharge"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 201,
+              "key": "Description of Additional Charges",
+              "value": "Export Surcharge"
+            }
+          ],
+          "reason": "Output ID 201 provides the complete and correct Description of Additional Charges.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -4445,6 +5490,22 @@
           "key": "Shipment Number",
           "value": "0682370779",
           "request_id": "1101a9d3df3f58b5355037b18616640b0c91a303c5260b68a5eadc4e4b76894f"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 205,
+              "key": "0682370779 — Shipment Number",
+              "value": "0682370779"
+            }
+          ],
+          "reason": "Output ID 205 provides the complete and correct Shipment Number for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5303,6 +6364,20 @@
           ],
           "reason": "Reference value is null, and no output ID represents a null value.",
           "request_id": "0dee50e068e81483aeb8e0871080331caa49b9563e75c6a02b1fcc99c728dc06"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 206,
+              "key": "0682370779 — Sender Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 206 is an empty field matching the expected null value for this field.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5318,6 +6393,22 @@
           "key": "Date_6",
           "value": "03-17-1992",
           "request_id": "b20336ad0431841742421a8a17d8e8bee1b49243db60bbdd74c154ceac028eb6"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 207,
+              "key": "0682370779 — Date",
+              "value": "03-17-1992"
+            }
+          ],
+          "reason": "Output ID 207 provides the complete and correct Date for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5353,6 +6444,22 @@
           "key": "Receiving Station / Recipient",
           "value": "Hamill - Green\n1811 Stanley Street\nFort Jaydeshire, 80569-3971",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 209,
+              "key": "0682370779 — Receiving Station / Recipient",
+              "value": "Hamill - Green 1811 Stanley Street Fort Jaydeshire, 80569-3971"
+            }
+          ],
+          "reason": "Output ID 209 provides the complete and correct Receiving Station / Recipient for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5393,6 +6500,20 @@
           ],
           "reason": "Output 76 correctly provides the type of service for Shipment 6.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 210,
+              "key": "0682370779 — Type of Service / Charge",
+              "value": "Domestic Priority"
+            }
+          ],
+          "reason": "Output ID 210 provides the complete and correct Type of Service / Charge for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5409,6 +6530,22 @@
           "value": "34.5",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 211,
+              "key": "0682370779 — Weight in Kg",
+              "value": "34.5"
+            }
+          ],
+          "reason": "Output ID 211 provides the complete and correct Weight in Kg for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 6 — Number of Shipments": {
@@ -5424,6 +6561,22 @@
           "value": "2",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 212,
+              "key": "0682370779 — Number of Shipments",
+              "value": "2"
+            }
+          ],
+          "reason": "Output ID 212 provides the complete and correct Number of Shipments for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
+        }
       ]
     },
     "Shipment 6 — Base Charge": {
@@ -5438,6 +6591,22 @@
           "key": "Base Charge_6",
           "value": "128.61",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 213,
+              "key": "0682370779 — Base Charge",
+              "value": "128.61"
+            }
+          ],
+          "reason": "Output ID 213 provides the complete and correct Base Charge for Shipment 6.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5478,6 +6647,20 @@
           ],
           "reason": "The first item in the list correctly provides the description for Shipment 6.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 214,
+              "key": "0682370779 — Description of Additional Charges",
+              "value": "Export Surcharge Holiday Delivery Fee"
+            }
+          ],
+          "reason": "Output ID 214 contains the correct description as part of a longer string.",
+          "request_id": "effbb8d0e7d4add68c45002015fdb2ab535dbda8a6a98827e42dd430682a8bc6"
         }
       ]
     },
@@ -5518,6 +6701,25 @@
           ],
           "reason": "The first item in the list correctly provides the additional charge for Shipment 6.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 215,
+              "key": "0682370779 — Additional Charges",
+              "value": "8.7 5.22"
+            },
+            {
+              "output_id": 488,
+              "key": "0682370779 — Additional Charges",
+              "value": "8.7 5.22"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the first additional charge value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5558,6 +6760,25 @@
           ],
           "reason": "The first item in the list correctly provides the VAT/Code for Shipment 6.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 216,
+              "key": "0682370779 — VAT/Code",
+              "value": "3.47 4.29"
+            },
+            {
+              "output_id": 489,
+              "key": "0682370779 — VAT/Code",
+              "value": "3.47 4.29"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the first VAT/Code value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5598,6 +6819,25 @@
           ],
           "reason": "The first item in the list correctly provides the gross value for Shipment 6.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 217,
+              "key": "0682370779 — Gross Value",
+              "value": "45.9 27.98"
+            },
+            {
+              "output_id": 490,
+              "key": "0682370779 — Gross Value",
+              "value": "45.9 27.98"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the first gross value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5659,6 +6899,20 @@
               "value": "Export Surcharge\nHoliday Delivery Fee"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 487,
+              "key": "0682370779 — Description of Additional Charges",
+              "value": "Export Surcharge Holiday Delivery Fee"
+            }
+          ],
+          "reason": "Correct description for additional charge 2, extracted from combined field.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5707,6 +6961,25 @@
               "value": "8.7\n5.22"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 215,
+              "key": "0682370779 — Additional Charges",
+              "value": "8.7 5.22"
+            },
+            {
+              "output_id": 488,
+              "key": "0682370779 — Additional Charges",
+              "value": "8.7 5.22"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the second additional charge value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5755,6 +7028,25 @@
               "value": "3.47\n4.29"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 216,
+              "key": "0682370779 — VAT/Code",
+              "value": "3.47 4.29"
+            },
+            {
+              "output_id": 489,
+              "key": "0682370779 — VAT/Code",
+              "value": "3.47 4.29"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the second VAT/Code value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5803,6 +7095,25 @@
               "value": "45.9\n27.98"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 217,
+              "key": "0682370779 — Gross Value",
+              "value": "45.9 27.98"
+            },
+            {
+              "output_id": 490,
+              "key": "0682370779 — Gross Value",
+              "value": "45.9 27.98"
+            }
+          ],
+          "reason": "Output contains multiple values; cannot isolate the second gross value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5819,6 +7130,22 @@
           "value": "2422145727",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 218,
+              "key": "2422145727 — Shipment Number",
+              "value": "2422145727"
+            }
+          ],
+          "reason": "Output ID 218 correctly provides the complete shipment number for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
+        }
       ]
     },
     "Shipment 7 — Date": {
@@ -5833,6 +7160,22 @@
           "key": "Date_7",
           "value": "10-29-1997",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 220,
+              "key": "2422145727 — Date",
+              "value": "10-29-1997"
+            }
+          ],
+          "reason": "Output ID 220 correctly provides the complete date for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5853,6 +7196,22 @@
           "key": "Dispatch Station / Sender",
           "value": "Vonrueden, Lehner And Kunze\n81390 Vandervort Plaza\nSouth Maiyaborough, 44444-6420",
           "request_id": "c9cdd67d66cc723b7b12783d3c93434e55c0d830c3de648d8532f9fab4d4d406"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 221,
+              "key": "2422145727 — Dispatch Station / Sender",
+              "value": "Vonrueden, Lehner And Kunze 81390 Vandervort Plaza South Maiyaborough, 44444-6420"
+            }
+          ],
+          "reason": "Output ID 221 correctly provides the complete dispatch station for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5893,6 +7252,20 @@
           ],
           "reason": "Output 89 correctly provides the type of service for Shipment 7.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 223,
+              "key": "2422145727 — Type of Service / Charge",
+              "value": "Economy Select"
+            }
+          ],
+          "reason": "Output ID 223 correctly provides the complete type of service for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5909,6 +7282,22 @@
           "value": "27.4",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 224,
+              "key": "2422145727 — Weight in Kg",
+              "value": "27.4"
+            }
+          ],
+          "reason": "Output ID 224 correctly provides the complete weight in Kg for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
+        }
       ]
     },
     "Shipment 7 — Number of Shipments": {
@@ -5924,6 +7313,22 @@
           "value": "6",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 225,
+              "key": "2422145727 — Number of Shipments",
+              "value": "6"
+            }
+          ],
+          "reason": "Output ID 225 correctly provides the complete number of shipments for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
+        }
       ]
     },
     "Shipment 7 — Base Charge": {
@@ -5938,6 +7343,22 @@
           "key": "Base Charge_7",
           "value": "29.92",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 226,
+              "key": "2422145727 — Base Charge",
+              "value": "29.92"
+            }
+          ],
+          "reason": "Output ID 226 correctly provides the complete base charge for Shipment 7.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5964,6 +7385,20 @@
           ],
           "reason": "Output 500 correctly provides the complete value 'Declared Value Charge'.",
           "request_id": "c3c4e876142b543da2758dc1986709b10c7ce48dfd8caf2a7029541bc50d7742"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 227,
+              "key": "2422145727 — Description of Additional Charges",
+              "value": "Declared Value Charge"
+            }
+          ],
+          "reason": "Output ID 227 correctly provides the complete description of additional charges.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -5979,6 +7414,22 @@
           "key": "Additional Charges_7",
           "value": "4.84",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 228,
+              "key": "2422145727 — Additional Charges",
+              "value": "4.84"
+            }
+          ],
+          "reason": "Output ID 228 correctly provides the complete additional charges value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -6000,6 +7451,22 @@
           "value": "4.92",
           "request_id": "b08d2644ec9b2005ee815d3497231028664402135cf42c70ca617d8023f04bfc"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 229,
+              "key": "2422145727 — VAT/Code",
+              "value": "4.92"
+            }
+          ],
+          "reason": "Output ID 229 correctly provides the complete VAT/Code value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
+        }
       ]
     },
     "Shipment 7 — Additional charge 1 — Gross Value": {
@@ -6015,6 +7482,22 @@
           "value": "16.51",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 230,
+              "key": "2422145727 — Gross Value",
+              "value": "16.51"
+            }
+          ],
+          "reason": "Output ID 230 correctly provides the complete gross value.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
+        }
       ]
     },
     "Shipment 8 — Shipment Number": {
@@ -6029,6 +7512,22 @@
           "key": "Shipment Number_8",
           "value": "0431981981",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 231,
+              "key": "0431981981 — Shipment Number",
+              "value": "0431981981"
+            }
+          ],
+          "reason": "Output ID 231 correctly provides the complete shipment number for Shipment 8.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -6887,6 +8386,745 @@
           ],
           "reason": "Reference value is null, and no output provides a null or empty value for this specific field.",
           "request_id": "c3c4e876142b543da2758dc1986709b10c7ce48dfd8caf2a7029541bc50d7742"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 2,
+              "key": "Client Number:",
+              "value": ""
+            },
+            {
+              "output_id": 11,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 13,
+              "key": "0715547543 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 14,
+              "key": "0715547543 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 23,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 25,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 28,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 29,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 30,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 31,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 36,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 37,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 38,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 41,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 42,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 43,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 44,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 49,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 50,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 51,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 54,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 55,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 56,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 57,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 62,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 63,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 64,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 65,
+              "key": "Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 66,
+              "key": "Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 67,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 68,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 69,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 78,
+              "key": "5357425199 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 79,
+              "key": "5357425199 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 88,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 89,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "9632670905 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "9632670905 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 119,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 120,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 121,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 122,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "Description of Additional Charges",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "Additional Charges",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "VAT/Code",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "Gross Value",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "8041910202 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "8041910202 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 181,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 184,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 185,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 186,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 187,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 192,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 193,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 194,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 197,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 198,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "0431981981 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 234,
+              "key": "0431981981 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 235,
+              "key": "0431981981 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 244,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 245,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 246,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 249,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 251,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 252,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 257,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 258,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 259,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 262,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 264,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 265,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 271,
+              "key": "Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 272,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 275,
+              "key": "Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 276,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 277,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 278,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 284,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 286,
+              "key": "0715547543 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 297,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 304,
+              "key": "0715547543 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 317,
+              "key": "0715547543 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 323,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "0715547543 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 336,
+              "key": "0715547543 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "0715547543 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "0715547543 — Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 343,
+              "key": "0715547543 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "5357425199 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 362,
+              "key": "5357425199 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 422,
+              "key": "9632670905 — Description of Additional Charges",
+              "value": ""
+            },
+            {
+              "output_id": 423,
+              "key": "9632670905 — Additional Charges",
+              "value": ""
+            },
+            {
+              "output_id": 424,
+              "key": "9632670905 — VAT/Code",
+              "value": ""
+            },
+            {
+              "output_id": 425,
+              "key": "9632670905 — Gross Value",
+              "value": ""
+            },
+            {
+              "output_id": 440,
+              "key": "8041910202 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 442,
+              "key": "8041910202 — Dispatch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 453,
+              "key": "8041910202 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 466,
+              "key": "8041910202 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "8041910202 — Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 473,
+              "key": "8041910202 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 479,
+              "key": "0682370779 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 505,
+              "key": "0431981981 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 518,
+              "key": "0431981981 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 531,
+              "key": "0431981981 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 535,
+              "key": "0431981981 — Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 536,
+              "key": "0431981981 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 537,
+              "key": "0431981981 — Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 538,
+              "key": "0431981981 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 544,
+              "key": "0431981981 — Sender Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 548,
+              "key": "0431981981 — Type of Service / Charge",
+              "value": ""
+            },
+            {
+              "output_id": 549,
+              "key": "0431981981 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 550,
+              "key": "0431981981 — Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 551,
+              "key": "0431981981 — Base Charge",
+              "value": ""
+            }
+          ],
+          "reason": "No output ID provides a null or empty value for this field.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -6902,6 +9140,22 @@
           "key": "Date_8",
           "value": "06-08-1998",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 233,
+              "key": "0431981981 — Date",
+              "value": "06-08-1998"
+            }
+          ],
+          "reason": "Output ID 233 correctly provides the complete date for Shipment 8.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -6938,6 +9192,43 @@
           ],
           "reason": "The output IDs 5 and 6 are fragments and do not form the complete address.",
           "request_id": "c3c4e876142b543da2758dc1986709b10c7ce48dfd8caf2a7029541bc50d7742"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 5,
+              "key": "North Sammiefurt,",
+              "value": "88126"
+            },
+            {
+              "output_id": 6,
+              "key": "1349 Barton",
+              "value": "Parkways"
+            }
+          ],
+          "reason": "Combined output IDs 247, 260, 273 form the complete dispatch station.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 247,
+              "key": "Dispatch Station / Sender",
+              "value": "Durgan Group Frami"
+            },
+            {
+              "output_id": 260,
+              "key": "Dispatch Station / Sender",
+              "value": "1349 Barton 7051 Parkways"
+            },
+            {
+              "output_id": 273,
+              "key": "Dispatch Station / Sender",
+              "value": "North Sammiefurt, 88126 8277"
+            }
+          ]
         }
       ]
     },
@@ -6994,6 +9285,68 @@
           ],
           "reason": "The output IDs are fragments and do not form the complete address.",
           "request_id": "c3c4e876142b543da2758dc1986709b10c7ce48dfd8caf2a7029541bc50d7742"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 248,
+              "key": "Receiving Station / Recipient",
+              "value": "Mcclure, Blick And"
+            },
+            {
+              "output_id": 261,
+              "key": "Receiving Station / Recipient",
+              "value": "E Front Street"
+            },
+            {
+              "output_id": 274,
+              "key": "Receiving Station / Recipient",
+              "value": "Wellington, 40549-"
+            },
+            {
+              "output_id": 508,
+              "key": "0431981981 — Receiving Station / Recipient",
+              "value": "Mcclure, Blick And"
+            },
+            {
+              "output_id": 521,
+              "key": "0431981981 — Receiving Station / Recipient",
+              "value": "Mcclure, Blick And"
+            },
+            {
+              "output_id": 534,
+              "key": "0431981981 — Receiving Station / Recipient",
+              "value": "E Front Street"
+            },
+            {
+              "output_id": 547,
+              "key": "0431981981 — Receiving Station / Recipient",
+              "value": "Wellington, 40549-"
+            }
+          ],
+          "reason": "Combined output IDs 248, 261, 274 form the complete receiving station.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc",
+          "rejected_because": "incomplete value coverage",
+          "gemini_picked": [
+            {
+              "output_id": 248,
+              "key": "Receiving Station / Recipient",
+              "value": "Mcclure, Blick And"
+            },
+            {
+              "output_id": 261,
+              "key": "Receiving Station / Recipient",
+              "value": "E Front Street"
+            },
+            {
+              "output_id": 274,
+              "key": "Receiving Station / Recipient",
+              "value": "Wellington, 40549-"
+            }
+          ]
         }
       ]
     },
@@ -7034,6 +9387,20 @@
           ],
           "reason": "Output 102 correctly provides the type of service for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 236,
+              "key": "0431981981 — Type of Service / Charge",
+              "value": "Economy Select"
+            }
+          ],
+          "reason": "Output ID 236 correctly provides the complete type of service for Shipment 8.",
+          "request_id": "cb804a9e1ac327dc4ee8fa86c9a847c4f364a0f8bb1d837315b5a39cb7001abc"
         }
       ]
     },
@@ -7049,6 +9416,22 @@
           "key": "Weight in Kg_8",
           "value": "6.4",
           "request_id": "77e391c3ba6e5f9529c4ee342cc0cae8faa809436d43bbbd2484cd55bb8af454"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 237,
+              "key": "0431981981 — Weight in Kg",
+              "value": "6.4"
+            }
+          ],
+          "reason": "Output ID 237 correctly provides the weight for Shipment 8 from the main shipment row.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7089,6 +9472,20 @@
           ],
           "reason": "Output 104 correctly provides the number of shipments for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 238,
+              "key": "0431981981 — Number of Shipments",
+              "value": "8"
+            }
+          ],
+          "reason": "Output ID 238 correctly provides the number of shipments for Shipment 8.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7104,6 +9501,22 @@
           "key": "Base Charge_8",
           "value": "183.13",
           "request_id": "e6680093f26a37ea94cbe09d8dd4ffe9eb4a37be26bd5e34a78493fb6140475a"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 239,
+              "key": "0431981981 — Base Charge",
+              "value": "183.13"
+            }
+          ],
+          "reason": "Output ID 239 correctly provides the base charge for Shipment 8.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7135,6 +9548,20 @@
           ],
           "reason": "The first item in the list correctly provides the description for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 240,
+              "key": "0431981981 — Description of Additional Charges",
+              "value": "Peak Season Surcharge"
+            }
+          ],
+          "reason": "Output ID 240 correctly provides the description for the first additional charge.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7166,6 +9593,20 @@
           ],
           "reason": "The first item in the list correctly provides the additional charge for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 241,
+              "key": "0431981981 — Additional Charges",
+              "value": "6.23"
+            }
+          ],
+          "reason": "Output ID 241 correctly provides the amount for the first additional charge.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7197,6 +9638,20 @@
           ],
           "reason": "The first item in the list correctly provides the VAT/Code for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 242,
+              "key": "0431981981 — VAT/Code",
+              "value": "0.92"
+            }
+          ],
+          "reason": "Output ID 242 correctly provides the VAT/Code for the first additional charge.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },
@@ -7228,6 +9683,20 @@
           ],
           "reason": "The first item in the list correctly provides the gross value for Shipment 8.",
           "request_id": "c0277c716acd998881a45919e53997ef2da7c4630c7cea50e5192643377e13c3"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "1ebcb079d2466ea7c6089feb89e3e81c02fd13e08548e73d653c27dfbb5eab72",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 243,
+              "key": "0431981981 — Gross Value",
+              "value": "40.31"
+            }
+          ],
+          "reason": "Output ID 243 correctly provides the gross value for the first additional charge.",
+          "request_id": "ed485ffb6ea93f344a67ebce7a288b373a0e9a50c2d61b1f0f54f5c4c9304822"
         }
       ]
     },

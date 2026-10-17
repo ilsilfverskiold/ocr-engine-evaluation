@@ -124,6 +124,20 @@
               "value": "51323 Unique Village [street address], State of California"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 11,
+              "key": "State of",
+              "value": "California"
+            }
+          ],
+          "reason": "Output ID 11 provides the complete and correct state value for Lessor.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -178,6 +192,20 @@
           ],
           "reason": "The Lessee's state is correctly extracted from the value of output 5.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 11,
+              "key": "State of",
+              "value": "California"
+            }
+          ],
+          "reason": "Output ID 11 is already assigned to Lessor's State. No other valid candidate.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -361,6 +389,20 @@
               "value": "1543 square feet (SF) of Warehouse located at 52577 Hailey Corners [street address], State of California."
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 11,
+              "key": "State of",
+              "value": "California"
+            }
+          ],
+          "reason": "Output ID 11 is already assigned to Lessor's State. No other valid candidate.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -493,6 +535,20 @@
               "value": "4 year(s) 2 month(s) commencing on the 31 day of December 2025, and expiring at Midnight on the 3 day of March 2030. (\"Initial Term\")"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 13,
+              "key": "31 day of — The term of this Lease",
+              "value": "31 day of"
+            }
+          ],
+          "reason": "Output ID 13 correctly extracts '31' as the commencing day from its value.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -568,6 +624,20 @@
               "value": "4 year(s) 2 month(s) commencing on the 31 day of December 2025, and expiring at Midnight on the 3 day of March 2030. (\"Initial Term\")"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "31 day of — shall be for a period of",
+              "value": "December 2025"
+            }
+          ],
+          "reason": "Output ID 14 provides the complete 'December 2025' for the first commencing day.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -650,6 +720,50 @@
           ],
           "reason": "Output 10 contains 'December 2025' once, matching the first day, not a second day.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 5,
+              "key": "day of",
+              "value": "December"
+            },
+            {
+              "output_id": 6,
+              "key": "day of",
+              "value": "December 2025"
+            },
+            {
+              "output_id": 14,
+              "key": "31 day of — shall be for a period of",
+              "value": "December 2025"
+            },
+            {
+              "output_id": 15,
+              "key": "31 day of — 4 year(s) 2",
+              "value": "day of December 2025 and"
+            },
+            {
+              "output_id": 22,
+              "key": "31 day of — The term of this Lease shall be for a period of",
+              "value": "December 2025 day of December 2025 and expiring at Midnight on the 3 day of"
+            },
+            {
+              "output_id": 23,
+              "key": "31 day of — 4 year(s) 2",
+              "value": "December 2025 day of December 2025 and expiring at Midnight on the 3 day of"
+            },
+            {
+              "output_id": 24,
+              "key": "31 day of — month(s) commencing on the",
+              "value": "December 2025 day of December 2025 and expiring at Midnight on the 3 day of"
+            }
+          ],
+          "reason": "Output ID 14 is already assigned to the first commencing day. No other valid candidate.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -698,6 +812,20 @@
               "value": "4 year(s) 2 month(s) commencing on the 31 day of December 2025, and expiring at Midnight on the 3 day of March 2030. (\"Initial Term\")"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "31 day of — month(s) commencing on the",
+              "value": "expiring at Midnight on the 3 day of"
+            }
+          ],
+          "reason": "Output ID 16 contains '3' as the expiring day, matching the reference.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -751,6 +879,20 @@
               "value": "4 year(s) 2 month(s) commencing on the 31 day of December 2025, and expiring at Midnight on the 3 day of March 2030. (\"Initial Term\")"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 18,
+              "key": "March 2030 day of — shall be for a period of",
+              "value": "March 2030 ."
+            }
+          ],
+          "reason": "Output ID 18 provides the complete 'March 2030' for the first expiring day.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -828,6 +970,50 @@
           ],
           "reason": "Output 10 contains 'March 2030' once, matching the first day, not a second day.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 10,
+              "key": "(\"Initial Term\")",
+              "value": "March 2030"
+            },
+            {
+              "output_id": 17,
+              "key": "March 2030 day of — The term of this Lease",
+              "value": "March 2030 day of"
+            },
+            {
+              "output_id": 18,
+              "key": "March 2030 day of — shall be for a period of",
+              "value": "March 2030 ."
+            },
+            {
+              "output_id": 25,
+              "key": "March 2030 day of — The term of this Lease shall be for a period of",
+              "value": "March 2030 day of"
+            },
+            {
+              "output_id": 26,
+              "key": "March 2030 day of — The term of this Lease shall be for a period of",
+              "value": "March 2030 . (\"Initial Term\")"
+            },
+            {
+              "output_id": 27,
+              "key": "March 2030 day of — 4 year(s) 2",
+              "value": "March 2030 . (\"Initial Term\")"
+            },
+            {
+              "output_id": 28,
+              "key": "March 2030 day of — month(s) commencing on the",
+              "value": "March 2030 . (\"Initial Term\")"
+            }
+          ],
+          "reason": "Output ID 18 is already assigned to the first expiring day. No other valid candidate.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -1124,6 +1310,20 @@
           ],
           "reason": "The reference value is null and no output provides a relevant value for renewal periods.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 20,
+              "key": "March 2030 day of — month(s) commencing on the",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 20 is an empty field, correctly representing the null expected value.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -1275,6 +1475,20 @@
           ],
           "reason": "The reference value is null and no output provides a relevant value for renewal years.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "day of",
+              "value": "."
+            }
+          ],
+          "reason": "Output ID 3 is an empty field, correctly representing the null expected value.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     },
@@ -1426,6 +1640,25 @@
           ],
           "reason": "The reference value is null and no output provides a relevant value for renewal months.",
           "request_id": "58da0b48f5b5ebd5fe77f3eb82c5a1b48d9dad27babd4368078b3755b17dd0f6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "29a9b37c99d18ad5ab7176c5b7b6a71ceb4185ff0aafe991f25404079f639be1",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "day of",
+              "value": "."
+            },
+            {
+              "output_id": 20,
+              "key": "March 2030 day of — month(s) commencing on the",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 20 and 3 are already assigned. No other empty field for null.",
+          "request_id": "58d44d3394932f5e1d7734c1672a6ada0fc4425b30b647ea9dc55d855e2f2b8b"
         }
       ]
     }

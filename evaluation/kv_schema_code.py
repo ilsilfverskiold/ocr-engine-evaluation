@@ -181,14 +181,25 @@ def engine_pairs(engine: str, text: str, structured_output: dict | None, pair_co
                     if pair_context is not None:
                         pair_context.extend([None] * len(grid))
                 elif len(grid) > 1:
-                    hdr = grid[0]
-                    for ri, row in enumerate(grid[1:], 1):
-                        for j, cell in enumerate(row):
-                            pairs.append([hdr[j] if j < len(hdr) else f"col{j+1}", cell])
+                    # Read the table as printed: the header is the first row
+                    # with text above the value columns (blank and title-only
+                    # rows above it are skipped). Every cell below it is
+                    # labelled "<first-column text> — <column header>". The
+                    # first column is also a value when it has a header of
+                    # its own ("Consultant Name"); under a blank corner it
+                    # is only the row label.
+                    h = next((i for i, r in enumerate(grid[:-1]) if any(str(c).strip() for c in r[1:])), 0)
+                    hdr = grid[h]
+                    first = 0 if hdr and str(hdr[0]).strip() else 1
+                    for ri, row in enumerate(grid[h + 1:], h + 1):
+                        row_key = str(row[0]).strip() if row else ''
+                        for j, cell in enumerate(row[first:], first):
+                            column = str(hdr[j]).strip() if j < len(hdr) else f"col{j+1}"
+                            pairs.append([" — ".join(p for p in (row_key, column) if p), cell])
                             if pair_context is not None:
                                 pair_context.append({'kind': 'native_table', 'table': ti, 'row': ri,
-                                    'column': j, 'row_key': row[0] if row else '',
-                                    'row_header': hdr[0], 'column_header': hdr[j] if j < len(hdr) else '',
+                                    'column': j, 'row_key': row_key,
+                                    'row_header': hdr[0], 'column_header': column,
                                     **({'selection_status': t['cell_selections'][f'{ri+1},{j+1}']}
                                        if f'{ri+1},{j+1}' in t.get('cell_selections', {}) else {})})
         return pairs, "Textract FORMS pairs + table cells (no JSON interface)"

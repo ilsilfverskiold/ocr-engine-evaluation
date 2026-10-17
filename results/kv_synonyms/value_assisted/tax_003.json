@@ -18,6 +18,20 @@
           ],
           "reason": "Output 60 contains the complete tax year '2024' within its value.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "Form",
+              "value": "1040 (2024)"
+            }
+          ],
+          "reason": "The output value '1040 (2024)' correctly provides the tax year.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -59,6 +73,20 @@
               "value": "1/01 , 2024, 12/31 , 204"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ],
+          "reason": "The output contains the correct beginning date for the other tax year.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -83,6 +111,33 @@
           ],
           "reason": "Output 60 contains the complete '2024' for the tax year beginning year.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "Form",
+              "value": "1040 (2024)"
+            },
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ],
+          "reason": "The output contains the correct year for the other tax year beginning date.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
           "rejected_because": "output reused",
           "gemini_picked": [
             {
@@ -150,6 +205,48 @@
               "value": "1/01 , 2024, 12/31 , 204"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            },
+            {
+              "output_id": 354,
+              "key": "$21,900 — 1a",
+              "value": "12"
+            },
+            {
+              "output_id": 361,
+              "key": "$21,900 — 1a",
+              "value": "12"
+            },
+            {
+              "output_id": 594,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": "12"
+            },
+            {
+              "output_id": 601,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": "12"
+            }
+          ],
+          "reason": "The output contains the correct ending date for the other tax year.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ]
         }
       ]
     },
@@ -181,6 +278,33 @@
           ],
           "reason": "Output 60 contains the complete '204' which is a partial match for 2024.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "Form",
+              "value": "1040 (2024)"
+            },
+            {
+              "output_id": 60,
+              "key": "For the year Jan. 1-Dec. 31, 2024, or other tax year beginning",
+              "value": "1/01 , 2024, 12/31 , 204"
+            }
+          ],
+          "reason": "The output contains the correct year for the other tax year ending date.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
           "rejected_because": "output reused",
           "gemini_picked": [
             {
@@ -1047,6 +1171,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -1086,6 +1224,20 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year, check the box and enter their name (see instructions and attach statement if required):",
+              "value": "NOT_SELECTED"
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -1795,6 +1947,683 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -1922,6 +2751,20 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 4,
+              "key": "Was born before January 2, 1960",
+              "value": "NOT_SELECTED"
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -1971,6 +2814,20 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 13,
+              "key": "Were born before January 2, 1960",
+              "value": "NOT_SELECTED"
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -2027,6 +2884,133 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 4,
+              "key": "Was born before January 2, 1960",
+              "value": "NOT_SELECTED"
+            },
+            {
+              "output_id": 13,
+              "key": "Were born before January 2, 1960",
+              "value": "NOT_SELECTED"
+            },
+            {
+              "output_id": 28,
+              "key": "If treating a nonresident alien or dual-status alien spouse as a U.S. resident for the entire tax year, check the box and enter their name (see instructions and attach statement if required):",
+              "value": "NOT_SELECTED"
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 194,
+              "key": "was withheld. — 1a",
+              "value": "f"
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 434,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": "f"
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a false value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 35,
+              "key": "NOT_SELECTED If more than four dependents, see instructions and check here",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -2494,6 +3478,23 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -2674,6 +3675,22 @@
           "value": "$14,600",
           "request_id": "f852c6d247abf44793ab2f8a739991e2d39a680f88b84dc88ef941f0b699cbfa"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 303,
+              "key": "$14,600 — Income",
+              "value": "$14,600"
+            }
+          ],
+          "reason": "The output provides the exact standard deduction amount for this filing status.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
+        }
       ]
     },
     "Standard Deduction for — Married filing jointly or Qualifying surviving spouse": {
@@ -2683,6 +3700,22 @@
           "key": "Income",
           "value": "$29,200",
           "request_id": "f852c6d247abf44793ab2f8a739991e2d39a680f88b84dc88ef941f0b699cbfa"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 333,
+              "key": "$29,200 — Income",
+              "value": "$29,200"
+            }
+          ],
+          "reason": "The output provides the exact standard deduction amount for this filing status.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -2694,6 +3727,22 @@
           "value": "$21,900",
           "request_id": "f852c6d247abf44793ab2f8a739991e2d39a680f88b84dc88ef941f0b699cbfa"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 353,
+              "key": "$21,900 — Income",
+              "value": "$21,900"
+            }
+          ],
+          "reason": "The output provides the exact standard deduction amount for this filing status.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
+        }
       ]
     },
     "Standard Deduction for — If you checked any box under Standard Deduction": {
@@ -2703,6 +3752,22 @@
           "key": "",
           "value": "(see instructions)",
           "request_id": "434d31a377eb6cf182d4590c681faf15a38e16b3781076a2fa3bee0c9041bc39"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 223,
+              "key": "see instructions. — Income",
+              "value": "see instructions."
+            }
+          ],
+          "reason": "The output 'see instructions.' matches the expected value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -2723,6 +3788,28 @@
           "reason": "Output 39 provides the complete footer form value 'Form 1040 (2024)'.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931",
           "rejected_because": "incomplete value coverage",
+          "gemini_picked": [
+            {
+              "output_id": 39,
+              "key": "Form",
+              "value": "1040 (2024)"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "Form",
+              "value": "1040 (2024)"
+            }
+          ],
+          "reason": "The key 'Form' with value '1040 (2024)' is a synonym for Footer form.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
           "gemini_picked": [
             {
               "output_id": 39,
@@ -3447,6 +4534,683 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -4164,6 +5928,683 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -4881,6 +7322,683 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -5598,6 +8716,683 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            },
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 310,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "If you checked the MFS box, enter the name of your spouse. If you checked the HOH or QSS box, enter the child's name if the qualifying person is a child but not your dependent:",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -5637,6 +9432,23 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 95,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -5676,6 +9488,23 @@
           ],
           "reason": "No output explicitly indicates 'false' for this checkbox field.",
           "request_id": "df75fcfa7697660a5c99c80e9a2517cfcbfa9c9a6bd182dd3989ecc432f86931"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 96,
+              "key": "for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "The reference value is false, and the output is 'NOT_SELECTED'.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -6393,6 +10222,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 97,
+              "key": "(see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "The output is an empty string, correctly indicating a null value.",
+          "request_id": "c2b8e29fe2813cdbc57d4f7e3d9d6ab79fa0b39bfdcc74cb198d6fa298b4993f"
         }
       ]
     },
@@ -7110,6 +10953,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            }
+          ],
+          "reason": "Output 125 represents the empty 'First name Last name' cell for Row 2.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -7827,6 +11684,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            }
+          ],
+          "reason": "Output 126 represents the empty 'Social security number' cell for Row 2.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -8544,6 +12415,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            }
+          ],
+          "reason": "Output 129 represents the empty 'Relationship to you' cell for Row 2.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -8583,6 +12468,23 @@
           ],
           "reason": "No output indicates a checked box for Child Tax Credit for Dependent Row 2.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 130 is the 'NOT_SELECTED' checkbox for Child tax credit in Row 2.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -8622,6 +12524,23 @@
           ],
           "reason": "No output indicates a checked box for Credit for Other Dependents for Dependent Row 2.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 131 is the 'NOT_SELECTED' checkbox for Credit for other dependents in Row 2.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -9339,6 +13258,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            }
+          ],
+          "reason": "Output 132 represents the empty 'First name Last name' cell for Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -10056,6 +13989,658 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "Output 132 represents the empty 'First name Last name' cell for Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -10773,6 +15358,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            }
+          ],
+          "reason": "Output 133 represents the empty 'Social security number' cell for Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -11490,6 +16089,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            }
+          ],
+          "reason": "Output 136 represents the empty 'Relationship to you' cell for Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -11529,6 +16142,23 @@
           ],
           "reason": "No output indicates a checked box for Child Tax Credit for Dependent Row 3.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 137 is the 'NOT_SELECTED' checkbox for Child tax credit in Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -11568,6 +16198,23 @@
           ],
           "reason": "No output indicates a checked box for Credit for Other Dependents for Dependent Row 3.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 138 is the 'NOT_SELECTED' checkbox for Credit for other dependents in Row 3.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -12285,6 +16932,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            }
+          ],
+          "reason": "Output 139 represents the empty 'First name Last name' cell for Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -13002,6 +17663,658 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 70,
+              "key": "ending",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Foreign country name",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Foreign province/state/county",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Foreign postal code",
+              "value": ""
+            },
+            {
+              "output_id": 84,
+              "key": "(1) First name Last name — (2)",
+              "value": ""
+            },
+            {
+              "output_id": 86,
+              "key": "(1) First name Last name — security",
+              "value": ""
+            },
+            {
+              "output_id": 90,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 91,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 92,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 93,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 98,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 99,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 100,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 101,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 102,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 103,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 104,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 105,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 106,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 108,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 109,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 110,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 111,
+              "key": "(see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 112,
+              "key": "(2)",
+              "value": ""
+            },
+            {
+              "output_id": 113,
+              "key": "Social",
+              "value": ""
+            },
+            {
+              "output_id": 114,
+              "key": "security",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "(3) Relationship",
+              "value": ""
+            },
+            {
+              "output_id": 116,
+              "key": "(4) Check the box if qualifies",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 125,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 126,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 130,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 131,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 136,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 137,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 138,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 149,
+              "key": "(2) Social security number",
+              "value": ""
+            },
+            {
+              "output_id": 150,
+              "key": "(3) Relationship to you",
+              "value": ""
+            },
+            {
+              "output_id": 151,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 152,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            },
+            {
+              "output_id": 153,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 158,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 160,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 168,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 169,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 170,
+              "key": "Attach Form(s) W-2 here. Also",
+              "value": ""
+            },
+            {
+              "output_id": 179,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 180,
+              "key": "attach Forms",
+              "value": ""
+            },
+            {
+              "output_id": 188,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 189,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 190,
+              "key": "W-2G and 1099-R if tax",
+              "value": ""
+            },
+            {
+              "output_id": 199,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 200,
+              "key": "was withheld.",
+              "value": ""
+            },
+            {
+              "output_id": 206,
+              "key": "If you did not — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 207,
+              "key": "If you did not — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 208,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 209,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 210,
+              "key": "If you did not",
+              "value": ""
+            },
+            {
+              "output_id": 217,
+              "key": "get a Form W-2, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 218,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 219,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 220,
+              "key": "get a Form W-2,",
+              "value": ""
+            },
+            {
+              "output_id": 228,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 231,
+              "key": "see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 233,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 236,
+              "key": "box 1",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "(see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 238,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 239,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 240,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "Attach Sch. B",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "if required.",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "Income",
+              "value": ""
+            },
+            {
+              "output_id": 270,
+              "key": "",
+              "value": ""
+            },
+            {
+              "output_id": 280,
+              "key": "Standard Deduction for-",
+              "value": ""
+            },
+            {
+              "output_id": 290,
+              "key": "Single or",
+              "value": ""
+            },
+            {
+              "output_id": 299,
+              "key": "Married filing separately,",
+              "value": ""
+            },
+            {
+              "output_id": 301,
+              "key": "Married filing separately, — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "Married filing separately, — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 309,
+              "key": "$14,600",
+              "value": ""
+            },
+            {
+              "output_id": 318,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 319,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 320,
+              "key": "Married filing jointly or",
+              "value": ""
+            },
+            {
+              "output_id": 329,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 330,
+              "key": "Qualifying surviving spouse,",
+              "value": ""
+            },
+            {
+              "output_id": 338,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 339,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 340,
+              "key": "$29,200",
+              "value": ""
+            },
+            {
+              "output_id": 349,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 350,
+              "key": "Head of household,",
+              "value": ""
+            },
+            {
+              "output_id": 356,
+              "key": "$21,900 — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 359,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 360,
+              "key": "$21,900",
+              "value": ""
+            },
+            {
+              "output_id": 366,
+              "key": "If you checked any box under — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 369,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 370,
+              "key": "If you checked any box under",
+              "value": ""
+            },
+            {
+              "output_id": 376,
+              "key": "Standard Deduction, — box 1",
+              "value": ""
+            },
+            {
+              "output_id": 377,
+              "key": "Standard Deduction, — (see instructions)",
+              "value": ""
+            },
+            {
+              "output_id": 378,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 379,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 380,
+              "key": "Standard Deduction,",
+              "value": ""
+            },
+            {
+              "output_id": 390,
+              "key": "see instructions.",
+              "value": ""
+            },
+            {
+              "output_id": 471,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 472,
+              "key": "Income Attach Form(s) W-2 here. Also attach Forms W-2G and 1099-R if tax was withheld. If you did not get a Form W-2, see instructions. — $124,890.00",
+              "value": ""
+            },
+            {
+              "output_id": 541,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — 1a",
+              "value": ""
+            },
+            {
+              "output_id": 542,
+              "key": "Standard Deduction for- Single or Married filing separately, $14,600 Married filing jointly or Qualifying surviving spouse, $29,200 Head of household, $21,900 If you checked any box under Standard Deduction, see instructions. — $124,890.00",
+              "value": ""
+            }
+          ],
+          "reason": "Output 139 represents the empty 'First name Last name' cell for Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 139,
+              "key": "(see instructions): (1) First name Last name",
+              "value": ""
+            }
+          ]
         }
       ]
     },
@@ -13719,6 +19032,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 140,
+              "key": "(2) Social security number",
+              "value": ""
+            }
+          ],
+          "reason": "Output 140 represents the empty 'Social security number' cell for Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -14436,6 +19763,20 @@
           ],
           "reason": "Expected null. Candidate value is empty, but key is for a different field.",
           "request_id": "981b9db9491082d6a749556028cbe94cf4a4e6c37603d1a64cf8bc04f4fa5811"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 143,
+              "key": "(3) Relationship to you",
+              "value": ""
+            }
+          ],
+          "reason": "Output 143 represents the empty 'Relationship to you' cell for Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4"
         }
       ]
     },
@@ -14475,6 +19816,23 @@
           ],
           "reason": "No output indicates a checked box for Child Tax Credit for Dependent Row 4.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 144,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 144 is the 'NOT_SELECTED' checkbox for Child tax credit in Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     },
@@ -14514,6 +19872,23 @@
           ],
           "reason": "No output indicates a checked box for Credit for Other Dependents for Dependent Row 4.",
           "request_id": "d2c3a2fd5201e7e4a48b3dec6b0da23e0dd940194dbf2aec25eaf3cbea2d8e51"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "73a7c8bbe1feee142417b8713d13675f8998870d4a8f126031ffd727214ae94f",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 145,
+              "key": "(4) Check the box if qualifies for (see instructions):",
+              "value": ""
+            }
+          ],
+          "reason": "Output 145 is the 'NOT_SELECTED' checkbox for Credit for other dependents in Row 4.",
+          "request_id": "6b16321da73b46a6de0c87fade2a704b12bc481e9a456fef46eed91f2945b9d4",
+          "evaluated_values": [
+            "NOT_SELECTED"
+          ]
         }
       ]
     }

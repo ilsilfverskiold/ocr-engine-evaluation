@@ -30,6 +30,22 @@
           "value": "HICKLE AND SONS\n8477 Bernardo Ranch\nYOSTVILLE_56602-1850",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 26,
+              "key": "7725716318 — Disputch Station / Sender",
+              "value": "HICKLE AND SONS 8477 Bernardo Ranch YOSTVILLE 56602- 1850"
+            }
+          ],
+          "reason": "Output ID 26 correctly provides the complete dispatch station and sender for Shipment 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
+        }
       ]
     },
     "Shipment 1 — Type of Service / Charge": {
@@ -76,6 +92,20 @@
           ],
           "reason": "Output 10 contains the complete expected value for Shipment 1.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "7725716318 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.9"
+            }
+          ],
+          "reason": "Output ID 28 contains the complete and correct type of service for Shipment 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -144,6 +174,33 @@
               "value": "ECONOMY SELECT 9.9"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "7725716318 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.9"
+            },
+            {
+              "output_id": 171,
+              "key": "7725716318 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.9"
+            }
+          ],
+          "reason": "Output ID 28 contains the complete and correct weight for Shipment 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 28,
+              "key": "7725716318 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.9"
+            }
+          ]
         }
       ]
     },
@@ -170,6 +227,20 @@
           ],
           "reason": "Output ID 11 has the correct value but an incorrect key 'Weight In Kg'.",
           "request_id": "3c1461863e5a80e64fa03be1872576d5ae78c82f96609fdfd73a24388877d276"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "7725716318 — Number of Shipments",
+              "value": "10"
+            }
+          ],
+          "reason": "Output ID 30 correctly provides the complete number of shipments for Shipment 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -180,6 +251,22 @@
           "key": "Base Charge",
           "value": "39.06",
           "request_id": "a9f4907b4474d1da957a06699b096dd1be766f1f51db2e72c0876aac69c90a8c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 31,
+              "key": "7725716318 — Base Charge",
+              "value": "39.06"
+            }
+          ],
+          "reason": "Output ID 31 correctly provides the complete base charge for Shipment 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -220,6 +307,20 @@
           ],
           "reason": "Output 14 contains the first description for Shipment 1, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ],
+          "reason": "Output ID 32 contains the complete and correct description for Shipment 1, Charge 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -260,6 +361,20 @@
           ],
           "reason": "Output 15 contains the first additional charge for Shipment 1, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            }
+          ],
+          "reason": "Output ID 33 contains the complete and correct additional charge for Shipment 1, Charge 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -300,6 +415,20 @@
           ],
           "reason": "Output 16 contains the first VAT/Code for Shipment 1, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            }
+          ],
+          "reason": "Output ID 34 contains the complete and correct VAT code for Shipment 1, Charge 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -340,6 +469,20 @@
           ],
           "reason": "Output 17 contains the first gross value for Shipment 1, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ],
+          "reason": "Output ID 35 contains the complete and correct gross value for Shipment 1, Charge 1.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -409,6 +552,43 @@
               "value": "PEAK SEASON SURCHARGE\nEXPRESS HANDLING FEE\nENVIRONMENTAL SURCHARGE\nEXPRESS HANDLING FEE\nPRIORITY SERVICE CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 45,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            },
+            {
+              "output_id": 175,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 188,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            }
+          ],
+          "reason": "Output ID 32 contains the complete and correct description for Shipment 1, Charge 2.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ]
         }
       ]
     },
@@ -461,6 +641,33 @@
               "output_id": 15,
               "key": "Additional Charges",
               "value": "4.07\n5.79\n4.42\n6.81\n5.29"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            },
+            {
+              "output_id": 176,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            }
+          ],
+          "reason": "Output ID 33 contains the complete and correct additional charge for Shipment 1, Charge 2.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
             }
           ]
         }
@@ -544,6 +751,33 @@
               "value": "19.89\n38.36\n30.83\n48.8\n42.97"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            },
+            {
+              "output_id": 178,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ],
+          "reason": "Output ID 35 contains the complete and correct gross value for Shipment 1, Charge 2.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ]
         }
       ]
     },
@@ -613,6 +847,43 @@
               "value": "PEAK SEASON SURCHARGE\nEXPRESS HANDLING FEE\nENVIRONMENTAL SURCHARGE\nEXPRESS HANDLING FEE\nPRIORITY SERVICE CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 136,
+              "key": "Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            },
+            {
+              "output_id": 175,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 279,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            }
+          ],
+          "reason": "Output ID 32 contains the complete and correct description for Shipment 1, Charge 3.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ]
         }
       ]
     },
@@ -665,6 +936,33 @@
               "output_id": 15,
               "key": "Additional Charges",
               "value": "4.07\n5.79\n4.42\n6.81\n5.29"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            },
+            {
+              "output_id": 176,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            }
+          ],
+          "reason": "Output ID 33 contains the complete and correct additional charge for Shipment 1, Charge 3.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
             }
           ]
         }
@@ -748,6 +1046,33 @@
               "value": "19.89\n38.36\n30.83\n48.8\n42.97"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            },
+            {
+              "output_id": 178,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ],
+          "reason": "Output ID 35 contains the complete and correct gross value for Shipment 1, Charge 3.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ]
         }
       ]
     },
@@ -817,6 +1142,43 @@
               "value": "PEAK SEASON SURCHARGE\nEXPRESS HANDLING FEE\nENVIRONMENTAL SURCHARGE\nEXPRESS HANDLING FEE\nPRIORITY SERVICE CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 45,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            },
+            {
+              "output_id": 175,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 188,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            }
+          ],
+          "reason": "Output ID 32 contains the complete and correct description for Shipment 1, Charge 4.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ]
         }
       ]
     },
@@ -871,6 +1233,33 @@
               "value": "4.07\n5.79\n4.42\n6.81\n5.29"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            },
+            {
+              "output_id": 176,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            }
+          ],
+          "reason": "Output ID 33 contains the complete and correct additional charge for Shipment 1, Charge 4.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 33,
+              "key": "7725716318 — Additional Charges",
+              "value": "4.07 5.79 4.42 6.81 529"
+            }
+          ]
         }
       ]
     },
@@ -923,6 +1312,33 @@
               "output_id": 16,
               "key": "VAT / Code",
               "value": "3.79\n1.6\n4.64\n2.29\n2.86"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            },
+            {
+              "output_id": 177,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            }
+          ],
+          "reason": "Output ID 34 contains the complete and correct VAT code for Shipment 1, Charge 4.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
             }
           ]
         }
@@ -1021,6 +1437,43 @@
               "value": "PEAK SEASON SURCHARGE\nEXPRESS HANDLING FEE\nENVIRONMENTAL SURCHARGE\nEXPRESS HANDLING FEE\nPRIORITY SERVICE CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 110,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 175,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            },
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 32 contains the complete and correct description for Shipment 1, Charge 5.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 32,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ]
         }
       ]
     },
@@ -1102,6 +1555,33 @@
               "value": "3.79\n1.6\n4.64\n2.29\n2.86"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            },
+            {
+              "output_id": 177,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            }
+          ],
+          "reason": "Output ID 34 contains the complete and correct VAT code for Shipment 1, Charge 5.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 34,
+              "key": "7725716318 — VAT Code",
+              "value": "3.79 16 4:64 2.29 2.86"
+            }
+          ]
         }
       ]
     },
@@ -1156,6 +1636,33 @@
               "value": "19.89\n38.36\n30.83\n48.8\n42.97"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            },
+            {
+              "output_id": 178,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ],
+          "reason": "Output ID 35 contains the complete and correct gross value for Shipment 1, Charge 5.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            }
+          ]
         }
       ]
     },
@@ -1171,6 +1678,22 @@
           "key": "Date_2",
           "value": "03-07-1967",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 38,
+              "key": "2571009596 — Date",
+              "value": "03-07-1967"
+            }
+          ],
+          "reason": "Output ID 38 correctly provides the complete date for Shipment 2.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     },
@@ -1192,6 +1715,22 @@
           "value": "AUER AND SONS\n396 S Walnut Street\nNEW VEDAFORT,\n04920",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "2571009596 — Disputch Station / Sender",
+              "value": "AUER AND SONS 396 S Walnut Street NEW VEDAFORT 04920"
+            }
+          ],
+          "reason": "Output ID 39 correctly provides the complete dispatch station and sender for Shipment 2.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
+        }
       ]
     },
     "Shipment 2 — Receiving Station / Recipient": {
@@ -1211,6 +1750,22 @@
           "key": "Receiving Station / Recipient",
           "value": "CRIST AND SONS\n789 Mozell Roads\nSOUTH AUSTINSTAD.,\n18910-0124",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 40,
+              "key": "2571009596 — Receiving Station / Recipient",
+              "value": "CRIST AND SONS 789 Mozell Roads SOUTH AUSTINSTAD 18910-0124"
+            }
+          ],
+          "reason": "The output ID provides the complete recipient information for Shipment 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1252,6 +1807,20 @@
           ],
           "reason": "Value '23.2' is correctly extracted from the service charge field for Shipment 2.",
           "request_id": "bb5b7f76c5c9b142c6ce67a0d92835f225d86a215c57c7f20cf7af132e1aba4e"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 41,
+              "key": "2571009596 — Type of Service Charge",
+              "value": "DOMESTIC 23.2 PRIORITY"
+            }
+          ],
+          "reason": "The weight is correctly extracted from the 'Type of Service Charge' field.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1268,6 +1837,22 @@
           "value": "9",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 43,
+              "key": "2571009596 — Number of Shipments",
+              "value": "9"
+            }
+          ],
+          "reason": "The output ID correctly provides the number of shipments for Shipment 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
+        }
       ]
     },
     "Shipment 2 — Base Charge": {
@@ -1282,6 +1867,22 @@
           "key": "Base Charge_2",
           "value": "118.68",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 44,
+              "key": "2571009596 — Base Charge",
+              "value": "118.68"
+            }
+          ],
+          "reason": "The output ID correctly provides the base charge for Shipment 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1315,6 +1916,20 @@
           ],
           "reason": "Output 27 contains the first description for Shipment 2, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 45,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            }
+          ],
+          "reason": "The output ID correctly identifies the first additional charge description for Shipment 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1348,6 +1963,20 @@
           ],
           "reason": "Output 28 contains the first additional charge for Shipment 2, matching the expected value.",
           "request_id": "cd8d474a38b591ef2fdc27f9367901a78a2743ac65fff1f238007127137e63a6"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 46,
+              "key": "2571009596 — Additional Charges",
+              "value": "9.92 7.57"
+            }
+          ],
+          "reason": "The output ID correctly provides the additional charge amount for Shipment 2, Charge 1.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1381,6 +2010,20 @@
           ],
           "reason": "The first VAT/Code value in the list matches Shipment 2 Charge 1.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 47,
+              "key": "2571009596 — VAT Code",
+              "value": "4.75 1:36"
+            }
+          ],
+          "reason": "The output ID correctly provides the VAT/Code for Shipment 2, Charge 1.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1414,6 +2057,20 @@
           ],
           "reason": "The first Gross Value in the list matches Shipment 2 Charge 1.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 48,
+              "key": "2571009596 — Gross Value",
+              "value": "21.56 29.6"
+            }
+          ],
+          "reason": "The output ID correctly provides the gross value for Shipment 2, Charge 1.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1485,6 +2142,53 @@
           ],
           "reason": "The correct output ID 27 is not among the candidates for Shipment 2 Charge 2.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 45,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            },
+            {
+              "output_id": 84,
+              "key": "Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            },
+            {
+              "output_id": 136,
+              "key": "Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            },
+            {
+              "output_id": 188,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            },
+            {
+              "output_id": 227,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            },
+            {
+              "output_id": 279,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            }
+          ],
+          "reason": "The output ID correctly identifies the second additional charge description for Shipment 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 45,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            }
+          ]
         }
       ]
     },
@@ -1504,6 +2208,33 @@
           ],
           "reason": "Value '7.57' is the second additional charge for Shipment 2, Charge 2.",
           "request_id": "4c1e6957df27e80ea970b9798c57026b006606157239ebb2528de94d49ef2f86"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 46,
+              "key": "2571009596 — Additional Charges",
+              "value": "9.92 7.57"
+            },
+            {
+              "output_id": 189,
+              "key": "2571009596 — Additional Charges",
+              "value": "9.92 7.57"
+            }
+          ],
+          "reason": "The output ID correctly provides the additional charge amount for Shipment 2, Charge 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 46,
+              "key": "2571009596 — Additional Charges",
+              "value": "9.92 7.57"
+            }
+          ]
         }
       ]
     },
@@ -1572,6 +2303,33 @@
               "value": "21.56\n29.6"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 48,
+              "key": "2571009596 — Gross Value",
+              "value": "21.56 29.6"
+            },
+            {
+              "output_id": 191,
+              "key": "2571009596 — Gross Value",
+              "value": "21.56 29.6"
+            }
+          ],
+          "reason": "The output ID correctly provides the gross value for Shipment 2, Charge 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 48,
+              "key": "2571009596 — Gross Value",
+              "value": "21.56 29.6"
+            }
+          ]
         }
       ]
     },
@@ -1588,6 +2346,22 @@
           "value": "WZAAGJKKVX",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 50,
+              "key": "3834531101 — Sender / Reference Number",
+              "value": "WZAAGJKKVX"
+            }
+          ],
+          "reason": "The output ID correctly provides the sender/reference number for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
+        }
       ]
     },
     "Shipment 3 — Date": {
@@ -1603,6 +2377,22 @@
           "value": "06-06-1979",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 51,
+              "key": "3834531101 — Date",
+              "value": "06-06-1979"
+            }
+          ],
+          "reason": "The output ID correctly provides the date for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
+        }
       ]
     },
     "Shipment 3 — Dispatch Station / Sender": {
@@ -1617,6 +2407,22 @@
           "key": "Dispatch Station / Sender",
           "value": "HERMISTON - LESCH\n92490 Pfeffer Circles\nBECHTELARTON,\n79427-4761",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 52,
+              "key": "3834531101 — Disputch Station / Sender",
+              "value": "HERMISTON LESCH 92490 Pfeffer Circles BECHTELARTON, 79427-4761"
+            }
+          ],
+          "reason": "The output ID provides the complete dispatch station/sender for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1637,6 +2443,22 @@
           "key": "Receiving Station / Recipient",
           "value": "BUCKRIDGE AND SONS\n916 University Avenue\nABBOTTWORTH,\n25526-6328",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 53,
+              "key": "3834531101 — Receiving Station / Recipient",
+              "value": "BUCKRIDGE AND SONS 916 University Avenue ABBOTTWORTH 25526-6328"
+            }
+          ],
+          "reason": "The output ID provides the complete receiving station/recipient for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1694,6 +2516,20 @@
           ],
           "reason": "Value '11.7' is correctly extracted as the weight for Shipment 3.",
           "request_id": "4c1e6957df27e80ea970b9798c57026b006606157239ebb2528de94d49ef2f86"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 54,
+              "key": "3834531101 — Type of Service Charge",
+              "value": "DOMESTIC 11.7 PRIORITY"
+            }
+          ],
+          "reason": "The output ID correctly extracts the weight from the 'Type of Service Charge' field.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1734,6 +2570,20 @@
           ],
           "reason": "The value 10 from output 38 correctly matches Shipment 3 Number of Shipments.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 56,
+              "key": "3834531101 — Number of Shipments",
+              "value": "10"
+            }
+          ],
+          "reason": "The output ID correctly provides the number of shipments for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1744,6 +2594,22 @@
           "key": "Base Charge",
           "value": "174.06",
           "request_id": "a9f4907b4474d1da957a06699b096dd1be766f1f51db2e72c0876aac69c90a8c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 57,
+              "key": "3834531101 — Base Charge",
+              "value": "174.06"
+            }
+          ],
+          "reason": "The output ID correctly provides the base charge for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1777,6 +2643,20 @@
           ],
           "reason": "The first description in the list matches Shipment 3 Charge 1.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 58,
+              "key": "3834531101 — Description of Additional Charges",
+              "value": "PERISHABLE ITEM SURCHARGE SEASONAL SURCHARGE URBAN CONGESTION CHARGE ADJUSTMENT CHARGE"
+            }
+          ],
+          "reason": "The output ID correctly identifies the first additional charge description for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1810,6 +2690,20 @@
           ],
           "reason": "The first additional charge in the list matches Shipment 3 Charge 1.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 59,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ],
+          "reason": "The output ID correctly provides the additional charge amount for Shipment 3, Charge 1.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1862,6 +2756,20 @@
           ],
           "reason": "The first Gross Value in the list matches Shipment 3 Charge 1.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 61,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
+            }
+          ],
+          "reason": "The output ID correctly provides the gross value for Shipment 3, Charge 1.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -1914,6 +2822,33 @@
               "output_id": 40,
               "key": "Description of Additional Charges",
               "value": "PERISHABLE ITEM SURCHARGE\nSEASONAL SURCHARGE\nURBAN CONGESTION CHARGE\nFUEL ADJUSTMENT CHARGE"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 58,
+              "key": "3834531101 — Description of Additional Charges",
+              "value": "PERISHABLE ITEM SURCHARGE SEASONAL SURCHARGE URBAN CONGESTION CHARGE ADJUSTMENT CHARGE"
+            },
+            {
+              "output_id": 201,
+              "key": "3834531101 — Description of Additional Charges",
+              "value": "PERISHABLE ITEM SURCHARGE SEASONAL SURCHARGE URBAN CONGESTION CHARGE ADJUSTMENT CHARGE"
+            }
+          ],
+          "reason": "The output ID correctly identifies the second additional charge description for Shipment 3.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 58,
+              "key": "3834531101 — Description of Additional Charges",
+              "value": "PERISHABLE ITEM SURCHARGE SEASONAL SURCHARGE URBAN CONGESTION CHARGE ADJUSTMENT CHARGE"
             }
           ]
         }
@@ -1970,6 +2905,33 @@
               "value": "3.29\n7.34\n5.64\n8.59"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 59,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            },
+            {
+              "output_id": 202,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ],
+          "reason": "The output ID correctly provides the additional charge amount for Shipment 3, Charge 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 59,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ]
         }
       ]
     },
@@ -2011,6 +2973,20 @@
               "value": "4.41\n4.5\n1.57\n4.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 60,
+              "key": "3834531101 — VAT Code",
+              "value": "4:41 4.5 1.57 4.34"
+            }
+          ],
+          "reason": "The output ID correctly provides the VAT/Code for Shipment 3, Charge 2.",
+          "request_id": "fd5ec0439997fda694516f9fafda1642f83c8ac7150e1b3a353a0fb289211573"
         }
       ]
     },
@@ -2065,6 +3041,20 @@
               "value": "44.25\n32\n33.62\n47.61"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 204,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
+            }
+          ],
+          "reason": "Output 204 contains the correct gross value for Shipment 3, Charge 2.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2134,6 +3124,20 @@
               "value": "PERISHABLE ITEM SURCHARGE\nSEASONAL SURCHARGE\nURBAN CONGESTION CHARGE\nFUEL ADJUSTMENT CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 201,
+              "key": "3834531101 — Description of Additional Charges",
+              "value": "PERISHABLE ITEM SURCHARGE SEASONAL SURCHARGE URBAN CONGESTION CHARGE ADJUSTMENT CHARGE"
+            }
+          ],
+          "reason": "Output 201 contains the correct description for Shipment 3, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2188,6 +3192,20 @@
               "value": "3.29\n7.34\n5.64\n8.59"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 202,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ],
+          "reason": "Output 202 contains the correct additional charge for Shipment 3, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2257,6 +3275,20 @@
               "value": "4.41\n4.5\n1.57\n4.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 203,
+              "key": "3834531101 — VAT Code",
+              "value": "4:41 4.5 1.57 4.34"
+            }
+          ],
+          "reason": "Output 203 contains the correct VAT code for Shipment 3, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2309,6 +3341,28 @@
               "output_id": 43,
               "key": "Gross Value",
               "value": "44.25\n32\n33.62\n47.61"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 204,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
+            }
+          ],
+          "reason": "Output 204 contains the correct gross value for Shipment 3, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 204,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
             }
           ]
         }
@@ -2392,6 +3446,28 @@
               "value": "3.29\n7.34\n5.64\n8.59"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 202,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ],
+          "reason": "Output 202 contains the correct additional charge for Shipment 3, Charge 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 202,
+              "key": "3834531101 — Additional Charges",
+              "value": "3.29 7.34 5.64 8.59"
+            }
+          ]
         }
       ]
     },
@@ -2444,6 +3520,28 @@
               "output_id": 42,
               "key": "VAT / Code",
               "value": "4.41\n4.5\n1.57\n4.34"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 203,
+              "key": "3834531101 — VAT Code",
+              "value": "4:41 4.5 1.57 4.34"
+            }
+          ],
+          "reason": "Output 203 contains the correct VAT code for Shipment 3, Charge 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 203,
+              "key": "3834531101 — VAT Code",
+              "value": "4:41 4.5 1.57 4.34"
             }
           ]
         }
@@ -2500,6 +3598,28 @@
               "value": "44.25\n32\n33.62\n47.61"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 204,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
+            }
+          ],
+          "reason": "Output 204 contains the correct gross value for Shipment 3, Charge 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 204,
+              "key": "3834531101 — Gross Value",
+              "value": "44.25 32 33.62 47.61"
+            }
+          ]
         }
       ]
     },
@@ -2515,6 +3635,22 @@
           "key": "Date_4",
           "value": "12-13-1981",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 207,
+              "key": "1463086890 — Date",
+              "value": "12-13-1981"
+            }
+          ],
+          "reason": "Output 207 provides the complete and correct date for Shipment 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2582,6 +3718,20 @@
           ],
           "reason": "The value from output 49 correctly matches Shipment 4 Type of Service.",
           "request_id": "8f6d407a5a2fa48dad92f68e399c3969aa10da1c497c1f8c4c7277e7dce84779"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 210,
+              "key": "1463086890 — Type of Service Charge",
+              "value": "ECONOMY SELECT 35.1"
+            }
+          ],
+          "reason": "Output 210 contains the correct type of service for Shipment 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2633,6 +3783,38 @@
           ],
           "reason": "The value '35.1' is part of output ID 41, which is already assigned.",
           "request_id": "3c1461863e5a80e64fa03be1872576d5ae78c82f96609fdfd73a24388877d276"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 67,
+              "key": "1463086890 — Type of Service Charge",
+              "value": "ECONOMY SELECT 35.1"
+            },
+            {
+              "output_id": 210,
+              "key": "1463086890 — Type of Service Charge",
+              "value": "ECONOMY SELECT 35.1"
+            },
+            {
+              "output_id": 223,
+              "key": "1463086890 — Type of Service Charge",
+              "value": "ECONOMY SELECT 35.1"
+            }
+          ],
+          "reason": "Output 210 contains the correct weight in Kg for Shipment 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 210,
+              "key": "1463086890 — Type of Service Charge",
+              "value": "ECONOMY SELECT 35.1"
+            }
+          ]
         }
       ]
     },
@@ -2649,6 +3831,22 @@
           "value": "6",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 212,
+              "key": "1463086890 — Number of Shipments",
+              "value": "6"
+            }
+          ],
+          "reason": "Output 212 provides the complete and correct number of shipments for Shipment 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
+        }
       ]
     },
     "Shipment 4 — Base Charge": {
@@ -2663,6 +3861,22 @@
           "key": "Base Charge_4",
           "value": "79.83",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 213,
+              "key": "1463086890 — Base Charge",
+              "value": "79.83"
+            }
+          ],
+          "reason": "Output 213 provides the complete and correct base charge for Shipment 4.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2689,6 +3903,20 @@
           ],
           "reason": "The value 'WEEKEND DELIVERY FEE' is the first item in the multi-line output.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 214,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "WEEKEND DELIVERY FEE"
+            }
+          ],
+          "reason": "Output 214 provides the complete and correct description for Shipment 4, Charge 1.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2715,6 +3943,20 @@
           ],
           "reason": "The value '1.22' is the first item in the multi-line output for Shipment 4, Charge 1.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 215,
+              "key": "1463086890 — Additional Charges",
+              "value": "1.22"
+            }
+          ],
+          "reason": "Output 215 provides the complete and correct additional charge for Shipment 4, Charge 1.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2741,6 +3983,20 @@
           ],
           "reason": "The value '0.98' is the first item in the multi-line output for Shipment 4, Charge 1.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 216,
+              "key": "1463086890 — VAT Code",
+              "value": "0.98"
+            }
+          ],
+          "reason": "Output 216 provides the complete and correct VAT code for Shipment 4, Charge 1.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2767,6 +4023,20 @@
           ],
           "reason": "The value '49.83' is the first item in the multi-line output for Shipment 4, Charge 1.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 217,
+              "key": "1463086890 — Gross Value",
+              "value": "49.83"
+            }
+          ],
+          "reason": "Output 217 provides the complete and correct gross value for Shipment 4, Charge 1.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2808,6 +4078,20 @@
               "value": "WEEKEND DELIVERY FEE\nADDRESS CORRECTION FEE\nSTORAGE FEE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 227,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            }
+          ],
+          "reason": "Output 227 contains the correct description for Shipment 4, Charge 2.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2849,6 +4133,20 @@
               "value": "1.22\n6.07\n5.03"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 228,
+              "key": "1463086890 — Additional Charges",
+              "value": "6.07 5.03"
+            }
+          ],
+          "reason": "Output 228 contains the correct additional charge for Shipment 4, Charge 2.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2895,6 +4193,20 @@
               "value": "0.98\n1.34\n1.07"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 229,
+              "key": "1463086890 — VAT Code",
+              "value": "1.34 1.07"
+            }
+          ],
+          "reason": "Output 229 contains the correct VAT code for Shipment 4, Charge 2.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2936,6 +4248,20 @@
               "value": "49.83\n28.72\n30.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 230,
+              "key": "1463086890 — Gross Value",
+              "value": "28.72 30.57"
+            }
+          ],
+          "reason": "Output 230 contains the correct gross value for Shipment 4, Charge 2.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824"
         }
       ]
     },
@@ -2982,6 +4308,48 @@
               "value": "WEEKEND DELIVERY FEE\nADDRESS CORRECTION FEE\nSTORAGE FEE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 84,
+              "key": "Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            },
+            {
+              "output_id": 136,
+              "key": "Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            },
+            {
+              "output_id": 188,
+              "key": "2571009596 — Description of Additional Charges",
+              "value": "EXPRESS HANDLING FEE STORAGE FEE"
+            },
+            {
+              "output_id": 227,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            },
+            {
+              "output_id": 279,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            }
+          ],
+          "reason": "Output 227 contains the correct description for Shipment 4, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 227,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "ADDRESS CORRECTION FEE STORAGE FEE"
+            }
+          ]
         }
       ]
     },
@@ -3021,6 +4389,33 @@
               "output_id": 54,
               "key": "Additional Charges",
               "value": "1.22\n6.07\n5.03"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 85,
+              "key": "Additional Charges",
+              "value": "6.07 5.03"
+            },
+            {
+              "output_id": 228,
+              "key": "1463086890 — Additional Charges",
+              "value": "6.07 5.03"
+            }
+          ],
+          "reason": "Output 228 contains the correct additional charge for Shipment 4, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 228,
+              "key": "1463086890 — Additional Charges",
+              "value": "6.07 5.03"
             }
           ]
         }
@@ -3064,6 +4459,33 @@
               "value": "0.98\n1.34\n1.07"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 86,
+              "key": "VAT Code",
+              "value": "1.34 1.07"
+            },
+            {
+              "output_id": 229,
+              "key": "1463086890 — VAT Code",
+              "value": "1.34 1.07"
+            }
+          ],
+          "reason": "Output 229 contains the correct VAT code for Shipment 4, Charge 3.",
+          "request_id": "1a670d1488c9f4669e7d55624ca30aca1a21c58859b5a16727054cf3ea16c824",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 229,
+              "key": "1463086890 — VAT Code",
+              "value": "1.34 1.07"
+            }
+          ]
         }
       ]
     },
@@ -3105,6 +4527,20 @@
               "value": "49.83\n28.72\n30.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 87,
+              "key": "Gross Value",
+              "value": "28.72 30.57"
+            }
+          ],
+          "reason": "Output contains the complete and correct gross value for Shipment 4 Charge 3.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3446,6 +4882,20 @@
           ],
           "reason": "No output provides the complete null value for this field.",
           "request_id": "35f1425c5711982a9699d88cd1251d99e73a187f1de580fde3e6f149bc1d7daa"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 89,
+              "key": "3464687052 — Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 89 is the empty sender/reference number for Shipment 5 in the table.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3461,6 +4911,22 @@
           "key": "Date_5",
           "value": "12-07-1986",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 90,
+              "key": "3464687052 — Date",
+              "value": "12-07-1986"
+            }
+          ],
+          "reason": "Output ID 90 provides the complete and correct date for Shipment 5.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3492,6 +4958,28 @@
             {
               "output_id": 92,
               "key": "Receiving Station / Recipient",
+              "value": "KUHN LLC 964 Charch Road PORT WYATTFORT 27397"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "75946 Walker Curve PORT BRAINFURT 15783",
+              "value": "27397"
+            }
+          ],
+          "reason": "Output ID 92 provides the complete and correct recipient address for Shipment 5.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 92,
+              "key": "3464687052 — Receiving Station / Recipient",
               "value": "KUHN LLC 964 Charch Road PORT WYATTFORT 27397"
             }
           ]
@@ -3547,6 +5035,20 @@
           ],
           "reason": "Output contains the complete expected weight for Shipment 5.",
           "request_id": "35f1425c5711982a9699d88cd1251d99e73a187f1de580fde3e6f149bc1d7daa"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 93,
+              "key": "3464687052 — Type of Service Charge",
+              "value": "DOMESTIC 13.1 PRIORITY"
+            }
+          ],
+          "reason": "Output ID 93 contains the complete and correct weight for Shipment 5.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3563,6 +5065,22 @@
           "value": "5",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 95,
+              "key": "3464687052 — Number of Shipments",
+              "value": "5"
+            }
+          ],
+          "reason": "Output ID 95 provides the complete and correct number of shipments for Shipment 5.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
+        }
       ]
     },
     "Shipment 5 — Base Charge": {
@@ -3578,6 +5096,22 @@
           "value": "44.64",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 96,
+              "key": "3464687052 — Base Charge",
+              "value": "44.64"
+            }
+          ],
+          "reason": "Output ID 96 provides the complete and correct base charge for Shipment 5.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
+        }
       ]
     },
     "Shipment 5 — Charge 1 — Description of Additional Charges": {
@@ -3588,6 +5122,22 @@
           "value": "SECURITY SURCHARGE",
           "request_id": "8c7aedcbc0f42821a92b73263ea4dd92cc2a87f0467a8aaaff461c2a1c779034"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 97,
+              "key": "3464687052 — Description of Additional Charges",
+              "value": "SECURITY SURCHARGE"
+            }
+          ],
+          "reason": "Output ID 97 provides the complete and correct description for Shipment 5 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
+        }
       ]
     },
     "Shipment 5 — Charge 1 — Additional Charges": {
@@ -3597,6 +5147,22 @@
           "key": "Additional Charges",
           "value": "9.66",
           "request_id": "8c7aedcbc0f42821a92b73263ea4dd92cc2a87f0467a8aaaff461c2a1c779034"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 98,
+              "key": "3464687052 — Additional Charges",
+              "value": "9.66"
+            }
+          ],
+          "reason": "Output ID 98 provides the complete and correct additional charges for Shipment 5 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3613,6 +5179,22 @@
           "value": "0.66",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 99,
+              "key": "3464687052 — VAT Code",
+              "value": "0.66"
+            }
+          ],
+          "reason": "Output ID 99 provides the complete and correct VAT/Code for Shipment 5 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
+        }
       ]
     },
     "Shipment 5 — Charge 1 — Gross Value": {
@@ -3622,6 +5204,22 @@
           "key": "Gross Value",
           "value": "13.24",
           "request_id": "8c7aedcbc0f42821a92b73263ea4dd92cc2a87f0467a8aaaff461c2a1c779034"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 100,
+              "key": "3464687052 — Gross Value",
+              "value": "13.24"
+            }
+          ],
+          "reason": "Output ID 100 provides the complete and correct gross value for Shipment 5 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3972,6 +5570,20 @@
           ],
           "reason": "The key 'Sender / Reference Number' correctly identifies the null reference value for Shipment 6.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 102,
+              "key": "8082328344 — Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output ID 102 is the empty sender/reference number for Shipment 6 in the table.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -3987,6 +5599,22 @@
           "key": "Date_6",
           "value": "01-27-1990",
           "request_id": "4a9e2fcf568c0ee4166feec7788d929db77f873f566283a07c917a5553e7d31c"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 103,
+              "key": "8082328344 — Date",
+              "value": "01-27-1990"
+            }
+          ],
+          "reason": "Output ID 103 provides the complete and correct date for Shipment 6.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4012,6 +5640,22 @@
           "key": "Receiving Station / Recipient",
           "value": "SCHMITT ZULAUF 6399 Boehm Valleys FLINT 49972",
           "request_id": "8c7aedcbc0f42821a92b73263ea4dd92cc2a87f0467a8aaaff461c2a1c779034"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 105,
+              "key": "8082328344 — Receiving Station / Recipient",
+              "value": "SCHMITT ZULAUF 6399 Boehm Valleys FLINT 49972"
+            }
+          ],
+          "reason": "Output ID 105 provides the complete and correct recipient address for Shipment 6.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4069,6 +5713,20 @@
           ],
           "reason": "Output contains the complete expected weight for Shipment 6.",
           "request_id": "35f1425c5711982a9699d88cd1251d99e73a187f1de580fde3e6f149bc1d7daa"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 106,
+              "key": "8082328344 — Type of Service Charge",
+              "value": "DOMESTIC 35 PRIORITY"
+            }
+          ],
+          "reason": "Output ID 106 contains the complete and correct weight for Shipment 6.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4085,6 +5743,22 @@
           "value": "3",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 108,
+              "key": "8082328344 — Number of Shipments",
+              "value": "3"
+            }
+          ],
+          "reason": "Output ID 108 provides the complete and correct number of shipments for Shipment 6.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
+        }
       ]
     },
     "Shipment 6 — Base Charge": {
@@ -4099,6 +5773,22 @@
           "key": "Base Charge_6",
           "value": "56.77",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 109,
+              "key": "8082328344 — Base Charge",
+              "value": "56.77"
+            }
+          ],
+          "reason": "Output ID 109 provides the complete and correct base charge for Shipment 6.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4132,6 +5822,20 @@
           ],
           "reason": "The value 'PRIORITY SERVICE CHARGE' is the first item in the multi-line output.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 110,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 110 contains the complete and correct description for Shipment 6 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4165,6 +5869,20 @@
           ],
           "reason": "The value '1.7' is the first item in the multi-line output for Shipment 6, Charge 1.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 111,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ],
+          "reason": "Output ID 111 contains the complete and correct additional charges for Shipment 6 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4217,6 +5935,20 @@
           ],
           "reason": "The value '14.27' is the first item in the multi-line output for Shipment 6, Charge 1.",
           "request_id": "5b17aa3d309bef3b3271947a1f2f2ad80116e26f072706cf4a010a02953a09ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 113,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ],
+          "reason": "Output ID 113 contains the complete and correct gross value for Shipment 6 Charge 1.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4271,6 +6003,33 @@
               "value": "PRIORITY SERVICE CHARGE\nCHANGE OF ADDRESS FEE\nDELIVERY FEE\nHOLIDAY DELIVERY FEE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 110,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 110 contains the complete and correct description for Shipment 6 Charge 2.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 110,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ]
         }
       ]
     },
@@ -4303,6 +6062,33 @@
               "value": "1.7 7.54 9.26 8.78 3.88"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 111,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            },
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ],
+          "reason": "Output ID 111 contains the complete and correct additional charges for Shipment 6 Charge 2.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 111,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ]
         }
       ]
     },
@@ -4322,6 +6108,20 @@
           ],
           "reason": "Output contains the complete expected VAT code for Shipment 6 Charge 2.",
           "request_id": "35f1425c5711982a9699d88cd1251d99e73a187f1de580fde3e6f149bc1d7daa"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 112,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ],
+          "reason": "Output ID 112 contains the complete and correct VAT/Code for Shipment 6 Charge 2.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713"
         }
       ]
     },
@@ -4351,6 +6151,33 @@
             {
               "output_id": 113,
               "key": "Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 113,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            },
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ],
+          "reason": "Output ID 113 contains the complete and correct gross value for Shipment 6 Charge 2.",
+          "request_id": "3e9d55cc31914a8bc8b1580e526c2e91a08907e0bcabde1f8ca4c6b8f87c5713",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 113,
+              "key": "8082328344 — Gross Value",
               "value": "14.27 39.99 20.13 49.47 37.21"
             }
           ]
@@ -4408,6 +6235,20 @@
               "value": "PRIORITY SERVICE CHARGE\nCHANGE OF ADDRESS FEE\nDELIVERY FEE\nHOLIDAY DELIVERY FEE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "The output contains the complete and correct description for Shipment 6, Charge 3.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -4462,6 +6303,20 @@
               "value": "1.7\n9.26\n8.78\n3.88"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ],
+          "reason": "The output contains the complete and correct additional charge for Shipment 6, Charge 3.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -4516,6 +6371,20 @@
               "value": "4.69\n2.17\n3.11\n3.97"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 255,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ],
+          "reason": "The output contains the complete and correct VAT code for Shipment 6, Charge 3.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -4570,6 +6439,20 @@
               "value": "14.27\n20.13\n49.47\n37.21"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ],
+          "reason": "The output contains the complete and correct gross value for Shipment 6, Charge 3.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -4639,6 +6522,43 @@
               "value": "PRIORITY SERVICE CHARGE\nCHANGE OF ADDRESS FEE\nDELIVERY FEE\nHOLIDAY DELIVERY FEE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 71,
+              "key": "1463086890 — Description of Additional Charges",
+              "value": "WEEKEND DELIVERY FEE"
+            },
+            {
+              "output_id": 162,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            },
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 305,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            }
+          ],
+          "reason": "The output contains the complete and correct description for Shipment 6, Charge 4.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ]
         }
       ]
     },
@@ -4668,6 +6588,28 @@
             {
               "output_id": 111,
               "key": "Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ],
+          "reason": "The output contains the complete and correct additional charge for Shipment 6, Charge 4.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
               "value": "1.7 7.54 9.26 8.78 3.88"
             }
           ]
@@ -4703,6 +6645,28 @@
               "value": "469 3.74 2.17 3.11 3.97"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 255,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ],
+          "reason": "The output contains the complete and correct VAT code for Shipment 6, Charge 4.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 255,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ]
         }
       ]
     },
@@ -4735,6 +6699,28 @@
               "value": "14.27 39.99 20.13 49.47 37.21"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ],
+          "reason": "The output contains the complete and correct gross value for Shipment 6, Charge 4.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ]
         }
       ]
     },
@@ -4754,6 +6740,28 @@
           ],
           "reason": "The output contains the complete and correct description for Shipment 6, Charge 5.",
           "request_id": "5b6ef11234c92b8dd2e95dea0480b59757c868882dabe8cfd29d4bb9707f51bb"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "The output contains the complete and correct description for Shipment 6, Charge 5.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 253,
+              "key": "8082328344 — Description of Additional Charges",
+              "value": "PRIORITY SERVICE CHARGE HOLIDAY DELIVERY FEE CHANGE OF ADDRESS FEE DELIVERY FEE HOLIDAY DELIVERY FEE"
+            }
+          ]
         }
       ]
     },
@@ -4773,6 +6781,28 @@
           ],
           "reason": "The output contains the complete and correct additional charge for Shipment 6, Charge 5.",
           "request_id": "5b6ef11234c92b8dd2e95dea0480b59757c868882dabe8cfd29d4bb9707f51bb"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ],
+          "reason": "The output contains the complete and correct additional charge for Shipment 6, Charge 5.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 254,
+              "key": "8082328344 — Additional Charges",
+              "value": "1.7 7.54 9.26 8.78 3.88"
+            }
+          ]
         }
       ]
     },
@@ -4792,6 +6822,28 @@
           ],
           "reason": "The output contains the complete and correct VAT/Code for Shipment 6, Charge 5.",
           "request_id": "5b6ef11234c92b8dd2e95dea0480b59757c868882dabe8cfd29d4bb9707f51bb"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 255,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ],
+          "reason": "The output contains the complete and correct VAT code for Shipment 6, Charge 5.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 255,
+              "key": "8082328344 — VAT Code",
+              "value": "469 3.74 2.17 3.11 3.97"
+            }
+          ]
         }
       ]
     },
@@ -4811,6 +6863,28 @@
           ],
           "reason": "The output contains the complete and correct gross value for Shipment 6, Charge 5.",
           "request_id": "5b6ef11234c92b8dd2e95dea0480b59757c868882dabe8cfd29d4bb9707f51bb"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ],
+          "reason": "The output contains the complete and correct gross value for Shipment 6, Charge 5.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 256,
+              "key": "8082328344 — Gross Value",
+              "value": "14.27 39.99 20.13 49.47 37.21"
+            }
+          ]
         }
       ]
     },
@@ -5161,6 +7235,320 @@
           ],
           "reason": "The key 'Sender / Reference Number' correctly identifies the null value for Shipment 7.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 19,
+              "key": "06-06-1979",
+              "value": ""
+            },
+            {
+              "output_id": 29,
+              "key": "7725716318 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 42,
+              "key": "2571009596 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 55,
+              "key": "3834531101 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 65,
+              "key": "1463086890 — Disputch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 66,
+              "key": "1463086890 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 68,
+              "key": "1463086890 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 75,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 76,
+              "key": "Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 77,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 80,
+              "key": "Type of Service Charge",
+              "value": ""
+            },
+            {
+              "output_id": 81,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 82,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 83,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 94,
+              "key": "3464687052 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 107,
+              "key": "8082328344 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 115,
+              "key": "0869727751 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 117,
+              "key": "0869727751 — Disputch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 118,
+              "key": "0869727751 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 120,
+              "key": "0869727751 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 127,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 128,
+              "key": "Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 129,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 132,
+              "key": "Type of Service Charge",
+              "value": ""
+            },
+            {
+              "output_id": 133,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 134,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 135,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 140,
+              "key": "Shipment Number",
+              "value": ""
+            },
+            {
+              "output_id": 141,
+              "key": "Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 142,
+              "key": "Date",
+              "value": ""
+            },
+            {
+              "output_id": 143,
+              "key": "Disputch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 144,
+              "key": "Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 145,
+              "key": "Type of Service Charge",
+              "value": ""
+            },
+            {
+              "output_id": 146,
+              "key": "Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 147,
+              "key": "Number of Shipments",
+              "value": ""
+            },
+            {
+              "output_id": 148,
+              "key": "Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 159,
+              "key": "1680725539 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 172,
+              "key": "7725716318 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 185,
+              "key": "2571009596 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 198,
+              "key": "3834531101 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 211,
+              "key": "1463086890 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 224,
+              "key": "1463086890 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 232,
+              "key": "3464687052 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 237,
+              "key": "3464687052 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 245,
+              "key": "8082328344 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 250,
+              "key": "8082328344 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 258,
+              "key": "0869727751 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 260,
+              "key": "0869727751 — Disputch Station / Sender",
+              "value": ""
+            },
+            {
+              "output_id": 261,
+              "key": "0869727751 — Receiving Station / Recipient",
+              "value": ""
+            },
+            {
+              "output_id": 263,
+              "key": "0869727751 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 271,
+              "key": "0869727751 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 272,
+              "key": "0869727751 — Date",
+              "value": ""
+            },
+            {
+              "output_id": 275,
+              "key": "0869727751 — Type of Service Charge",
+              "value": ""
+            },
+            {
+              "output_id": 276,
+              "key": "0869727751 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 278,
+              "key": "0869727751 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 284,
+              "key": "0869727751 — Sender / Reference Number",
+              "value": ""
+            },
+            {
+              "output_id": 285,
+              "key": "0869727751 — Date",
+              "value": ""
+            },
+            {
+              "output_id": 288,
+              "key": "0869727751 — Type of Service Charge",
+              "value": ""
+            },
+            {
+              "output_id": 289,
+              "key": "0869727751 — Weight in Kg",
+              "value": ""
+            },
+            {
+              "output_id": 291,
+              "key": "0869727751 — Base Charge",
+              "value": ""
+            },
+            {
+              "output_id": 302,
+              "key": "1680725539 — Weight in Kg",
+              "value": ""
+            }
+          ],
+          "reason": "No output ID provides the correct empty value for this specific shipment and field.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5176,6 +7564,22 @@
           "key": "Date_7",
           "value": "10-18-2001",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 259,
+              "key": "0869727751 — Date",
+              "value": "10-18-2001"
+            }
+          ],
+          "reason": "The output provides the complete and correct date for Shipment 7.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5258,6 +7662,20 @@
           ],
           "reason": "'ECONOMY SELECT' is correctly extracted from the combined service and weight field.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 262,
+              "key": "0869727751 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.2"
+            }
+          ],
+          "reason": "The output contains the complete and correct type of service for Shipment 7.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5326,6 +7744,33 @@
               "value": "ECONOMY SELECT 9.2"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 119,
+              "key": "0869727751 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.2"
+            },
+            {
+              "output_id": 262,
+              "key": "0869727751 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.2"
+            }
+          ],
+          "reason": "The output contains the complete and correct weight in Kg for Shipment 7.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 262,
+              "key": "0869727751 — Type of Service Charge",
+              "value": "ECONOMY SELECT 9.2"
+            }
+          ]
         }
       ]
     },
@@ -5366,6 +7811,20 @@
           ],
           "reason": "The key 'Number of Shipments' correctly identifies the value '10' for Shipment 7.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 264,
+              "key": "0869727751 — Number of Shipments",
+              "value": "10"
+            }
+          ],
+          "reason": "The output provides the complete and correct number of shipments for Shipment 7.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5381,6 +7840,22 @@
           "key": "Base Charge_7",
           "value": "81.43",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 265,
+              "key": "0869727751 — Base Charge",
+              "value": "81.43"
+            }
+          ],
+          "reason": "The output provides the complete and correct base charge for Shipment 7.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5407,6 +7882,20 @@
           ],
           "reason": "'REPACKING FEE' is the first item in the list of additional charges for Shipment 7.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 266,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "REPACKING FEE"
+            }
+          ],
+          "reason": "The output provides the complete and correct description for Shipment 7, Charge 1.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5433,6 +7922,20 @@
           ],
           "reason": "'3.58' is the first additional charge amount, corresponding to 'REPACKING FEE'.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 267,
+              "key": "0869727751 — Additional Charges",
+              "value": "3.58"
+            }
+          ],
+          "reason": "The output provides the complete and correct additional charge for Shipment 7, Charge 1.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5478,6 +7981,20 @@
           ],
           "reason": "'33.29' is the first gross value, corresponding to 'REPACKING FEE'.",
           "request_id": "84865e08fd27f43e21cd88f81efb78c2e5bcff1ccfe959b5a867c8d744d6a1bd"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 269,
+              "key": "0869727751 — Gross Value",
+              "value": "33.29"
+            }
+          ],
+          "reason": "The output provides the complete and correct gross value for Shipment 7, Charge 1.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5519,6 +8036,20 @@
               "value": "REPACKING FEE\nIMPORT TAX\nENVIRONMENTAL SURCHARGE\nSTORAGE FEE\nWEIGHT OVERCHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 279,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            }
+          ],
+          "reason": "The output contains the complete and correct description for Shipment 7, Charge 2.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5560,6 +8091,20 @@
               "value": "3.58\n7.83\n4.7\n2.37\n3.18"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 280,
+              "key": "0869727751 — Additional Charges",
+              "value": "7.83 47 2.37 4.2"
+            }
+          ],
+          "reason": "The output contains the complete and correct additional charge for Shipment 7, Charge 2.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5601,6 +8146,20 @@
               "value": "1.3\n3.83\n1.69\n4.2\n1.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 281,
+              "key": "0869727751 — VAT Code",
+              "value": "3.83 1.69"
+            }
+          ],
+          "reason": "The output contains the complete and correct VAT code for Shipment 7, Charge 2.",
+          "request_id": "80dfdc96110cb0ef69cdcf22ee07065d3cfc4740d847ed48a24e5129bdfed454"
         }
       ]
     },
@@ -5642,6 +8201,20 @@
               "value": "33.29\n31.54\n38.93\n49.41\n27.02"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
+            }
+          ],
+          "reason": "Value is correctly extracted from the table, matching the expected gross value.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -5699,6 +8272,33 @@
               "output_id": 92,
               "key": "Description of Additional Charges",
               "value": "REPACKING FEE\nIMPORT TAX\nENVIRONMENTAL SURCHARGE\nSTORAGE FEE\nWEIGHT OVERCHARGE"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 136,
+              "key": "Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            },
+            {
+              "output_id": 175,
+              "key": "7725716318 — Description of Additional Charges",
+              "value": "PEAK SEASON SURCHARGE EXPRESS HANDLING FEE ENVIRONMENTAL SURCHARGE EXPRESS HANDLING FEE PRIORITY SERVICE CHARGE"
+            }
+          ],
+          "reason": "The description is correctly extracted from the table for Shipment 7, Charge 3.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 279,
+              "key": "0869727751 — Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
             }
           ]
         }
@@ -5782,6 +8382,28 @@
               "value": "1.3\n3.83\n1.69\n4.2\n1.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 138,
+              "key": "VAT Code",
+              "value": "3.83 1.69"
+            }
+          ],
+          "reason": "The VAT code is correctly extracted from the table for Shipment 7, Charge 3.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 281,
+              "key": "0869727751 — VAT Code",
+              "value": "3.83 1.69"
+            }
+          ]
         }
       ]
     },
@@ -5834,6 +8456,33 @@
               "output_id": 95,
               "key": "Gross Value",
               "value": "33.29\n31.54\n38.93\n49.41\n27.02"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 139,
+              "key": "Gross Value",
+              "value": "31.54 38.93 49.41"
+            },
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
+            }
+          ],
+          "reason": "Value is correctly extracted from the table, matching the expected gross value.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
             }
           ]
         }
@@ -5895,6 +8544,20 @@
               "value": "REPACKING FEE\nIMPORT TAX\nENVIRONMENTAL SURCHARGE\nSTORAGE FEE\nWEIGHT OVERCHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 136,
+              "key": "Description of Additional Charges",
+              "value": "IMPORT TAX ENVIRONMENTAL SURCHARGE STORAGE FEE"
+            }
+          ],
+          "reason": "The description is correctly extracted from the table for Shipment 7, Charge 4.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -5949,6 +8612,20 @@
               "value": "3.58\n7.83\n4.7\n2.37\n3.18"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 137,
+              "key": "Additional Charges",
+              "value": "7.83 47 2.37 4.2"
+            }
+          ],
+          "reason": "The additional charge is correctly extracted from the table for Shipment 7, Charge 4.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6003,6 +8680,28 @@
               "value": "1.3\n3.83\n1.69\n4.2\n1.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 137,
+              "key": "Additional Charges",
+              "value": "7.83 47 2.37 4.2"
+            }
+          ],
+          "reason": "The VAT code is correctly extracted from the table for Shipment 7, Charge 4.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 137,
+              "key": "Additional Charges",
+              "value": "7.83 47 2.37 4.2"
+            }
+          ]
         }
       ]
     },
@@ -6055,6 +8754,33 @@
               "output_id": 95,
               "key": "Gross Value",
               "value": "33.29\n31.54\n38.93\n49.41\n27.02"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 139,
+              "key": "Gross Value",
+              "value": "31.54 38.93 49.41"
+            },
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
+            }
+          ],
+          "reason": "Value is correctly extracted from the table, matching the expected gross value.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
             }
           ]
         }
@@ -6152,6 +8878,28 @@
               "value": "1.3\n3.83\n1.69\n4.2\n1.34"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 86,
+              "key": "VAT Code",
+              "value": "1.34 1.07"
+            }
+          ],
+          "reason": "The VAT code is correctly extracted from the table for Shipment 7, Charge 5.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 151,
+              "key": "VAT Code",
+              "value": "134"
+            }
+          ]
         }
       ]
     },
@@ -6178,6 +8926,22 @@
           "value": "KNWZUGHCW6",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 154,
+              "key": "1680725539 — Sender / Reference Number",
+              "value": "KNWZUGHCW6"
+            }
+          ],
+          "reason": "The sender/reference number is correctly extracted from the table.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
+        }
       ]
     },
     "Shipment 8 — Date": {
@@ -6192,6 +8956,22 @@
           "key": "Date_8",
           "value": "12-14-2001",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 155,
+              "key": "1680725539 — Date",
+              "value": "12-14-2001"
+            }
+          ],
+          "reason": "The date is correctly extracted from the table for Shipment 8.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6213,6 +8993,22 @@
           "value": "PADBERG INC\n951 Aspen Close\nTRACY, 98505",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 156,
+              "key": "1680725539 — Disputch Station / Sender",
+              "value": "PADBERG INC 951 Aspen Close TRACY. 98505"
+            }
+          ],
+          "reason": "The dispatch station/sender is correctly extracted from the table.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
+        }
       ]
     },
     "Shipment 8 — Receiving Station / Recipient": {
@@ -6227,6 +9023,22 @@
           "key": "Receiving Station / Recipient",
           "value": "MCGLYNN - PREDOVIC\n995 Boyle Junction\nGEOVANNYBORO,\n14819",
           "request_id": "037419efc891995d6187100bd7a93a3a281c2f3b7ec1fa4d10a79247a8bc113e"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 157,
+              "key": "1680725539 — Receiving Station / Recipient",
+              "value": "MCGLYNN PREDOVIC 995 Boyle Junction GEOVANNYBORO 14819"
+            }
+          ],
+          "reason": "The receiving station/recipient is correctly extracted from the table.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6284,6 +9096,20 @@
           ],
           "reason": "The output contains the complete and correct weight in Kg for Shipment 8.",
           "request_id": "5b6ef11234c92b8dd2e95dea0480b59757c868882dabe8cfd29d4bb9707f51bb"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 158,
+              "key": "1680725539 — Type of Service Charge",
+              "value": "DOMESTIC 28 PRIORITY"
+            }
+          ],
+          "reason": "The weight in Kg is correctly extracted from the table for Shipment 8.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6323,6 +9149,28 @@
               "value": "I"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 190,
+              "key": "2571009596 — VAT Code",
+              "value": "4.75 1:36"
+            }
+          ],
+          "reason": "The number of shipments is correctly extracted from the table.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "selected output is not a value candidate",
+          "gemini_picked": [
+            {
+              "output_id": 160,
+              "key": "1680725539 — Number of Shipments",
+              "value": "I"
+            }
+          ]
         }
       ]
     },
@@ -6338,6 +9186,22 @@
           "key": "Base Charge_8",
           "value": "144.24",
           "request_id": "c1f7fd5a592cb3fcf60b2419b7bdd074cbeb7e588ad452349934dacdda35c249"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 161,
+              "key": "1680725539 — Base Charge",
+              "value": "144.24"
+            }
+          ],
+          "reason": "The base charge is correctly extracted from the table for Shipment 8.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6371,6 +9235,20 @@
           ],
           "reason": "First item in the list matches the expected description for Charge 1.",
           "request_id": "92dd5dfec0e3c0bc5f5567064b20d7e93f93af9a0dc21444e1bd24454099ceb0"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 162,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            }
+          ],
+          "reason": "The description is correctly extracted from the table for Shipment 8, Charge 1.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6404,6 +9282,20 @@
           ],
           "reason": "First item in the list matches the expected additional charge for Charge 1.",
           "request_id": "92dd5dfec0e3c0bc5f5567064b20d7e93f93af9a0dc21444e1bd24454099ceb0"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 163,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ],
+          "reason": "The additional charge is correctly extracted from the table for Shipment 8, Charge 1.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6437,6 +9329,20 @@
           ],
           "reason": "First item in the list matches the expected VAT/Code for Charge 1.",
           "request_id": "92dd5dfec0e3c0bc5f5567064b20d7e93f93af9a0dc21444e1bd24454099ceb0"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 164,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
+            }
+          ],
+          "reason": "The VAT code is correctly extracted from the table for Shipment 8, Charge 1.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6470,6 +9376,20 @@
           ],
           "reason": "First item in the list matches the expected gross value for Charge 1.",
           "request_id": "92dd5dfec0e3c0bc5f5567064b20d7e93f93af9a0dc21444e1bd24454099ceb0"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 165,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ],
+          "reason": "The gross value is correctly extracted from the table for Shipment 8, Charge 1.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f"
         }
       ]
     },
@@ -6509,6 +9429,33 @@
               "output_id": 105,
               "key": "Description of Additional Charges",
               "value": "OUT-OF-HOURS DELIVERY FEE\nDANGEROUS GOODS HANDLING FEE\nWEEKEND DELIVERY FEE\nURBAN CONGESTION CHARGE"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 162,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            },
+            {
+              "output_id": 305,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            }
+          ],
+          "reason": "The description is correctly extracted from the table for Shipment 8, Charge 2.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 162,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
             }
           ]
         }
@@ -6552,6 +9499,38 @@
               "value": "1.86\n8.05\n2.35\n1.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 1,
+              "key": "DANGEROUS GOODS HANDLING FEE",
+              "value": "8.05 3.82 47.85"
+            },
+            {
+              "output_id": 163,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            },
+            {
+              "output_id": 306,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ],
+          "reason": "The additional charge is correctly extracted from the table for Shipment 8, Charge 2.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 163,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ]
         }
       ]
     },
@@ -6591,6 +9570,38 @@
               "output_id": 107,
               "key": "VAT / Code",
               "value": "3.96\n3.82\n4.09\n2.58"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 1,
+              "key": "DANGEROUS GOODS HANDLING FEE",
+              "value": "8.05 3.82 47.85"
+            },
+            {
+              "output_id": 164,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
+            },
+            {
+              "output_id": 307,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
+            }
+          ],
+          "reason": "The VAT code is correctly extracted from the table for Shipment 8, Charge 2.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 164,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
             }
           ]
         }
@@ -6652,6 +9663,38 @@
               "value": "20.85\n47.85\n19.77\n45.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 1,
+              "key": "DANGEROUS GOODS HANDLING FEE",
+              "value": "8.05 3.82 47.85"
+            },
+            {
+              "output_id": 165,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            },
+            {
+              "output_id": 308,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ],
+          "reason": "The gross value is correctly extracted from the table for Shipment 8, Charge 2.",
+          "request_id": "6f2717491fc8d8ff121bbd82f0506d9e9fc1769b8776c5357f511eea7973261f",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 165,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ]
         }
       ]
     },
@@ -6706,6 +9749,20 @@
               "value": "OUT-OF-HOURS DELIVERY FEE\nDANGEROUS GOODS HANDLING FEE\nWEEKEND DELIVERY FEE\nURBAN CONGESTION CHARGE"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 305,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            }
+          ],
+          "reason": "The value is correctly extracted from the description of additional charges for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939"
         }
       ]
     },
@@ -6755,6 +9812,20 @@
               "value": "1.86\n8.05\n2.35\n1.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 306,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ],
+          "reason": "The value is correctly extracted from the additional charges for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939"
         }
       ]
     },
@@ -6804,6 +9875,20 @@
               "value": "3.96\n3.82\n4.09\n2.58"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 307,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
+            }
+          ],
+          "reason": "The value is correctly extracted from the VAT code for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939"
         }
       ]
     },
@@ -6858,6 +9943,20 @@
               "value": "20.85\n47.85\n19.77\n45.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 308,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ],
+          "reason": "The value is correctly extracted from the gross value for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939"
         }
       ]
     },
@@ -6910,6 +10009,28 @@
               "output_id": 105,
               "key": "Description of Additional Charges",
               "value": "OUT-OF-HOURS DELIVERY FEE\nDANGEROUS GOODS HANDLING FEE\nWEEKEND DELIVERY FEE\nURBAN CONGESTION CHARGE"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 305,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
+            }
+          ],
+          "reason": "The value is correctly extracted from the description of additional charges for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 305,
+              "key": "1680725539 — Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE DANGEROUS GOODS HANDLING FEE WEEKEND DELIVERY FEE URBAN CONGESTION CHARGE"
             }
           ]
         }
@@ -6966,6 +10087,28 @@
               "value": "1.86\n8.05\n2.35\n1.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 306,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ],
+          "reason": "The value is correctly extracted from the additional charges for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 306,
+              "key": "1680725539 — Additional Charges",
+              "value": "1.86 8.05 2.35 1.57"
+            }
+          ]
         }
       ]
     },
@@ -7013,6 +10156,28 @@
               "output_id": 107,
               "key": "VAT / Code",
               "value": "3.96\n3.82\n4.09\n2.58"
+            }
+          ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 307,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
+            }
+          ],
+          "reason": "The value is correctly extracted from the VAT code for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 307,
+              "key": "1680725539 — VAT Code",
+              "value": "3.96 3.82 4.09 2.58"
             }
           ]
         }
@@ -7069,6 +10234,62 @@
               "value": "20.85\n47.85\n19.77\n45.57"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 308,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ],
+          "reason": "The value is correctly extracted from the gross value for Shipment 8.",
+          "request_id": "52ab63e7fcc9af79d0a75c76209b4134928d8632e3d77ba32144a2595f99b939",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 308,
+              "key": "1680725539 — Gross Value",
+              "value": "20.85 47.85 19.77 45.57"
+            }
+          ]
+        }
+      ]
+    },
+    "Footer page number": {
+      "expected": "38",
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "acf86ed4020658fd38ee10b24175e3deed5e6bf1bce297262eb2df9318d45504",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            },
+            {
+              "output_id": 139,
+              "key": "Gross Value",
+              "value": "31.54 38.93 49.41"
+            },
+            {
+              "output_id": 178,
+              "key": "7725716318 — Gross Value",
+              "value": "19.89 38.36 30.83 48 8 42.97"
+            },
+            {
+              "output_id": 282,
+              "key": "0869727751 — Gross Value",
+              "value": "31.54 38.93 49.41"
+            }
+          ],
+          "reason": "No output ID completely and correctly represents the footer page number '38'.",
+          "request_id": "f89a4353a0e1f3a85a7ce224b4d38a9a85d7e81e2ee8be8dbab5a6fd7addfa58"
         }
       ]
     }

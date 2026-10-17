@@ -56,6 +56,20 @@
           ],
           "reason": "The output key \"Seller:\" correctly identifies and contains the complete seller address.",
           "request_id": "8a8799b0da8ed366c2f09e4d90ef71b5195495f17579d0d978d7195b138cbc8f"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 20,
+              "key": "Suite",
+              "value": "495"
+            }
+          ],
+          "reason": "Full seller address not found; only a fragment is available.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -145,6 +159,20 @@
           ],
           "reason": "The output key \"Client:\" correctly identifies and contains the complete client address.",
           "request_id": "8a8799b0da8ed366c2f09e4d90ef71b5195495f17579d0d978d7195b138cbc8f"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 6,
+              "key": "Client:",
+              "value": "Lee and Sons 8552 Karen Islands East Roger, ID 40416 929-86-0601"
+            }
+          ],
+          "reason": "Output ID 6 contains the complete client address.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -396,6 +424,20 @@
               "value": "No.\nDescription\nQty\nUM\nNet price\nNet worth\nVAT [%]\nGross worth\n1.\nCare & Repair of Furniture\n2,00\neach\n4,25\n8,50\n10%\n9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 26,
+              "key": "1. — Net worth",
+              "value": "8,50"
+            }
+          ],
+          "reason": "Output ID 26 correctly extracts the item's net worth from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -470,6 +512,20 @@
               "value": "No.\nDescription\nQty\nUM\nNet price\nNet worth\nVAT [%]\nGross worth\n1.\nCare & Repair of Furniture\n2,00\neach\n4,25\n8,50\n10%\n9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "1. — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Output ID 27 correctly extracts the item's VAT percentage from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -544,6 +600,20 @@
               "value": "No.\nDescription\nQty\nUM\nNet price\nNet worth\nVAT [%]\nGross worth\n1.\nCare & Repair of Furniture\n2,00\neach\n4,25\n8,50\n10%\n9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "1. — Gross worth",
+              "value": "9,35"
+            }
+          ],
+          "reason": "Output ID 28 correctly extracts the item's gross worth from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -605,6 +675,20 @@
           ],
           "reason": "Output 6 contains the correct summary VAT percentage \"10%\" in the summary table.",
           "request_id": "8a8799b0da8ed366c2f09e4d90ef71b5195495f17579d0d978d7195b138cbc8f"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "10% — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Output ID 29 correctly extracts the summary VAT percentage from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -679,6 +763,20 @@
               "value": "VAT [%]\nNet worth\nVAT\nGross worth\n10%\n8,50\n0,85\n9,35\nTotal\n$ 8,50\n$ 0,85\n$ 9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "10% — Net worth",
+              "value": "8,50"
+            }
+          ],
+          "reason": "Output ID 30 correctly extracts the summary net worth from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -787,6 +885,20 @@
               "value": "VAT [%]\nNet worth\nVAT\nGross worth\n10%\n8,50\n0,85\n9,35\nTotal\n$ 8,50\n$ 0,85\n$ 9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "10% — Gross worth",
+              "value": "9,35"
+            }
+          ],
+          "reason": "Output ID 32 correctly extracts the summary gross worth from the table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -836,6 +948,20 @@
               "value": "VAT [%]\nNet worth\nVAT\nGross worth\n10%\n8,50\n0,85\n9,35\nTotal\n$ 8,50\n$ 0,85\n$ 9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "Total — Net worth",
+              "value": "$ 8,50"
+            }
+          ],
+          "reason": "Output ID 34 correctly extracts the total net worth from the summary table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -875,6 +1001,20 @@
               "value": "VAT [%]\nNet worth\nVAT\nGross worth\n10%\n8,50\n0,85\n9,35\nTotal\n$ 8,50\n$ 0,85\n$ 9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "Total — VAT",
+              "value": "$ 0,85"
+            }
+          ],
+          "reason": "Output ID 35 correctly extracts the total VAT from the summary table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     },
@@ -933,6 +1073,20 @@
               "value": "VAT [%]\nNet worth\nVAT\nGross worth\n10%\n8,50\n0,85\n9,35\nTotal\n$ 8,50\n$ 0,85\n$ 9,35"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "e094a5f0ac03407ee8cc8383b8572c64ac5ad192be8f1c65bc19a440d0ba6bac",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 36,
+              "key": "Total — Gross worth",
+              "value": "$ 9,35"
+            }
+          ],
+          "reason": "Output ID 36 correctly extracts the total gross worth from the summary table.",
+          "request_id": "ca254a239f300dc5daf9d12d2c677e80b91b59bfda5081917186b2cf764b4ab8"
         }
       ]
     }

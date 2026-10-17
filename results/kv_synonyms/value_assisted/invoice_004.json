@@ -92,6 +92,25 @@
               "value": "Gordon, Alvarado and Jones\n943 Sean Park Suite 284\nNorth Derrick, OR 67536\nTax Id: 936-79-2794\nIBAN: GB47JKAT88391563723291"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Suite",
+              "value": "284"
+            },
+            {
+              "output_id": 15,
+              "key": "OR",
+              "value": "67536"
+            }
+          ],
+          "reason": "No single output or combination provides the complete seller address.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -212,6 +231,20 @@
           ],
           "reason": "Value is correctly extracted from the combined client information.",
           "request_id": "a846c7b05f10af0fdbab4521db4e851ad9987da6a5a5b62b7ab73cb996d5437f"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "Client:",
+              "value": "Manning-Ho 92026 Michael Terrace Apt. 138 West Michael, IL 42693 960-85-1578"
+            }
+          ],
+          "reason": "Client name is correctly extracted from the combined client information.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -267,6 +300,28 @@
               "value": "Manning-Ho\n92026 Michael Terrace Apt. 138\nWest Michael, IL 42693\nTax Id: 960-85-1578"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "Client:",
+              "value": "Manning-Ho 92026 Michael Terrace Apt. 138 West Michael, IL 42693 960-85-1578"
+            }
+          ],
+          "reason": "Client address is correctly extracted from the combined client information.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 3,
+              "key": "Client:",
+              "value": "Manning-Ho 92026 Michael Terrace Apt. 138 West Michael, IL 42693 960-85-1578"
+            }
+          ]
         }
       ]
     },
@@ -315,6 +370,28 @@
               "value": "Manning-Ho\n92026 Michael Terrace Apt. 138\nWest Michael, IL 42693\nTax Id: 960-85-1578"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "Client:",
+              "value": "Manning-Ho 92026 Michael Terrace Apt. 138 West Michael, IL 42693 960-85-1578"
+            }
+          ],
+          "reason": "Client tax ID is correctly extracted from the combined client information.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 3,
+              "key": "Client:",
+              "value": "Manning-Ho 92026 Michael Terrace Apt. 138 West Michael, IL 42693 960-85-1578"
+            }
+          ]
         }
       ]
     },
@@ -351,6 +428,20 @@
           ],
           "reason": "Output 8 contains '1.' as the first item number, matching the reference.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "1. — No.",
+              "value": "1."
+            }
+          ],
+          "reason": "Item number 1. is correctly identified by key and value.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -387,6 +478,20 @@
           ],
           "reason": "Output 9 contains the complete description for Item 1 as its first part.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "1. — Description",
+              "value": "CCNA 200-301 50 GB AUG 2020 Cisco Video/Official Books/Exam Dumps/Licences"
+            }
+          ],
+          "reason": "Item 1 description is completely and correctly extracted.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -423,6 +528,20 @@
           ],
           "reason": "Output 10 contains '5,00' as the first quantity, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 18,
+              "key": "1. — Qty",
+              "value": "5,00"
+            }
+          ],
+          "reason": "Item 1 quantity is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -459,6 +578,20 @@
           ],
           "reason": "Output 11 contains 'each' as the first unit, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 19,
+              "key": "1. — UM",
+              "value": "each"
+            }
+          ],
+          "reason": "Item 1 unit of measure is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -495,6 +628,20 @@
           ],
           "reason": "Output 12 contains '1,99' as the first net price, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 20,
+              "key": "1. — Net price",
+              "value": "1,99"
+            }
+          ],
+          "reason": "Item 1 net price is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -531,6 +678,20 @@
           ],
           "reason": "Output 13 contains '9,95' as the first net worth, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 21,
+              "key": "1. — Net worth",
+              "value": "9,95"
+            }
+          ],
+          "reason": "Item 1 net worth is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -576,6 +737,20 @@
           ],
           "reason": "Output 14 contains '10%' as the first VAT percentage, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "1. — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Item 1 VAT percentage is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -612,6 +787,20 @@
           ],
           "reason": "Output 15 contains '10,94' as the first gross worth, matching Item 1.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 23,
+              "key": "1. — Gross worth",
+              "value": "10,94"
+            }
+          ],
+          "reason": "Item 1 gross worth is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -648,6 +837,20 @@
           ],
           "reason": "Output 8 contains '2.' but is already assigned to Item 1 No. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 24,
+              "key": "2. — No.",
+              "value": "2."
+            }
+          ],
+          "reason": "Item number 2. is correctly identified by key and value.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -684,6 +887,20 @@
           ],
           "reason": "Output 9 contains the description but is already assigned to Item 1 Description.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 25,
+              "key": "2. — Description",
+              "value": "Tales from the Buffalo Bills"
+            }
+          ],
+          "reason": "Item 2 description is completely and correctly extracted.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -729,6 +946,20 @@
           ],
           "reason": "Output 10 contains '5,00' but is already assigned to Item 1 Qty. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 26,
+              "key": "2. — Qty",
+              "value": "5,00"
+            }
+          ],
+          "reason": "Item 2 quantity is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -774,6 +1005,20 @@
           ],
           "reason": "Output 11 contains 'each' but is already assigned to Item 1 UM. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "2. — UM",
+              "value": "each"
+            }
+          ],
+          "reason": "Item 2 unit of measure is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -810,6 +1055,20 @@
           ],
           "reason": "Output 12 contains '5,50' but is already assigned to Item 1 Net price.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "2. — Net price",
+              "value": "5,50"
+            }
+          ],
+          "reason": "Item 2 net price is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -846,6 +1105,20 @@
           ],
           "reason": "Output 13 contains '27,50' but is already assigned to Item 1 Net worth.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "2. — Net worth",
+              "value": "27,50"
+            }
+          ],
+          "reason": "Item 2 net worth is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -891,6 +1164,20 @@
           ],
           "reason": "Output 14 contains '10%' but is already assigned to Item 1 VAT [%].",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "2. — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Item 2 VAT percentage is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -927,6 +1214,20 @@
           ],
           "reason": "Output 15 contains '30,25' but is already assigned to Item 1 Gross worth.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 31,
+              "key": "2. — Gross worth",
+              "value": "30,25"
+            }
+          ],
+          "reason": "Item 2 gross worth is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -963,6 +1264,20 @@
           ],
           "reason": "Output 8 contains '3.' but is already assigned to Item 1 No. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "3. — No.",
+              "value": "3."
+            }
+          ],
+          "reason": "Item number 3. is correctly identified by key and value.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -999,6 +1314,20 @@
           ],
           "reason": "Output 10 contains '4,00' but is already assigned to Item 1 Qty. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "3. — Qty",
+              "value": "4,00"
+            }
+          ],
+          "reason": "Item 3 quantity is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -1044,6 +1373,20 @@
           ],
           "reason": "Output 11 contains 'each' but is already assigned to Item 1 UM. No other candidate.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 35,
+              "key": "3. — UM",
+              "value": "each"
+            }
+          ],
+          "reason": "Item 3 unit of measure is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -1080,6 +1423,20 @@
           ],
           "reason": "Output 12 contains '19,50' but is already assigned to Item 1 Net price.",
           "request_id": "b3876f37c7acfaffda96b02ec18b45cc7ecb5d33f6d89bc894a559c60ee16f6b"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 36,
+              "key": "3. — Net price",
+              "value": "19,50"
+            }
+          ],
+          "reason": "Item 3 net price is correctly extracted from the table.",
+          "request_id": "97f35ed129f430236c2d030261f36c15aff66577f831daeb6b193a87a750bd41"
         }
       ]
     },
@@ -1100,6 +1457,22 @@
           "key": "ITEMS.Net worth[2]",
           "value": "78,00",
           "request_id": "84cb526f5d2aadc0af67159a50f614f8deac635fc7757a209329e0312da29589"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 37,
+              "key": "3. — Net worth",
+              "value": "78,00"
+            }
+          ],
+          "reason": "Output ID 37 correctly provides the net worth for Item 3.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     },
@@ -1131,6 +1504,20 @@
           ],
           "reason": "Output ID 38 correctly provides the VAT percentage for Item 3.",
           "request_id": "0284ce89db882e0d502a59740e78b189f5922447d12140cbb06c5d7e2f281e01"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 38,
+              "key": "3. — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Output ID 38 correctly provides the VAT percentage for Item 3.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     },
@@ -1151,6 +1538,22 @@
           "key": "ITEMS.Gross worth[2]",
           "value": "85,80",
           "request_id": "84cb526f5d2aadc0af67159a50f614f8deac635fc7757a209329e0312da29589"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 39,
+              "key": "3. — Gross worth",
+              "value": "85,80"
+            }
+          ],
+          "reason": "Output ID 39 correctly provides the gross worth for Item 3.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     },
@@ -1288,6 +1691,20 @@
           ],
           "reason": "Net worth is correctly extracted from the combined summary total.",
           "request_id": "a846c7b05f10af0fdbab4521db4e851ad9987da6a5a5b62b7ab73cb996d5437f"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 45,
+              "key": "Total — Net worth",
+              "value": "$ 115,45"
+            }
+          ],
+          "reason": "Output ID 45 correctly provides the total net worth from the summary table.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     },
@@ -1349,6 +1766,20 @@
               "value": "$ 115,45 $ 11,55 $ 127,00"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 46,
+              "key": "Total — VAT",
+              "value": "$ 11,55"
+            }
+          ],
+          "reason": "Output ID 46 correctly provides the total VAT from the summary table.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     },
@@ -1410,6 +1841,20 @@
               "value": "$ 115,45 $ 11,55 $ 127,00"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "9a1a601ace3850bbb3fdf7e3f621b8e87220ce596827f6479fddc37c11b73b47",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 47,
+              "key": "Total — Gross worth",
+              "value": "$ 127,00"
+            }
+          ],
+          "reason": "Output ID 47 correctly provides the total gross worth from the summary table.",
+          "request_id": "2a0d2833ce0f4f2977375837db980ac3cfac26eed90c7c44b46e866e4318f31c"
         }
       ]
     }

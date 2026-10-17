@@ -179,6 +179,48 @@
               "value": "9678"
             }
           ]
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "DPO AP",
+              "value": "69387"
+            },
+            {
+              "output_id": 17,
+              "key": "Box",
+              "value": "9664"
+            },
+            {
+              "output_id": 18,
+              "key": "Unit",
+              "value": "9678"
+            }
+          ],
+          "reason": "All fragments combine to form the complete client address.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190",
+          "rejected_because": "incomplete value coverage",
+          "gemini_picked": [
+            {
+              "output_id": 18,
+              "key": "Unit",
+              "value": "9678"
+            },
+            {
+              "output_id": 17,
+              "key": "Box",
+              "value": "9664"
+            },
+            {
+              "output_id": 16,
+              "key": "DPO AP",
+              "value": "69387"
+            }
+          ]
         }
       ]
     },
@@ -224,6 +266,22 @@
           "key": "ITEMS.Description",
           "value": "12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537",
           "request_id": "7faab544a55325ceea51bd23bec896a926d10cf71ae247bb4bdc3b3650a877b3"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 24,
+              "key": "1. — Description",
+              "value": "12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537"
+            }
+          ],
+          "reason": "Output ID 24 provides the complete item description with correct key.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -333,6 +391,20 @@
           ],
           "reason": "This VAT percentage is for the summary, distinct from item 1.",
           "request_id": "44b4c425d8037db8786e8585c8186fdba5f86f38d337ca89d752b725bca7bfe7"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 31,
+              "key": "10% — VAT [%]",
+              "value": "10%"
+            }
+          ],
+          "reason": "Output ID 31 correctly identifies the 10% VAT for the summary section.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -359,6 +431,20 @@
           ],
           "reason": "This net worth matches the summary 10% net worth.",
           "request_id": "44b4c425d8037db8786e8585c8186fdba5f86f38d337ca89d752b725bca7bfe7"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "10% — Net worth",
+              "value": "889,20"
+            }
+          ],
+          "reason": "Output ID 32 provides the correct net worth for the 10% summary.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -411,6 +497,20 @@
           ],
           "reason": "This gross worth matches the summary 10% gross worth.",
           "request_id": "44b4c425d8037db8786e8585c8186fdba5f86f38d337ca89d752b725bca7bfe7"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "10% — Gross worth",
+              "value": "978,12"
+            }
+          ],
+          "reason": "Output ID 34 provides the correct gross worth for the 10% summary.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -447,6 +547,20 @@
           ],
           "reason": "Output 17 is a combined total; cannot isolate Net worth for this specific field.",
           "request_id": "1aa7c228889e4803d56f06115be579dae7268af049d0e6f5e3d1df2b6fcbf0ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 36,
+              "key": "Total — Net worth",
+              "value": "$ 889,20"
+            }
+          ],
+          "reason": "Output ID 36 provides the correct total net worth including currency symbol.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -483,6 +597,20 @@
           ],
           "reason": "Output 17 is a combined total; cannot isolate VAT for this specific field.",
           "request_id": "1aa7c228889e4803d56f06115be579dae7268af049d0e6f5e3d1df2b6fcbf0ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 37,
+              "key": "Total — VAT",
+              "value": "$ 88,92"
+            }
+          ],
+          "reason": "Output ID 37 provides the correct total VAT including currency symbol.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     },
@@ -514,6 +642,20 @@
           ],
           "reason": "Output 17 is a combined total; cannot isolate Gross worth for this specific field.",
           "request_id": "1aa7c228889e4803d56f06115be579dae7268af049d0e6f5e3d1df2b6fcbf0ad"
+        },
+        {
+          "engine": "textract_structured",
+          "output": "cd422e990199132ee3662568f29bea6ac2cfb061436bca2c64b4c72566cd27dd",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 38,
+              "key": "Total — Gross worth",
+              "value": "$ 978,12"
+            }
+          ],
+          "reason": "Output ID 38 provides the correct total gross worth including currency symbol.",
+          "request_id": "302c4710499118c63f1009be8772e4bab1196763a789bb68f7fd7bf1d6b87190"
         }
       ]
     }
