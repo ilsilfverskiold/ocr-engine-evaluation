@@ -1,0 +1,556 @@
+{
+  "engine": "glm_ocr",
+  "document": "documents/medium/medical/medical_003.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "请按下列JSON格式输出图中信息:\n\n{\n  \"Document title\": \"\",\n  \"First Name\": \"\",\n  \"Last Name\": \"\",\n  \"Marital Status — Single\": \"\",\n  \"Marital Status — Married\": \"\",\n  \"Marital Status — Divorced\": \"\",\n  \"Marital Status — Separated\": \"\",\n  \"Marital Status — Widowed\": \"\",\n  \"Address\": \"\",\n  \"City\": \"\",\n  \"State\": \"\",\n  \"Zip\": \"\",\n  \"Phone\": \"\",\n  \"DOB\": \"\",\n  \"Spouse Name\": \"\",\n  \"Spouse Phone\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": \"\",\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": \"\",\n  \"Have you been hospitalized in the past year? — No\": \"\",\n  \"Review of Symptoms — Allergies\": \"\",\n  \"Review of Symptoms — Blurred Vision\": \"\",\n  \"Review of Symptoms — Chest Pain\": \"\",\n  \"Review of Symptoms — Coughing\": \"\",\n  \"Review of Symptoms — Dental Problems\": \"\",\n  \"Review of Symptoms — Double Vision\": \"\",\n  \"Review of Symptoms — Excessive Bruising\": \"\",\n  \"Review of Symptoms — Excessive Thirst\": \"\",\n  \"Review of Symptoms — Fatigue\": \"\",\n  \"Review of Symptoms — Headaches\": \"\",\n  \"Review of Symptoms — Irregular Heart Rate\": \"\",\n  \"Review of Symptoms — Muscle Pain\": \"\",\n  \"Review of Symptoms — Shortness Of Breath\": \"\",\n  \"Review of Symptoms — Tuberculosis Exposure\": \"\",\n  \"Review of Symptoms — Black Outs\": \"\",\n  \"Review of Symptoms — Calf Pain\": \"\",\n  \"Review of Symptoms — Chills\": \"\",\n  \"Review of Symptoms — Coughing Up Blood\": \"\",\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": \"\",\n  \"Review of Symptoms — Enlarged Glands\": \"\",\n  \"Review of Symptoms — Excessive Stress\": \"\",\n  \"Review of Symptoms — Eye Pain\": \"\",\n  \"Review of Symptoms — Fever\": \"\",\n  \"Review of Symptoms — Hearing Loss\": \"\",\n  \"Review of Symptoms — Joint Swelling\": \"\",\n  \"Review of Symptoms — Seizures\": \"\",\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": \"\",\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": \"\",\n  \"Social History — Do you smoke? — Yes\": \"\",\n  \"Social History — Do you smoke? — No\": \"\",\n  \"Social History — Do you smoke? — If yes, how many times per week\": \"\",\n  \"Social History — Do you drink? — Yes\": \"\",\n  \"Social History — Do you drink? — No\": \"\",\n  \"Social History — Do you drink? — If yes, how many times per week\": \"\",\n  \"Social History — Do you exercise? — Yes\": \"\",\n  \"Social History — Do you exercise? — No\": \"\",\n  \"Social History — Do you exercise? — If yes, how many times per week\": \"\",\n  \"Social History — Do you have a social support system? — Yes\": \"\",\n  \"Social History — Do you have a social support system? — No\": \"\"\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "First Name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Last Name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Marital Status — Single": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Married": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Divorced": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Separated": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Widowed": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "City": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "State": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Zip": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Phone": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DOB": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Spouse Name": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Spouse Phone": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "If so, start date": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Allergies": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Blurred Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chest Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Dental Problems": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Double Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Bruising": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Thirst": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fatigue": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Headaches": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Irregular Heart Rate": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Muscle Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Shortness Of Breath": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Tuberculosis Exposure": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Black Outs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Calf Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing Up Blood": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Enlarged Glands": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Stress": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Eye Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fever": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Hearing Loss": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Joint Swelling": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Seizures": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Stomach Trouble Or Ulcers": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you smoke? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you smoke? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you smoke? — If yes, how many times per week": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you drink? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you drink? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you drink? — If yes, how many times per week": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Social History — Do you exercise? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you exercise? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you exercise? — If yes, how many times per week": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you have a social support system? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Social History — Do you have a social support system? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Document title",
+      "First Name",
+      "Last Name",
+      "Marital Status — Single",
+      "Marital Status — Married",
+      "Marital Status — Divorced",
+      "Marital Status — Separated",
+      "Marital Status — Widowed",
+      "Address",
+      "City",
+      "State",
+      "Zip",
+      "Phone",
+      "DOB",
+      "Spouse Name",
+      "Spouse Phone",
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW",
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION",
+      "If so, start date",
+      "Have you been hospitalized in the past year? — Yes",
+      "Have you been hospitalized in the past year? — No",
+      "Review of Symptoms — Allergies",
+      "Review of Symptoms — Blurred Vision",
+      "Review of Symptoms — Chest Pain",
+      "Review of Symptoms — Coughing",
+      "Review of Symptoms — Dental Problems",
+      "Review of Symptoms — Double Vision",
+      "Review of Symptoms — Excessive Bruising",
+      "Review of Symptoms — Excessive Thirst",
+      "Review of Symptoms — Fatigue",
+      "Review of Symptoms — Headaches",
+      "Review of Symptoms — Irregular Heart Rate",
+      "Review of Symptoms — Muscle Pain",
+      "Review of Symptoms — Shortness Of Breath",
+      "Review of Symptoms — Tuberculosis Exposure",
+      "Review of Symptoms — Black Outs",
+      "Review of Symptoms — Calf Pain",
+      "Review of Symptoms — Chills",
+      "Review of Symptoms — Coughing Up Blood",
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder",
+      "Review of Symptoms — Enlarged Glands",
+      "Review of Symptoms — Excessive Stress",
+      "Review of Symptoms — Eye Pain",
+      "Review of Symptoms — Fever",
+      "Review of Symptoms — Hearing Loss",
+      "Review of Symptoms — Joint Swelling",
+      "Review of Symptoms — Seizures",
+      "Review of Symptoms — Stomach Trouble Or Ulcers",
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs",
+      "Social History — Do you smoke? — Yes",
+      "Social History — Do you smoke? — No",
+      "Social History — Do you smoke? — If yes, how many times per week",
+      "Social History — Do you drink? — Yes",
+      "Social History — Do you drink? — No",
+      "Social History — Do you drink? — If yes, how many times per week",
+      "Social History — Do you exercise? — Yes",
+      "Social History — Do you exercise? — No",
+      "Social History — Do you exercise? — If yes, how many times per week",
+      "Social History — Do you have a social support system? — Yes",
+      "Social History — Do you have a social support system? — No"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "zai-org/GLM-OCR via vllm-server",
+  "latency_seconds": 2.783212977666667,
+  "cost_per_page": 0.0008516631711660001,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Document title\": \"New Patient Form\",\n  \"First Name\": \"Daniel\",\n  \"Last Name\": \"Anderson\",\n  \"Marital Status — Single\": true,\n  \"Marital Status — Married\": true,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": true,\n  \"Marital Status — Widowed\": true,\n  \"Address\": \"2213 1/2 Mulberry Dr\",\n  \"City\": \"Waimanalo\",\n  \"State\": \"HI\",\n  \"Zip\": \"96795\",\n  \"Phone\": \"9065807172\",\n  \"DOB\": \"September 29, 1962\",\n  \"Spouse Name\": \"\",\n  \"Spouse Phone\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": true,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Social History — Do you smoke? — Yes\": true,\n  \"Social History — Do you smoke? — No\": true,\n  \"Social History — Do you smoke? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you drink? — Yes\": true,\n  \"Social History — Do you drink? — No\": true,\n  \"Social History — Do you drink? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you exercise? — Yes\": true,\n  \"Social History — Do you exercise? — No\": true,\n  \"Social History — Do you exercise? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you have a social support system? — Yes\": true,\n  \"Social History — Do you have a social support system? — No\": true\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-9e94be55f2e159f4",
+      "object": "chat.completion",
+      "created": 1791322121,
+      "prompt_routed_experts": null,
+      "model": "glm-ocr",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Document title\": \"New Patient Form\",\n  \"First Name\": \"Daniel\",\n  \"Last Name\": \"Anderson\",\n  \"Marital Status — Single\": true,\n  \"Marital Status — Married\": true,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": true,\n  \"Marital Status — Widowed\": true,\n  \"Address\": \"2213 1/2 Mulberry Dr\",\n  \"City\": \"Waimanalo\",\n  \"State\": \"HI\",\n  \"Zip\": \"96795\",\n  \"Phone\": \"9065807172\",\n  \"DOB\": \"September 29, 1962\",\n  \"Spouse Name\": \"\",\n  \"Spouse Phone\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": true,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Social History — Do you smoke? — Yes\": true,\n  \"Social History — Do you smoke? — No\": true,\n  \"Social History — Do you smoke? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you drink? — Yes\": true,\n  \"Social History — Do you drink? — No\": true,\n  \"Social History — Do you drink? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you exercise? — Yes\": true,\n  \"Social History — Do you exercise? — No\": true,\n  \"Social History — Do you exercise? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you have a social support system? — Yes\": true,\n  \"Social History — Do you have a social support system? — No\": true\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-1cced44d",
+      "usage": {
+        "prompt_tokens": 6877,
+        "total_tokens": 7763,
+        "completion_tokens": 886,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A10",
+    "gpu_seconds": 2.783212977666667,
+    "startup_gpu_seconds": 126.110703769,
+    "is_cold_start": true,
+    "measurement_scope": "modal_batch",
+    "batch_id": "669d82440f114c3b9ff52905f870df97",
+    "batch_gpu_seconds": 66.79711146400001,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 2.783212977666667,
+    "gpu_rate_usd_per_second": 0.000306,
+    "startup_excluded": true,
+    "original_source_timestamp": "20261006T205911Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Document title\": \"New Patient Form\",\n  \"First Name\": \"Daniel\",\n  \"Last Name\": \"Anderson\",\n  \"Marital Status — Single\": true,\n  \"Marital Status — Married\": true,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": true,\n  \"Marital Status — Widowed\": true,\n  \"Address\": \"2213 1/2 Mulberry Dr\",\n  \"City\": \"Waimanalo\",\n  \"State\": \"HI\",\n  \"Zip\": \"96795\",\n  \"Phone\": \"9065807172\",\n  \"DOB\": \"September 29, 1962\",\n  \"Spouse Name\": \"\",\n  \"Spouse Phone\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": true,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Social History — Do you smoke? — Yes\": true,\n  \"Social History — Do you smoke? — No\": true,\n  \"Social History — Do you smoke? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you drink? — Yes\": true,\n  \"Social History — Do you drink? — No\": true,\n  \"Social History — Do you drink? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you exercise? — Yes\": true,\n  \"Social History — Do you exercise? — No\": true,\n  \"Social History — Do you exercise? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you have a social support system? — Yes\": true,\n  \"Social History — Do you have a social support system? — No\": true\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-9e94be55f2e159f4",
+        "object": "chat.completion",
+        "created": 1791322121,
+        "prompt_routed_experts": null,
+        "model": "glm-ocr",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Document title\": \"New Patient Form\",\n  \"First Name\": \"Daniel\",\n  \"Last Name\": \"Anderson\",\n  \"Marital Status — Single\": true,\n  \"Marital Status — Married\": true,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": true,\n  \"Marital Status — Widowed\": true,\n  \"Address\": \"2213 1/2 Mulberry Dr\",\n  \"City\": \"Waimanalo\",\n  \"State\": \"HI\",\n  \"Zip\": \"96795\",\n  \"Phone\": \"9065807172\",\n  \"DOB\": \"September 29, 1962\",\n  \"Spouse Name\": \"\",\n  \"Spouse Phone\": \"\",\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": true,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Social History — Do you smoke? — Yes\": true,\n  \"Social History — Do you smoke? — No\": true,\n  \"Social History — Do you smoke? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you drink? — Yes\": true,\n  \"Social History — Do you drink? — No\": true,\n  \"Social History — Do you drink? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you exercise? — Yes\": true,\n  \"Social History — Do you exercise? — No\": true,\n  \"Social History — Do you exercise? — If yes, how many times per week\": \"1\",\n  \"Social History — Do you have a social support system? — Yes\": true,\n  \"Social History — Do you have a social support system? — No\": true\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-1cced44d",
+        "usage": {
+          "prompt_tokens": 6877,
+          "total_tokens": 7763,
+          "completion_tokens": 886,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "gpu_seconds": 2.783212977666667,
+    "gpu_type": "A10",
+    "model_version": "zai-org/GLM-OCR via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_003.png",
+    "startup_gpu_seconds": 126.110703769,
+    "is_cold_start": true
+  }
+}

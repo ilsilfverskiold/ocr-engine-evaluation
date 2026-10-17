@@ -1,0 +1,440 @@
+{
+  "engine": "qwen3_vl",
+  "document": "documents/medium/photo_receipt/photo_000.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Business name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Hp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Reg No\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Check #\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Pax(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Excluding GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Payable\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Inclusive of GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Rounding Adj\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closed\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASH\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Business name\",\n    \"Address\",\n    \"Tel\",\n    \"Fax\",\n    \"Hp\",\n    \"Website\",\n    \"GST Reg No\",\n    \"Document title\",\n    \"Check #\",\n    \"Pax(s)\",\n    \"Date\",\n    \"Cashier\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — U.price\",\n    \"Item 1 — Total\",\n    \"Item 1 — TAX\",\n    \"Item 2 — Description\",\n    \"Item 2 — Qty\",\n    \"Item 2 — U.price\",\n    \"Item 2 — Total\",\n    \"Item 2 — TAX\",\n    \"Item 3 — Description\",\n    \"Item 3 — Qty\",\n    \"Item 3 — U.price\",\n    \"Item 3 — Total\",\n    \"Item 3 — TAX\",\n    \"Total (Excluding GST)\",\n    \"GST Payable\",\n    \"Total (Inclusive of GST)\",\n    \"Rounding Adj\",\n    \"TOTAL\",\n    \"Closed\",\n    \"CASH\",\n    \"CHANGE\",\n    \"GST Summary — SR — Rate\",\n    \"GST Summary — SR — Amount(RM)\",\n    \"GST Summary — SR — Tax(RM)\",\n    \"GST Summary — ZR — Amount(RM)\",\n    \"GST Summary — ZR — Tax(RM)\",\n    \"GST Summary — ZRL — Rate\",\n    \"GST Summary — ZRL — Amount(RM)\",\n    \"GST Summary — ZRL — Tax(RM)\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Business name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Tel": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Fax": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Hp": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Website": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Reg No": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Check #": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Pax(s)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Cashier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Excluding GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Payable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Inclusive of GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Rounding Adj": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Closed": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CASH": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CHANGE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Footer": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Business name",
+      "Address",
+      "Tel",
+      "Fax",
+      "Hp",
+      "Website",
+      "GST Reg No",
+      "Document title",
+      "Check #",
+      "Pax(s)",
+      "Date",
+      "Cashier",
+      "Item 1 — Description",
+      "Item 1 — Qty",
+      "Item 1 — U.price",
+      "Item 1 — Total",
+      "Item 1 — TAX",
+      "Item 2 — Description",
+      "Item 2 — Qty",
+      "Item 2 — U.price",
+      "Item 2 — Total",
+      "Item 2 — TAX",
+      "Item 3 — Description",
+      "Item 3 — Qty",
+      "Item 3 — U.price",
+      "Item 3 — Total",
+      "Item 3 — TAX",
+      "Total (Excluding GST)",
+      "GST Payable",
+      "Total (Inclusive of GST)",
+      "Rounding Adj",
+      "TOTAL",
+      "Closed",
+      "CASH",
+      "CHANGE",
+      "GST Summary — SR — Rate",
+      "GST Summary — SR — Amount(RM)",
+      "GST Summary — SR — Tax(RM)",
+      "GST Summary — ZR — Amount(RM)",
+      "GST Summary — ZR — Tax(RM)",
+      "GST Summary — ZRL — Rate",
+      "GST Summary — ZRL — Amount(RM)",
+      "GST Summary — ZRL — Tax(RM)",
+      "Footer"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "latency_seconds": 7.148724624541667,
+  "cost_per_page": 0.004961214889431916,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Business name\": \"SEMBOYAN TEGAS SDN BHD\",\n  \"Address\": \"No.5 & 7 , Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\",\n  \"Tel\": \"03-7846 1113\",\n  \"Fax\": \"03-7832 1368\",\n  \"Hp\": \"012-396 1688 012-353 7738\",\n  \"Website\": \"www.semboyan.com\",\n  \"GST Reg No\": \"001538965504\",\n  \"Document title\": \"Tax Invoice\",\n  \"Check #\": \"549146\",\n  \"Pax(s)\": \"5\",\n  \"Date\": \"06-03-2018\",\n  \"Cashier\": \"CASHIER 4\",\n  \"Item 1 — Description\": \"taucu kisar\",\n  \"Item 1 — Qty\": \"2 x\",\n  \"Item 1 — U.price\": \"6.50\",\n  \"Item 1 — Total\": \"13.00\",\n  \"Item 1 — TAX\": \"SR\",\n  \"Item 2 — Description\": \"Teh wangi ros 180g\",\n  \"Item 2 — Qty\": \"2 x\",\n  \"Item 2 — U.price\": \"4.20\",\n  \"Item 2 — Total\": \"8.40\",\n  \"Item 2 — TAX\": \"ZR\",\n  \"Item 3 — Description\": \"ASAM JAWA 1KG\",\n  \"Item 3 — Qty\": \"1 x\",\n  \"Item 3 — U.price\": \"4.80\",\n  \"Item 3 — Total\": \"4.80\",\n  \"Item 3 — TAX\": \"ZRL\",\n  \"Total (Excluding GST)\": \"26.20\",\n  \"GST Payable\": \"0.78\",\n  \"Total (Inclusive of GST)\": \"26.98\",\n  \"Rounding Adj\": \"0.02\",\n  \"TOTAL\": \"27.00\",\n  \"Closed\": \"06-03-2018\",\n  \"CASH\": \"52.00\",\n  \"CHANGE\": \"25.00\",\n  \"GST Summary — SR — Rate\": \"@ 6%\",\n  \"GST Summary — SR — Amount(RM)\": \"13.00\",\n  \"GST Summary — SR — Tax(RM)\": \"0.78\",\n  \"GST Summary — ZR — Amount(RM)\": \"8.40\",\n  \"GST Summary — ZR — Tax(RM)\": \"0.00\",\n  \"GST Summary — ZRL — Rate\": \"@ 0%\",\n  \"GST Summary — ZRL — Amount(RM)\": \"4.80\",\n  \"GST Summary — ZRL — Tax(RM)\": \"0.00\",\n  \"Footer\": \"*** Thank You *** Please Come Again\"\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-a4b1da0eda537f2d",
+      "object": "chat.completion",
+      "created": 1791320804,
+      "prompt_routed_experts": null,
+      "model": "qwen3-vl",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Business name\": \"SEMBOYAN TEGAS SDN BHD\",\n  \"Address\": \"No.5 & 7 , Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\",\n  \"Tel\": \"03-7846 1113\",\n  \"Fax\": \"03-7832 1368\",\n  \"Hp\": \"012-396 1688 012-353 7738\",\n  \"Website\": \"www.semboyan.com\",\n  \"GST Reg No\": \"001538965504\",\n  \"Document title\": \"Tax Invoice\",\n  \"Check #\": \"549146\",\n  \"Pax(s)\": \"5\",\n  \"Date\": \"06-03-2018\",\n  \"Cashier\": \"CASHIER 4\",\n  \"Item 1 — Description\": \"taucu kisar\",\n  \"Item 1 — Qty\": \"2 x\",\n  \"Item 1 — U.price\": \"6.50\",\n  \"Item 1 — Total\": \"13.00\",\n  \"Item 1 — TAX\": \"SR\",\n  \"Item 2 — Description\": \"Teh wangi ros 180g\",\n  \"Item 2 — Qty\": \"2 x\",\n  \"Item 2 — U.price\": \"4.20\",\n  \"Item 2 — Total\": \"8.40\",\n  \"Item 2 — TAX\": \"ZR\",\n  \"Item 3 — Description\": \"ASAM JAWA 1KG\",\n  \"Item 3 — Qty\": \"1 x\",\n  \"Item 3 — U.price\": \"4.80\",\n  \"Item 3 — Total\": \"4.80\",\n  \"Item 3 — TAX\": \"ZRL\",\n  \"Total (Excluding GST)\": \"26.20\",\n  \"GST Payable\": \"0.78\",\n  \"Total (Inclusive of GST)\": \"26.98\",\n  \"Rounding Adj\": \"0.02\",\n  \"TOTAL\": \"27.00\",\n  \"Closed\": \"06-03-2018\",\n  \"CASH\": \"52.00\",\n  \"CHANGE\": \"25.00\",\n  \"GST Summary — SR — Rate\": \"@ 6%\",\n  \"GST Summary — SR — Amount(RM)\": \"13.00\",\n  \"GST Summary — SR — Tax(RM)\": \"0.78\",\n  \"GST Summary — ZR — Amount(RM)\": \"8.40\",\n  \"GST Summary — ZR — Tax(RM)\": \"0.00\",\n  \"GST Summary — ZRL — Rate\": \"@ 0%\",\n  \"GST Summary — ZRL — Amount(RM)\": \"4.80\",\n  \"GST Summary — ZRL — Tax(RM)\": \"0.00\",\n  \"Footer\": \"*** Thank You *** Please Come Again\"\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-8c500980",
+      "usage": {
+        "prompt_tokens": 3063,
+        "total_tokens": 3753,
+        "completion_tokens": 690,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A100-80GB",
+    "gpu_seconds": 7.148724624541667,
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false,
+    "measurement_scope": "modal_batch",
+    "batch_id": "810ef39fa2f0475b96a08ce77cddffe2",
+    "batch_gpu_seconds": 171.569390989,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 7.148724624541667,
+    "gpu_rate_usd_per_second": 0.000694,
+    "startup_excluded": true,
+    "original_source_timestamp": "20261006T205911Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Business name\": \"SEMBOYAN TEGAS SDN BHD\",\n  \"Address\": \"No.5 & 7 , Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\",\n  \"Tel\": \"03-7846 1113\",\n  \"Fax\": \"03-7832 1368\",\n  \"Hp\": \"012-396 1688 012-353 7738\",\n  \"Website\": \"www.semboyan.com\",\n  \"GST Reg No\": \"001538965504\",\n  \"Document title\": \"Tax Invoice\",\n  \"Check #\": \"549146\",\n  \"Pax(s)\": \"5\",\n  \"Date\": \"06-03-2018\",\n  \"Cashier\": \"CASHIER 4\",\n  \"Item 1 — Description\": \"taucu kisar\",\n  \"Item 1 — Qty\": \"2 x\",\n  \"Item 1 — U.price\": \"6.50\",\n  \"Item 1 — Total\": \"13.00\",\n  \"Item 1 — TAX\": \"SR\",\n  \"Item 2 — Description\": \"Teh wangi ros 180g\",\n  \"Item 2 — Qty\": \"2 x\",\n  \"Item 2 — U.price\": \"4.20\",\n  \"Item 2 — Total\": \"8.40\",\n  \"Item 2 — TAX\": \"ZR\",\n  \"Item 3 — Description\": \"ASAM JAWA 1KG\",\n  \"Item 3 — Qty\": \"1 x\",\n  \"Item 3 — U.price\": \"4.80\",\n  \"Item 3 — Total\": \"4.80\",\n  \"Item 3 — TAX\": \"ZRL\",\n  \"Total (Excluding GST)\": \"26.20\",\n  \"GST Payable\": \"0.78\",\n  \"Total (Inclusive of GST)\": \"26.98\",\n  \"Rounding Adj\": \"0.02\",\n  \"TOTAL\": \"27.00\",\n  \"Closed\": \"06-03-2018\",\n  \"CASH\": \"52.00\",\n  \"CHANGE\": \"25.00\",\n  \"GST Summary — SR — Rate\": \"@ 6%\",\n  \"GST Summary — SR — Amount(RM)\": \"13.00\",\n  \"GST Summary — SR — Tax(RM)\": \"0.78\",\n  \"GST Summary — ZR — Amount(RM)\": \"8.40\",\n  \"GST Summary — ZR — Tax(RM)\": \"0.00\",\n  \"GST Summary — ZRL — Rate\": \"@ 0%\",\n  \"GST Summary — ZRL — Amount(RM)\": \"4.80\",\n  \"GST Summary — ZRL — Tax(RM)\": \"0.00\",\n  \"Footer\": \"*** Thank You *** Please Come Again\"\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-a4b1da0eda537f2d",
+        "object": "chat.completion",
+        "created": 1791320804,
+        "prompt_routed_experts": null,
+        "model": "qwen3-vl",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Business name\": \"SEMBOYAN TEGAS SDN BHD\",\n  \"Address\": \"No.5 & 7 , Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\",\n  \"Tel\": \"03-7846 1113\",\n  \"Fax\": \"03-7832 1368\",\n  \"Hp\": \"012-396 1688 012-353 7738\",\n  \"Website\": \"www.semboyan.com\",\n  \"GST Reg No\": \"001538965504\",\n  \"Document title\": \"Tax Invoice\",\n  \"Check #\": \"549146\",\n  \"Pax(s)\": \"5\",\n  \"Date\": \"06-03-2018\",\n  \"Cashier\": \"CASHIER 4\",\n  \"Item 1 — Description\": \"taucu kisar\",\n  \"Item 1 — Qty\": \"2 x\",\n  \"Item 1 — U.price\": \"6.50\",\n  \"Item 1 — Total\": \"13.00\",\n  \"Item 1 — TAX\": \"SR\",\n  \"Item 2 — Description\": \"Teh wangi ros 180g\",\n  \"Item 2 — Qty\": \"2 x\",\n  \"Item 2 — U.price\": \"4.20\",\n  \"Item 2 — Total\": \"8.40\",\n  \"Item 2 — TAX\": \"ZR\",\n  \"Item 3 — Description\": \"ASAM JAWA 1KG\",\n  \"Item 3 — Qty\": \"1 x\",\n  \"Item 3 — U.price\": \"4.80\",\n  \"Item 3 — Total\": \"4.80\",\n  \"Item 3 — TAX\": \"ZRL\",\n  \"Total (Excluding GST)\": \"26.20\",\n  \"GST Payable\": \"0.78\",\n  \"Total (Inclusive of GST)\": \"26.98\",\n  \"Rounding Adj\": \"0.02\",\n  \"TOTAL\": \"27.00\",\n  \"Closed\": \"06-03-2018\",\n  \"CASH\": \"52.00\",\n  \"CHANGE\": \"25.00\",\n  \"GST Summary — SR — Rate\": \"@ 6%\",\n  \"GST Summary — SR — Amount(RM)\": \"13.00\",\n  \"GST Summary — SR — Tax(RM)\": \"0.78\",\n  \"GST Summary — ZR — Amount(RM)\": \"8.40\",\n  \"GST Summary — ZR — Tax(RM)\": \"0.00\",\n  \"GST Summary — ZRL — Rate\": \"@ 0%\",\n  \"GST Summary — ZRL — Amount(RM)\": \"4.80\",\n  \"GST Summary — ZRL — Tax(RM)\": \"0.00\",\n  \"Footer\": \"*** Thank You *** Please Come Again\"\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-8c500980",
+        "usage": {
+          "prompt_tokens": 3063,
+          "total_tokens": 3753,
+          "completion_tokens": 690,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Business name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Hp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Reg No\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Check #\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Pax(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Excluding GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Payable\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Inclusive of GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Rounding Adj\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closed\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASH\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Business name\",\n    \"Address\",\n    \"Tel\",\n    \"Fax\",\n    \"Hp\",\n    \"Website\",\n    \"GST Reg No\",\n    \"Document title\",\n    \"Check #\",\n    \"Pax(s)\",\n    \"Date\",\n    \"Cashier\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — U.price\",\n    \"Item 1 — Total\",\n    \"Item 1 — TAX\",\n    \"Item 2 — Description\",\n    \"Item 2 — Qty\",\n    \"Item 2 — U.price\",\n    \"Item 2 — Total\",\n    \"Item 2 — TAX\",\n    \"Item 3 — Description\",\n    \"Item 3 — Qty\",\n    \"Item 3 — U.price\",\n    \"Item 3 — Total\",\n    \"Item 3 — TAX\",\n    \"Total (Excluding GST)\",\n    \"GST Payable\",\n    \"Total (Inclusive of GST)\",\n    \"Rounding Adj\",\n    \"TOTAL\",\n    \"Closed\",\n    \"CASH\",\n    \"CHANGE\",\n    \"GST Summary — SR — Rate\",\n    \"GST Summary — SR — Amount(RM)\",\n    \"GST Summary — SR — Tax(RM)\",\n    \"GST Summary — ZR — Amount(RM)\",\n    \"GST Summary — ZR — Tax(RM)\",\n    \"GST Summary — ZRL — Rate\",\n    \"GST Summary — ZRL — Amount(RM)\",\n    \"GST Summary — ZRL — Tax(RM)\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+    "gpu_seconds": 7.148724624541667,
+    "gpu_type": "A100-80GB",
+    "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_000.png",
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false
+  }
+}

@@ -1,6 +1,5 @@
 import json
 import unittest
-import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -13,18 +12,15 @@ from runners.docling_runner import DoclingRunner, _complete_export
 from runners.llamaparse_runner import LlamaParseRunner
 
 
-BUNDLE = Path(__file__).resolve().parents[1] / "results/current.zip"
+OUTPUTS = (Path(__file__).resolve().parents[1]
+           / "results/ocr_outputs/reconciled_outputs")
 
 
 def saved_call(suffix):
-    with zipfile.ZipFile(BUNDLE) as archive:
-        matches = [name for name in archive.namelist()
-                   if name.startswith("results/ocr_outputs/20260810T130609Z/")
-                   or name.startswith("results/ocr_outputs/20261001T102236Z/")]
-        matches = [name for name in matches if name.endswith(suffix)]
-        if len(matches) != 1:
-            raise AssertionError((suffix, matches))
-        return json.loads(archive.read(matches[0]))
+    matches = list(OUTPUTS.glob(f"**/{suffix}"))
+    if len(matches) != 1:
+        raise AssertionError((suffix, matches))
+    return json.loads(matches[0].read_text())
 
 
 class CompleteViewsTest(unittest.TestCase):

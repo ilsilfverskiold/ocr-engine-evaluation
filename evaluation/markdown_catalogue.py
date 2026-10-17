@@ -1,7 +1,4 @@
-"""Load and validate the benchmark's accepted Markdown reference catalogues.
-
-Catalogues are supplied in results/current.zip. Scoring never generates them.
-"""
+"""Load and validate the benchmark's accepted Markdown reference catalogues."""
 from __future__ import annotations
 import json
 from pathlib import Path

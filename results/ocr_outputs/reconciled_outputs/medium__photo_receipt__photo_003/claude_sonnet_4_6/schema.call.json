@@ -1,0 +1,364 @@
+{
+  "engine": "claude_sonnet_4_6",
+  "document": "documents/medium/photo_receipt/photo_003.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Merchant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Branch\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — @\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Card\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Transaction details\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Email\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Telephone\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Merchant\",\n    \"Branch\",\n    \"Address\",\n    \"Tel\",\n    \"Document type\",\n    \"Item 1 — Description\",\n    \"Item 1 — Amount\",\n    \"Item 2 — Amount\",\n    \"Item 3 — Description\",\n    \"Item 3 — Amount\",\n    \"Item 4 — Description\",\n    \"Item 4 — Amount\",\n    \"Item 5 — Description\",\n    \"Item 5 — Quantity\",\n    \"Item 5 — @\",\n    \"Item 5 — Amount\",\n    \"Item 6 — Description\",\n    \"Item 6 — Amount\",\n    \"Item 7 — Description\",\n    \"Item 7 — Amount\",\n    \"Item 8 — Description\",\n    \"Item 8 — Amount\",\n    \"Item 9 — Description\",\n    \"Item 9 — Amount\",\n    \"TOTAL\",\n    \"Card\",\n    \"CHANGE\",\n    \"*Non Vat — NET\",\n    \"*Non Vat — VAT\",\n    \"*Non Vat — TOTAL\",\n    \"VAT — NET\",\n    \"VAT — VAT\",\n    \"VAT — TOTAL\",\n    \"VAT TOTALS — NET\",\n    \"VAT TOTALS — VAT\",\n    \"VAT TOTALS — TOTAL\",\n    \"VAT NO.\",\n    \"Cashier\",\n    \"Transaction details\",\n    \"Footer\",\n    \"Customer Care — Email\",\n    \"Customer Care — Telephone\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Merchant": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Branch": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Tel": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document type": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 4 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 4 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Quantity": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — @": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 6 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 6 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 7 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 7 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 8 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 8 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 9 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 9 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Card": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CHANGE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT NO.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Cashier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Transaction details": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Footer": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Customer Care — Email": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Customer Care — Telephone": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Merchant",
+      "Branch",
+      "Address",
+      "Tel",
+      "Document type",
+      "Item 1 — Description",
+      "Item 1 — Amount",
+      "Item 2 — Amount",
+      "Item 3 — Description",
+      "Item 3 — Amount",
+      "Item 4 — Description",
+      "Item 4 — Amount",
+      "Item 5 — Description",
+      "Item 5 — Quantity",
+      "Item 5 — @",
+      "Item 5 — Amount",
+      "Item 6 — Description",
+      "Item 6 — Amount",
+      "Item 7 — Description",
+      "Item 7 — Amount",
+      "Item 8 — Description",
+      "Item 8 — Amount",
+      "Item 9 — Description",
+      "Item 9 — Amount",
+      "TOTAL",
+      "Card",
+      "CHANGE",
+      "*Non Vat — NET",
+      "*Non Vat — VAT",
+      "*Non Vat — TOTAL",
+      "VAT — NET",
+      "VAT — VAT",
+      "VAT — TOTAL",
+      "VAT TOTALS — NET",
+      "VAT TOTALS — VAT",
+      "VAT TOTALS — TOTAL",
+      "VAT NO.",
+      "Cashier",
+      "Transaction details",
+      "Footer",
+      "Customer Care — Email",
+      "Customer Care — Telephone"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "claude-sonnet-4-6",
+  "latency_seconds": 11.651887916959822,
+  "cost_per_page": 0.020529,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "```json\n{\n  \"Merchant\": \"Food Lover's Market\",\n  \"Branch\": \"Showgate Centre\",\n  \"Address\": \"Curie Ave, Hospital Park, Bloemfontein\",\n  \"Tel\": \"071 849 8137\",\n  \"Document type\": \"TAX INVOICE\",\n  \"Item 1 — Description\": \"CELERY STICKS CUT 300G\",\n  \"Item 1 — Amount\": \"14.99\",\n  \"Item 2 — Amount\": \"45.99\",\n  \"Item 3 — Description\": \"F/L RECYCLED C/BAG 24L\",\n  \"Item 3 — Amount\": \"1.50\",\n  \"Item 4 — Description\": \"LOAF BANANA\",\n  \"Item 4 — Amount\": \"14.99\",\n  \"Item 5 — Description\": \"PINEAPPLE QUEEN\",\n  \"Item 5 — Quantity\": \"2\",\n  \"Item 5 — @\": \"21.99\",\n  \"Item 5 — Amount\": \"43.98\",\n  \"Item 6 — Description\": \"COMBO PROMO\",\n  \"Item 6 — Amount\": \"-3.98\",\n  \"Item 7 — Description\": \"SUPER M FL/MILK C/SODA 300ML\",\n  \"Item 7 — Amount\": \"17.99\",\n  \"Item 8 — Description\": \"SUPER M FL/MILK S/BERRY 300ML\",\n  \"Item 8 — Amount\": \"15.99\",\n  \"Item 9 — Description\": \"TOMATOES LONG LIFE 2KG\",\n  \"Item 9 — Amount\": \"59.99\",\n  \"TOTAL\": \"213.44\",\n  \"Card\": \"213.44\",\n  \"CHANGE\": \"0.00\",\n  \"*Non Vat — NET\": \"114.98\",\n  \"*Non Vat — VAT\": \"0.00\",\n  \"*Non Vat — TOTAL\": \"114.98\",\n  \"VAT — NET\": \"85.60\",\n  \"VAT — VAT\": \"12.86\",\n  \"VAT — TOTAL\": \"98.46\",\n  \"VAT TOTALS — NET\": \"200.58\",\n  \"VAT TOTALS — VAT\": \"12.86\",\n  \"VAT TOTALS — TOTAL\": \"213.44\",\n  \"VAT NO.\": \"4110287044\",\n  \"Cashier\": \"Felicia\",\n  \"Transaction details\": \"C1011 #5174 11:51 3/04/2024 S91045 R008\",\n  \"Footer\": \"Thank you for your patronage\",\n  \"Customer Care — Email\": \"care@fnv.co.za\",\n  \"Customer Care — Telephone\": \"0860 007 728\"\n}\n```",
+  "structured_output": {},
+  "metadata": {
+    "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Merchant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Branch\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — @\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Card\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Transaction details\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Email\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Telephone\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Merchant\",\n    \"Branch\",\n    \"Address\",\n    \"Tel\",\n    \"Document type\",\n    \"Item 1 — Description\",\n    \"Item 1 — Amount\",\n    \"Item 2 — Amount\",\n    \"Item 3 — Description\",\n    \"Item 3 — Amount\",\n    \"Item 4 — Description\",\n    \"Item 4 — Amount\",\n    \"Item 5 — Description\",\n    \"Item 5 — Quantity\",\n    \"Item 5 — @\",\n    \"Item 5 — Amount\",\n    \"Item 6 — Description\",\n    \"Item 6 — Amount\",\n    \"Item 7 — Description\",\n    \"Item 7 — Amount\",\n    \"Item 8 — Description\",\n    \"Item 8 — Amount\",\n    \"Item 9 — Description\",\n    \"Item 9 — Amount\",\n    \"TOTAL\",\n    \"Card\",\n    \"CHANGE\",\n    \"*Non Vat — NET\",\n    \"*Non Vat — VAT\",\n    \"*Non Vat — TOTAL\",\n    \"VAT — NET\",\n    \"VAT — VAT\",\n    \"VAT — TOTAL\",\n    \"VAT TOTALS — NET\",\n    \"VAT TOTALS — VAT\",\n    \"VAT TOTALS — TOTAL\",\n    \"VAT NO.\",\n    \"Cashier\",\n    \"Transaction details\",\n    \"Footer\",\n    \"Customer Care — Email\",\n    \"Customer Care — Telephone\"\n  ],\n  \"additionalProperties\": false\n}",
+    "input_tokens": 3348,
+    "output_tokens": 699,
+    "leg": "schema",
+    "max_output_tokens": 4096,
+    "temperature": 0,
+    "sdk_max_retries": 0,
+    "stop_reason": "end_turn",
+    "original_source_timestamp": "20261006T205850Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "id": "msg_011CfmfcCwnY3XMdnWd6LR5d",
+    "container": null,
+    "content": [
+      {
+        "citations": null,
+        "text": "```json\n{\n  \"Merchant\": \"Food Lover's Market\",\n  \"Branch\": \"Showgate Centre\",\n  \"Address\": \"Curie Ave, Hospital Park, Bloemfontein\",\n  \"Tel\": \"071 849 8137\",\n  \"Document type\": \"TAX INVOICE\",\n  \"Item 1 — Description\": \"CELERY STICKS CUT 300G\",\n  \"Item 1 — Amount\": \"14.99\",\n  \"Item 2 — Amount\": \"45.99\",\n  \"Item 3 — Description\": \"F/L RECYCLED C/BAG 24L\",\n  \"Item 3 — Amount\": \"1.50\",\n  \"Item 4 — Description\": \"LOAF BANANA\",\n  \"Item 4 — Amount\": \"14.99\",\n  \"Item 5 — Description\": \"PINEAPPLE QUEEN\",\n  \"Item 5 — Quantity\": \"2\",\n  \"Item 5 — @\": \"21.99\",\n  \"Item 5 — Amount\": \"43.98\",\n  \"Item 6 — Description\": \"COMBO PROMO\",\n  \"Item 6 — Amount\": \"-3.98\",\n  \"Item 7 — Description\": \"SUPER M FL/MILK C/SODA 300ML\",\n  \"Item 7 — Amount\": \"17.99\",\n  \"Item 8 — Description\": \"SUPER M FL/MILK S/BERRY 300ML\",\n  \"Item 8 — Amount\": \"15.99\",\n  \"Item 9 — Description\": \"TOMATOES LONG LIFE 2KG\",\n  \"Item 9 — Amount\": \"59.99\",\n  \"TOTAL\": \"213.44\",\n  \"Card\": \"213.44\",\n  \"CHANGE\": \"0.00\",\n  \"*Non Vat — NET\": \"114.98\",\n  \"*Non Vat — VAT\": \"0.00\",\n  \"*Non Vat — TOTAL\": \"114.98\",\n  \"VAT — NET\": \"85.60\",\n  \"VAT — VAT\": \"12.86\",\n  \"VAT — TOTAL\": \"98.46\",\n  \"VAT TOTALS — NET\": \"200.58\",\n  \"VAT TOTALS — VAT\": \"12.86\",\n  \"VAT TOTALS — TOTAL\": \"213.44\",\n  \"VAT NO.\": \"4110287044\",\n  \"Cashier\": \"Felicia\",\n  \"Transaction details\": \"C1011 #5174 11:51 3/04/2024 S91045 R008\",\n  \"Footer\": \"Thank you for your patronage\",\n  \"Customer Care — Email\": \"care@fnv.co.za\",\n  \"Customer Care — Telephone\": \"0860 007 728\"\n}\n```",
+        "type": "text"
+      }
+    ],
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 3348,
+      "output_tokens": 699,
+      "output_tokens_details": null,
+      "server_tool_use": null,
+      "service_tier": "standard"
+    },
+    "diagnostics": null
+  }
+}

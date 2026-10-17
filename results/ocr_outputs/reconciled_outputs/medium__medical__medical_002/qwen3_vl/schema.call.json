@@ -1,0 +1,618 @@
+{
+  "engine": "qwen3_vl",
+  "document": "documents/medium/medical/medical_002.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"First Name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Last Name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Single\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Married\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Divorced\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Separated\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Widowed\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"City\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"State\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Zip\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Phone\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DOB\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Spouse Name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Spouse Phone\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"If so, start date\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you been hospitalized in the past year? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you been hospitalized in the past year? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Allergies\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Blurred Vision\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Chest Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Coughing\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Dental Problems\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Double Vision\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Bruising\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Thirst\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Fatigue\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Headaches\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Irregular Heart Rate\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Muscle Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Shortness Of Breath\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Tuberculosis Exposure\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Black Outs\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Calf Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Chills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Coughing Up Blood\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Enlarged Glands\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Stress\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Eye Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Fever\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Hearing Loss\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Joint Swelling\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Seizures\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Stomach Trouble Or Ulcers\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Previous Health History — Primary Care Physician\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Previous Health History — Last Seen Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Have you received chiropractic care? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received chiropractic care? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received acupuncture care? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received acupuncture care? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Antidepressants\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Birth Control Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Diet Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Muscle Relaxers\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Pain Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Anti Inflammatory\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Blood Pressure Medication\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Blood Sugar Medication\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Insulin\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Sleeping Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Other\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Over-the-Counter Drugs\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accidents or Injuries\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Vitamins or Supplements\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Document title\",\n    \"First Name\",\n    \"Last Name\",\n    \"Marital Status — Single\",\n    \"Marital Status — Married\",\n    \"Marital Status — Divorced\",\n    \"Marital Status — Separated\",\n    \"Marital Status — Widowed\",\n    \"Address\",\n    \"City\",\n    \"State\",\n    \"Zip\",\n    \"Phone\",\n    \"DOB\",\n    \"Spouse Name\",\n    \"Spouse Phone\",\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\",\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\",\n    \"If so, start date\",\n    \"Have you been hospitalized in the past year? — Yes\",\n    \"Have you been hospitalized in the past year? — No\",\n    \"Review of Symptoms — Allergies\",\n    \"Review of Symptoms — Blurred Vision\",\n    \"Review of Symptoms — Chest Pain\",\n    \"Review of Symptoms — Coughing\",\n    \"Review of Symptoms — Dental Problems\",\n    \"Review of Symptoms — Double Vision\",\n    \"Review of Symptoms — Excessive Bruising\",\n    \"Review of Symptoms — Excessive Thirst\",\n    \"Review of Symptoms — Fatigue\",\n    \"Review of Symptoms — Headaches\",\n    \"Review of Symptoms — Irregular Heart Rate\",\n    \"Review of Symptoms — Muscle Pain\",\n    \"Review of Symptoms — Shortness Of Breath\",\n    \"Review of Symptoms — Tuberculosis Exposure\",\n    \"Review of Symptoms — Black Outs\",\n    \"Review of Symptoms — Calf Pain\",\n    \"Review of Symptoms — Chills\",\n    \"Review of Symptoms — Coughing Up Blood\",\n    \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\",\n    \"Review of Symptoms — Enlarged Glands\",\n    \"Review of Symptoms — Excessive Stress\",\n    \"Review of Symptoms — Eye Pain\",\n    \"Review of Symptoms — Fever\",\n    \"Review of Symptoms — Hearing Loss\",\n    \"Review of Symptoms — Joint Swelling\",\n    \"Review of Symptoms — Seizures\",\n    \"Review of Symptoms — Stomach Trouble Or Ulcers\",\n    \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\",\n    \"Previous Health History — Primary Care Physician\",\n    \"Previous Health History — Last Seen Date\",\n    \"Have you received chiropractic care? — Yes\",\n    \"Have you received chiropractic care? — No\",\n    \"Have you received acupuncture care? — Yes\",\n    \"Have you received acupuncture care? — No\",\n    \"PRESCRIPTION DRUGS — Antidepressants\",\n    \"PRESCRIPTION DRUGS — Birth Control Pills\",\n    \"PRESCRIPTION DRUGS — Diet Pills\",\n    \"PRESCRIPTION DRUGS — Muscle Relaxers\",\n    \"PRESCRIPTION DRUGS — Pain Pills\",\n    \"PRESCRIPTION DRUGS — Anti Inflammatory\",\n    \"PRESCRIPTION DRUGS — Blood Pressure Medication\",\n    \"PRESCRIPTION DRUGS — Blood Sugar Medication\",\n    \"PRESCRIPTION DRUGS — Insulin\",\n    \"PRESCRIPTION DRUGS — Sleeping Pills\",\n    \"PRESCRIPTION DRUGS — Other\",\n    \"Over-the-Counter Drugs\",\n    \"Accidents or Injuries\",\n    \"Vitamins or Supplements\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "First Name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Last Name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Marital Status — Single": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Married": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Divorced": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Separated": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Marital Status — Widowed": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "City": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "State": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Zip": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Phone": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DOB": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Spouse Name": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Spouse Phone": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "If so, start date": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Allergies": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Blurred Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chest Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Dental Problems": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Double Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Bruising": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Thirst": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fatigue": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Headaches": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Irregular Heart Rate": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Muscle Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Shortness Of Breath": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Tuberculosis Exposure": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Black Outs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Calf Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing Up Blood": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Enlarged Glands": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Stress": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Eye Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fever": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Hearing Loss": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Joint Swelling": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Seizures": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Stomach Trouble Or Ulcers": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Previous Health History — Primary Care Physician": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Previous Health History — Last Seen Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Have you received chiropractic care? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you received chiropractic care? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you received acupuncture care? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you received acupuncture care? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Antidepressants": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Birth Control Pills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Diet Pills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Muscle Relaxers": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Pain Pills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Anti Inflammatory": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Blood Pressure Medication": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Blood Sugar Medication": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Insulin": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Sleeping Pills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "PRESCRIPTION DRUGS — Other": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Over-the-Counter Drugs": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Accidents or Injuries": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Vitamins or Supplements": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Document title",
+      "First Name",
+      "Last Name",
+      "Marital Status — Single",
+      "Marital Status — Married",
+      "Marital Status — Divorced",
+      "Marital Status — Separated",
+      "Marital Status — Widowed",
+      "Address",
+      "City",
+      "State",
+      "Zip",
+      "Phone",
+      "DOB",
+      "Spouse Name",
+      "Spouse Phone",
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW",
+      "Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION",
+      "If so, start date",
+      "Have you been hospitalized in the past year? — Yes",
+      "Have you been hospitalized in the past year? — No",
+      "Review of Symptoms — Allergies",
+      "Review of Symptoms — Blurred Vision",
+      "Review of Symptoms — Chest Pain",
+      "Review of Symptoms — Coughing",
+      "Review of Symptoms — Dental Problems",
+      "Review of Symptoms — Double Vision",
+      "Review of Symptoms — Excessive Bruising",
+      "Review of Symptoms — Excessive Thirst",
+      "Review of Symptoms — Fatigue",
+      "Review of Symptoms — Headaches",
+      "Review of Symptoms — Irregular Heart Rate",
+      "Review of Symptoms — Muscle Pain",
+      "Review of Symptoms — Shortness Of Breath",
+      "Review of Symptoms — Tuberculosis Exposure",
+      "Review of Symptoms — Black Outs",
+      "Review of Symptoms — Calf Pain",
+      "Review of Symptoms — Chills",
+      "Review of Symptoms — Coughing Up Blood",
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder",
+      "Review of Symptoms — Enlarged Glands",
+      "Review of Symptoms — Excessive Stress",
+      "Review of Symptoms — Eye Pain",
+      "Review of Symptoms — Fever",
+      "Review of Symptoms — Hearing Loss",
+      "Review of Symptoms — Joint Swelling",
+      "Review of Symptoms — Seizures",
+      "Review of Symptoms — Stomach Trouble Or Ulcers",
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs",
+      "Previous Health History — Primary Care Physician",
+      "Previous Health History — Last Seen Date",
+      "Have you received chiropractic care? — Yes",
+      "Have you received chiropractic care? — No",
+      "Have you received acupuncture care? — Yes",
+      "Have you received acupuncture care? — No",
+      "PRESCRIPTION DRUGS — Antidepressants",
+      "PRESCRIPTION DRUGS — Birth Control Pills",
+      "PRESCRIPTION DRUGS — Diet Pills",
+      "PRESCRIPTION DRUGS — Muscle Relaxers",
+      "PRESCRIPTION DRUGS — Pain Pills",
+      "PRESCRIPTION DRUGS — Anti Inflammatory",
+      "PRESCRIPTION DRUGS — Blood Pressure Medication",
+      "PRESCRIPTION DRUGS — Blood Sugar Medication",
+      "PRESCRIPTION DRUGS — Insulin",
+      "PRESCRIPTION DRUGS — Sleeping Pills",
+      "PRESCRIPTION DRUGS — Other",
+      "Over-the-Counter Drugs",
+      "Accidents or Injuries",
+      "Vitamins or Supplements"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "latency_seconds": 7.148724624541667,
+  "cost_per_page": 0.004961214889431916,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Document title\": \"Personal Health Record\",\n  \"First Name\": \"Jessica\",\n  \"Last Name\": \"Brown\",\n  \"Marital Status — Single\": false,\n  \"Marital Status — Married\": false,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": false,\n  \"Marital Status — Widowed\": false,\n  \"Address\": \"6306 Upper Mountain Circle\",\n  \"City\": \"Limestone\",\n  \"State\": \"PA\",\n  \"Zip\": \"16234\",\n  \"Phone\": \"796-895-8529\",\n  \"DOB\": \"10/25/1954\",\n  \"Spouse Name\": null,\n  \"Spouse Phone\": null,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": false,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": null,\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": false,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": false,\n  \"Review of Symptoms — Coughing\": false,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": false,\n  \"Review of Symptoms — Headaches\": false,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": false,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": false,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": false,\n  \"Review of Symptoms — Eye Pain\": false,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": false,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": false,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": false,\n  \"Previous Health History — Primary Care Physician\": \"Dr. Sarah Moore\",\n  \"Previous Health History — Last Seen Date\": \"03-20-1998\",\n  \"Have you received chiropractic care? — Yes\": true,\n  \"Have you received chiropractic care? — No\": false,\n  \"Have you received acupuncture care? — Yes\": true,\n  \"Have you received acupuncture care? — No\": false,\n  \"PRESCRIPTION DRUGS — Antidepressants\": true,\n  \"PRESCRIPTION DRUGS — Birth Control Pills\": false,\n  \"PRESCRIPTION DRUGS — Diet Pills\": false,\n  \"PRESCRIPTION DRUGS — Muscle Relaxers\": true,\n  \"PRESCRIPTION DRUGS — Pain Pills\": false,\n  \"PRESCRIPTION DRUGS — Anti Inflammatory\": false,\n  \"PRESCRIPTION DRUGS — Blood Pressure Medication\": true,\n  \"PRESCRIPTION DRUGS — Blood Sugar Medication\": false,\n  \"PRESCRIPTION DRUGS — Insulin\": true,\n  \"PRESCRIPTION DRUGS — Sleeping Pills\": false,\n  \"PRESCRIPTION DRUGS — Other\": \"metformin, simvastatin\",\n  \"Over-the-Counter Drugs\": \"pepto-bismol\",\n  \"Accidents or Injuries\": \"poisoning\",\n  \"Vitamins or Supplements\": \"vitamin b9, msm, fish oil\"\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-85c69cbdeb55f32d",
+      "object": "chat.completion",
+      "created": 1791320755,
+      "prompt_routed_experts": null,
+      "model": "qwen3-vl",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Document title\": \"Personal Health Record\",\n  \"First Name\": \"Jessica\",\n  \"Last Name\": \"Brown\",\n  \"Marital Status — Single\": false,\n  \"Marital Status — Married\": false,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": false,\n  \"Marital Status — Widowed\": false,\n  \"Address\": \"6306 Upper Mountain Circle\",\n  \"City\": \"Limestone\",\n  \"State\": \"PA\",\n  \"Zip\": \"16234\",\n  \"Phone\": \"796-895-8529\",\n  \"DOB\": \"10/25/1954\",\n  \"Spouse Name\": null,\n  \"Spouse Phone\": null,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": false,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": null,\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": false,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": false,\n  \"Review of Symptoms — Coughing\": false,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": false,\n  \"Review of Symptoms — Headaches\": false,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": false,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": false,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": false,\n  \"Review of Symptoms — Eye Pain\": false,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": false,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": false,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": false,\n  \"Previous Health History — Primary Care Physician\": \"Dr. Sarah Moore\",\n  \"Previous Health History — Last Seen Date\": \"03-20-1998\",\n  \"Have you received chiropractic care? — Yes\": true,\n  \"Have you received chiropractic care? — No\": false,\n  \"Have you received acupuncture care? — Yes\": true,\n  \"Have you received acupuncture care? — No\": false,\n  \"PRESCRIPTION DRUGS — Antidepressants\": true,\n  \"PRESCRIPTION DRUGS — Birth Control Pills\": false,\n  \"PRESCRIPTION DRUGS — Diet Pills\": false,\n  \"PRESCRIPTION DRUGS — Muscle Relaxers\": true,\n  \"PRESCRIPTION DRUGS — Pain Pills\": false,\n  \"PRESCRIPTION DRUGS — Anti Inflammatory\": false,\n  \"PRESCRIPTION DRUGS — Blood Pressure Medication\": true,\n  \"PRESCRIPTION DRUGS — Blood Sugar Medication\": false,\n  \"PRESCRIPTION DRUGS — Insulin\": true,\n  \"PRESCRIPTION DRUGS — Sleeping Pills\": false,\n  \"PRESCRIPTION DRUGS — Other\": \"metformin, simvastatin\",\n  \"Over-the-Counter Drugs\": \"pepto-bismol\",\n  \"Accidents or Injuries\": \"poisoning\",\n  \"Vitamins or Supplements\": \"vitamin b9, msm, fish oil\"\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-8c500980",
+      "usage": {
+        "prompt_tokens": 7207,
+        "total_tokens": 8114,
+        "completion_tokens": 907,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A100-80GB",
+    "gpu_seconds": 7.148724624541667,
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false,
+    "measurement_scope": "modal_batch",
+    "batch_id": "810ef39fa2f0475b96a08ce77cddffe2",
+    "batch_gpu_seconds": 171.569390989,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 7.148724624541667,
+    "gpu_rate_usd_per_second": 0.000694,
+    "startup_excluded": true,
+    "original_source_timestamp": "20261006T205911Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Document title\": \"Personal Health Record\",\n  \"First Name\": \"Jessica\",\n  \"Last Name\": \"Brown\",\n  \"Marital Status — Single\": false,\n  \"Marital Status — Married\": false,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": false,\n  \"Marital Status — Widowed\": false,\n  \"Address\": \"6306 Upper Mountain Circle\",\n  \"City\": \"Limestone\",\n  \"State\": \"PA\",\n  \"Zip\": \"16234\",\n  \"Phone\": \"796-895-8529\",\n  \"DOB\": \"10/25/1954\",\n  \"Spouse Name\": null,\n  \"Spouse Phone\": null,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": false,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": null,\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": false,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": false,\n  \"Review of Symptoms — Coughing\": false,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": false,\n  \"Review of Symptoms — Headaches\": false,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": false,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": false,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": false,\n  \"Review of Symptoms — Eye Pain\": false,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": false,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": false,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": false,\n  \"Previous Health History — Primary Care Physician\": \"Dr. Sarah Moore\",\n  \"Previous Health History — Last Seen Date\": \"03-20-1998\",\n  \"Have you received chiropractic care? — Yes\": true,\n  \"Have you received chiropractic care? — No\": false,\n  \"Have you received acupuncture care? — Yes\": true,\n  \"Have you received acupuncture care? — No\": false,\n  \"PRESCRIPTION DRUGS — Antidepressants\": true,\n  \"PRESCRIPTION DRUGS — Birth Control Pills\": false,\n  \"PRESCRIPTION DRUGS — Diet Pills\": false,\n  \"PRESCRIPTION DRUGS — Muscle Relaxers\": true,\n  \"PRESCRIPTION DRUGS — Pain Pills\": false,\n  \"PRESCRIPTION DRUGS — Anti Inflammatory\": false,\n  \"PRESCRIPTION DRUGS — Blood Pressure Medication\": true,\n  \"PRESCRIPTION DRUGS — Blood Sugar Medication\": false,\n  \"PRESCRIPTION DRUGS — Insulin\": true,\n  \"PRESCRIPTION DRUGS — Sleeping Pills\": false,\n  \"PRESCRIPTION DRUGS — Other\": \"metformin, simvastatin\",\n  \"Over-the-Counter Drugs\": \"pepto-bismol\",\n  \"Accidents or Injuries\": \"poisoning\",\n  \"Vitamins or Supplements\": \"vitamin b9, msm, fish oil\"\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-85c69cbdeb55f32d",
+        "object": "chat.completion",
+        "created": 1791320755,
+        "prompt_routed_experts": null,
+        "model": "qwen3-vl",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Document title\": \"Personal Health Record\",\n  \"First Name\": \"Jessica\",\n  \"Last Name\": \"Brown\",\n  \"Marital Status — Single\": false,\n  \"Marital Status — Married\": false,\n  \"Marital Status — Divorced\": true,\n  \"Marital Status — Separated\": false,\n  \"Marital Status — Widowed\": false,\n  \"Address\": \"6306 Upper Mountain Circle\",\n  \"City\": \"Limestone\",\n  \"State\": \"PA\",\n  \"Zip\": \"16234\",\n  \"Phone\": \"796-895-8529\",\n  \"DOB\": \"10/25/1954\",\n  \"Spouse Name\": null,\n  \"Spouse Phone\": null,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": false,\n  \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": true,\n  \"If so, start date\": null,\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": false,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": false,\n  \"Review of Symptoms — Coughing\": false,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": false,\n  \"Review of Symptoms — Headaches\": false,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": false,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": false,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": false,\n  \"Review of Symptoms — Eye Pain\": false,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": false,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": false,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": false,\n  \"Previous Health History — Primary Care Physician\": \"Dr. Sarah Moore\",\n  \"Previous Health History — Last Seen Date\": \"03-20-1998\",\n  \"Have you received chiropractic care? — Yes\": true,\n  \"Have you received chiropractic care? — No\": false,\n  \"Have you received acupuncture care? — Yes\": true,\n  \"Have you received acupuncture care? — No\": false,\n  \"PRESCRIPTION DRUGS — Antidepressants\": true,\n  \"PRESCRIPTION DRUGS — Birth Control Pills\": false,\n  \"PRESCRIPTION DRUGS — Diet Pills\": false,\n  \"PRESCRIPTION DRUGS — Muscle Relaxers\": true,\n  \"PRESCRIPTION DRUGS — Pain Pills\": false,\n  \"PRESCRIPTION DRUGS — Anti Inflammatory\": false,\n  \"PRESCRIPTION DRUGS — Blood Pressure Medication\": true,\n  \"PRESCRIPTION DRUGS — Blood Sugar Medication\": false,\n  \"PRESCRIPTION DRUGS — Insulin\": true,\n  \"PRESCRIPTION DRUGS — Sleeping Pills\": false,\n  \"PRESCRIPTION DRUGS — Other\": \"metformin, simvastatin\",\n  \"Over-the-Counter Drugs\": \"pepto-bismol\",\n  \"Accidents or Injuries\": \"poisoning\",\n  \"Vitamins or Supplements\": \"vitamin b9, msm, fish oil\"\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-8c500980",
+        "usage": {
+          "prompt_tokens": 7207,
+          "total_tokens": 8114,
+          "completion_tokens": 907,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"First Name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Last Name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Single\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Married\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Divorced\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Separated\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Marital Status — Widowed\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"City\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"State\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Zip\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Phone\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DOB\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Spouse Name\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Spouse Phone\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"If so, start date\": {\n      \"type\": [\n        \"string\",\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you been hospitalized in the past year? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you been hospitalized in the past year? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Allergies\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Blurred Vision\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Chest Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Coughing\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Dental Problems\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Double Vision\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Bruising\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Thirst\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Fatigue\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Headaches\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Irregular Heart Rate\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Muscle Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Shortness Of Breath\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Tuberculosis Exposure\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Black Outs\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Calf Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Chills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Coughing Up Blood\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Enlarged Glands\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Excessive Stress\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Eye Pain\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Fever\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Hearing Loss\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Joint Swelling\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Seizures\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Stomach Trouble Or Ulcers\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Previous Health History — Primary Care Physician\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Previous Health History — Last Seen Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Have you received chiropractic care? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received chiropractic care? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received acupuncture care? — Yes\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Have you received acupuncture care? — No\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Antidepressants\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Birth Control Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Diet Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Muscle Relaxers\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Pain Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Anti Inflammatory\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Blood Pressure Medication\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Blood Sugar Medication\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Insulin\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Sleeping Pills\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"PRESCRIPTION DRUGS — Other\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Over-the-Counter Drugs\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Accidents or Injuries\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Vitamins or Supplements\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Document title\",\n    \"First Name\",\n    \"Last Name\",\n    \"Marital Status — Single\",\n    \"Marital Status — Married\",\n    \"Marital Status — Divorced\",\n    \"Marital Status — Separated\",\n    \"Marital Status — Widowed\",\n    \"Address\",\n    \"City\",\n    \"State\",\n    \"Zip\",\n    \"Phone\",\n    \"DOB\",\n    \"Spouse Name\",\n    \"Spouse Phone\",\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — NEW\",\n    \"Is the requested medication NEW or a CONTINUATION of THERAPY? — CONTINUATION\",\n    \"If so, start date\",\n    \"Have you been hospitalized in the past year? — Yes\",\n    \"Have you been hospitalized in the past year? — No\",\n    \"Review of Symptoms — Allergies\",\n    \"Review of Symptoms — Blurred Vision\",\n    \"Review of Symptoms — Chest Pain\",\n    \"Review of Symptoms — Coughing\",\n    \"Review of Symptoms — Dental Problems\",\n    \"Review of Symptoms — Double Vision\",\n    \"Review of Symptoms — Excessive Bruising\",\n    \"Review of Symptoms — Excessive Thirst\",\n    \"Review of Symptoms — Fatigue\",\n    \"Review of Symptoms — Headaches\",\n    \"Review of Symptoms — Irregular Heart Rate\",\n    \"Review of Symptoms — Muscle Pain\",\n    \"Review of Symptoms — Shortness Of Breath\",\n    \"Review of Symptoms — Tuberculosis Exposure\",\n    \"Review of Symptoms — Black Outs\",\n    \"Review of Symptoms — Calf Pain\",\n    \"Review of Symptoms — Chills\",\n    \"Review of Symptoms — Coughing Up Blood\",\n    \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\",\n    \"Review of Symptoms — Enlarged Glands\",\n    \"Review of Symptoms — Excessive Stress\",\n    \"Review of Symptoms — Eye Pain\",\n    \"Review of Symptoms — Fever\",\n    \"Review of Symptoms — Hearing Loss\",\n    \"Review of Symptoms — Joint Swelling\",\n    \"Review of Symptoms — Seizures\",\n    \"Review of Symptoms — Stomach Trouble Or Ulcers\",\n    \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\",\n    \"Previous Health History — Primary Care Physician\",\n    \"Previous Health History — Last Seen Date\",\n    \"Have you received chiropractic care? — Yes\",\n    \"Have you received chiropractic care? — No\",\n    \"Have you received acupuncture care? — Yes\",\n    \"Have you received acupuncture care? — No\",\n    \"PRESCRIPTION DRUGS — Antidepressants\",\n    \"PRESCRIPTION DRUGS — Birth Control Pills\",\n    \"PRESCRIPTION DRUGS — Diet Pills\",\n    \"PRESCRIPTION DRUGS — Muscle Relaxers\",\n    \"PRESCRIPTION DRUGS — Pain Pills\",\n    \"PRESCRIPTION DRUGS — Anti Inflammatory\",\n    \"PRESCRIPTION DRUGS — Blood Pressure Medication\",\n    \"PRESCRIPTION DRUGS — Blood Sugar Medication\",\n    \"PRESCRIPTION DRUGS — Insulin\",\n    \"PRESCRIPTION DRUGS — Sleeping Pills\",\n    \"PRESCRIPTION DRUGS — Other\",\n    \"Over-the-Counter Drugs\",\n    \"Accidents or Injuries\",\n    \"Vitamins or Supplements\"\n  ],\n  \"additionalProperties\": false\n}",
+    "gpu_seconds": 7.148724624541667,
+    "gpu_type": "A100-80GB",
+    "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_002.png",
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false
+  }
+}

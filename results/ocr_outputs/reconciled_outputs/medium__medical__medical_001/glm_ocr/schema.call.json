@@ -1,0 +1,585 @@
+{
+  "engine": "glm_ocr",
+  "document": "documents/medium/medical/medical_001.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "请按下列JSON格式输出图中信息:\n\n{\n  \"Document title\": \"\",\n  \"FIRST NAME\": \"\",\n  \"LAST NAME\": \"\",\n  \"MARITAL STATUS — Single\": \"\",\n  \"MARITAL STATUS — Married\": \"\",\n  \"MARITAL STATUS — Divorced\": \"\",\n  \"MARITAL STATUS — Separated\": \"\",\n  \"MARITAL STATUS — Widowed\": \"\",\n  \"ADDRESS\": \"\",\n  \"CITY\": \"\",\n  \"STATE\": \"\",\n  \"ZIP\": \"\",\n  \"PHONE\": \"\",\n  \"DOB\": \"\",\n  \"SPOUSE NAME\": \"\",\n  \"SPOUSE PHONE\": \"\",\n  \"Is the requested medication NEW\": \"\",\n  \"Is the requested medication a CONTINUATION of THERAPY?\": \"\",\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": \"\",\n  \"Have you been hospitalized in the past year? — No\": \"\",\n  \"Review of Symptoms — Allergies\": \"\",\n  \"Review of Symptoms — Blurred Vision\": \"\",\n  \"Review of Symptoms — Chest Pain\": \"\",\n  \"Review of Symptoms — Coughing\": \"\",\n  \"Review of Symptoms — Dental Problems\": \"\",\n  \"Review of Symptoms — Double Vision\": \"\",\n  \"Review of Symptoms — Excessive Bruising\": \"\",\n  \"Review of Symptoms — Excessive Thirst\": \"\",\n  \"Review of Symptoms — Fatigue\": \"\",\n  \"Review of Symptoms — Headaches\": \"\",\n  \"Review of Symptoms — Irregular Heart Rate\": \"\",\n  \"Review of Symptoms — Muscle Pain\": \"\",\n  \"Review of Symptoms — Shortness Of Breath\": \"\",\n  \"Review of Symptoms — Tuberculosis Exposure\": \"\",\n  \"Review of Symptoms — Black Outs\": \"\",\n  \"Review of Symptoms — Calf Pain\": \"\",\n  \"Review of Symptoms — Chills\": \"\",\n  \"Review of Symptoms — Coughing Up Blood\": \"\",\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": \"\",\n  \"Review of Symptoms — Enlarged Glands\": \"\",\n  \"Review of Symptoms — Excessive Stress\": \"\",\n  \"Review of Symptoms — Eye Pain\": \"\",\n  \"Review of Symptoms — Fever\": \"\",\n  \"Review of Symptoms — Hearing Loss\": \"\",\n  \"Review of Symptoms — Joint Swelling\": \"\",\n  \"Review of Symptoms — Seizures\": \"\",\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": \"\",\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": \"\",\n  \"Family Health History — Father — Age If Living\": \"\",\n  \"Family Health History — Father — Age At Death\": \"\",\n  \"Family Health History — Father — Chronic Health Problems\": \"\",\n  \"Family Health History — Sister — Age If Living\": \"\",\n  \"Family Health History — Sister — Age At Death\": \"\",\n  \"Family Health History — Sister — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 3 — Relation\": \"\",\n  \"Family Health History — Row 3 — Age If Living\": \"\",\n  \"Family Health History — Row 3 — Age At Death\": \"\",\n  \"Family Health History — Row 3 — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 4 — Relation\": \"\",\n  \"Family Health History — Row 4 — Age If Living\": \"\",\n  \"Family Health History — Row 4 — Age At Death\": \"\",\n  \"Family Health History — Row 4 — Chronic Health Problems\": \"\"\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "FIRST NAME": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "LAST NAME": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "MARITAL STATUS — Single": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "MARITAL STATUS — Married": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "MARITAL STATUS — Divorced": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "MARITAL STATUS — Separated": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "MARITAL STATUS — Widowed": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "ADDRESS": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CITY": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "STATE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ZIP": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "PHONE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DOB": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPOUSE NAME": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "SPOUSE PHONE": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication NEW": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Is the requested medication a CONTINUATION of THERAPY?": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "If so, start date": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — Yes": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Have you been hospitalized in the past year? — No": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Allergies": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Blurred Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chest Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Dental Problems": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Double Vision": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Bruising": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Thirst": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fatigue": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Headaches": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Irregular Heart Rate": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Muscle Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Shortness Of Breath": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Tuberculosis Exposure": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Black Outs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Calf Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Chills": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Coughing Up Blood": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Enlarged Glands": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Excessive Stress": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Eye Pain": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Fever": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Hearing Loss": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Joint Swelling": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Seizures": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Stomach Trouble Or Ulcers": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Father — Age If Living": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Family Health History — Father — Age At Death": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Father — Chronic Health Problems": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Family Health History — Sister — Age If Living": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Family Health History — Sister — Age At Death": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Sister — Chronic Health Problems": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Family Health History — Row 3 — Relation": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 3 — Age If Living": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 3 — Age At Death": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 3 — Chronic Health Problems": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 4 — Relation": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 4 — Age If Living": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 4 — Age At Death": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      },
+      "Family Health History — Row 4 — Chronic Health Problems": {
+        "type": [
+          "string",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Document title",
+      "FIRST NAME",
+      "LAST NAME",
+      "MARITAL STATUS — Single",
+      "MARITAL STATUS — Married",
+      "MARITAL STATUS — Divorced",
+      "MARITAL STATUS — Separated",
+      "MARITAL STATUS — Widowed",
+      "ADDRESS",
+      "CITY",
+      "STATE",
+      "ZIP",
+      "PHONE",
+      "DOB",
+      "SPOUSE NAME",
+      "SPOUSE PHONE",
+      "Is the requested medication NEW",
+      "Is the requested medication a CONTINUATION of THERAPY?",
+      "If so, start date",
+      "Have you been hospitalized in the past year? — Yes",
+      "Have you been hospitalized in the past year? — No",
+      "Review of Symptoms — Allergies",
+      "Review of Symptoms — Blurred Vision",
+      "Review of Symptoms — Chest Pain",
+      "Review of Symptoms — Coughing",
+      "Review of Symptoms — Dental Problems",
+      "Review of Symptoms — Double Vision",
+      "Review of Symptoms — Excessive Bruising",
+      "Review of Symptoms — Excessive Thirst",
+      "Review of Symptoms — Fatigue",
+      "Review of Symptoms — Headaches",
+      "Review of Symptoms — Irregular Heart Rate",
+      "Review of Symptoms — Muscle Pain",
+      "Review of Symptoms — Shortness Of Breath",
+      "Review of Symptoms — Tuberculosis Exposure",
+      "Review of Symptoms — Black Outs",
+      "Review of Symptoms — Calf Pain",
+      "Review of Symptoms — Chills",
+      "Review of Symptoms — Coughing Up Blood",
+      "Review of Symptoms — Difficulty Emptying Bowel Or Bladder",
+      "Review of Symptoms — Enlarged Glands",
+      "Review of Symptoms — Excessive Stress",
+      "Review of Symptoms — Eye Pain",
+      "Review of Symptoms — Fever",
+      "Review of Symptoms — Hearing Loss",
+      "Review of Symptoms — Joint Swelling",
+      "Review of Symptoms — Seizures",
+      "Review of Symptoms — Stomach Trouble Or Ulcers",
+      "Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs",
+      "Family Health History — Father — Age If Living",
+      "Family Health History — Father — Age At Death",
+      "Family Health History — Father — Chronic Health Problems",
+      "Family Health History — Sister — Age If Living",
+      "Family Health History — Sister — Age At Death",
+      "Family Health History — Sister — Chronic Health Problems",
+      "Family Health History — Row 3 — Relation",
+      "Family Health History — Row 3 — Age If Living",
+      "Family Health History — Row 3 — Age At Death",
+      "Family Health History — Row 3 — Chronic Health Problems",
+      "Family Health History — Row 4 — Relation",
+      "Family Health History — Row 4 — Age If Living",
+      "Family Health History — Row 4 — Age At Death",
+      "Family Health History — Row 4 — Chronic Health Problems"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "zai-org/GLM-OCR via vllm-server",
+  "latency_seconds": 3.260545057750001,
+  "cost_per_page": 0.0009977267876715003,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Document title\": \"Health Intake Questionnaire\",\n  \"FIRST NAME\": \"Daniel\",\n  \"LAST NAME\": \"Brown\",\n  \"MARITAL STATUS — Single\": true,\n  \"MARITAL STATUS — Married\": true,\n  \"MARITAL STATUS — Divorced\": true,\n  \"MARITAL STATUS — Separated\": true,\n  \"MARITAL STATUS — Widowed\": true,\n  \"ADDRESS\": \"8574 Aspen Ave\",\n  \"CITY\": \"Waimanalo\",\n  \"STATE\": \"HI\",\n  \"ZIP\": \"96795\",\n  \"PHONE\": \"(493) 716-1180\",\n  \"DOB\": \"10-06-1961\",\n  \"SPOUSE NAME\": \"\",\n  \"SPOUSE PHONE\": \"\",\n  \"Is the requested medication NEW\": true,\n  \"Is the requested medication a CONTINUATION of THERAPY?\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Family Health History — Father — Age If Living\": \"55\",\n  \"Family Health History — Father — Age At Death\": \"\",\n  \"Family Health History — Father — Chronic Health Problems\": \"\",\n  \"Family Health History — Sister — Age If Living\": \"27\",\n  \"Family Health History — Sister — Age At Death\": \"\",\n  \"Family Health History — Sister — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 3 — Relation\": \"\",\n  \"Family Health History — Row 3 — Age If Living\": \"55\",\n  \"Family Health History — Row 3 — Age At Death\": \"\",\n  \"Family Health History — Row 3 — Chronic Health Problems\": \"\"\n ,\n  \"Family Health History — Row 4 — Relation\": \"\",\n  \"Family Health History — Row 4 — Age If Living\": \"\",\n  \"Family Health History — Row 4 — Age At Death\": \"\",\n  \"Family Health History — Row 4 — Chronic Health Problems\": \"\"\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-8381c19d68813b23",
+      "object": "chat.completion",
+      "created": 1791320590,
+      "prompt_routed_experts": null,
+      "model": "glm-ocr",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Document title\": \"Health Intake Questionnaire\",\n  \"FIRST NAME\": \"Daniel\",\n  \"LAST NAME\": \"Brown\",\n  \"MARITAL STATUS — Single\": true,\n  \"MARITAL STATUS — Married\": true,\n  \"MARITAL STATUS — Divorced\": true,\n  \"MARITAL STATUS — Separated\": true,\n  \"MARITAL STATUS — Widowed\": true,\n  \"ADDRESS\": \"8574 Aspen Ave\",\n  \"CITY\": \"Waimanalo\",\n  \"STATE\": \"HI\",\n  \"ZIP\": \"96795\",\n  \"PHONE\": \"(493) 716-1180\",\n  \"DOB\": \"10-06-1961\",\n  \"SPOUSE NAME\": \"\",\n  \"SPOUSE PHONE\": \"\",\n  \"Is the requested medication NEW\": true,\n  \"Is the requested medication a CONTINUATION of THERAPY?\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Family Health History — Father — Age If Living\": \"55\",\n  \"Family Health History — Father — Age At Death\": \"\",\n  \"Family Health History — Father — Chronic Health Problems\": \"\",\n  \"Family Health History — Sister — Age If Living\": \"27\",\n  \"Family Health History — Sister — Age At Death\": \"\",\n  \"Family Health History — Sister — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 3 — Relation\": \"\",\n  \"Family Health History — Row 3 — Age If Living\": \"55\",\n  \"Family Health History — Row 3 — Age At Death\": \"\",\n  \"Family Health History — Row 3 — Chronic Health Problems\": \"\"\n ,\n  \"Family Health History — Row 4 — Relation\": \"\",\n  \"Family Health History — Row 4 — Age If Living\": \"\",\n  \"Family Health History — Row 4 — Age At Death\": \"\",\n  \"Family Health History — Row 4 — Chronic Health Problems\": \"\"\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-1cced44d",
+      "usage": {
+        "prompt_tokens": 4879,
+        "total_tokens": 5798,
+        "completion_tokens": 919,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A10",
+    "gpu_seconds": 3.260545057750001,
+    "startup_gpu_seconds": 136.23567427700002,
+    "is_cold_start": true,
+    "measurement_scope": "modal_batch",
+    "batch_id": "33893fb2d7af433c9a9dee439861744d",
+    "batch_gpu_seconds": 78.25308138600002,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 3.260545057750001,
+    "gpu_rate_usd_per_second": 0.000306,
+    "startup_excluded": true,
+    "original_source_timestamp": "20261006T205911Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Document title\": \"Health Intake Questionnaire\",\n  \"FIRST NAME\": \"Daniel\",\n  \"LAST NAME\": \"Brown\",\n  \"MARITAL STATUS — Single\": true,\n  \"MARITAL STATUS — Married\": true,\n  \"MARITAL STATUS — Divorced\": true,\n  \"MARITAL STATUS — Separated\": true,\n  \"MARITAL STATUS — Widowed\": true,\n  \"ADDRESS\": \"8574 Aspen Ave\",\n  \"CITY\": \"Waimanalo\",\n  \"STATE\": \"HI\",\n  \"ZIP\": \"96795\",\n  \"PHONE\": \"(493) 716-1180\",\n  \"DOB\": \"10-06-1961\",\n  \"SPOUSE NAME\": \"\",\n  \"SPOUSE PHONE\": \"\",\n  \"Is the requested medication NEW\": true,\n  \"Is the requested medication a CONTINUATION of THERAPY?\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Family Health History — Father — Age If Living\": \"55\",\n  \"Family Health History — Father — Age At Death\": \"\",\n  \"Family Health History — Father — Chronic Health Problems\": \"\",\n  \"Family Health History — Sister — Age If Living\": \"27\",\n  \"Family Health History — Sister — Age At Death\": \"\",\n  \"Family Health History — Sister — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 3 — Relation\": \"\",\n  \"Family Health History — Row 3 — Age If Living\": \"55\",\n  \"Family Health History — Row 3 — Age At Death\": \"\",\n  \"Family Health History — Row 3 — Chronic Health Problems\": \"\"\n ,\n  \"Family Health History — Row 4 — Relation\": \"\",\n  \"Family Health History — Row 4 — Age If Living\": \"\",\n  \"Family Health History — Row 4 — Age At Death\": \"\",\n  \"Family Health History — Row 4 — Chronic Health Problems\": \"\"\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-8381c19d68813b23",
+        "object": "chat.completion",
+        "created": 1791320590,
+        "prompt_routed_experts": null,
+        "model": "glm-ocr",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Document title\": \"Health Intake Questionnaire\",\n  \"FIRST NAME\": \"Daniel\",\n  \"LAST NAME\": \"Brown\",\n  \"MARITAL STATUS — Single\": true,\n  \"MARITAL STATUS — Married\": true,\n  \"MARITAL STATUS — Divorced\": true,\n  \"MARITAL STATUS — Separated\": true,\n  \"MARITAL STATUS — Widowed\": true,\n  \"ADDRESS\": \"8574 Aspen Ave\",\n  \"CITY\": \"Waimanalo\",\n  \"STATE\": \"HI\",\n  \"ZIP\": \"96795\",\n  \"PHONE\": \"(493) 716-1180\",\n  \"DOB\": \"10-06-1961\",\n  \"SPOUSE NAME\": \"\",\n  \"SPOUSE PHONE\": \"\",\n  \"Is the requested medication NEW\": true,\n  \"Is the requested medication a CONTINUATION of THERAPY?\": true,\n  \"If so, start date\": \"\",\n  \"Have you been hospitalized in the past year? — Yes\": true,\n  \"Have you been hospitalized in the past year? — No\": true,\n  \"Review of Symptoms — Allergies\": true,\n  \"Review of Symptoms — Blurred Vision\": true,\n  \"Review of Symptoms — Chest Pain\": true,\n  \"Review of Symptoms — Coughing\": true,\n  \"Review of Symptoms — Dental Problems\": true,\n  \"Review of Symptoms — Double Vision\": true,\n  \"Review of Symptoms — Excessive Bruising\": true,\n  \"Review of Symptoms — Excessive Thirst\": true,\n  \"Review of Symptoms — Fatigue\": true,\n  \"Review of Symptoms — Headaches\": true,\n  \"Review of Symptoms — Irregular Heart Rate\": true,\n  \"Review of Symptoms — Muscle Pain\": true,\n  \"Review of Symptoms — Shortness Of Breath\": true,\n  \"Review of Symptoms — Tuberculosis Exposure\": true,\n  \"Review of Symptoms — Black Outs\": true,\n  \"Review of Symptoms — Calf Pain\": true,\n  \"Review of Symptoms — Chills\": true,\n  \"Review of Symptoms — Coughing Up Blood\": true,\n  \"Review of Symptoms — Difficulty Emptying Bowel Or Bladder\": true,\n  \"Review of Symptoms — Enlarged Glands\": true,\n  \"Review of Symptoms — Excessive Stress\": true,\n  \"Review of Symptoms — Eye Pain\": true,\n  \"Review of Symptoms — Fever\": true,\n  \"Review of Symptoms — Hearing Loss\": true,\n  \"Review of Symptoms — Joint Swelling\": true,\n  \"Review of Symptoms — Seizures\": true,\n  \"Review of Symptoms — Stomach Trouble Or Ulcers\": true,\n  \"Review of Symptoms — Weight Gain Or Loss Greater Than10 Lbs\": true,\n  \"Family Health History — Father — Age If Living\": \"55\",\n  \"Family Health History — Father — Age At Death\": \"\",\n  \"Family Health History — Father — Chronic Health Problems\": \"\",\n  \"Family Health History — Sister — Age If Living\": \"27\",\n  \"Family Health History — Sister — Age At Death\": \"\",\n  \"Family Health History — Sister — Chronic Health Problems\": \"\",\n  \"Family Health History — Row 3 — Relation\": \"\",\n  \"Family Health History — Row 3 — Age If Living\": \"55\",\n  \"Family Health History — Row 3 — Age At Death\": \"\",\n  \"Family Health History — Row 3 — Chronic Health Problems\": \"\"\n ,\n  \"Family Health History — Row 4 — Relation\": \"\",\n  \"Family Health History — Row 4 — Age If Living\": \"\",\n  \"Family Health History — Row 4 — Age At Death\": \"\",\n  \"Family Health History — Row 4 — Chronic Health Problems\": \"\"\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-1cced44d",
+        "usage": {
+          "prompt_tokens": 4879,
+          "total_tokens": 5798,
+          "completion_tokens": 919,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "gpu_seconds": 3.260545057750001,
+    "gpu_type": "A10",
+    "model_version": "zai-org/GLM-OCR via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/medical/medical_001.png",
+    "startup_gpu_seconds": 136.23567427700002,
+    "is_cold_start": true
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "engine": "qwen3_vl",
+  "document": "documents/easy/invoice/invoice_003.png",
+  "pass_name": "key_value",
+  "legs_fed": [
+    "key_value"
+  ],
+  "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "response_format": "json",
+  "json_schema_sent": false,
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "latency_seconds": 5.588990255500003,
+  "cost_per_page": 0.003878759237317002,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Invoice no:\": \"26343874\",\n  \"Date of issue:\": \"07/17/2013\",\n  \"Seller:\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\\nTax Id: 916-97-6743\\nIBAN: GB78TZMX55978564099007\",\n  \"Client:\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\\nTax Id: 913-80-4636\",\n  \"ITEMS\": {\n    \"No.\": [\n      \"1.\",\n      \"2.\",\n      \"3.\",\n      \"4.\",\n      \"5.\"\n    ],\n    \"Description\": [\n      \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\",\n      \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\",\n      \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\",\n      \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\",\n      \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\"\n    ],\n    \"Qty\": [\n      \"5,00\",\n      \"5,00\",\n      \"4,00\",\n      \"2,00\",\n      \"1,00\"\n    ],\n    \"UM\": [\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\"\n    ],\n    \"Net price\": [\n      \"249,00\",\n      \"100,00\",\n      \"252,00\",\n      \"130,00\",\n      \"159,99\"\n    ],\n    \"Net worth\": [\n      \"1 245,00\",\n      \"500,00\",\n      \"1 008,00\",\n      \"260,00\",\n      \"159,99\"\n    ],\n    \"VAT [%]\": [\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\"\n    ],\n    \"Gross worth\": [\n      \"1 369,50\",\n      \"550,00\",\n      \"1 108,80\",\n      \"286,00\",\n      \"175,99\"\n    ]\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"$ 3 172,99\",\n    \"VAT\": \"$ 317,30\",\n    \"Gross worth\": \"$ 3 490,29\",\n    \"Total\": \"$ 3 172,99 $ 317,30 $ 3 490,29\"\n  }\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-b721f448aecc773d",
+      "object": "chat.completion",
+      "created": 1786375782,
+      "prompt_routed_experts": null,
+      "model": "qwen3-vl",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Invoice no:\": \"26343874\",\n  \"Date of issue:\": \"07/17/2013\",\n  \"Seller:\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\\nTax Id: 916-97-6743\\nIBAN: GB78TZMX55978564099007\",\n  \"Client:\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\\nTax Id: 913-80-4636\",\n  \"ITEMS\": {\n    \"No.\": [\n      \"1.\",\n      \"2.\",\n      \"3.\",\n      \"4.\",\n      \"5.\"\n    ],\n    \"Description\": [\n      \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\",\n      \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\",\n      \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\",\n      \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\",\n      \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\"\n    ],\n    \"Qty\": [\n      \"5,00\",\n      \"5,00\",\n      \"4,00\",\n      \"2,00\",\n      \"1,00\"\n    ],\n    \"UM\": [\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\"\n    ],\n    \"Net price\": [\n      \"249,00\",\n      \"100,00\",\n      \"252,00\",\n      \"130,00\",\n      \"159,99\"\n    ],\n    \"Net worth\": [\n      \"1 245,00\",\n      \"500,00\",\n      \"1 008,00\",\n      \"260,00\",\n      \"159,99\"\n    ],\n    \"VAT [%]\": [\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\"\n    ],\n    \"Gross worth\": [\n      \"1 369,50\",\n      \"550,00\",\n      \"1 108,80\",\n      \"286,00\",\n      \"175,99\"\n    ]\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"$ 3 172,99\",\n    \"VAT\": \"$ 317,30\",\n    \"Gross worth\": \"$ 3 490,29\",\n    \"Total\": \"$ 3 172,99 $ 317,30 $ 3 490,29\"\n  }\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-8c500980",
+      "usage": {
+        "prompt_tokens": 8630,
+        "total_tokens": 9307,
+        "completion_tokens": 677,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A100-80GB",
+    "gpu_seconds": 5.588990255500003,
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false,
+    "measurement_scope": "modal_batch",
+    "batch_id": "3516d3f0c65f4d999380951f51cfa194",
+    "batch_gpu_seconds": 134.13576613200007,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 5.588990255500003,
+    "gpu_rate_usd_per_second": 0.000694,
+    "startup_excluded": true,
+    "original_source_timestamp": "20260810T130609Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Invoice no:\": \"26343874\",\n  \"Date of issue:\": \"07/17/2013\",\n  \"Seller:\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\\nTax Id: 916-97-6743\\nIBAN: GB78TZMX55978564099007\",\n  \"Client:\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\\nTax Id: 913-80-4636\",\n  \"ITEMS\": {\n    \"No.\": [\n      \"1.\",\n      \"2.\",\n      \"3.\",\n      \"4.\",\n      \"5.\"\n    ],\n    \"Description\": [\n      \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\",\n      \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\",\n      \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\",\n      \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\",\n      \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\"\n    ],\n    \"Qty\": [\n      \"5,00\",\n      \"5,00\",\n      \"4,00\",\n      \"2,00\",\n      \"1,00\"\n    ],\n    \"UM\": [\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\"\n    ],\n    \"Net price\": [\n      \"249,00\",\n      \"100,00\",\n      \"252,00\",\n      \"130,00\",\n      \"159,99\"\n    ],\n    \"Net worth\": [\n      \"1 245,00\",\n      \"500,00\",\n      \"1 008,00\",\n      \"260,00\",\n      \"159,99\"\n    ],\n    \"VAT [%]\": [\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\"\n    ],\n    \"Gross worth\": [\n      \"1 369,50\",\n      \"550,00\",\n      \"1 108,80\",\n      \"286,00\",\n      \"175,99\"\n    ]\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"$ 3 172,99\",\n    \"VAT\": \"$ 317,30\",\n    \"Gross worth\": \"$ 3 490,29\",\n    \"Total\": \"$ 3 172,99 $ 317,30 $ 3 490,29\"\n  }\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-b721f448aecc773d",
+        "object": "chat.completion",
+        "created": 1786375782,
+        "prompt_routed_experts": null,
+        "model": "qwen3-vl",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Invoice no:\": \"26343874\",\n  \"Date of issue:\": \"07/17/2013\",\n  \"Seller:\": \"Smith Ltd\\n290 Jodi Gardens\\nCharlesview, TN 10958\\nTax Id: 916-97-6743\\nIBAN: GB78TZMX55978564099007\",\n  \"Client:\": \"Herring-Floyd\\n8113 Hansen Cliff Apt. 826\\nPort Alice, ID 99663\\nTax Id: 913-80-4636\",\n  \"ITEMS\": {\n    \"No.\": [\n      \"1.\",\n      \"2.\",\n      \"3.\",\n      \"4.\",\n      \"5.\"\n    ],\n    \"Description\": [\n      \"Microsoft Xbox One X 1TB 4k Ultra HD Console black controller works great 1787\",\n      \"Cables 500gb,Sony PlayStation 4 PS4 CUH 1215A Jet Black Console w/ Controller\",\n      \"PS2 Slim Console System SCPH-77000 PINK Playstation 2 Tested\",\n      \"Nintendo Game Boy Micro Console - Black (OXYSFBB)\",\n      \"Nintendo GameCube System Console Bundle Mario Sunshine + Genuine controller LOT\"\n    ],\n    \"Qty\": [\n      \"5,00\",\n      \"5,00\",\n      \"4,00\",\n      \"2,00\",\n      \"1,00\"\n    ],\n    \"UM\": [\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\",\n      \"each\"\n    ],\n    \"Net price\": [\n      \"249,00\",\n      \"100,00\",\n      \"252,00\",\n      \"130,00\",\n      \"159,99\"\n    ],\n    \"Net worth\": [\n      \"1 245,00\",\n      \"500,00\",\n      \"1 008,00\",\n      \"260,00\",\n      \"159,99\"\n    ],\n    \"VAT [%]\": [\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\",\n      \"10%\"\n    ],\n    \"Gross worth\": [\n      \"1 369,50\",\n      \"550,00\",\n      \"1 108,80\",\n      \"286,00\",\n      \"175,99\"\n    ]\n  },\n  \"SUMMARY\": {\n    \"VAT [%]\": \"10%\",\n    \"Net worth\": \"$ 3 172,99\",\n    \"VAT\": \"$ 317,30\",\n    \"Gross worth\": \"$ 3 490,29\",\n    \"Total\": \"$ 3 172,99 $ 317,30 $ 3 490,29\"\n  }\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-8c500980",
+        "usage": {
+          "prompt_tokens": 8630,
+          "total_tokens": 9307,
+          "completion_tokens": 677,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "prompt_used": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+    "gpu_seconds": 5.588990255500003,
+    "gpu_type": "A100-80GB",
+    "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_003.png",
+    "startup_gpu_seconds": 0.0,
+    "is_cold_start": false
+  }
+}

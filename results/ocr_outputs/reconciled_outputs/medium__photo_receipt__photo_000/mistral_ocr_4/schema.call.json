@@ -1,0 +1,689 @@
+{
+  "engine": "mistral_ocr_4",
+  "document": "documents/medium/photo_receipt/photo_000.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Business name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Hp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Reg No\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Check #\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Pax(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Excluding GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Payable\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Inclusive of GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Rounding Adj\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closed\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASH\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Business name\",\n    \"Address\",\n    \"Tel\",\n    \"Fax\",\n    \"Hp\",\n    \"Website\",\n    \"GST Reg No\",\n    \"Document title\",\n    \"Check #\",\n    \"Pax(s)\",\n    \"Date\",\n    \"Cashier\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — U.price\",\n    \"Item 1 — Total\",\n    \"Item 1 — TAX\",\n    \"Item 2 — Description\",\n    \"Item 2 — Qty\",\n    \"Item 2 — U.price\",\n    \"Item 2 — Total\",\n    \"Item 2 — TAX\",\n    \"Item 3 — Description\",\n    \"Item 3 — Qty\",\n    \"Item 3 — U.price\",\n    \"Item 3 — Total\",\n    \"Item 3 — TAX\",\n    \"Total (Excluding GST)\",\n    \"GST Payable\",\n    \"Total (Inclusive of GST)\",\n    \"Rounding Adj\",\n    \"TOTAL\",\n    \"Closed\",\n    \"CASH\",\n    \"CHANGE\",\n    \"GST Summary — SR — Rate\",\n    \"GST Summary — SR — Amount(RM)\",\n    \"GST Summary — SR — Tax(RM)\",\n    \"GST Summary — ZR — Amount(RM)\",\n    \"GST Summary — ZR — Tax(RM)\",\n    \"GST Summary — ZRL — Rate\",\n    \"GST Summary — ZRL — Amount(RM)\",\n    \"GST Summary — ZRL — Tax(RM)\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Business name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Tel": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Fax": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Hp": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Website": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Reg No": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Check #": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Pax(s)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Cashier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Excluding GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Payable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Inclusive of GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Rounding Adj": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Closed": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CASH": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CHANGE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Footer": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Business name",
+      "Address",
+      "Tel",
+      "Fax",
+      "Hp",
+      "Website",
+      "GST Reg No",
+      "Document title",
+      "Check #",
+      "Pax(s)",
+      "Date",
+      "Cashier",
+      "Item 1 — Description",
+      "Item 1 — Qty",
+      "Item 1 — U.price",
+      "Item 1 — Total",
+      "Item 1 — TAX",
+      "Item 2 — Description",
+      "Item 2 — Qty",
+      "Item 2 — U.price",
+      "Item 2 — Total",
+      "Item 2 — TAX",
+      "Item 3 — Description",
+      "Item 3 — Qty",
+      "Item 3 — U.price",
+      "Item 3 — Total",
+      "Item 3 — TAX",
+      "Total (Excluding GST)",
+      "GST Payable",
+      "Total (Inclusive of GST)",
+      "Rounding Adj",
+      "TOTAL",
+      "Closed",
+      "CASH",
+      "CHANGE",
+      "GST Summary — SR — Rate",
+      "GST Summary — SR — Amount(RM)",
+      "GST Summary — SR — Tax(RM)",
+      "GST Summary — ZR — Amount(RM)",
+      "GST Summary — ZR — Tax(RM)",
+      "GST Summary — ZRL — Rate",
+      "GST Summary — ZRL — Amount(RM)",
+      "GST Summary — ZRL — Tax(RM)",
+      "Footer"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "mistral-ocr-4-0",
+  "latency_seconds": 12.222198791336268,
+  "cost_per_page": 0.005,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\"Business name\": \"SEMBOYAN TEGAS SDN BHD\", \"Address\": \"No. 5 & 7, Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\", \"Tel\": \"03-7846 1113\", \"Fax\": \"03-7832 1368\", \"Hp\": \"012-396 1688 012-353 7738\", \"Website\": \"www.semboyan.com\", \"GST Reg No\": \"001538965504\", \"Document title\": \"Tax Invoice\", \"Check #\": \"549146\", \"Pax(s)\": \"5\", \"Date\": \"06-03-2018 07:24:06\", \"Cashier\": \"CASHIER 4\", \"Item 1 — Description\": \"taucu kisar\", \"Item 1 — Qty\": \"2\", \"Item 1 — U.price\": \"6.50\", \"Item 1 — Total\": \"13.00\", \"Item 1 — TAX\": \"SR\", \"Item 2 — Description\": \"Teh wangi ros 180g\", \"Item 2 — Qty\": \"2\", \"Item 2 — U.price\": \"4.20\", \"Item 2 — Total\": \"8.40\", \"Item 2 — TAX\": \"ZR\", \"Item 3 — Description\": \"ASAM JAWA 1KG\", \"Item 3 — Qty\": \"1\", \"Item 3 — U.price\": \"4.80\", \"Item 3 — Total\": \"4.80\", \"Item 3 — TAX\": \"ZRL\", \"Total (Excluding GST)\": \"26.20\", \"GST Payable\": \"0.78\", \"Total (Inclusive of GST)\": \"26.98\", \"Rounding Adj\": \"0.02\", \"TOTAL\": \"27.00\", \"Closed\": \"06-03-2018 07:24:44\", \"CASH\": \"52.00\", \"CHANGE\": \"25.00\", \"GST Summary — SR — Rate\": \"6%\", \"GST Summary — SR — Amount(RM)\": \"13.00\", \"GST Summary — SR — Tax(RM)\": \"0.78\", \"GST Summary — ZR — Amount(RM)\": \"8.40\", \"GST Summary — ZR — Tax(RM)\": \"0.00\", \"GST Summary — ZRL — Rate\": \"0%\", \"GST Summary — ZRL — Amount(RM)\": \"4.80\", \"GST Summary — ZRL — Tax(RM)\": \"0.00\", \"Footer\": \"*** Thank You *** Please Come Again\"}",
+  "structured_output": {
+    "pages": [
+      {
+        "index": 0,
+        "markdown": "LB\n\nSEMBOYAN TEGAS SDN BHD\n\nNo. 5 & 7, Jalan TSJ 2.\n\nTaman Subang Jasa\n\nKg. Baru Subang, 40150 Shah Alam\n\nSelangor Darul Ehsan\n\nTel 03-7846 1113 Fax: 03-7832 1368\n\nHp: 012-396 1688 012-353 7738\n\nwww.semboyan.com\n\nEmail: semboyantegas@gmail.com\n\n(GST Reg No 001538965504)\n\n# Tax Invoice\n\nCheck # 549146 Pax(s): 5\n\nDate : 06-03-2018 07:24:06\n\nCashier: CASHIER 4\n\nDescription Qty U.price Total TAX\n\ntaucu kisar\n\n2 x 6.50 13.00 SR\n\nTeh wangi ros 180g\n\n2 x 4.20 8.40 ZR\n\nASAM JAWA 1KG\n\n1 x 4.80 4.80 ZRL\n\nTotal (Excluding GST) 26.20\n\nGST Payable: 0.78\n\nTotal (Inclusive of GST) 26.98\n\nRounding Adj: 0.02\n\nTOTAL: 27.00\n\nClosed 06-03-2018 07:24:44\n\nCASH : 52.00\n\nCHANGE : 25.00\n\nGST Summary Amount (RM) Tax (RM)\n\nSR (@ 6%) 13.00 0.78\n\nZR (@ %) 8.40 0.00\n\nZRL (@ 0%) 4.80 0.00\n\n*** Thank You ***\n\nPlease Come Again",
+        "images": [],
+        "dimensions": {
+          "dpi": 200,
+          "height": 2164,
+          "width": 741
+        },
+        "tables": [],
+        "hyperlinks": [],
+        "header": null,
+        "footer": null,
+        "confidence_scores": null,
+        "blocks": [
+          {
+            "top_left_x": 490,
+            "top_left_y": 76,
+            "bottom_right_x": 602,
+            "bottom_right_y": 206,
+            "content": "LB",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 180,
+            "top_left_y": 171,
+            "bottom_right_x": 526,
+            "bottom_right_y": 210,
+            "content": "SEMBOYAN TEGAS SDN BHD",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 165,
+            "top_left_y": 212,
+            "bottom_right_x": 522,
+            "bottom_right_y": 247,
+            "content": "No. 5 & 7, Jalan TSJ 2.",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 212,
+            "top_left_y": 251,
+            "bottom_right_x": 481,
+            "bottom_right_y": 284,
+            "content": "Taman Subang Jasa",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 102,
+            "top_left_y": 288,
+            "bottom_right_x": 608,
+            "bottom_right_y": 325,
+            "content": "Kg. Baru Subang, 40150 Shah Alam",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 196,
+            "top_left_y": 327,
+            "bottom_right_x": 513,
+            "bottom_right_y": 362,
+            "content": "Selangor Darul Ehsan",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 73,
+            "top_left_y": 366,
+            "bottom_right_x": 637,
+            "bottom_right_y": 403,
+            "content": "Tel 03-7846 1113 Fax: 03-7832 1368",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 117,
+            "top_left_y": 407,
+            "bottom_right_x": 590,
+            "bottom_right_y": 444,
+            "content": "Hp: 012-396 1688 012-353 7738",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 227,
+            "top_left_y": 451,
+            "bottom_right_x": 481,
+            "bottom_right_y": 483,
+            "content": "www.semboyan.com",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 119,
+            "top_left_y": 487,
+            "bottom_right_x": 590,
+            "bottom_right_y": 524,
+            "content": "Email: semboyantegas@gmail.com",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 137,
+            "top_left_y": 529,
+            "bottom_right_x": 570,
+            "bottom_right_y": 563,
+            "content": "(GST Reg No 001538965504)",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 168,
+            "top_left_y": 607,
+            "bottom_right_x": 508,
+            "bottom_right_y": 643,
+            "content": "# Tax Invoice",
+            "confidence_scores": null,
+            "type": "title"
+          },
+          {
+            "top_left_x": 43,
+            "top_left_y": 687,
+            "bottom_right_x": 590,
+            "bottom_right_y": 723,
+            "content": "Check # 549146 Pax(s): 5",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 43,
+            "top_left_y": 728,
+            "bottom_right_x": 481,
+            "bottom_right_y": 762,
+            "content": "Date : 06-03-2018 07:24:06",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 43,
+            "top_left_y": 767,
+            "bottom_right_x": 329,
+            "bottom_right_y": 804,
+            "content": "Cashier: CASHIER 4",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 43,
+            "top_left_y": 845,
+            "bottom_right_x": 665,
+            "bottom_right_y": 886,
+            "content": "Description Qty U.price Total TAX",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 46,
+            "top_left_y": 929,
+            "bottom_right_x": 216,
+            "bottom_right_y": 962,
+            "content": "taucu kisar",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 243,
+            "top_left_y": 964,
+            "bottom_right_x": 664,
+            "bottom_right_y": 999,
+            "content": "2 x 6.50 13.00 SR",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 45,
+            "top_left_y": 1003,
+            "bottom_right_x": 326,
+            "bottom_right_y": 1038,
+            "content": "Teh wangi ros 180g",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 243,
+            "top_left_y": 1042,
+            "bottom_right_x": 664,
+            "bottom_right_y": 1077,
+            "content": "2 x 4.20 8.40 ZR",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1079,
+            "bottom_right_x": 249,
+            "bottom_right_y": 1111,
+            "content": "ASAM JAWA 1KG",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 246,
+            "top_left_y": 1116,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1150,
+            "content": "1 x 4.80 4.80 ZRL",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1191,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1228,
+            "content": "Total (Excluding GST) 26.20",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1233,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1267,
+            "content": "GST Payable: 0.78",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1272,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1306,
+            "content": "Total (Inclusive of GST) 26.98",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1311,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1345,
+            "content": "Rounding Adj: 0.02",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1363,
+            "bottom_right_x": 721,
+            "bottom_right_y": 1492,
+            "content": "TOTAL: 27.00",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1495,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1529,
+            "content": "Closed 06-03-2018 07:24:44",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1573,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1607,
+            "content": "CASH : 52.00",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 42,
+            "top_left_y": 1612,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1646,
+            "content": "CHANGE : 25.00",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 37,
+            "top_left_y": 1724,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1763,
+            "content": "GST Summary Amount (RM) Tax (RM)",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 37,
+            "top_left_y": 1768,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1802,
+            "content": "SR (@ 6%) 13.00 0.78",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 37,
+            "top_left_y": 1807,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1841,
+            "content": "ZR (@ %) 8.40 0.00",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 37,
+            "top_left_y": 1846,
+            "bottom_right_x": 662,
+            "bottom_right_y": 1880,
+            "content": "ZRL (@ 0%) 4.80 0.00",
+            "confidence_scores": null,
+            "type": "text"
+          },
+          {
+            "top_left_x": 196,
+            "top_left_y": 2045,
+            "bottom_right_x": 493,
+            "bottom_right_y": 2080,
+            "content": "*** Thank You ***",
+            "confidence_scores": null,
+            "type": "footer"
+          },
+          {
+            "top_left_x": 224,
+            "top_left_y": 2084,
+            "bottom_right_x": 494,
+            "bottom_right_y": 2121,
+            "content": "Please Come Again",
+            "confidence_scores": null,
+            "type": "footer"
+          }
+        ]
+      }
+    ],
+    "model": "mistral-ocr-4-0",
+    "usage_info": {
+      "pages_processed": 1,
+      "doc_size_bytes": 455703
+    },
+    "document_annotation": "{\"Business name\": \"SEMBOYAN TEGAS SDN BHD\", \"Address\": \"No. 5 & 7, Jalan TSJ 2. Taman Subang Jasa Kg. Baru Subang, 40150 Shah Alam Selangor Darul Ehsan\", \"Tel\": \"03-7846 1113\", \"Fax\": \"03-7832 1368\", \"Hp\": \"012-396 1688 012-353 7738\", \"Website\": \"www.semboyan.com\", \"GST Reg No\": \"001538965504\", \"Document title\": \"Tax Invoice\", \"Check #\": \"549146\", \"Pax(s)\": \"5\", \"Date\": \"06-03-2018 07:24:06\", \"Cashier\": \"CASHIER 4\", \"Item 1 — Description\": \"taucu kisar\", \"Item 1 — Qty\": \"2\", \"Item 1 — U.price\": \"6.50\", \"Item 1 — Total\": \"13.00\", \"Item 1 — TAX\": \"SR\", \"Item 2 — Description\": \"Teh wangi ros 180g\", \"Item 2 — Qty\": \"2\", \"Item 2 — U.price\": \"4.20\", \"Item 2 — Total\": \"8.40\", \"Item 2 — TAX\": \"ZR\", \"Item 3 — Description\": \"ASAM JAWA 1KG\", \"Item 3 — Qty\": \"1\", \"Item 3 — U.price\": \"4.80\", \"Item 3 — Total\": \"4.80\", \"Item 3 — TAX\": \"ZRL\", \"Total (Excluding GST)\": \"26.20\", \"GST Payable\": \"0.78\", \"Total (Inclusive of GST)\": \"26.98\", \"Rounding Adj\": \"0.02\", \"TOTAL\": \"27.00\", \"Closed\": \"06-03-2018 07:24:44\", \"CASH\": \"52.00\", \"CHANGE\": \"25.00\", \"GST Summary — SR — Rate\": \"6%\", \"GST Summary — SR — Amount(RM)\": \"13.00\", \"GST Summary — SR — Tax(RM)\": \"0.78\", \"GST Summary — ZR — Amount(RM)\": \"8.40\", \"GST Summary — ZR — Tax(RM)\": \"0.00\", \"GST Summary — ZRL — Rate\": \"0%\", \"GST Summary — ZRL — Amount(RM)\": \"4.80\", \"GST Summary — ZRL — Tax(RM)\": \"0.00\", \"Footer\": \"*** Thank You *** Please Come Again\"}"
+  },
+  "metadata": {
+    "original_source_timestamp": "20261006T205850Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {}
+}

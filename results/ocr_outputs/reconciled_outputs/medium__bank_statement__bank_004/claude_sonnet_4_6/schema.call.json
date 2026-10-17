@@ -1,0 +1,602 @@
+{
+  "engine": "claude_sonnet_4_6",
+  "document": "documents/medium/bank_statement/bank_004.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Account Summary — BEGINNING OF PERIOD — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Management Fees — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Deposits — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Comprehensive Portfolio Change — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Portfolio Rebalancing — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Other Expenditures (Gains) — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Other Expenditures (Gains) — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Realized Capital Gains — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Interest Earnings — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Redemptions — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — END OF PERIOD — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — END OF PERIOD — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Footnote 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-30 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-29 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-28 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-23 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-21 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-20 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-14 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-09 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Representative — Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account statement as of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Account Summary — BEGINNING OF PERIOD — Current Period\",\n    \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\",\n    \"Account Summary — Management Fees — Current Period\",\n    \"Account Summary — Deposits — Year-to-Date\",\n    \"Account Summary — Comprehensive Portfolio Change — Current Period\",\n    \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\",\n    \"Account Summary — Portfolio Rebalancing — Current Period\",\n    \"Account Summary — Other Expenditures (Gains) — Current Period\",\n    \"Account Summary — Other Expenditures (Gains) — Year-to-Date\",\n    \"Account Summary — Realized Capital Gains — Year-to-Date\",\n    \"Account Summary — Interest Earnings — Current Period\",\n    \"Account Summary — Redemptions — Current Period\",\n    \"Account Summary — END OF PERIOD — Current Period\",\n    \"Account Summary — END OF PERIOD — Year-to-Date\",\n    \"Account Summary — Footnote 1\",\n    \"Daily Balances — 2023-12-30 — Amount\",\n    \"Daily Balances — 2023-12-29 — Amount\",\n    \"Daily Balances — 2023-12-28 — Amount\",\n    \"Daily Balances — 2023-12-26 — Amount\",\n    \"Daily Balances — 2023-12-23 — Amount\",\n    \"Daily Balances — 2023-12-22 — Amount\",\n    \"Daily Balances — 2023-12-21 — Amount\",\n    \"Daily Balances — 2023-12-20 — Amount\",\n    \"Daily Balances — 2023-12-19 — Amount\",\n    \"Daily Balances — 2023-12-16 — Amount\",\n    \"Daily Balances — 2023-12-14 — Amount\",\n    \"Daily Balances — 2023-12-13 — Amount\",\n    \"Daily Balances — 2023-12-12 — Amount\",\n    \"Daily Balances — 2023-12-09 — Amount\",\n    \"Daily Balances — 2023-12-02 — Amount\",\n    \"Daily Balances — 2023-12-01 — Amount\",\n    \"Your Representative — Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"Account statement as of\",\n    \"Traded As VWO — E.T.F.\",\n    \"Traded As VWO — Price Change in Period (YTD)\",\n    \"Traded As VWO — Classification\",\n    \"Traded As VWO — One Day Change\",\n    \"Traded As IVV — E.T.F.\",\n    \"Traded As IVV — Price Change in Period (YTD)\",\n    \"Traded As IVV — Average daily volume\",\n    \"Traded As IVV — Classification\",\n    \"Traded As IVV — One Day Change\",\n    \"Traded As IWF — E.T.F.\",\n    \"Traded As IWF — Price Change in Period (YTD)\",\n    \"Traded As IWF — Average daily volume\",\n    \"Traded As IWF — Classification\",\n    \"Traded As IWF — One Day Change\",\n    \"Traded As IJH — EOD Price\",\n    \"Traded As IJH — Average daily volume\",\n    \"Traded As IJH — Classification\",\n    \"Traded As SPY — E.T.F.\",\n    \"Traded As SPY — EOD Price\",\n    \"Traded As SPY — One Day Change\",\n    \"Traded As IEMG — E.T.F.\",\n    \"Traded As IEMG — EOD Price\",\n    \"Traded As IEMG — Price Change in Period (YTD)\",\n    \"Traded As IEMG — One Day Change\",\n    \"Traded As VOO — EOD Price\",\n    \"Traded As VOO — Price Change in Period (YTD)\",\n    \"Traded As VOO — Classification\",\n    \"Traded As VOO — One Day Change\",\n    \"Traded As VTI — EOD Price\",\n    \"Traded As VTI — Average daily volume\",\n    \"Traded As VTI — Classification\",\n    \"Traded As VTI — One Day Change\",\n    \"Traded As VXUS — EOD Price\",\n    \"Traded As VXUS — Price Change in Period (YTD)\",\n    \"Traded As VXUS — Classification\",\n    \"Traded As VXUS — One Day Change\",\n    \"Traded As QQQ — EOD Price\",\n    \"Traded As QQQ — Price Change in Period (YTD)\",\n    \"Traded As QQQ — Average daily volume\",\n    \"Traded As QQQ — Classification\",\n    \"Traded As QQQ — One Day Change\",\n    \"Page\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Account Summary — BEGINNING OF PERIOD — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — BEGINNING OF PERIOD — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Management Fees — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Deposits — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Comprehensive Portfolio Change — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Comprehensive Portfolio Change — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Portfolio Rebalancing — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Other Expenditures (Gains) — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Other Expenditures (Gains) — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Realized Capital Gains — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Interest Earnings — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Redemptions — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — END OF PERIOD — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — END OF PERIOD — Year-to-Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Summary — Footnote 1": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-30 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-29 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-28 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-26 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-23 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-22 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-21 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-20 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-19 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-16 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-14 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-13 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-12 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-09 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-02 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-01 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Your Representative — Your Financial Consultant": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Contact Information — Business": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account statement as of": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VWO — E.T.F.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VWO — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VWO — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VWO — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IVV — E.T.F.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IVV — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IVV — Average daily volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IVV — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IVV — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IWF — E.T.F.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IWF — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IWF — Average daily volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IWF — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IWF — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IJH — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IJH — Average daily volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IJH — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As SPY — E.T.F.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As SPY — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As SPY — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IEMG — E.T.F.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IEMG — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IEMG — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As IEMG — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VOO — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VOO — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VOO — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VOO — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VTI — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VTI — Average daily volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VTI — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VTI — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VXUS — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VXUS — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VXUS — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As VXUS — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As QQQ — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As QQQ — Price Change in Period (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As QQQ — Average daily volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As QQQ — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Traded As QQQ — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Page": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Account Summary — BEGINNING OF PERIOD — Current Period",
+      "Account Summary — BEGINNING OF PERIOD — Year-to-Date",
+      "Account Summary — Management Fees — Current Period",
+      "Account Summary — Deposits — Year-to-Date",
+      "Account Summary — Comprehensive Portfolio Change — Current Period",
+      "Account Summary — Comprehensive Portfolio Change — Year-to-Date",
+      "Account Summary — Portfolio Rebalancing — Current Period",
+      "Account Summary — Other Expenditures (Gains) — Current Period",
+      "Account Summary — Other Expenditures (Gains) — Year-to-Date",
+      "Account Summary — Realized Capital Gains — Year-to-Date",
+      "Account Summary — Interest Earnings — Current Period",
+      "Account Summary — Redemptions — Current Period",
+      "Account Summary — END OF PERIOD — Current Period",
+      "Account Summary — END OF PERIOD — Year-to-Date",
+      "Account Summary — Footnote 1",
+      "Daily Balances — 2023-12-30 — Amount",
+      "Daily Balances — 2023-12-29 — Amount",
+      "Daily Balances — 2023-12-28 — Amount",
+      "Daily Balances — 2023-12-26 — Amount",
+      "Daily Balances — 2023-12-23 — Amount",
+      "Daily Balances — 2023-12-22 — Amount",
+      "Daily Balances — 2023-12-21 — Amount",
+      "Daily Balances — 2023-12-20 — Amount",
+      "Daily Balances — 2023-12-19 — Amount",
+      "Daily Balances — 2023-12-16 — Amount",
+      "Daily Balances — 2023-12-14 — Amount",
+      "Daily Balances — 2023-12-13 — Amount",
+      "Daily Balances — 2023-12-12 — Amount",
+      "Daily Balances — 2023-12-09 — Amount",
+      "Daily Balances — 2023-12-02 — Amount",
+      "Daily Balances — 2023-12-01 — Amount",
+      "Your Representative — Your Financial Consultant",
+      "Contact Information — Business",
+      "Account statement as of",
+      "Traded As VWO — E.T.F.",
+      "Traded As VWO — Price Change in Period (YTD)",
+      "Traded As VWO — Classification",
+      "Traded As VWO — One Day Change",
+      "Traded As IVV — E.T.F.",
+      "Traded As IVV — Price Change in Period (YTD)",
+      "Traded As IVV — Average daily volume",
+      "Traded As IVV — Classification",
+      "Traded As IVV — One Day Change",
+      "Traded As IWF — E.T.F.",
+      "Traded As IWF — Price Change in Period (YTD)",
+      "Traded As IWF — Average daily volume",
+      "Traded As IWF — Classification",
+      "Traded As IWF — One Day Change",
+      "Traded As IJH — EOD Price",
+      "Traded As IJH — Average daily volume",
+      "Traded As IJH — Classification",
+      "Traded As SPY — E.T.F.",
+      "Traded As SPY — EOD Price",
+      "Traded As SPY — One Day Change",
+      "Traded As IEMG — E.T.F.",
+      "Traded As IEMG — EOD Price",
+      "Traded As IEMG — Price Change in Period (YTD)",
+      "Traded As IEMG — One Day Change",
+      "Traded As VOO — EOD Price",
+      "Traded As VOO — Price Change in Period (YTD)",
+      "Traded As VOO — Classification",
+      "Traded As VOO — One Day Change",
+      "Traded As VTI — EOD Price",
+      "Traded As VTI — Average daily volume",
+      "Traded As VTI — Classification",
+      "Traded As VTI — One Day Change",
+      "Traded As VXUS — EOD Price",
+      "Traded As VXUS — Price Change in Period (YTD)",
+      "Traded As VXUS — Classification",
+      "Traded As VXUS — One Day Change",
+      "Traded As QQQ — EOD Price",
+      "Traded As QQQ — Price Change in Period (YTD)",
+      "Traded As QQQ — Average daily volume",
+      "Traded As QQQ — Classification",
+      "Traded As QQQ — One Day Change",
+      "Page"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "claude-sonnet-4-6",
+  "latency_seconds": 21.231484374962747,
+  "cost_per_page": 0.04302,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "```json\n{\n  \"Account Summary — BEGINNING OF PERIOD — Current Period\": \"$71,131.00\",\n  \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\": \"$73,343.00\",\n  \"Account Summary — Management Fees — Current Period\": \"-$13,694.95\",\n  \"Account Summary — Deposits — Year-to-Date\": \"$283,135.40\",\n  \"Account Summary — Comprehensive Portfolio Change — Current Period\": \"-$11,169.71\",\n  \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\": \"-$203,912.60\",\n  \"Account Summary — Portfolio Rebalancing — Current Period\": \"$53,043.55\",\n  \"Account Summary — Other Expenditures (Gains) — Current Period\": \"-$20,271.65\",\n  \"Account Summary — Other Expenditures (Gains) — Year-to-Date\": \"-$72,903.30\",\n  \"Account Summary — Realized Capital Gains — Year-to-Date\": \"$68,005.40\",\n  \"Account Summary — Interest Earnings — Current Period\": \"$8,032.55\",\n  \"Account Summary — Redemptions — Current Period\": \"$0.00\",\n  \"Account Summary — END OF PERIOD — Current Period\": \"$339,663.51\",\n  \"Account Summary — END OF PERIOD — Year-to-Date\": \"$140,029.30\",\n  \"Account Summary — Footnote 1\": \"Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\",\n  \"Daily Balances — 2023-12-30 — Amount\": \"$339,410.00\",\n  \"Daily Balances — 2023-12-29 — Amount\": \"$339,625.00\",\n  \"Daily Balances — 2023-12-28 — Amount\": \"$339,514.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$339,193.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$339,405.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$339,540.00\",\n  \"Daily Balances — 2023-12-21 — Amount\": \"$339,644.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$339,869.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$340,034.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$339,724.00\",\n  \"Daily Balances — 2023-12-14 — Amount\": \"$339,415.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$339,415.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$339,628.00\",\n  \"Daily Balances — 2023-12-09 — Amount\": \"$339,918.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$342,327.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$342,550.00\",\n  \"Your Representative — Your Financial Consultant\": \"Genevieve O'Conner\",\n  \"Contact Information — Business\": \"(336) 697-2409\",\n  \"Account statement as of\": \"2018-05-01 - 2019-06-30\",\n  \"Traded As VWO — E.T.F.\": \"Vanguard FTSE Emerging Markets ETF\",\n  \"Traded As VWO — Price Change in Period (YTD)\": \"0.1076\",\n  \"Traded As VWO — Classification\": \"Equity\",\n  \"Traded As VWO — One Day Change\": \"-0.0088\",\n  \"Traded As IVV — E.T.F.\": \"iShares Core S&P 500 ETF\",\n  \"Traded As IVV — Price Change in Period (YTD)\": \"0.2542\",\n  \"Traded As IVV — Average daily volume\": \"5875330\",\n  \"Traded As IVV — Classification\": \"Equity\",\n  \"Traded As IVV — One Day Change\": \"-0.011\",\n  \"Traded As IWF — E.T.F.\": \"iShares Russell 1000 Growth ETF\",\n  \"Traded As IWF — Price Change in Period (YTD)\": \"0.3432\",\n  \"Traded As IWF — Average daily volume\": \"1349642\",\n  \"Traded As IWF — Classification\": \"Equity\",\n  \"Traded As IWF — One Day Change\": \"-0.0119\",\n  \"Traded As IJH — EOD Price\": \"62.17\",\n  \"Traded As IJH — Average daily volume\": \"7659450\",\n  \"Traded As IJH — Classification\": \"Equity\",\n  \"Traded As SPY — E.T.F.\": \"SPDR S&P 500 ETF Trust\",\n  \"Traded As SPY — EOD Price\": \"588.22\",\n  \"Traded As SPY — One Day Change\": \"-0.0114\",\n  \"Traded As IEMG — E.T.F.\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"Traded As IEMG — EOD Price\": \"52.31\",\n  \"Traded As IEMG — Price Change in Period (YTD)\": \"0.0667\",\n  \"Traded As IEMG — One Day Change\": \"-0.0082\",\n  \"Traded As VOO — EOD Price\": \"540.99\",\n  \"Traded As VOO — Price Change in Period (YTD)\": \"0.2548\",\n  \"Traded As VOO — Classification\": \"Equity\",\n  \"Traded As VOO — One Day Change\": \"-0.0111\",\n  \"Traded As VTI — EOD Price\": \"290.82\",\n  \"Traded As VTI — Average daily volume\": \"3046583\",\n  \"Traded As VTI — Classification\": \"Equity\",\n  \"Traded As VTI — One Day Change\": \"-0.0111\",\n  \"Traded As VXUS — EOD Price\": \"59\",\n  \"Traded As VXUS — Price Change in Period (YTD)\": \"0.052\",\n  \"Traded As VXUS — Classification\": \"Equity\",\n  \"Traded As VXUS — One Day Change\": \"-0.0067\",\n  \"Traded As QQQ — EOD Price\": \"515.61\",\n  \"Traded As QQQ — Price Change in Period (YTD)\": \"0.2665\",\n  \"Traded As QQQ — Average daily volume\": \"29009270\",\n  \"Traded As QQQ — Classification\": \"Equity\",\n  \"Traded As QQQ — One Day Change\": \"-0.0133\",\n  \"Page\": \"15 / 75\"\n}\n```",
+  "structured_output": {},
+  "metadata": {
+    "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Account Summary — BEGINNING OF PERIOD — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Management Fees — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Deposits — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Comprehensive Portfolio Change — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Portfolio Rebalancing — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Other Expenditures (Gains) — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Other Expenditures (Gains) — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Realized Capital Gains — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Interest Earnings — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Redemptions — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — END OF PERIOD — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — END OF PERIOD — Year-to-Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Summary — Footnote 1\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-30 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-29 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-28 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-23 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-21 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-20 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-14 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-09 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Representative — Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account statement as of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VWO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IVV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IWF — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IJH — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — E.T.F.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As IEMG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VOO — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VTI — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As VXUS — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Price Change in Period (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Average daily volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Traded As QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Account Summary — BEGINNING OF PERIOD — Current Period\",\n    \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\",\n    \"Account Summary — Management Fees — Current Period\",\n    \"Account Summary — Deposits — Year-to-Date\",\n    \"Account Summary — Comprehensive Portfolio Change — Current Period\",\n    \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\",\n    \"Account Summary — Portfolio Rebalancing — Current Period\",\n    \"Account Summary — Other Expenditures (Gains) — Current Period\",\n    \"Account Summary — Other Expenditures (Gains) — Year-to-Date\",\n    \"Account Summary — Realized Capital Gains — Year-to-Date\",\n    \"Account Summary — Interest Earnings — Current Period\",\n    \"Account Summary — Redemptions — Current Period\",\n    \"Account Summary — END OF PERIOD — Current Period\",\n    \"Account Summary — END OF PERIOD — Year-to-Date\",\n    \"Account Summary — Footnote 1\",\n    \"Daily Balances — 2023-12-30 — Amount\",\n    \"Daily Balances — 2023-12-29 — Amount\",\n    \"Daily Balances — 2023-12-28 — Amount\",\n    \"Daily Balances — 2023-12-26 — Amount\",\n    \"Daily Balances — 2023-12-23 — Amount\",\n    \"Daily Balances — 2023-12-22 — Amount\",\n    \"Daily Balances — 2023-12-21 — Amount\",\n    \"Daily Balances — 2023-12-20 — Amount\",\n    \"Daily Balances — 2023-12-19 — Amount\",\n    \"Daily Balances — 2023-12-16 — Amount\",\n    \"Daily Balances — 2023-12-14 — Amount\",\n    \"Daily Balances — 2023-12-13 — Amount\",\n    \"Daily Balances — 2023-12-12 — Amount\",\n    \"Daily Balances — 2023-12-09 — Amount\",\n    \"Daily Balances — 2023-12-02 — Amount\",\n    \"Daily Balances — 2023-12-01 — Amount\",\n    \"Your Representative — Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"Account statement as of\",\n    \"Traded As VWO — E.T.F.\",\n    \"Traded As VWO — Price Change in Period (YTD)\",\n    \"Traded As VWO — Classification\",\n    \"Traded As VWO — One Day Change\",\n    \"Traded As IVV — E.T.F.\",\n    \"Traded As IVV — Price Change in Period (YTD)\",\n    \"Traded As IVV — Average daily volume\",\n    \"Traded As IVV — Classification\",\n    \"Traded As IVV — One Day Change\",\n    \"Traded As IWF — E.T.F.\",\n    \"Traded As IWF — Price Change in Period (YTD)\",\n    \"Traded As IWF — Average daily volume\",\n    \"Traded As IWF — Classification\",\n    \"Traded As IWF — One Day Change\",\n    \"Traded As IJH — EOD Price\",\n    \"Traded As IJH — Average daily volume\",\n    \"Traded As IJH — Classification\",\n    \"Traded As SPY — E.T.F.\",\n    \"Traded As SPY — EOD Price\",\n    \"Traded As SPY — One Day Change\",\n    \"Traded As IEMG — E.T.F.\",\n    \"Traded As IEMG — EOD Price\",\n    \"Traded As IEMG — Price Change in Period (YTD)\",\n    \"Traded As IEMG — One Day Change\",\n    \"Traded As VOO — EOD Price\",\n    \"Traded As VOO — Price Change in Period (YTD)\",\n    \"Traded As VOO — Classification\",\n    \"Traded As VOO — One Day Change\",\n    \"Traded As VTI — EOD Price\",\n    \"Traded As VTI — Average daily volume\",\n    \"Traded As VTI — Classification\",\n    \"Traded As VTI — One Day Change\",\n    \"Traded As VXUS — EOD Price\",\n    \"Traded As VXUS — Price Change in Period (YTD)\",\n    \"Traded As VXUS — Classification\",\n    \"Traded As VXUS — One Day Change\",\n    \"Traded As QQQ — EOD Price\",\n    \"Traded As QQQ — Price Change in Period (YTD)\",\n    \"Traded As QQQ — Average daily volume\",\n    \"Traded As QQQ — Classification\",\n    \"Traded As QQQ — One Day Change\",\n    \"Page\"\n  ],\n  \"additionalProperties\": false\n}",
+    "input_tokens": 5715,
+    "output_tokens": 1725,
+    "leg": "schema",
+    "max_output_tokens": 4096,
+    "temperature": 0,
+    "sdk_max_retries": 0,
+    "stop_reason": "end_turn",
+    "original_source_timestamp": "20261006T205850Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "id": "msg_011CfmfCwfNvaV39oKDsnaiP",
+    "container": null,
+    "content": [
+      {
+        "citations": null,
+        "text": "```json\n{\n  \"Account Summary — BEGINNING OF PERIOD — Current Period\": \"$71,131.00\",\n  \"Account Summary — BEGINNING OF PERIOD — Year-to-Date\": \"$73,343.00\",\n  \"Account Summary — Management Fees — Current Period\": \"-$13,694.95\",\n  \"Account Summary — Deposits — Year-to-Date\": \"$283,135.40\",\n  \"Account Summary — Comprehensive Portfolio Change — Current Period\": \"-$11,169.71\",\n  \"Account Summary — Comprehensive Portfolio Change — Year-to-Date\": \"-$203,912.60\",\n  \"Account Summary — Portfolio Rebalancing — Current Period\": \"$53,043.55\",\n  \"Account Summary — Other Expenditures (Gains) — Current Period\": \"-$20,271.65\",\n  \"Account Summary — Other Expenditures (Gains) — Year-to-Date\": \"-$72,903.30\",\n  \"Account Summary — Realized Capital Gains — Year-to-Date\": \"$68,005.40\",\n  \"Account Summary — Interest Earnings — Current Period\": \"$8,032.55\",\n  \"Account Summary — Redemptions — Current Period\": \"$0.00\",\n  \"Account Summary — END OF PERIOD — Current Period\": \"$339,663.51\",\n  \"Account Summary — END OF PERIOD — Year-to-Date\": \"$140,029.30\",\n  \"Account Summary — Footnote 1\": \"Net Change in Portfolio is the difference between the ending account value and beginning account value after activity.\",\n  \"Daily Balances — 2023-12-30 — Amount\": \"$339,410.00\",\n  \"Daily Balances — 2023-12-29 — Amount\": \"$339,625.00\",\n  \"Daily Balances — 2023-12-28 — Amount\": \"$339,514.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$339,193.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$339,405.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$339,540.00\",\n  \"Daily Balances — 2023-12-21 — Amount\": \"$339,644.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$339,869.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$340,034.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$339,724.00\",\n  \"Daily Balances — 2023-12-14 — Amount\": \"$339,415.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$339,415.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$339,628.00\",\n  \"Daily Balances — 2023-12-09 — Amount\": \"$339,918.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$342,327.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$342,550.00\",\n  \"Your Representative — Your Financial Consultant\": \"Genevieve O'Conner\",\n  \"Contact Information — Business\": \"(336) 697-2409\",\n  \"Account statement as of\": \"2018-05-01 - 2019-06-30\",\n  \"Traded As VWO — E.T.F.\": \"Vanguard FTSE Emerging Markets ETF\",\n  \"Traded As VWO — Price Change in Period (YTD)\": \"0.1076\",\n  \"Traded As VWO — Classification\": \"Equity\",\n  \"Traded As VWO — One Day Change\": \"-0.0088\",\n  \"Traded As IVV — E.T.F.\": \"iShares Core S&P 500 ETF\",\n  \"Traded As IVV — Price Change in Period (YTD)\": \"0.2542\",\n  \"Traded As IVV — Average daily volume\": \"5875330\",\n  \"Traded As IVV — Classification\": \"Equity\",\n  \"Traded As IVV — One Day Change\": \"-0.011\",\n  \"Traded As IWF — E.T.F.\": \"iShares Russell 1000 Growth ETF\",\n  \"Traded As IWF — Price Change in Period (YTD)\": \"0.3432\",\n  \"Traded As IWF — Average daily volume\": \"1349642\",\n  \"Traded As IWF — Classification\": \"Equity\",\n  \"Traded As IWF — One Day Change\": \"-0.0119\",\n  \"Traded As IJH — EOD Price\": \"62.17\",\n  \"Traded As IJH — Average daily volume\": \"7659450\",\n  \"Traded As IJH — Classification\": \"Equity\",\n  \"Traded As SPY — E.T.F.\": \"SPDR S&P 500 ETF Trust\",\n  \"Traded As SPY — EOD Price\": \"588.22\",\n  \"Traded As SPY — One Day Change\": \"-0.0114\",\n  \"Traded As IEMG — E.T.F.\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"Traded As IEMG — EOD Price\": \"52.31\",\n  \"Traded As IEMG — Price Change in Period (YTD)\": \"0.0667\",\n  \"Traded As IEMG — One Day Change\": \"-0.0082\",\n  \"Traded As VOO — EOD Price\": \"540.99\",\n  \"Traded As VOO — Price Change in Period (YTD)\": \"0.2548\",\n  \"Traded As VOO — Classification\": \"Equity\",\n  \"Traded As VOO — One Day Change\": \"-0.0111\",\n  \"Traded As VTI — EOD Price\": \"290.82\",\n  \"Traded As VTI — Average daily volume\": \"3046583\",\n  \"Traded As VTI — Classification\": \"Equity\",\n  \"Traded As VTI — One Day Change\": \"-0.0111\",\n  \"Traded As VXUS — EOD Price\": \"59\",\n  \"Traded As VXUS — Price Change in Period (YTD)\": \"0.052\",\n  \"Traded As VXUS — Classification\": \"Equity\",\n  \"Traded As VXUS — One Day Change\": \"-0.0067\",\n  \"Traded As QQQ — EOD Price\": \"515.61\",\n  \"Traded As QQQ — Price Change in Period (YTD)\": \"0.2665\",\n  \"Traded As QQQ — Average daily volume\": \"29009270\",\n  \"Traded As QQQ — Classification\": \"Equity\",\n  \"Traded As QQQ — One Day Change\": \"-0.0133\",\n  \"Page\": \"15 / 75\"\n}\n```",
+        "type": "text"
+      }
+    ],
+    "model": "claude-sonnet-4-6",
+    "role": "assistant",
+    "stop_details": null,
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "type": "message",
+    "usage": {
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 0,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "input_tokens": 5715,
+      "output_tokens": 1725,
+      "output_tokens_details": null,
+      "server_tool_use": null,
+      "service_tier": "standard"
+    },
+    "diagnostics": null
+  }
+}

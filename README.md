@@ -289,12 +289,17 @@ pip install -r requirements.txt
 python run_benchmark.py --report current
 ```
 
-`current` reads the included `results/current.zip`. No credentials or model calls.
+`current` reads the committed files under `results/runs/` and the calls under
+`results/ocr_outputs/reconciled_outputs/`. No credentials or model calls.
 Add `--legs text --report-sort cer` to sort text results by error rate, or
 `--report-details` for document-family breakdowns.
 
-For the browser report, open `results/reports/ocr-benchmark-final.html` if it
-already exists. On a fresh clone, build it with the source images:
+The result tree contains one reconciled run. `reconciled_outputs/` contains the
+2,636 OCR calls actually used by its scores; superseded calls are not retained.
+Each saved call records its original source timestamp in metadata.
+
+For the browser report, open `results/reports/ocr-benchmark-final.html`. To
+rebuild it with the source images:
 
 ```bash
 python scripts/download_data.py

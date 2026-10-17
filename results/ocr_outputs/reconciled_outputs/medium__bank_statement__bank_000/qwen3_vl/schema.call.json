@@ -1,0 +1,741 @@
+{
+  "engine": "qwen3_vl",
+  "document": "documents/medium/bank_statement/bank_000.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Account Overview — Beginning of Period Value — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Account Transfers Out — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Dividends — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Dividends — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Aggregate Portfolio Movement — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Aggregate Portfolio Movement — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Additional Deposits — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Capital Appreciation — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Other — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Representative — Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-27 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-23 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-20 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-15 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-08 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-05 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Get your statements online — App Store\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Get your statements online — Google Play\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Account Overview — Beginning of Period Value — Current Period\",\n    \"Account Overview — Account Transfers Out — Current Period\",\n    \"Account Overview — Dividends — Current Period\",\n    \"Account Overview — Dividends — YTD Period\",\n    \"Account Overview — Aggregate Portfolio Movement — Current Period\",\n    \"Account Overview — Aggregate Portfolio Movement — YTD Period\",\n    \"Account Overview — Additional Deposits — YTD Period\",\n    \"Account Overview — Capital Appreciation — YTD Period\",\n    \"Account Overview — Other — YTD Period\",\n    \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\",\n    \"XLK — Traded As\",\n    \"XLK — EOD Price\",\n    \"XLK — One Day Change\",\n    \"XLK — Classification\",\n    \"VGT — ETF\",\n    \"VGT — EOD Price\",\n    \"VGT — YTD Price Change\",\n    \"VGT — Avg. Daily Volume\",\n    \"VGT — One Day Change\",\n    \"VGT — Classification\",\n    \"SPY — EOD Price\",\n    \"SPY — One Day Change\",\n    \"SPY — Classification\",\n    \"VUG — ETF\",\n    \"VUG — YTD Price Change\",\n    \"VUG — Avg. Daily Volume\",\n    \"VUG — Classification\",\n    \"QQQ — ETF\",\n    \"QQQ — EOD Price\",\n    \"QQQ — YTD Price Change\",\n    \"QQQ — Avg. Daily Volume\",\n    \"QQQ — One Day Change\",\n    \"IVV — ETF\",\n    \"IVV — EOD Price\",\n    \"IVV — Avg. Daily Volume\",\n    \"IVV — One Day Change\",\n    \"VXUS — ETF\",\n    \"VXUS — EOD Price\",\n    \"VXUS — YTD Price Change\",\n    \"VXUS — One Day Change\",\n    \"VXUS — Classification\",\n    \"VWO — EOD Price\",\n    \"VWO — Classification\",\n    \"IEMG — ETF\",\n    \"IEMG — EOD Price\",\n    \"IEMG — YTD Price Change\",\n    \"IEMG — One Day Change\",\n    \"IEMG — Classification\",\n    \"IJH — YTD Price Change\",\n    \"IJH — One Day Change\",\n    \"IJH — Classification\",\n    \"VTI — ETF\",\n    \"VTI — Traded As\",\n    \"VTI — EOD Price\",\n    \"VTI — Classification\",\n    \"IEFA — Traded As\",\n    \"IEFA — EOD Price\",\n    \"IEFA — YTD Price Change\",\n    \"IEFA — Classification\",\n    \"VTV — Traded As\",\n    \"VTV — EOD Price\",\n    \"VTV — Avg. Daily Volume\",\n    \"VTV — One Day Change\",\n    \"VTV — Classification\",\n    \"VOO — ETF\",\n    \"VOO — EOD Price\",\n    \"VOO — Classification\",\n    \"Your Representative — Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\",\n    \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\",\n    \"Daily Balances — 2023-12-27 — Amount\",\n    \"Daily Balances — 2023-12-26 — Amount\",\n    \"Daily Balances — 2023-12-23 — Amount\",\n    \"Daily Balances — 2023-12-22 — Amount\",\n    \"Daily Balances — 2023-12-20 — Amount\",\n    \"Daily Balances — 2023-12-19 — Amount\",\n    \"Daily Balances — 2023-12-16 — Amount\",\n    \"Daily Balances — 2023-12-15 — Amount\",\n    \"Daily Balances — 2023-12-13 — Amount\",\n    \"Daily Balances — 2023-12-12 — Amount\",\n    \"Daily Balances — 2023-12-08 — Amount\",\n    \"Daily Balances — 2023-12-05 — Amount\",\n    \"Daily Balances — 2023-12-02 — Amount\",\n    \"Daily Balances — 2023-12-01 — Amount\",\n    \"Get your statements online — App Store\",\n    \"Get your statements online — Google Play\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Account Overview — Beginning of Period Value — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Account Transfers Out — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Dividends — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Dividends — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Aggregate Portfolio Movement — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Aggregate Portfolio Movement — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Additional Deposits — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Capital Appreciation — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — Other — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account Overview — ENDING ACCOUNT VALUE — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "XLK — Traded As": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "XLK — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "XLK — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "XLK — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEMG — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEMG — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEMG — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEMG — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEMG — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — Traded As": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — Traded As": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — YTD Price Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — Traded As": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VOO — ETF": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VOO — EOD Price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VOO — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Your Representative — Your Financial Consultant": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Contact Information — Business": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-27 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-26 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-23 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-22 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-20 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-19 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-16 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-15 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-13 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-12 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-08 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-05 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-02 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Daily Balances — 2023-12-01 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Get your statements online — App Store": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Get your statements online — Google Play": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Account Overview — Beginning of Period Value — Current Period",
+      "Account Overview — Account Transfers Out — Current Period",
+      "Account Overview — Dividends — Current Period",
+      "Account Overview — Dividends — YTD Period",
+      "Account Overview — Aggregate Portfolio Movement — Current Period",
+      "Account Overview — Aggregate Portfolio Movement — YTD Period",
+      "Account Overview — Additional Deposits — YTD Period",
+      "Account Overview — Capital Appreciation — YTD Period",
+      "Account Overview — Other — YTD Period",
+      "Account Overview — ENDING ACCOUNT VALUE — YTD Period",
+      "XLK — Traded As",
+      "XLK — EOD Price",
+      "XLK — One Day Change",
+      "XLK — Classification",
+      "VGT — ETF",
+      "VGT — EOD Price",
+      "VGT — YTD Price Change",
+      "VGT — Avg. Daily Volume",
+      "VGT — One Day Change",
+      "VGT — Classification",
+      "SPY — EOD Price",
+      "SPY — One Day Change",
+      "SPY — Classification",
+      "VUG — ETF",
+      "VUG — YTD Price Change",
+      "VUG — Avg. Daily Volume",
+      "VUG — Classification",
+      "QQQ — ETF",
+      "QQQ — EOD Price",
+      "QQQ — YTD Price Change",
+      "QQQ — Avg. Daily Volume",
+      "QQQ — One Day Change",
+      "IVV — ETF",
+      "IVV — EOD Price",
+      "IVV — Avg. Daily Volume",
+      "IVV — One Day Change",
+      "VXUS — ETF",
+      "VXUS — EOD Price",
+      "VXUS — YTD Price Change",
+      "VXUS — One Day Change",
+      "VXUS — Classification",
+      "VWO — EOD Price",
+      "VWO — Classification",
+      "IEMG — ETF",
+      "IEMG — EOD Price",
+      "IEMG — YTD Price Change",
+      "IEMG — One Day Change",
+      "IEMG — Classification",
+      "IJH — YTD Price Change",
+      "IJH — One Day Change",
+      "IJH — Classification",
+      "VTI — ETF",
+      "VTI — Traded As",
+      "VTI — EOD Price",
+      "VTI — Classification",
+      "IEFA — Traded As",
+      "IEFA — EOD Price",
+      "IEFA — YTD Price Change",
+      "IEFA — Classification",
+      "VTV — Traded As",
+      "VTV — EOD Price",
+      "VTV — Avg. Daily Volume",
+      "VTV — One Day Change",
+      "VTV — Classification",
+      "VOO — ETF",
+      "VOO — EOD Price",
+      "VOO — Classification",
+      "Your Representative — Your Financial Consultant",
+      "Contact Information — Business",
+      "DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions",
+      "DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments",
+      "Daily Balances — 2023-12-27 — Amount",
+      "Daily Balances — 2023-12-26 — Amount",
+      "Daily Balances — 2023-12-23 — Amount",
+      "Daily Balances — 2023-12-22 — Amount",
+      "Daily Balances — 2023-12-20 — Amount",
+      "Daily Balances — 2023-12-19 — Amount",
+      "Daily Balances — 2023-12-16 — Amount",
+      "Daily Balances — 2023-12-15 — Amount",
+      "Daily Balances — 2023-12-13 — Amount",
+      "Daily Balances — 2023-12-12 — Amount",
+      "Daily Balances — 2023-12-08 — Amount",
+      "Daily Balances — 2023-12-05 — Amount",
+      "Daily Balances — 2023-12-02 — Amount",
+      "Daily Balances — 2023-12-01 — Amount",
+      "Get your statements online — App Store",
+      "Get your statements online — Google Play"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+  "latency_seconds": 6.564292317541667,
+  "cost_per_page": 0.004555618868373916,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\n  \"Account Overview — Beginning of Period Value — Current Period\": \"$637,990.00\",\n  \"Account Overview — Account Transfers Out — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — YTD Period\": \"-$73,579.95\",\n  \"Account Overview — Aggregate Portfolio Movement — Current Period\": \"-$25,497.13\",\n  \"Account Overview — Aggregate Portfolio Movement — YTD Period\": \"-$14,691.25\",\n  \"Account Overview — Additional Deposits — YTD Period\": \"$14,691.25\",\n  \"Account Overview — Capital Appreciation — YTD Period\": \"-$50,150.55\",\n  \"Account Overview — Other — YTD Period\": \"-$27,602.90\",\n  \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": \"$634,902.90\",\n  \"XLK — Traded As\": \"XLK\",\n  \"XLK — EOD Price\": \"234.47\",\n  \"XLK — One Day Change\": \"-0.0127\",\n  \"XLK — Classification\": \"Equity\",\n  \"VGT — ETF\": \"Vanguard Information Technology ETF\",\n  \"VGT — EOD Price\": \"627.57\",\n  \"VGT — YTD Price Change\": \"0.305\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — One Day Change\": \"-0.0125\",\n  \"VGT — Classification\": \"Equity\",\n  \"SPY — EOD Price\": \"588.22\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"VUG — ETF\": \"Vanguard Growth ETF\",\n  \"VUG — YTD Price Change\": \"0.339\",\n  \"VUG — Avg. Daily Volume\": \"1145739\",\n  \"VUG — Classification\": \"Equity\",\n  \"QQQ — ETF\": \"Invesco QQQ Trust Series I\",\n  \"QQQ — EOD Price\": \"515.61\",\n  \"QQQ — YTD Price Change\": \"0.2665\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"IVV — ETF\": \"iShares Core S&P 500 ETF\",\n  \"IVV — EOD Price\": \"590.98\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — One Day Change\": \"-0.011\",\n  \"VXUS — ETF\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — EOD Price\": \"59\",\n  \"VXUS — YTD Price Change\": \"0.052\",\n  \"VXUS — One Day Change\": \"-0.0067\",\n  \"VXUS — Classification\": \"Equity\",\n  \"VWO — EOD Price\": \"44.11\",\n  \"VWO — Classification\": \"Equity\",\n  \"IEMG — ETF\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"IEMG — EOD Price\": \"52.31\",\n  \"IEMG — YTD Price Change\": \"0.0667\",\n  \"IEMG — One Day Change\": \"-0.0088\",\n  \"IEMG — Classification\": \"Equity\",\n  \"IJH — YTD Price Change\": \"0.1366\",\n  \"IJH — One Day Change\": \"-0.0082\",\n  \"IJH — Classification\": \"Equity\",\n  \"VTI — ETF\": \"Vanguard Total Stock Market ETF\",\n  \"VTI — Traded As\": \"VTI\",\n  \"VTI — EOD Price\": \"290.82\",\n  \"VTI — Classification\": \"Equity\",\n  \"IEFA — Traded As\": \"IEFA\",\n  \"IEFA — EOD Price\": \"70.32\",\n  \"IEFA — YTD Price Change\": \"0.0332\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VTV — Traded As\": \"VTV\",\n  \"VTV — EOD Price\": \"168.94\",\n  \"VTV — Avg. Daily Volume\": \"1827734\",\n  \"VTV — One Day Change\": \"-0.0066\",\n  \"VTV — Classification\": \"Equity\",\n  \"VOO — ETF\": \"Vanguard S&P 500 ETF\",\n  \"VOO — EOD Price\": \"540.99\",\n  \"VOO — Classification\": \"Equity\",\n  \"Your Representative — Your Financial Consultant\": \"Dr. Gregory Frami\",\n  \"Contact Information — Business\": \"663 999-5583\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": \"YES\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": \"NO\",\n  \"Daily Balances — 2023-12-27 — Amount\": \"$706,159.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$705,795.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$706,412.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$706,373.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$706,666.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$707,119.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$706,759.00\",\n  \"Daily Balances — 2023-12-15 — Amount\": \"$706,899.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$707,955.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$709,423.00\",\n  \"Daily Balances — 2023-12-08 — Amount\": \"$709,066.00\",\n  \"Daily Balances — 2023-12-05 — Amount\": \"$709,301.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$709,798.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$709,311.00\",\n  \"Get your statements online — App Store\": \"Download on the App Store\",\n  \"Get your statements online — Google Play\": \"GET IT ON Google Play\"\n}",
+  "structured_output": {
+    "api_response": {
+      "id": "chatcmpl-987b9ae0ae86698d",
+      "object": "chat.completion",
+      "created": 1791320651,
+      "prompt_routed_experts": null,
+      "model": "qwen3-vl",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"Account Overview — Beginning of Period Value — Current Period\": \"$637,990.00\",\n  \"Account Overview — Account Transfers Out — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — YTD Period\": \"-$73,579.95\",\n  \"Account Overview — Aggregate Portfolio Movement — Current Period\": \"-$25,497.13\",\n  \"Account Overview — Aggregate Portfolio Movement — YTD Period\": \"-$14,691.25\",\n  \"Account Overview — Additional Deposits — YTD Period\": \"$14,691.25\",\n  \"Account Overview — Capital Appreciation — YTD Period\": \"-$50,150.55\",\n  \"Account Overview — Other — YTD Period\": \"-$27,602.90\",\n  \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": \"$634,902.90\",\n  \"XLK — Traded As\": \"XLK\",\n  \"XLK — EOD Price\": \"234.47\",\n  \"XLK — One Day Change\": \"-0.0127\",\n  \"XLK — Classification\": \"Equity\",\n  \"VGT — ETF\": \"Vanguard Information Technology ETF\",\n  \"VGT — EOD Price\": \"627.57\",\n  \"VGT — YTD Price Change\": \"0.305\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — One Day Change\": \"-0.0125\",\n  \"VGT — Classification\": \"Equity\",\n  \"SPY — EOD Price\": \"588.22\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"VUG — ETF\": \"Vanguard Growth ETF\",\n  \"VUG — YTD Price Change\": \"0.339\",\n  \"VUG — Avg. Daily Volume\": \"1145739\",\n  \"VUG — Classification\": \"Equity\",\n  \"QQQ — ETF\": \"Invesco QQQ Trust Series I\",\n  \"QQQ — EOD Price\": \"515.61\",\n  \"QQQ — YTD Price Change\": \"0.2665\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"IVV — ETF\": \"iShares Core S&P 500 ETF\",\n  \"IVV — EOD Price\": \"590.98\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — One Day Change\": \"-0.011\",\n  \"VXUS — ETF\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — EOD Price\": \"59\",\n  \"VXUS — YTD Price Change\": \"0.052\",\n  \"VXUS — One Day Change\": \"-0.0067\",\n  \"VXUS — Classification\": \"Equity\",\n  \"VWO — EOD Price\": \"44.11\",\n  \"VWO — Classification\": \"Equity\",\n  \"IEMG — ETF\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"IEMG — EOD Price\": \"52.31\",\n  \"IEMG — YTD Price Change\": \"0.0667\",\n  \"IEMG — One Day Change\": \"-0.0088\",\n  \"IEMG — Classification\": \"Equity\",\n  \"IJH — YTD Price Change\": \"0.1366\",\n  \"IJH — One Day Change\": \"-0.0082\",\n  \"IJH — Classification\": \"Equity\",\n  \"VTI — ETF\": \"Vanguard Total Stock Market ETF\",\n  \"VTI — Traded As\": \"VTI\",\n  \"VTI — EOD Price\": \"290.82\",\n  \"VTI — Classification\": \"Equity\",\n  \"IEFA — Traded As\": \"IEFA\",\n  \"IEFA — EOD Price\": \"70.32\",\n  \"IEFA — YTD Price Change\": \"0.0332\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VTV — Traded As\": \"VTV\",\n  \"VTV — EOD Price\": \"168.94\",\n  \"VTV — Avg. Daily Volume\": \"1827734\",\n  \"VTV — One Day Change\": \"-0.0066\",\n  \"VTV — Classification\": \"Equity\",\n  \"VOO — ETF\": \"Vanguard S&P 500 ETF\",\n  \"VOO — EOD Price\": \"540.99\",\n  \"VOO — Classification\": \"Equity\",\n  \"Your Representative — Your Financial Consultant\": \"Dr. Gregory Frami\",\n  \"Contact Information — Business\": \"663 999-5583\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": \"YES\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": \"NO\",\n  \"Daily Balances — 2023-12-27 — Amount\": \"$706,159.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$705,795.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$706,412.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$706,373.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$706,666.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$707,119.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$706,759.00\",\n  \"Daily Balances — 2023-12-15 — Amount\": \"$706,899.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$707,955.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$709,423.00\",\n  \"Daily Balances — 2023-12-08 — Amount\": \"$709,066.00\",\n  \"Daily Balances — 2023-12-05 — Amount\": \"$709,301.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$709,798.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$709,311.00\",\n  \"Get your statements online — App Store\": \"Download on the App Store\",\n  \"Get your statements online — Google Play\": \"GET IT ON Google Play\"\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": "vllm-0.21.0-8c500980",
+      "usage": {
+        "prompt_tokens": 19761,
+        "total_tokens": 21451,
+        "completion_tokens": 1690,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null
+    }
+  },
+  "metadata": {
+    "gpu_type": "A100-80GB",
+    "gpu_seconds": 6.564292317541667,
+    "startup_gpu_seconds": 200.732141729,
+    "is_cold_start": true,
+    "measurement_scope": "modal_batch",
+    "batch_id": "222a9905390d43f3a89c0fca8f04bdd0",
+    "batch_gpu_seconds": 157.543015621,
+    "batch_size": 24,
+    "effective_gpu_seconds_per_document": 6.564292317541667,
+    "gpu_rate_usd_per_second": 0.000694,
+    "startup_excluded": true,
+    "original_source_timestamp": "20261006T205911Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "raw_text": "{\n  \"Account Overview — Beginning of Period Value — Current Period\": \"$637,990.00\",\n  \"Account Overview — Account Transfers Out — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — YTD Period\": \"-$73,579.95\",\n  \"Account Overview — Aggregate Portfolio Movement — Current Period\": \"-$25,497.13\",\n  \"Account Overview — Aggregate Portfolio Movement — YTD Period\": \"-$14,691.25\",\n  \"Account Overview — Additional Deposits — YTD Period\": \"$14,691.25\",\n  \"Account Overview — Capital Appreciation — YTD Period\": \"-$50,150.55\",\n  \"Account Overview — Other — YTD Period\": \"-$27,602.90\",\n  \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": \"$634,902.90\",\n  \"XLK — Traded As\": \"XLK\",\n  \"XLK — EOD Price\": \"234.47\",\n  \"XLK — One Day Change\": \"-0.0127\",\n  \"XLK — Classification\": \"Equity\",\n  \"VGT — ETF\": \"Vanguard Information Technology ETF\",\n  \"VGT — EOD Price\": \"627.57\",\n  \"VGT — YTD Price Change\": \"0.305\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — One Day Change\": \"-0.0125\",\n  \"VGT — Classification\": \"Equity\",\n  \"SPY — EOD Price\": \"588.22\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"VUG — ETF\": \"Vanguard Growth ETF\",\n  \"VUG — YTD Price Change\": \"0.339\",\n  \"VUG — Avg. Daily Volume\": \"1145739\",\n  \"VUG — Classification\": \"Equity\",\n  \"QQQ — ETF\": \"Invesco QQQ Trust Series I\",\n  \"QQQ — EOD Price\": \"515.61\",\n  \"QQQ — YTD Price Change\": \"0.2665\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"IVV — ETF\": \"iShares Core S&P 500 ETF\",\n  \"IVV — EOD Price\": \"590.98\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — One Day Change\": \"-0.011\",\n  \"VXUS — ETF\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — EOD Price\": \"59\",\n  \"VXUS — YTD Price Change\": \"0.052\",\n  \"VXUS — One Day Change\": \"-0.0067\",\n  \"VXUS — Classification\": \"Equity\",\n  \"VWO — EOD Price\": \"44.11\",\n  \"VWO — Classification\": \"Equity\",\n  \"IEMG — ETF\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"IEMG — EOD Price\": \"52.31\",\n  \"IEMG — YTD Price Change\": \"0.0667\",\n  \"IEMG — One Day Change\": \"-0.0088\",\n  \"IEMG — Classification\": \"Equity\",\n  \"IJH — YTD Price Change\": \"0.1366\",\n  \"IJH — One Day Change\": \"-0.0082\",\n  \"IJH — Classification\": \"Equity\",\n  \"VTI — ETF\": \"Vanguard Total Stock Market ETF\",\n  \"VTI — Traded As\": \"VTI\",\n  \"VTI — EOD Price\": \"290.82\",\n  \"VTI — Classification\": \"Equity\",\n  \"IEFA — Traded As\": \"IEFA\",\n  \"IEFA — EOD Price\": \"70.32\",\n  \"IEFA — YTD Price Change\": \"0.0332\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VTV — Traded As\": \"VTV\",\n  \"VTV — EOD Price\": \"168.94\",\n  \"VTV — Avg. Daily Volume\": \"1827734\",\n  \"VTV — One Day Change\": \"-0.0066\",\n  \"VTV — Classification\": \"Equity\",\n  \"VOO — ETF\": \"Vanguard S&P 500 ETF\",\n  \"VOO — EOD Price\": \"540.99\",\n  \"VOO — Classification\": \"Equity\",\n  \"Your Representative — Your Financial Consultant\": \"Dr. Gregory Frami\",\n  \"Contact Information — Business\": \"663 999-5583\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": \"YES\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": \"NO\",\n  \"Daily Balances — 2023-12-27 — Amount\": \"$706,159.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$705,795.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$706,412.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$706,373.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$706,666.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$707,119.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$706,759.00\",\n  \"Daily Balances — 2023-12-15 — Amount\": \"$706,899.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$707,955.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$709,423.00\",\n  \"Daily Balances — 2023-12-08 — Amount\": \"$709,066.00\",\n  \"Daily Balances — 2023-12-05 — Amount\": \"$709,301.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$709,798.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$709,311.00\",\n  \"Get your statements online — App Store\": \"Download on the App Store\",\n  \"Get your statements online — Google Play\": \"GET IT ON Google Play\"\n}",
+    "structured_output": {
+      "api_response": {
+        "id": "chatcmpl-987b9ae0ae86698d",
+        "object": "chat.completion",
+        "created": 1791320651,
+        "prompt_routed_experts": null,
+        "model": "qwen3-vl",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"Account Overview — Beginning of Period Value — Current Period\": \"$637,990.00\",\n  \"Account Overview — Account Transfers Out — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — Current Period\": \"$0.00\",\n  \"Account Overview — Dividends — YTD Period\": \"-$73,579.95\",\n  \"Account Overview — Aggregate Portfolio Movement — Current Period\": \"-$25,497.13\",\n  \"Account Overview — Aggregate Portfolio Movement — YTD Period\": \"-$14,691.25\",\n  \"Account Overview — Additional Deposits — YTD Period\": \"$14,691.25\",\n  \"Account Overview — Capital Appreciation — YTD Period\": \"-$50,150.55\",\n  \"Account Overview — Other — YTD Period\": \"-$27,602.90\",\n  \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": \"$634,902.90\",\n  \"XLK — Traded As\": \"XLK\",\n  \"XLK — EOD Price\": \"234.47\",\n  \"XLK — One Day Change\": \"-0.0127\",\n  \"XLK — Classification\": \"Equity\",\n  \"VGT — ETF\": \"Vanguard Information Technology ETF\",\n  \"VGT — EOD Price\": \"627.57\",\n  \"VGT — YTD Price Change\": \"0.305\",\n  \"VGT — Avg. Daily Volume\": \"453405\",\n  \"VGT — One Day Change\": \"-0.0125\",\n  \"VGT — Classification\": \"Equity\",\n  \"SPY — EOD Price\": \"588.22\",\n  \"SPY — One Day Change\": \"-0.0114\",\n  \"SPY — Classification\": \"Equity\",\n  \"VUG — ETF\": \"Vanguard Growth ETF\",\n  \"VUG — YTD Price Change\": \"0.339\",\n  \"VUG — Avg. Daily Volume\": \"1145739\",\n  \"VUG — Classification\": \"Equity\",\n  \"QQQ — ETF\": \"Invesco QQQ Trust Series I\",\n  \"QQQ — EOD Price\": \"515.61\",\n  \"QQQ — YTD Price Change\": \"0.2665\",\n  \"QQQ — Avg. Daily Volume\": \"29009270\",\n  \"QQQ — One Day Change\": \"-0.0133\",\n  \"IVV — ETF\": \"iShares Core S&P 500 ETF\",\n  \"IVV — EOD Price\": \"590.98\",\n  \"IVV — Avg. Daily Volume\": \"5875330\",\n  \"IVV — One Day Change\": \"-0.011\",\n  \"VXUS — ETF\": \"Vanguard Total International Stock ETF\",\n  \"VXUS — EOD Price\": \"59\",\n  \"VXUS — YTD Price Change\": \"0.052\",\n  \"VXUS — One Day Change\": \"-0.0067\",\n  \"VXUS — Classification\": \"Equity\",\n  \"VWO — EOD Price\": \"44.11\",\n  \"VWO — Classification\": \"Equity\",\n  \"IEMG — ETF\": \"iShares Core MSCI Emerging Markets ETF\",\n  \"IEMG — EOD Price\": \"52.31\",\n  \"IEMG — YTD Price Change\": \"0.0667\",\n  \"IEMG — One Day Change\": \"-0.0088\",\n  \"IEMG — Classification\": \"Equity\",\n  \"IJH — YTD Price Change\": \"0.1366\",\n  \"IJH — One Day Change\": \"-0.0082\",\n  \"IJH — Classification\": \"Equity\",\n  \"VTI — ETF\": \"Vanguard Total Stock Market ETF\",\n  \"VTI — Traded As\": \"VTI\",\n  \"VTI — EOD Price\": \"290.82\",\n  \"VTI — Classification\": \"Equity\",\n  \"IEFA — Traded As\": \"IEFA\",\n  \"IEFA — EOD Price\": \"70.32\",\n  \"IEFA — YTD Price Change\": \"0.0332\",\n  \"IEFA — Classification\": \"Equity\",\n  \"VTV — Traded As\": \"VTV\",\n  \"VTV — EOD Price\": \"168.94\",\n  \"VTV — Avg. Daily Volume\": \"1827734\",\n  \"VTV — One Day Change\": \"-0.0066\",\n  \"VTV — Classification\": \"Equity\",\n  \"VOO — ETF\": \"Vanguard S&P 500 ETF\",\n  \"VOO — EOD Price\": \"540.99\",\n  \"VOO — Classification\": \"Equity\",\n  \"Your Representative — Your Financial Consultant\": \"Dr. Gregory Frami\",\n  \"Contact Information — Business\": \"663 999-5583\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": \"YES\",\n  \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": \"NO\",\n  \"Daily Balances — 2023-12-27 — Amount\": \"$706,159.00\",\n  \"Daily Balances — 2023-12-26 — Amount\": \"$705,795.00\",\n  \"Daily Balances — 2023-12-23 — Amount\": \"$706,412.00\",\n  \"Daily Balances — 2023-12-22 — Amount\": \"$706,373.00\",\n  \"Daily Balances — 2023-12-20 — Amount\": \"$706,666.00\",\n  \"Daily Balances — 2023-12-19 — Amount\": \"$707,119.00\",\n  \"Daily Balances — 2023-12-16 — Amount\": \"$706,759.00\",\n  \"Daily Balances — 2023-12-15 — Amount\": \"$706,899.00\",\n  \"Daily Balances — 2023-12-13 — Amount\": \"$707,955.00\",\n  \"Daily Balances — 2023-12-12 — Amount\": \"$709,423.00\",\n  \"Daily Balances — 2023-12-08 — Amount\": \"$709,066.00\",\n  \"Daily Balances — 2023-12-05 — Amount\": \"$709,301.00\",\n  \"Daily Balances — 2023-12-02 — Amount\": \"$709,798.00\",\n  \"Daily Balances — 2023-12-01 — Amount\": \"$709,311.00\",\n  \"Get your statements online — App Store\": \"Download on the App Store\",\n  \"Get your statements online — Google Play\": \"GET IT ON Google Play\"\n}",
+              "refusal": null,
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [],
+              "reasoning": null
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null,
+            "token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.21.0-8c500980",
+        "usage": {
+          "prompt_tokens": 19761,
+          "total_tokens": 21451,
+          "completion_tokens": 1690,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null,
+        "prompt_token_ids": null,
+        "prompt_text": null,
+        "kv_transfer_params": null
+      }
+    },
+    "prompt_used": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Account Overview — Beginning of Period Value — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Account Transfers Out — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Dividends — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Dividends — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Aggregate Portfolio Movement — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Aggregate Portfolio Movement — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Additional Deposits — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Capital Appreciation — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — Other — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"XLK — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEMG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — YTD Price Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Traded As\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — ETF\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — EOD Price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Your Representative — Your Financial Consultant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-27 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-23 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-22 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-20 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-16 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-15 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-13 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-08 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-05 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-02 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Daily Balances — 2023-12-01 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Get your statements online — App Store\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Get your statements online — Google Play\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Account Overview — Beginning of Period Value — Current Period\",\n    \"Account Overview — Account Transfers Out — Current Period\",\n    \"Account Overview — Dividends — Current Period\",\n    \"Account Overview — Dividends — YTD Period\",\n    \"Account Overview — Aggregate Portfolio Movement — Current Period\",\n    \"Account Overview — Aggregate Portfolio Movement — YTD Period\",\n    \"Account Overview — Additional Deposits — YTD Period\",\n    \"Account Overview — Capital Appreciation — YTD Period\",\n    \"Account Overview — Other — YTD Period\",\n    \"Account Overview — ENDING ACCOUNT VALUE — YTD Period\",\n    \"XLK — Traded As\",\n    \"XLK — EOD Price\",\n    \"XLK — One Day Change\",\n    \"XLK — Classification\",\n    \"VGT — ETF\",\n    \"VGT — EOD Price\",\n    \"VGT — YTD Price Change\",\n    \"VGT — Avg. Daily Volume\",\n    \"VGT — One Day Change\",\n    \"VGT — Classification\",\n    \"SPY — EOD Price\",\n    \"SPY — One Day Change\",\n    \"SPY — Classification\",\n    \"VUG — ETF\",\n    \"VUG — YTD Price Change\",\n    \"VUG — Avg. Daily Volume\",\n    \"VUG — Classification\",\n    \"QQQ — ETF\",\n    \"QQQ — EOD Price\",\n    \"QQQ — YTD Price Change\",\n    \"QQQ — Avg. Daily Volume\",\n    \"QQQ — One Day Change\",\n    \"IVV — ETF\",\n    \"IVV — EOD Price\",\n    \"IVV — Avg. Daily Volume\",\n    \"IVV — One Day Change\",\n    \"VXUS — ETF\",\n    \"VXUS — EOD Price\",\n    \"VXUS — YTD Price Change\",\n    \"VXUS — One Day Change\",\n    \"VXUS — Classification\",\n    \"VWO — EOD Price\",\n    \"VWO — Classification\",\n    \"IEMG — ETF\",\n    \"IEMG — EOD Price\",\n    \"IEMG — YTD Price Change\",\n    \"IEMG — One Day Change\",\n    \"IEMG — Classification\",\n    \"IJH — YTD Price Change\",\n    \"IJH — One Day Change\",\n    \"IJH — Classification\",\n    \"VTI — ETF\",\n    \"VTI — Traded As\",\n    \"VTI — EOD Price\",\n    \"VTI — Classification\",\n    \"IEFA — Traded As\",\n    \"IEFA — EOD Price\",\n    \"IEFA — YTD Price Change\",\n    \"IEFA — Classification\",\n    \"VTV — Traded As\",\n    \"VTV — EOD Price\",\n    \"VTV — Avg. Daily Volume\",\n    \"VTV — One Day Change\",\n    \"VTV — Classification\",\n    \"VOO — ETF\",\n    \"VOO — EOD Price\",\n    \"VOO — Classification\",\n    \"Your Representative — Your Financial Consultant\",\n    \"Contact Information — Business\",\n    \"DIVIDEND REINVESTMENT PREFERENCES — Automatically apply dividends toward new share acquisitions\",\n    \"DIVIDEND REINVESTMENT PREFERENCES — Allow partial share ownership for investments\",\n    \"Daily Balances — 2023-12-27 — Amount\",\n    \"Daily Balances — 2023-12-26 — Amount\",\n    \"Daily Balances — 2023-12-23 — Amount\",\n    \"Daily Balances — 2023-12-22 — Amount\",\n    \"Daily Balances — 2023-12-20 — Amount\",\n    \"Daily Balances — 2023-12-19 — Amount\",\n    \"Daily Balances — 2023-12-16 — Amount\",\n    \"Daily Balances — 2023-12-15 — Amount\",\n    \"Daily Balances — 2023-12-13 — Amount\",\n    \"Daily Balances — 2023-12-12 — Amount\",\n    \"Daily Balances — 2023-12-08 — Amount\",\n    \"Daily Balances — 2023-12-05 — Amount\",\n    \"Daily Balances — 2023-12-02 — Amount\",\n    \"Daily Balances — 2023-12-01 — Amount\",\n    \"Get your statements online — App Store\",\n    \"Get your statements online — Google Play\"\n  ],\n  \"additionalProperties\": false\n}",
+    "gpu_seconds": 6.564292317541667,
+    "gpu_type": "A100-80GB",
+    "model_version": "Qwen/Qwen3-VL-8B-Instruct via vllm-server",
+    "document_path": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/bank_statement/bank_000.png",
+    "startup_gpu_seconds": 200.732141729,
+    "is_cold_start": true
+  }
+}

@@ -1,7 +1,7 @@
 # Scoring design
 
-Rules implemented by the scorers and used in published run `20261013T154858Z`,
-checked October 13, 2026. [Results and commands](../README.md) ·
+Rules implemented by the scorers and used in published run `20261017T065717Z`,
+checked October 17, 2026. [Results and commands](../README.md) ·
 [Engine versions and pricing](engines-and-pricing.md).
 
 ## Tasks and references
@@ -23,7 +23,7 @@ structure and credit it to the OCR engine.
 Source images are pinned by `documents/manifest.json`. Text and geometry
 references ship as sidecars; accepted table and structured references live in
 `documents/table_references/gold/` and `documents/structured_references/gold/`.
-Shared Markdown catalogues and cached judge decisions ship in `results/current.zip`.
+Shared Markdown catalogues and cached judge decisions live under `results/`.
 Scoring does not regenerate Markdown catalogues or replace human gold with proposals.
 
 `engines.py` and `evaluation/legs.py` define native and prompted passes. Shared
@@ -288,11 +288,12 @@ paid once. Modal per-page cost and latency use processing-only batch time;
 startup/shutdown is shared session overhead and excluded from volume multiplication.
 See [pricing and latency assumptions](engines-and-pricing.md#pricing-audit).
 
-`results/current.zip` contains the published scores, source calls and shared
-catalogues/decisions. Local working files override bundled files. Report commands
-read saved scores without changing them. An explicit offline rescore recomputes
-scores from retained outputs; `--skip-judge` prevents new judging. Source images
-are downloaded separately; references ship in the repository.
+`results/runs/` contains the published scores, and
+`results/ocr_outputs/reconciled_outputs/` contains only the source calls used by
+them. Report commands read these files without changing the saved scores. An
+explicit offline rescore recomputes scores from retained outputs; `--skip-judge`
+prevents new judging. Source images are downloaded separately; references ship
+in the repository.
 
 ## Published result limitations
 

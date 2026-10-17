@@ -41,10 +41,25 @@ documents/structured_references/*
 documents/structured_references/gold/*
 !documents/structured_references/gold/*.json
 
-# Published evidence lives in one verified bundle. Working runs and exports
-# are local; publish_results.py replaces the bundle after an offline rescore.
+# Published results are committed as inspectable files. Superseded working
+# results are removed before publication.
 results/*
-!results/current.zip
+!results/ocr_outputs/
+!results/ocr_outputs/**
+!results/runs/
+!results/runs/**
+!results/logs/
+!results/logs/**
+!results/summaries/
+!results/summaries/**
+!results/reports/
+!results/reports/**
+!results/judge_checklists/
+!results/judge_checklists/**
+!results/kv_synonyms/
+!results/kv_synonyms/**
+!results/markdown_judge_cache/
+!results/markdown_judge_cache/**
 
 # Python
 __pycache__/
@@ -62,6 +77,3 @@ __pycache__/
 
 # Test cache
 .pytest_cache/
-
-# Local browser exports
-results/reports/

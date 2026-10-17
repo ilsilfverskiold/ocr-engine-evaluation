@@ -1,0 +1,1990 @@
+{
+  "engine": "llamaparse",
+  "document": "documents/medium/photo_receipt/photo_003.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Merchant\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Branch\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document type\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 4 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Quantity\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — @\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 5 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 6 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 7 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 8 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 9 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Card\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"*Non Vat — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — NET\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — VAT\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT TOTALS — TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VAT NO.\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Transaction details\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Email\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Customer Care — Telephone\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Merchant\",\n    \"Branch\",\n    \"Address\",\n    \"Tel\",\n    \"Document type\",\n    \"Item 1 — Description\",\n    \"Item 1 — Amount\",\n    \"Item 2 — Amount\",\n    \"Item 3 — Description\",\n    \"Item 3 — Amount\",\n    \"Item 4 — Description\",\n    \"Item 4 — Amount\",\n    \"Item 5 — Description\",\n    \"Item 5 — Quantity\",\n    \"Item 5 — @\",\n    \"Item 5 — Amount\",\n    \"Item 6 — Description\",\n    \"Item 6 — Amount\",\n    \"Item 7 — Description\",\n    \"Item 7 — Amount\",\n    \"Item 8 — Description\",\n    \"Item 8 — Amount\",\n    \"Item 9 — Description\",\n    \"Item 9 — Amount\",\n    \"TOTAL\",\n    \"Card\",\n    \"CHANGE\",\n    \"*Non Vat — NET\",\n    \"*Non Vat — VAT\",\n    \"*Non Vat — TOTAL\",\n    \"VAT — NET\",\n    \"VAT — VAT\",\n    \"VAT — TOTAL\",\n    \"VAT TOTALS — NET\",\n    \"VAT TOTALS — VAT\",\n    \"VAT TOTALS — TOTAL\",\n    \"VAT NO.\",\n    \"Cashier\",\n    \"Transaction details\",\n    \"Footer\",\n    \"Customer Care — Email\",\n    \"Customer Care — Telephone\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Merchant": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Branch": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Tel": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document type": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 4 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 4 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Quantity": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — @": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 5 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 6 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 6 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 7 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 7 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 8 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 8 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 9 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 9 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Card": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CHANGE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "*Non Vat — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — NET": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — VAT": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT TOTALS — TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VAT NO.": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Cashier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Transaction details": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Footer": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Customer Care — Email": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Customer Care — Telephone": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Merchant",
+      "Branch",
+      "Address",
+      "Tel",
+      "Document type",
+      "Item 1 — Description",
+      "Item 1 — Amount",
+      "Item 2 — Amount",
+      "Item 3 — Description",
+      "Item 3 — Amount",
+      "Item 4 — Description",
+      "Item 4 — Amount",
+      "Item 5 — Description",
+      "Item 5 — Quantity",
+      "Item 5 — @",
+      "Item 5 — Amount",
+      "Item 6 — Description",
+      "Item 6 — Amount",
+      "Item 7 — Description",
+      "Item 7 — Amount",
+      "Item 8 — Description",
+      "Item 8 — Amount",
+      "Item 9 — Description",
+      "Item 9 — Amount",
+      "TOTAL",
+      "Card",
+      "CHANGE",
+      "*Non Vat — NET",
+      "*Non Vat — VAT",
+      "*Non Vat — TOTAL",
+      "VAT — NET",
+      "VAT — VAT",
+      "VAT — TOTAL",
+      "VAT TOTALS — NET",
+      "VAT TOTALS — VAT",
+      "VAT TOTALS — TOTAL",
+      "VAT NO.",
+      "Cashier",
+      "Transaction details",
+      "Footer",
+      "Customer Care — Email",
+      "Customer Care — Telephone"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "llama-extract",
+  "latency_seconds": 19.746279041748494,
+  "cost_per_page": 0.025,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\"Merchant\": \"FOOD LOVER'S MARKET\", \"Branch\": \"Showgate Centre\", \"Address\": \"Curie Ave, Hospital Park, Bloemfontein\", \"Tel\": \"071 849 8137\", \"Document type\": \"TAX INVOICE\", \"Item 1 — Description\": \"CELERY STICKS CUT 300G\", \"Item 1 — Amount\": \"14.99\", \"Item 2 — Amount\": \"16.99\", \"Item 3 — Description\": \"F/L RECYCLED C/BAG 24L\", \"Item 3 — Amount\": \"1.50\", \"Item 4 — Description\": \"LOAF BANANA\", \"Item 4 — Amount\": \"11.99\", \"Item 5 — Description\": \"PINEAPPLE QUEEN\", \"Item 5 — Quantity\": \"2\", \"Item 5 — @\": \"21.99\", \"Item 5 — Amount\": \"43.98\", \"Item 6 — Description\": \"COMBO PROMO\", \"Item 6 — Amount\": \"-3.98\", \"Item 7 — Description\": \"SUPER M FL/MILK C/SODA 300ML\", \"Item 7 — Amount\": \"17.99\", \"Item 8 — Description\": \"SUPER M FL/MILK S/BERRY 300ML\", \"Item 8 — Amount\": \"15.99\", \"Item 9 — Description\": \"TOMATOES LONG LIFE 2KG\", \"Item 9 — Amount\": \"59.99\", \"TOTAL\": \"213.44\", \"Card\": \"213.44\", \"CHANGE\": \"0.00\", \"*Non Vat — NET\": \"114.98\", \"*Non Vat — VAT\": \"0.00\", \"*Non Vat — TOTAL\": \"114.98\", \"VAT — NET\": \"85.60\", \"VAT — VAT\": \"12.86\", \"VAT — TOTAL\": \"98.46\", \"VAT TOTALS — NET\": \"200.58\", \"VAT TOTALS — VAT\": \"12.86\", \"VAT TOTALS — TOTAL\": \"213.44\", \"VAT NO.\": \"4110287044\", \"Cashier\": \"Felicia\", \"Transaction details\": \"C1011 #5174 11:51 3/04/2024 591045 R008\", \"Footer\": \"Thank you for your patronage\", \"Customer Care — Email\": \"care@fnv.co.za\", \"Customer Care — Telephone\": \"0860 007 728\"}",
+  "structured_output": {
+    "config": {
+      "chunk_mode": "PAGE",
+      "citation_bbox": false,
+      "cite_sources": false,
+      "confidence_scores": false,
+      "extract_model": "openai-gpt-4-1",
+      "extraction_mode": "MULTIMODAL",
+      "extraction_target": "PER_DOC",
+      "high_resolution_mode": false,
+      "invalidate_cache": false,
+      "multimodal_fast_mode": false,
+      "num_pages_context": null,
+      "page_range": null,
+      "parse_model": null,
+      "priority": null,
+      "system_prompt": null,
+      "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:33:28.536823+00:00",
+    "data": {
+      "Merchant": "FOOD LOVER'S MARKET",
+      "Branch": "Showgate Centre",
+      "Address": "Curie Ave, Hospital Park, Bloemfontein",
+      "Tel": "071 849 8137",
+      "Document type": "TAX INVOICE",
+      "Item 1 — Description": "CELERY STICKS CUT 300G",
+      "Item 1 — Amount": "14.99",
+      "Item 2 — Amount": "16.99",
+      "Item 3 — Description": "F/L RECYCLED C/BAG 24L",
+      "Item 3 — Amount": "1.50",
+      "Item 4 — Description": "LOAF BANANA",
+      "Item 4 — Amount": "11.99",
+      "Item 5 — Description": "PINEAPPLE QUEEN",
+      "Item 5 — Quantity": "2",
+      "Item 5 — @": "21.99",
+      "Item 5 — Amount": "43.98",
+      "Item 6 — Description": "COMBO PROMO",
+      "Item 6 — Amount": "-3.98",
+      "Item 7 — Description": "SUPER M FL/MILK C/SODA 300ML",
+      "Item 7 — Amount": "17.99",
+      "Item 8 — Description": "SUPER M FL/MILK S/BERRY 300ML",
+      "Item 8 — Amount": "15.99",
+      "Item 9 — Description": "TOMATOES LONG LIFE 2KG",
+      "Item 9 — Amount": "59.99",
+      "TOTAL": "213.44",
+      "Card": "213.44",
+      "CHANGE": "0.00",
+      "*Non Vat — NET": "114.98",
+      "*Non Vat — VAT": "0.00",
+      "*Non Vat — TOTAL": "114.98",
+      "VAT — NET": "85.60",
+      "VAT — VAT": "12.86",
+      "VAT — TOTAL": "98.46",
+      "VAT TOTALS — NET": "200.58",
+      "VAT TOTALS — VAT": "12.86",
+      "VAT TOTALS — TOTAL": "213.44",
+      "VAT NO.": "4110287044",
+      "Cashier": "Felicia",
+      "Transaction details": "C1011 #5174 11:51 3/04/2024 591045 R008",
+      "Footer": "Thank you for your patronage",
+      "Customer Care — Email": "care@fnv.co.za",
+      "Customer Care — Telephone": "0860 007 728"
+    },
+    "data_schema": {
+      "type": "object",
+      "properties": {
+        "Merchant": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Branch": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Tel": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Document type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 4 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 4 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 5 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 5 — Quantity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 5 — @": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 5 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 6 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 6 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 7 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 7 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 8 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 8 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 9 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 9 — Amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "TOTAL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Card": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "CHANGE": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "*Non Vat — NET": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "*Non Vat — VAT": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "*Non Vat — TOTAL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT — NET": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT — VAT": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT — TOTAL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT TOTALS — NET": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT TOTALS — VAT": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT TOTALS — TOTAL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "VAT NO.": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Cashier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Transaction details": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Footer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Customer Care — Email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Customer Care — Telephone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "Merchant",
+        "Branch",
+        "Address",
+        "Tel",
+        "Document type",
+        "Item 1 — Description",
+        "Item 1 — Amount",
+        "Item 2 — Amount",
+        "Item 3 — Description",
+        "Item 3 — Amount",
+        "Item 4 — Description",
+        "Item 4 — Amount",
+        "Item 5 — Description",
+        "Item 5 — Quantity",
+        "Item 5 — @",
+        "Item 5 — Amount",
+        "Item 6 — Description",
+        "Item 6 — Amount",
+        "Item 7 — Description",
+        "Item 7 — Amount",
+        "Item 8 — Description",
+        "Item 8 — Amount",
+        "Item 9 — Description",
+        "Item 9 — Amount",
+        "TOTAL",
+        "Card",
+        "CHANGE",
+        "*Non Vat — NET",
+        "*Non Vat — VAT",
+        "*Non Vat — TOTAL",
+        "VAT — NET",
+        "VAT — VAT",
+        "VAT — TOTAL",
+        "VAT TOTALS — NET",
+        "VAT TOTALS — VAT",
+        "VAT TOTALS — TOTAL",
+        "VAT NO.",
+        "Cashier",
+        "Transaction details",
+        "Footer",
+        "Customer Care — Email",
+        "Customer Care — Telephone"
+      ],
+      "additionalProperties": false
+    },
+    "error": null,
+    "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "extraction_metadata": {
+      "field_metadata": {},
+      "usage": {
+        "num_pages_extracted": 1,
+        "num_document_tokens": 503,
+        "num_output_tokens": 453
+      },
+      "parse_job_id": "18ec7e39-2244-4142-ae11-6bad051606a9"
+    },
+    "file": {
+      "created_at": null,
+      "data_source_id": null,
+      "expires_at": null,
+      "external_file_id": "file-not-found",
+      "file_size": null,
+      "file_type": null,
+      "id": "00000000-0000-0000-0000-000000000000",
+      "last_modified_at": null,
+      "name": "File not found",
+      "permission_info": null,
+      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+      "purpose": null,
+      "resource_info": null,
+      "updated_at": null
+    },
+    "file_id": "fa168035-c695-4ed8-b3f9-8e46378dc39f",
+    "from_ui": false,
+    "id": "880293e6-466f-4114-be90-eec5d04dc50c",
+    "job_id": "880293e6-466f-4114-be90-eec5d04dc50c",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "status": "SUCCESS",
+    "updated_at": "2026-10-06 21:33:45.251272+00:00"
+  },
+  "metadata": {
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "interface": "v1 stateless extraction",
+    "job_id": "880293e6-466f-4114-be90-eec5d04dc50c",
+    "submission_attempts": 1,
+    "cost_is_estimate": true,
+    "original_source_timestamp": "20261006T211813Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "job": {
+      "error": null,
+      "extraction_agent": {
+        "config": {
+          "chunk_mode": "PAGE",
+          "citation_bbox": false,
+          "cite_sources": false,
+          "confidence_scores": false,
+          "extract_model": "openai-gpt-4-1",
+          "extraction_mode": "MULTIMODAL",
+          "extraction_target": "PER_DOC",
+          "high_resolution_mode": false,
+          "invalidate_cache": false,
+          "multimodal_fast_mode": false,
+          "num_pages_context": null,
+          "page_range": null,
+          "parse_model": null,
+          "priority": null,
+          "system_prompt": null,
+          "use_reasoning": false
+        },
+        "created_at": "2026-10-06 21:18:19.441456+00:00",
+        "custom_configuration": "default",
+        "data_schema": {
+          "type": "object",
+          "properties": {
+            "Merchant": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Branch": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Address": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Tel": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Document type": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 4 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 4 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 5 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 5 — Quantity": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 5 — @": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 5 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 6 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 6 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 7 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 7 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 8 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 8 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 9 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 9 — Amount": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "TOTAL": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Card": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "CHANGE": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "*Non Vat — NET": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "*Non Vat — VAT": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "*Non Vat — TOTAL": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT — NET": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT — VAT": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT — TOTAL": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT TOTALS — NET": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT TOTALS — VAT": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT TOTALS — TOTAL": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "VAT NO.": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Cashier": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Transaction details": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Footer": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Customer Care — Email": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Customer Care — Telephone": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "Merchant",
+            "Branch",
+            "Address",
+            "Tel",
+            "Document type",
+            "Item 1 — Description",
+            "Item 1 — Amount",
+            "Item 2 — Amount",
+            "Item 3 — Description",
+            "Item 3 — Amount",
+            "Item 4 — Description",
+            "Item 4 — Amount",
+            "Item 5 — Description",
+            "Item 5 — Quantity",
+            "Item 5 — @",
+            "Item 5 — Amount",
+            "Item 6 — Description",
+            "Item 6 — Amount",
+            "Item 7 — Description",
+            "Item 7 — Amount",
+            "Item 8 — Description",
+            "Item 8 — Amount",
+            "Item 9 — Description",
+            "Item 9 — Amount",
+            "TOTAL",
+            "Card",
+            "CHANGE",
+            "*Non Vat — NET",
+            "*Non Vat — VAT",
+            "*Non Vat — TOTAL",
+            "VAT — NET",
+            "VAT — VAT",
+            "VAT — TOTAL",
+            "VAT TOTALS — NET",
+            "VAT TOTALS — VAT",
+            "VAT TOTALS — TOTAL",
+            "VAT NO.",
+            "Cashier",
+            "Transaction details",
+            "Footer",
+            "Customer Care — Email",
+            "Customer Care — Telephone"
+          ],
+          "additionalProperties": false
+        },
+        "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+        "name": "Default Extraction Agent",
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "updated_at": "2026-10-06 21:18:19.441456+00:00"
+      },
+      "file": {
+        "created_at": "2026-10-06 21:33:28.321746+00:00",
+        "data_source_id": null,
+        "expires_at": null,
+        "external_file_id": "extraction_file-v0dmyx0x.png",
+        "file_size": 1393742,
+        "file_type": "png",
+        "id": "fa168035-c695-4ed8-b3f9-8e46378dc39f",
+        "last_modified_at": "2026-10-06 21:33:28+00:00",
+        "name": "extraction_file-v0dmyx0x.png",
+        "permission_info": null,
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "purpose": null,
+        "resource_info": {
+          "file_size": 1393742,
+          "last_modified_at": "2026-10-06T21:33:28"
+        },
+        "updated_at": "2026-10-06 21:33:28.321746+00:00"
+      },
+      "file_id": "fa168035-c695-4ed8-b3f9-8e46378dc39f",
+      "id": "880293e6-466f-4114-be90-eec5d04dc50c",
+      "status": "PENDING"
+    },
+    "result": {
+      "config": {
+        "chunk_mode": "PAGE",
+        "citation_bbox": false,
+        "cite_sources": false,
+        "confidence_scores": false,
+        "extract_model": "openai-gpt-4-1",
+        "extraction_mode": "MULTIMODAL",
+        "extraction_target": "PER_DOC",
+        "high_resolution_mode": false,
+        "invalidate_cache": false,
+        "multimodal_fast_mode": false,
+        "num_pages_context": null,
+        "page_range": null,
+        "parse_model": null,
+        "priority": null,
+        "system_prompt": null,
+        "use_reasoning": false
+      },
+      "created_at": "2026-10-06 21:33:28.536823+00:00",
+      "data": {
+        "Merchant": "FOOD LOVER'S MARKET",
+        "Branch": "Showgate Centre",
+        "Address": "Curie Ave, Hospital Park, Bloemfontein",
+        "Tel": "071 849 8137",
+        "Document type": "TAX INVOICE",
+        "Item 1 — Description": "CELERY STICKS CUT 300G",
+        "Item 1 — Amount": "14.99",
+        "Item 2 — Amount": "16.99",
+        "Item 3 — Description": "F/L RECYCLED C/BAG 24L",
+        "Item 3 — Amount": "1.50",
+        "Item 4 — Description": "LOAF BANANA",
+        "Item 4 — Amount": "11.99",
+        "Item 5 — Description": "PINEAPPLE QUEEN",
+        "Item 5 — Quantity": "2",
+        "Item 5 — @": "21.99",
+        "Item 5 — Amount": "43.98",
+        "Item 6 — Description": "COMBO PROMO",
+        "Item 6 — Amount": "-3.98",
+        "Item 7 — Description": "SUPER M FL/MILK C/SODA 300ML",
+        "Item 7 — Amount": "17.99",
+        "Item 8 — Description": "SUPER M FL/MILK S/BERRY 300ML",
+        "Item 8 — Amount": "15.99",
+        "Item 9 — Description": "TOMATOES LONG LIFE 2KG",
+        "Item 9 — Amount": "59.99",
+        "TOTAL": "213.44",
+        "Card": "213.44",
+        "CHANGE": "0.00",
+        "*Non Vat — NET": "114.98",
+        "*Non Vat — VAT": "0.00",
+        "*Non Vat — TOTAL": "114.98",
+        "VAT — NET": "85.60",
+        "VAT — VAT": "12.86",
+        "VAT — TOTAL": "98.46",
+        "VAT TOTALS — NET": "200.58",
+        "VAT TOTALS — VAT": "12.86",
+        "VAT TOTALS — TOTAL": "213.44",
+        "VAT NO.": "4110287044",
+        "Cashier": "Felicia",
+        "Transaction details": "C1011 #5174 11:51 3/04/2024 591045 R008",
+        "Footer": "Thank you for your patronage",
+        "Customer Care — Email": "care@fnv.co.za",
+        "Customer Care — Telephone": "0860 007 728"
+      },
+      "data_schema": {
+        "type": "object",
+        "properties": {
+          "Merchant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Branch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Tel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Document type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 4 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 4 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 5 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 5 — Quantity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 5 — @": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 5 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 6 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 6 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 7 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 7 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 8 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 8 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 9 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 9 — Amount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "TOTAL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "CHANGE": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "*Non Vat — NET": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "*Non Vat — VAT": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "*Non Vat — TOTAL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT — NET": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT — VAT": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT — TOTAL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT TOTALS — NET": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT TOTALS — VAT": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT TOTALS — TOTAL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "VAT NO.": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Cashier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Transaction details": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Footer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Customer Care — Email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Customer Care — Telephone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "Merchant",
+          "Branch",
+          "Address",
+          "Tel",
+          "Document type",
+          "Item 1 — Description",
+          "Item 1 — Amount",
+          "Item 2 — Amount",
+          "Item 3 — Description",
+          "Item 3 — Amount",
+          "Item 4 — Description",
+          "Item 4 — Amount",
+          "Item 5 — Description",
+          "Item 5 — Quantity",
+          "Item 5 — @",
+          "Item 5 — Amount",
+          "Item 6 — Description",
+          "Item 6 — Amount",
+          "Item 7 — Description",
+          "Item 7 — Amount",
+          "Item 8 — Description",
+          "Item 8 — Amount",
+          "Item 9 — Description",
+          "Item 9 — Amount",
+          "TOTAL",
+          "Card",
+          "CHANGE",
+          "*Non Vat — NET",
+          "*Non Vat — VAT",
+          "*Non Vat — TOTAL",
+          "VAT — NET",
+          "VAT — VAT",
+          "VAT — TOTAL",
+          "VAT TOTALS — NET",
+          "VAT TOTALS — VAT",
+          "VAT TOTALS — TOTAL",
+          "VAT NO.",
+          "Cashier",
+          "Transaction details",
+          "Footer",
+          "Customer Care — Email",
+          "Customer Care — Telephone"
+        ],
+        "additionalProperties": false
+      },
+      "error": null,
+      "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+      "extraction_metadata": {
+        "field_metadata": {},
+        "usage": {
+          "num_pages_extracted": 1,
+          "num_document_tokens": 503,
+          "num_output_tokens": 453
+        },
+        "parse_job_id": "18ec7e39-2244-4142-ae11-6bad051606a9"
+      },
+      "file": {
+        "created_at": null,
+        "data_source_id": null,
+        "expires_at": null,
+        "external_file_id": "file-not-found",
+        "file_size": null,
+        "file_type": null,
+        "id": "00000000-0000-0000-0000-000000000000",
+        "last_modified_at": null,
+        "name": "File not found",
+        "permission_info": null,
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "purpose": null,
+        "resource_info": null,
+        "updated_at": null
+      },
+      "file_id": "fa168035-c695-4ed8-b3f9-8e46378dc39f",
+      "from_ui": false,
+      "id": "880293e6-466f-4114-be90-eec5d04dc50c",
+      "job_id": "880293e6-466f-4114-be90-eec5d04dc50c",
+      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+      "status": "SUCCESS",
+      "updated_at": "2026-10-06 21:33:45.251272+00:00"
+    }
+  }
+}

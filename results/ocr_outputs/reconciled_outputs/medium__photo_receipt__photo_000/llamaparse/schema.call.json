@@ -1,0 +1,2074 @@
+{
+  "engine": "llamaparse",
+  "document": "documents/medium/photo_receipt/photo_000.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Business name\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Address\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Tel\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Fax\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Hp\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Website\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Reg No\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Check #\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Pax(s)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Date\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Cashier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 1 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 2 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Description\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Qty\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — U.price\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — Total\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Item 3 — TAX\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Excluding GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Payable\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Total (Inclusive of GST)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Rounding Adj\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"TOTAL\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Closed\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CASH\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CHANGE\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — SR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZR — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Rate\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Amount(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"GST Summary — ZRL — Tax(RM)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Footer\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Business name\",\n    \"Address\",\n    \"Tel\",\n    \"Fax\",\n    \"Hp\",\n    \"Website\",\n    \"GST Reg No\",\n    \"Document title\",\n    \"Check #\",\n    \"Pax(s)\",\n    \"Date\",\n    \"Cashier\",\n    \"Item 1 — Description\",\n    \"Item 1 — Qty\",\n    \"Item 1 — U.price\",\n    \"Item 1 — Total\",\n    \"Item 1 — TAX\",\n    \"Item 2 — Description\",\n    \"Item 2 — Qty\",\n    \"Item 2 — U.price\",\n    \"Item 2 — Total\",\n    \"Item 2 — TAX\",\n    \"Item 3 — Description\",\n    \"Item 3 — Qty\",\n    \"Item 3 — U.price\",\n    \"Item 3 — Total\",\n    \"Item 3 — TAX\",\n    \"Total (Excluding GST)\",\n    \"GST Payable\",\n    \"Total (Inclusive of GST)\",\n    \"Rounding Adj\",\n    \"TOTAL\",\n    \"Closed\",\n    \"CASH\",\n    \"CHANGE\",\n    \"GST Summary — SR — Rate\",\n    \"GST Summary — SR — Amount(RM)\",\n    \"GST Summary — SR — Tax(RM)\",\n    \"GST Summary — ZR — Amount(RM)\",\n    \"GST Summary — ZR — Tax(RM)\",\n    \"GST Summary — ZRL — Rate\",\n    \"GST Summary — ZRL — Amount(RM)\",\n    \"GST Summary — ZRL — Tax(RM)\",\n    \"Footer\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Business name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Tel": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Fax": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Hp": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Website": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Reg No": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Check #": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Pax(s)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Cashier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 1 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 2 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Qty": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — U.price": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — Total": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Item 3 — TAX": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Excluding GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Payable": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Total (Inclusive of GST)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Rounding Adj": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TOTAL": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Closed": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CASH": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CHANGE": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — SR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZR — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Rate": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Amount(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "GST Summary — ZRL — Tax(RM)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Footer": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Business name",
+      "Address",
+      "Tel",
+      "Fax",
+      "Hp",
+      "Website",
+      "GST Reg No",
+      "Document title",
+      "Check #",
+      "Pax(s)",
+      "Date",
+      "Cashier",
+      "Item 1 — Description",
+      "Item 1 — Qty",
+      "Item 1 — U.price",
+      "Item 1 — Total",
+      "Item 1 — TAX",
+      "Item 2 — Description",
+      "Item 2 — Qty",
+      "Item 2 — U.price",
+      "Item 2 — Total",
+      "Item 2 — TAX",
+      "Item 3 — Description",
+      "Item 3 — Qty",
+      "Item 3 — U.price",
+      "Item 3 — Total",
+      "Item 3 — TAX",
+      "Total (Excluding GST)",
+      "GST Payable",
+      "Total (Inclusive of GST)",
+      "Rounding Adj",
+      "TOTAL",
+      "Closed",
+      "CASH",
+      "CHANGE",
+      "GST Summary — SR — Rate",
+      "GST Summary — SR — Amount(RM)",
+      "GST Summary — SR — Tax(RM)",
+      "GST Summary — ZR — Amount(RM)",
+      "GST Summary — ZR — Tax(RM)",
+      "GST Summary — ZRL — Rate",
+      "GST Summary — ZRL — Amount(RM)",
+      "GST Summary — ZRL — Tax(RM)",
+      "Footer"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "llama-extract",
+  "latency_seconds": 14.087592542171478,
+  "cost_per_page": 0.025,
+  "page_count": 1,
+  "error": null,
+  "raw_text": "{\"Business name\": \"SEMBOYAN TEGAS SDN BHD\", \"Address\": \"No. 5 & 7, Jalan TSJ 2, Taman Subang Jasa, Kg. Baru Subang, 40150 Shah Alam, Selangor Darul Ehsan\", \"Tel\": \"03-7846 1113\", \"Fax\": \"03-7832 1368\", \"Hp\": \"012-396 1688 012-353 7738\", \"Website\": \"www.semboyan.com\", \"GST Reg No\": \"001538965504\", \"Document title\": \"Tax Invoice\", \"Check #\": \"549146\", \"Pax(s)\": \"5\", \"Date\": \"06-03-2018 07:24:06\", \"Cashier\": \"CASHIER 4\", \"Item 1 — Description\": \"taucu kisar\", \"Item 1 — Qty\": \"2 x\", \"Item 1 — U.price\": \"6.50\", \"Item 1 — Total\": \"13.00\", \"Item 1 — TAX\": \"SR\", \"Item 2 — Description\": \"Teh wangi ros 180g\", \"Item 2 — Qty\": \"2 x\", \"Item 2 — U.price\": \"4.20\", \"Item 2 — Total\": \"8.40\", \"Item 2 — TAX\": \"ZR\", \"Item 3 — Description\": \"ASAM JAWA 1KG\", \"Item 3 — Qty\": \"1 x\", \"Item 3 — U.price\": \"4.80\", \"Item 3 — Total\": \"4.80\", \"Item 3 — TAX\": \"ZRL\", \"Total (Excluding GST)\": \"26.20\", \"GST Payable\": \"0.78\", \"Total (Inclusive of GST)\": \"26.98\", \"Rounding Adj\": \"0.02\", \"TOTAL\": \"27.00\", \"Closed\": \"06-03-2018 07:24:44\", \"CASH\": \"52.00\", \"CHANGE\": \"25.00\", \"GST Summary — SR — Rate\": \"6%\", \"GST Summary — SR — Amount(RM)\": \"13.00\", \"GST Summary — SR — Tax(RM)\": \"0.78\", \"GST Summary — ZR — Amount(RM)\": \"8.40\", \"GST Summary — ZR — Tax(RM)\": \"0.00\", \"GST Summary — ZRL — Rate\": \"0%\", \"GST Summary — ZRL — Amount(RM)\": \"4.80\", \"GST Summary — ZRL — Tax(RM)\": \"0.00\", \"Footer\": \"**** Thank You **** Please Come Again\"}",
+  "structured_output": {
+    "config": {
+      "chunk_mode": "PAGE",
+      "citation_bbox": false,
+      "cite_sources": false,
+      "confidence_scores": false,
+      "extract_model": "openai-gpt-4-1",
+      "extraction_mode": "MULTIMODAL",
+      "extraction_target": "PER_DOC",
+      "high_resolution_mode": false,
+      "invalidate_cache": false,
+      "multimodal_fast_mode": false,
+      "num_pages_context": null,
+      "page_range": null,
+      "parse_model": null,
+      "priority": null,
+      "system_prompt": null,
+      "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:32:09.888908+00:00",
+    "data": {
+      "Business name": "SEMBOYAN TEGAS SDN BHD",
+      "Address": "No. 5 & 7, Jalan TSJ 2, Taman Subang Jasa, Kg. Baru Subang, 40150 Shah Alam, Selangor Darul Ehsan",
+      "Tel": "03-7846 1113",
+      "Fax": "03-7832 1368",
+      "Hp": "012-396 1688 012-353 7738",
+      "Website": "www.semboyan.com",
+      "GST Reg No": "001538965504",
+      "Document title": "Tax Invoice",
+      "Check #": "549146",
+      "Pax(s)": "5",
+      "Date": "06-03-2018 07:24:06",
+      "Cashier": "CASHIER 4",
+      "Item 1 — Description": "taucu kisar",
+      "Item 1 — Qty": "2 x",
+      "Item 1 — U.price": "6.50",
+      "Item 1 — Total": "13.00",
+      "Item 1 — TAX": "SR",
+      "Item 2 — Description": "Teh wangi ros 180g",
+      "Item 2 — Qty": "2 x",
+      "Item 2 — U.price": "4.20",
+      "Item 2 — Total": "8.40",
+      "Item 2 — TAX": "ZR",
+      "Item 3 — Description": "ASAM JAWA 1KG",
+      "Item 3 — Qty": "1 x",
+      "Item 3 — U.price": "4.80",
+      "Item 3 — Total": "4.80",
+      "Item 3 — TAX": "ZRL",
+      "Total (Excluding GST)": "26.20",
+      "GST Payable": "0.78",
+      "Total (Inclusive of GST)": "26.98",
+      "Rounding Adj": "0.02",
+      "TOTAL": "27.00",
+      "Closed": "06-03-2018 07:24:44",
+      "CASH": "52.00",
+      "CHANGE": "25.00",
+      "GST Summary — SR — Rate": "6%",
+      "GST Summary — SR — Amount(RM)": "13.00",
+      "GST Summary — SR — Tax(RM)": "0.78",
+      "GST Summary — ZR — Amount(RM)": "8.40",
+      "GST Summary — ZR — Tax(RM)": "0.00",
+      "GST Summary — ZRL — Rate": "0%",
+      "GST Summary — ZRL — Amount(RM)": "4.80",
+      "GST Summary — ZRL — Tax(RM)": "0.00",
+      "Footer": "**** Thank You **** Please Come Again"
+    },
+    "data_schema": {
+      "type": "object",
+      "properties": {
+        "Business name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Tel": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Fax": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Hp": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Website": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Reg No": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Document title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Check #": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Pax(s)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Cashier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — Qty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — U.price": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — Total": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 1 — TAX": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — Qty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — U.price": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — Total": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 2 — TAX": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — Description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — Qty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — U.price": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — Total": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Item 3 — TAX": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Total (Excluding GST)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Payable": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Total (Inclusive of GST)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Rounding Adj": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "TOTAL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Closed": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "CASH": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "CHANGE": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — SR — Rate": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — SR — Amount(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — SR — Tax(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — ZR — Amount(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — ZR — Tax(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — ZRL — Rate": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — ZRL — Amount(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "GST Summary — ZRL — Tax(RM)": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "Footer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "Business name",
+        "Address",
+        "Tel",
+        "Fax",
+        "Hp",
+        "Website",
+        "GST Reg No",
+        "Document title",
+        "Check #",
+        "Pax(s)",
+        "Date",
+        "Cashier",
+        "Item 1 — Description",
+        "Item 1 — Qty",
+        "Item 1 — U.price",
+        "Item 1 — Total",
+        "Item 1 — TAX",
+        "Item 2 — Description",
+        "Item 2 — Qty",
+        "Item 2 — U.price",
+        "Item 2 — Total",
+        "Item 2 — TAX",
+        "Item 3 — Description",
+        "Item 3 — Qty",
+        "Item 3 — U.price",
+        "Item 3 — Total",
+        "Item 3 — TAX",
+        "Total (Excluding GST)",
+        "GST Payable",
+        "Total (Inclusive of GST)",
+        "Rounding Adj",
+        "TOTAL",
+        "Closed",
+        "CASH",
+        "CHANGE",
+        "GST Summary — SR — Rate",
+        "GST Summary — SR — Amount(RM)",
+        "GST Summary — SR — Tax(RM)",
+        "GST Summary — ZR — Amount(RM)",
+        "GST Summary — ZR — Tax(RM)",
+        "GST Summary — ZRL — Rate",
+        "GST Summary — ZRL — Amount(RM)",
+        "GST Summary — ZRL — Tax(RM)",
+        "Footer"
+      ],
+      "additionalProperties": false
+    },
+    "error": null,
+    "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "extraction_metadata": {
+      "field_metadata": {},
+      "usage": {
+        "num_pages_extracted": 1,
+        "num_document_tokens": 569,
+        "num_output_tokens": 502
+      },
+      "parse_job_id": "c5f58baf-6216-4cf1-8de3-5a4e25badf09"
+    },
+    "file": {
+      "created_at": null,
+      "data_source_id": null,
+      "expires_at": null,
+      "external_file_id": "file-not-found",
+      "file_size": null,
+      "file_type": null,
+      "id": "00000000-0000-0000-0000-000000000000",
+      "last_modified_at": null,
+      "name": "File not found",
+      "permission_info": null,
+      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+      "purpose": null,
+      "resource_info": null,
+      "updated_at": null
+    },
+    "file_id": "74814c5d-9830-47cd-8a33-c40b9dbade7d",
+    "from_ui": false,
+    "id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+    "job_id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "status": "SUCCESS",
+    "updated_at": "2026-10-06 21:32:21.412139+00:00"
+  },
+  "metadata": {
+    "extraction_mode": "MULTIMODAL",
+    "extraction_target": "PER_DOC",
+    "interface": "v1 stateless extraction",
+    "job_id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+    "submission_attempts": 1,
+    "cost_is_estimate": true,
+    "original_source_timestamp": "20261006T211813Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {
+    "job": {
+      "error": null,
+      "extraction_agent": {
+        "config": {
+          "chunk_mode": "PAGE",
+          "citation_bbox": false,
+          "cite_sources": false,
+          "confidence_scores": false,
+          "extract_model": "openai-gpt-4-1",
+          "extraction_mode": "MULTIMODAL",
+          "extraction_target": "PER_DOC",
+          "high_resolution_mode": false,
+          "invalidate_cache": false,
+          "multimodal_fast_mode": false,
+          "num_pages_context": null,
+          "page_range": null,
+          "parse_model": null,
+          "priority": null,
+          "system_prompt": null,
+          "use_reasoning": false
+        },
+        "created_at": "2026-10-06 21:18:19.441456+00:00",
+        "custom_configuration": "default",
+        "data_schema": {
+          "type": "object",
+          "properties": {
+            "Business name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Address": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Tel": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Fax": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Hp": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Website": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Reg No": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Document title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Check #": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Pax(s)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Date": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Cashier": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — Qty": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — U.price": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — Total": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 1 — TAX": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — Qty": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — U.price": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — Total": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 2 — TAX": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — Description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — Qty": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — U.price": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — Total": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Item 3 — TAX": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Total (Excluding GST)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Payable": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Total (Inclusive of GST)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Rounding Adj": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "TOTAL": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Closed": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "CASH": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "CHANGE": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — SR — Rate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — SR — Amount(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — SR — Tax(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — ZR — Amount(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — ZR — Tax(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — ZRL — Rate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — ZRL — Amount(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "GST Summary — ZRL — Tax(RM)": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "Footer": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "Business name",
+            "Address",
+            "Tel",
+            "Fax",
+            "Hp",
+            "Website",
+            "GST Reg No",
+            "Document title",
+            "Check #",
+            "Pax(s)",
+            "Date",
+            "Cashier",
+            "Item 1 — Description",
+            "Item 1 — Qty",
+            "Item 1 — U.price",
+            "Item 1 — Total",
+            "Item 1 — TAX",
+            "Item 2 — Description",
+            "Item 2 — Qty",
+            "Item 2 — U.price",
+            "Item 2 — Total",
+            "Item 2 — TAX",
+            "Item 3 — Description",
+            "Item 3 — Qty",
+            "Item 3 — U.price",
+            "Item 3 — Total",
+            "Item 3 — TAX",
+            "Total (Excluding GST)",
+            "GST Payable",
+            "Total (Inclusive of GST)",
+            "Rounding Adj",
+            "TOTAL",
+            "Closed",
+            "CASH",
+            "CHANGE",
+            "GST Summary — SR — Rate",
+            "GST Summary — SR — Amount(RM)",
+            "GST Summary — SR — Tax(RM)",
+            "GST Summary — ZR — Amount(RM)",
+            "GST Summary — ZR — Tax(RM)",
+            "GST Summary — ZRL — Rate",
+            "GST Summary — ZRL — Amount(RM)",
+            "GST Summary — ZRL — Tax(RM)",
+            "Footer"
+          ],
+          "additionalProperties": false
+        },
+        "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+        "name": "Default Extraction Agent",
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "updated_at": "2026-10-06 21:18:19.441456+00:00"
+      },
+      "file": {
+        "created_at": "2026-10-06 21:32:09.721795+00:00",
+        "data_source_id": null,
+        "expires_at": null,
+        "external_file_id": "extraction_file-7svjdswr.png",
+        "file_size": 455703,
+        "file_type": "png",
+        "id": "74814c5d-9830-47cd-8a33-c40b9dbade7d",
+        "last_modified_at": "2026-10-06 21:32:09+00:00",
+        "name": "extraction_file-7svjdswr.png",
+        "permission_info": null,
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "purpose": null,
+        "resource_info": {
+          "file_size": 455703,
+          "last_modified_at": "2026-10-06T21:32:09"
+        },
+        "updated_at": "2026-10-06 21:32:09.721795+00:00"
+      },
+      "file_id": "74814c5d-9830-47cd-8a33-c40b9dbade7d",
+      "id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+      "status": "PENDING"
+    },
+    "result": {
+      "config": {
+        "chunk_mode": "PAGE",
+        "citation_bbox": false,
+        "cite_sources": false,
+        "confidence_scores": false,
+        "extract_model": "openai-gpt-4-1",
+        "extraction_mode": "MULTIMODAL",
+        "extraction_target": "PER_DOC",
+        "high_resolution_mode": false,
+        "invalidate_cache": false,
+        "multimodal_fast_mode": false,
+        "num_pages_context": null,
+        "page_range": null,
+        "parse_model": null,
+        "priority": null,
+        "system_prompt": null,
+        "use_reasoning": false
+      },
+      "created_at": "2026-10-06 21:32:09.888908+00:00",
+      "data": {
+        "Business name": "SEMBOYAN TEGAS SDN BHD",
+        "Address": "No. 5 & 7, Jalan TSJ 2, Taman Subang Jasa, Kg. Baru Subang, 40150 Shah Alam, Selangor Darul Ehsan",
+        "Tel": "03-7846 1113",
+        "Fax": "03-7832 1368",
+        "Hp": "012-396 1688 012-353 7738",
+        "Website": "www.semboyan.com",
+        "GST Reg No": "001538965504",
+        "Document title": "Tax Invoice",
+        "Check #": "549146",
+        "Pax(s)": "5",
+        "Date": "06-03-2018 07:24:06",
+        "Cashier": "CASHIER 4",
+        "Item 1 — Description": "taucu kisar",
+        "Item 1 — Qty": "2 x",
+        "Item 1 — U.price": "6.50",
+        "Item 1 — Total": "13.00",
+        "Item 1 — TAX": "SR",
+        "Item 2 — Description": "Teh wangi ros 180g",
+        "Item 2 — Qty": "2 x",
+        "Item 2 — U.price": "4.20",
+        "Item 2 — Total": "8.40",
+        "Item 2 — TAX": "ZR",
+        "Item 3 — Description": "ASAM JAWA 1KG",
+        "Item 3 — Qty": "1 x",
+        "Item 3 — U.price": "4.80",
+        "Item 3 — Total": "4.80",
+        "Item 3 — TAX": "ZRL",
+        "Total (Excluding GST)": "26.20",
+        "GST Payable": "0.78",
+        "Total (Inclusive of GST)": "26.98",
+        "Rounding Adj": "0.02",
+        "TOTAL": "27.00",
+        "Closed": "06-03-2018 07:24:44",
+        "CASH": "52.00",
+        "CHANGE": "25.00",
+        "GST Summary — SR — Rate": "6%",
+        "GST Summary — SR — Amount(RM)": "13.00",
+        "GST Summary — SR — Tax(RM)": "0.78",
+        "GST Summary — ZR — Amount(RM)": "8.40",
+        "GST Summary — ZR — Tax(RM)": "0.00",
+        "GST Summary — ZRL — Rate": "0%",
+        "GST Summary — ZRL — Amount(RM)": "4.80",
+        "GST Summary — ZRL — Tax(RM)": "0.00",
+        "Footer": "**** Thank You **** Please Come Again"
+      },
+      "data_schema": {
+        "type": "object",
+        "properties": {
+          "Business name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Tel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Fax": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Hp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Reg No": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Document title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Check #": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Pax(s)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Cashier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — Qty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — U.price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — Total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 1 — TAX": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — Qty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — U.price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — Total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 2 — TAX": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — Description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — Qty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — U.price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — Total": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Item 3 — TAX": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Total (Excluding GST)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Payable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Total (Inclusive of GST)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Rounding Adj": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "TOTAL": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Closed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "CASH": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "CHANGE": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — SR — Rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — SR — Amount(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — SR — Tax(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — ZR — Amount(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — ZR — Tax(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — ZRL — Rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — ZRL — Amount(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "GST Summary — ZRL — Tax(RM)": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "Footer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "Business name",
+          "Address",
+          "Tel",
+          "Fax",
+          "Hp",
+          "Website",
+          "GST Reg No",
+          "Document title",
+          "Check #",
+          "Pax(s)",
+          "Date",
+          "Cashier",
+          "Item 1 — Description",
+          "Item 1 — Qty",
+          "Item 1 — U.price",
+          "Item 1 — Total",
+          "Item 1 — TAX",
+          "Item 2 — Description",
+          "Item 2 — Qty",
+          "Item 2 — U.price",
+          "Item 2 — Total",
+          "Item 2 — TAX",
+          "Item 3 — Description",
+          "Item 3 — Qty",
+          "Item 3 — U.price",
+          "Item 3 — Total",
+          "Item 3 — TAX",
+          "Total (Excluding GST)",
+          "GST Payable",
+          "Total (Inclusive of GST)",
+          "Rounding Adj",
+          "TOTAL",
+          "Closed",
+          "CASH",
+          "CHANGE",
+          "GST Summary — SR — Rate",
+          "GST Summary — SR — Amount(RM)",
+          "GST Summary — SR — Tax(RM)",
+          "GST Summary — ZR — Amount(RM)",
+          "GST Summary — ZR — Tax(RM)",
+          "GST Summary — ZRL — Rate",
+          "GST Summary — ZRL — Amount(RM)",
+          "GST Summary — ZRL — Tax(RM)",
+          "Footer"
+        ],
+        "additionalProperties": false
+      },
+      "error": null,
+      "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+      "extraction_metadata": {
+        "field_metadata": {},
+        "usage": {
+          "num_pages_extracted": 1,
+          "num_document_tokens": 569,
+          "num_output_tokens": 502
+        },
+        "parse_job_id": "c5f58baf-6216-4cf1-8de3-5a4e25badf09"
+      },
+      "file": {
+        "created_at": null,
+        "data_source_id": null,
+        "expires_at": null,
+        "external_file_id": "file-not-found",
+        "file_size": null,
+        "file_type": null,
+        "id": "00000000-0000-0000-0000-000000000000",
+        "last_modified_at": null,
+        "name": "File not found",
+        "permission_info": null,
+        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+        "purpose": null,
+        "resource_info": null,
+        "updated_at": null
+      },
+      "file_id": "74814c5d-9830-47cd-8a33-c40b9dbade7d",
+      "from_ui": false,
+      "id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+      "job_id": "0942fe95-a252-420c-8474-14a3d8c4ad07",
+      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+      "status": "SUCCESS",
+      "updated_at": "2026-10-06 21:32:21.412139+00:00"
+    }
+  }
+}
