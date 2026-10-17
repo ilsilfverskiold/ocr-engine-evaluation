@@ -1,12 +1,45 @@
 from __future__ import annotations
 
 import os
+import html
+import re
 from pathlib import Path
 
 from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
 
 COST_PER_PAGE = 0.00375  # cost_effective tier: 3 credits/page × $1.25/1K credits
 EXTRACT_COST_PER_PAGE = 0.025  # v1 MULTIMODAL: 20 credits × $1.25/1000
+
+
+def _audit_text_view(page: dict) -> tuple[str, list[dict]]:
+    """Score the native text unchanged and expose differences from native items."""
+    native = str(page.get("text") or "").strip()
+    additions = []
+
+    def words(value: str) -> list[str]:
+        return re.findall(r"\w+", html.unescape(re.sub(r"<[^>]+>", " ", value)).casefold())
+
+    seen = words(native)
+
+    def add(value, source):
+        for line in str(value or "").splitlines():
+            # Normalize item table Markdown only for the audit. The native
+            # page text remains the scored text, unchanged.
+            if re.fullmatch(r"[\s|:-]+", line):
+                continue
+            plain = html.unescape(re.sub(r"<[^>]+>", " ", line)).strip().strip("|").strip()
+            if "|" in plain:
+                plain = "\t".join(cell.strip() for cell in plain.split("|"))
+            tokens = words(plain)
+            if tokens and not any(seen[i:i + len(tokens)] == tokens
+                                  for i in range(len(seen) - len(tokens) + 1)):
+                additions.append({"source": source, "text": plain})
+
+    for index, item in enumerate(page.get("items") or []):
+        add(item.get("value") or item.get("md") or item.get("html"), f"items[{index}]")
+    for field in ("pageHeaderMarkdown", "pageFooterMarkdown", "printedPageNumber"):
+        add(page.get(field), field)
+    return native, additions
 
 
 def _sanitize_schema_for_llama(schema: dict) -> dict:
@@ -75,9 +108,21 @@ class LlamaParseRunner(OCRRunner):
 
         pages = getattr(result, "pages", None) or []
         page_count = max(1, len(pages))
-        raw_text = "\n".join(
-            (getattr(p, "md", None) or getattr(p, "text", None) or "") for p in pages
-        ).strip()
+        if any((getattr(p, "md", None) or "").strip() and
+               not (getattr(p, "text", None) or "").strip() for p in pages):
+            raise ValueError("LlamaParse returned Markdown without native text for a page")
+        page_payloads = [provider_payload(p, max_bytes=32_000_000) for p in pages]
+        if any("_truncated" in payload for payload in page_payloads):
+            raise ValueError("LlamaParse page payload exceeded the retention limit")
+        text_views = [_audit_text_view(payload) for payload in page_payloads]
+        raw_text = "\n".join(view[0] for view in text_views).strip()
+        markdown = "\n".join((getattr(p, "md", None) or "") for p in pages).strip()
+        structured = provider_payload(result, max_bytes=32_000_000)
+        if "_truncated" in structured:
+            raise ValueError("LlamaParse result exceeded the retention limit")
+        structured["markdown"] = markdown
+        structured["native_text"] = "\n".join((getattr(p, "text", None) or "") for p in pages).strip()
+        structured["text_item_differences"] = [view[1] for view in text_views]
 
         return OCRResult(
             engine_name=self.name,
@@ -85,7 +130,7 @@ class LlamaParseRunner(OCRRunner):
             raw_text=raw_text,
             # The parse result carries per-page items with types and boxes;
             # keeping only the concatenated markdown threw that away.
-            structured_output=provider_payload(result),
+            structured_output=structured,
             latency_seconds=elapsed,
             cost_per_page=COST_PER_PAGE,
             page_count=page_count,

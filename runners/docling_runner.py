@@ -2,9 +2,64 @@ from __future__ import annotations
 
 from importlib.metadata import version
 from pathlib import Path
-
 from runners.base import OCRResult, OCRRunner, OCRTask
 
+
+def _complete_export(rendered: str, native_document: dict) -> tuple[str, list[dict]]:
+    """Retain recognized text items the Docling serializer did not traverse."""
+    import html
+    import re
+
+    def words(value):
+        clean = html.unescape(re.sub(r"<[^>]+>", " ", value))
+        clean = re.sub(r"\\([\\`*_{}\[\]()#+.!<>|])", r"\1", clean)
+        return re.findall(r"\w+", clean.casefold())
+
+    output = rendered.rstrip()
+    seen = words(output)
+    additions = []
+
+    def insertion_after_parent_table(item):
+        parent = (item.get("parent") or {}).get("$ref", "")
+        if not parent.startswith("#/tables/"):
+            return None
+        try:
+            table = (native_document.get("tables") or [])[int(parent.rsplit("/", 1)[1])]
+        except (IndexError, ValueError):
+            return None
+        cells = [str(cell.get("text") or "").strip() for cell in
+                 (table.get("data") or {}).get("table_cells") or []]
+        cells = [cell for cell in cells if len(cell) >= 4]
+        if not cells:
+            return None
+        start = output.find(cells[0])
+        end = output.find(cells[-1], max(0, start)) if start >= 0 else -1
+        if end < 0:
+            return None
+        line_end = output.find("\n", end + len(cells[-1]))
+        return len(output) if line_end < 0 else line_end + 1
+
+    entries = [(f"texts[{index}]", item) for index, item in
+               enumerate(native_document.get("texts") or [])]
+    for table_index, table in enumerate(native_document.get("tables") or []):
+        for cell_index, cell in enumerate((table.get("data") or {}).get("table_cells") or []):
+            entries.append((f"tables[{table_index}].cells[{cell_index}]", cell))
+    for source, item in entries:
+        value = str(item.get("text") or "").strip()
+        tokens = words(value)
+        if tokens and not any(seen[i:i + len(tokens)] == tokens
+                              for i in range(len(seen) - len(tokens) + 1)):
+            position = insertion_after_parent_table(item)
+            additions.append({"source": source, "label": item.get("label"),
+                              "content_layer": item.get("content_layer"),
+                              "parent": item.get("parent"), "text": value,
+                              "insert_after": position})
+            if position is None or position == len(output):
+                output += "\n\n" + value
+            else:
+                output = output[:position] + value + "\n\n" + output[position:]
+            seen = words(output)
+    return output, additions
 
 def _quiet_torch_stack() -> None:
     """Silence docling's model stack so the benchmark's own output survives.
@@ -96,8 +151,17 @@ class DoclingRunner(OCRRunner):
         elapsed = self._elapsed(t0)
 
         doc = result.document
-        # Export as markdown for clean flat text
-        raw_text = doc.export_to_markdown()
+        from docling_core.types.doc import ContentLayer
+        layers = set(ContentLayer)
+        raw_text = doc.export_to_text(included_content_layers=layers, traverse_pictures=True)
+        markdown = doc.export_to_markdown(included_content_layers=layers, traverse_pictures=True)
+        native_document = doc.export_to_dict()
+        if any(str(getattr(item, "text", "")).strip() for item in getattr(doc, "texts", [])) \
+                and (not raw_text.strip() or not markdown.strip()):
+            raise ValueError("Docling has recognized text items absent from an export")
+        provider_text, provider_markdown = raw_text, markdown
+        raw_text, text_supplements = _complete_export(raw_text, native_document)
+        markdown, markdown_supplements = _complete_export(markdown, native_document)
 
         # Collect table HTML for structured output
         tables: list[dict] = []
@@ -116,7 +180,17 @@ class DoclingRunner(OCRRunner):
             except Exception:
                 pass
 
-        structured_output = {"tables": tables} if tables else {}
+        structured_output = {
+            "markdown": markdown,
+            "provider_text": provider_text,
+            "provider_markdown": provider_markdown,
+            "text_supplements": text_supplements,
+            "markdown_supplements": markdown_supplements,
+            "content_layers": sorted(layer.value for layer in layers),
+            "native_document": native_document,
+        }
+        if tables:
+            structured_output["tables"] = tables
 
         # Page count from document metadata
         page_count = len(doc.pages) if hasattr(doc, "pages") else 1

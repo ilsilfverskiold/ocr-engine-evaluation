@@ -13,14 +13,18 @@ def audit_modal_records(records: list[dict]) -> tuple[list[dict], list[str], boo
 
     Historical runs used per-request timing and have no ``measurement_scope``.
     They are left reportable, but are not treated as audited batch measurements.
-    If a run contains any new batch records, every successful Modal record in
-    that run must use the same auditable schema.
+    If a run contains any new batch records, every successful physical Modal
+    call in that run must use the same auditable schema. Saved-call view replays
+    carry their own scope and are not additional physical calls.
     """
 
+    # A corrected view of a saved call is not a second GPU invocation. Its
+    # physical batch remains in the original inference record.
     modal_rows = [
         row
         for row in records
         if row.get("engine_name") in MODAL_ENGINES and not row.get("error")
+        and row.get("measurement_scope") != "replayed_saved_call"
     ]
     if not modal_rows:
         return [], [], False

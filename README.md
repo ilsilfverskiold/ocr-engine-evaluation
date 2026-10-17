@@ -5,7 +5,11 @@ schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
-Saved run: **`20261013T154858Z`**. Rankings use the saved outputs and current scoring rules.
+Saved run: **`20261017T065717Z`**. Rankings use the saved outputs and current scoring rules.
+The [text/Markdown output repair](docs/text-markdown-output-repair.md) rescored
+LlamaParse, PaddleOCR-VL v1 and MinerU pipeline from retained calls, and Docling
+from a new local conversion of the same 93 pages. PaddleOCR-VL 1.6 is a separate
+later-engine integration and has no rows in this benchmark.
 Each leg is sorted by overall score, highest first. Overall means give each
 document family equal weight. **Easy/medium/hard are difficulty tiers.** “Pages”
 counts successful scores; errors are listed separately. **—** means no score,
@@ -30,11 +34,11 @@ insertions and ordering; coverage alone ignores extra text. No judge.
 | `mistral_ocr_4` | 0.9231 | 0.9560 | 0.9554 | 0.8813 | 82 | 0.1355 | 0.2034 |
 | `qwen3_vl` | 0.9077 | 0.9536 | 0.8856 | 0.9168 | 82 | 0.5730 | 0.7905 |
 | `glm_ocr` | 0.9039 | 0.9459 | 0.9197 | 0.8761 | 82 | 0.1698 | 0.2407 |
+| `llamaparse` | 0.8814 | 0.9474 | 0.8724 | 0.8716 | 82 | 0.1754 | 0.2757 |
+| `paddleocr_vl` | 0.8749 | 0.9446 | 0.8223 | 0.9076 | 82 | 0.3137 | 0.3952 |
+| `docling` | 0.8643 | 0.9112 | 0.8919 | 0.8234 | 82 | 0.2989 | 0.4184 |
 | `mineru` | 0.8613 | 0.9133 | 0.8926 | 0.8152 | 82 | 0.2122 | 0.2826 |
-| `llamaparse` | 0.8584 | 0.9145 | 0.8294 | 0.8714 | 82 | 0.1855 | 0.2826 |
 | `marker` | 0.8563 | 0.8868 | 0.8673 | 0.8365 | 82 | 0.2490 | 0.3260 |
-| `paddleocr_vl` | 0.8525 | 0.9386 | 0.8057 | 0.8746 | 82 | 0.2490 | 0.2499 |
-| `docling` | 0.8248 | 0.9092 | 0.8814 | 0.7441 | 82 | 0.3166 | 0.4273 |
 | `deepseek_ocr` | 0.8243 | 0.8910 | 0.7837 | 0.8458 | 82 | 0.2319 | 0.3298 |
 | `tesseract` | 0.7391 | 0.8682 | 0.7539 | 0.6874 | 82 | 0.3532 | 0.5126 |
 
@@ -72,11 +76,16 @@ the answers. CER/WER below measure rendered text separately.
 | `qwen3_vl` | 0.7566 | 0.8913 | 0.7464 | 0.7319 | 92 | 0.2410 | 0.3122 |
 | `mineru` | 0.6972 | 0.8225 | 0.6624 | 0.6964 | 92 | 0.2136 | 0.2836 |
 | `llamaparse` | 0.6911 | 0.8441 | 0.6663 | 0.6747 | 92 | 0.1855 | 0.2826 |
-| `docling` | 0.6520 | 0.8434 | 0.6406 | 0.6141 | 92 | 0.3166 | 0.4273 |
+| `docling` | 0.6869 | 0.8434 | 0.6472 | 0.6826 | 92 | 0.2988 | 0.4179 |
+| `paddleocr_vl` | 0.6831 | 0.8074 | 0.5888 | 0.7346 | 92 | 0.3102 | 0.3821 |
 | `marker` | 0.6398 | 0.7972 | 0.5581 | 0.6718 | 92 | 0.2490 | 0.3260 |
 | `deepseek_ocr` | 0.6391 | 0.8065 | 0.5767 | 0.6519 | 92 | 0.2941 | 0.3798 |
-| `paddleocr_vl` | 0.6362 | 0.8032 | 0.5512 | 0.6689 | 92 | 0.2490 | 0.2499 |
 | `glm_ocr` | 0.5173 | 0.3794 | 0.4646 | 0.5979 | 92 | 0.3209 | 0.3753 |
+
+`mineru_pipeline` has corrected text 0.8599 and Markdown 0.6348 on its 17
+saved pages. That smaller geometry sample is separate from these rankings.
+PaddleOCR-VL v1's recovered blocks raised text coverage, but its CER rose from
+0.2490 to 0.3137; the block order and inserted content affect edit distance.
 
 ### Tables
 
@@ -228,9 +237,9 @@ these are projections, not measured production runs.
 | `textract_text` | 4.73 sec | 1 hr 19 min | 5 days 11 hr | 54 days 17 hr |
 | `qwen3_vl` | 5.38 sec | 1 hr 30 min | 6 days 5 hr | 62 days 7 hr |
 | `textract_structured` | 7.08 sec | 1 hr 58 min | 8 days 5 hr | 81 days 23 hr |
-| `docling` | 15.60 sec | 4 hr 20 min | 18 days 1 hr | 180 days 14 hr |
 | `claude_sonnet_4_6` | 18.27 sec | 5 hr 4 min | 21 days 3 hr | 211 days 11 hr |
 | `llamaparse` | 21.88 sec | 6 hr 5 min | 25 days 8 hr | 253 days 7 hr |
+| `docling` | 24.84 sec | 6 hr 54 min | 28 days 17 hr | 287 days 11 hr |
 
 ### Geometry-only pipelines
 
@@ -252,7 +261,7 @@ These two configurations were measured on 17 pages, separately from text OCR.
 | --- | --- | --- |
 | `claude_sonnet_4_6` | Sonnet 4.6 | Anthropic API |
 | `deepseek_ocr` | DeepSeek-OCR v1 · `9f30c71f441d` | vLLM · Modal A100-80GB |
-| `docling` | 2.118.1 (reconstructed) | Heron + TableFormer Accurate + RapidOCR/PP-OCRv6 · CPU |
+| `docling` | 2.118.1 (recorded local rerun) | Heron + TableFormer Accurate + RapidOCR/PP-OCRv6 · CPU |
 | `gemini_flash` | Gemini 3.1 Flash-Lite | Google API |
 | `glm_ocr` | GLM-OCR · `ca5d8b3e287e` | vLLM · Modal A10 |
 | `llamaparse` | v1 Balanced; backend unrecorded | Parse API; schema: LlamaExtract / GPT-4.1 |

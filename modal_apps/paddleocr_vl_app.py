@@ -1,6 +1,7 @@
 """Modal app: PaddleOCR-VL — PaddlePaddle/PaddleOCR-VL. GPU: A100-80GB."""
 
 import modal
+from html.parser import HTMLParser
 
 GPU_TYPE = "A100-80GB"  # hardware-matched to published throughput figures (single A100)
 MODEL_ID = "PaddlePaddle/PaddleOCR-VL"
@@ -54,6 +55,89 @@ image = (
 paddlex_cache = modal.Volume.from_name("paddlex-model-cache", create_if_missing=True)
 
 app = modal.App("ocr-bench-paddleocr-vl")
+
+
+class _TableText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"td", "th"} and self.parts:
+            self.parts.append("\t")
+        elif tag == "tr" and self.parts:
+            self.parts.append("\n")
+
+    def handle_data(self, data):
+        self.parts.append(data)
+
+
+def _block_text(content: str) -> str:
+    if "<table" not in content.lower():
+        return content
+    parser = _TableText()
+    parser.feed(content)
+    return "".join(parser.parts).strip()
+
+
+def _plain_text_from_blocks(blocks: list[dict]) -> str:
+    """Use every recognized content block, including page furniture and short IDs."""
+    return "\n".join(
+        _block_text(str(block.get("content")))
+        for block in blocks
+        if block.get("content") is not None and str(block["content"]).strip()
+    )
+
+
+def _complete_markdown(markdown: str, blocks: list[dict],
+                       historical_filtered: bool = False) -> tuple[str, list[dict]]:
+    """Keep native Markdown and disclose any recognized blocks absent from it."""
+    import re
+
+    def words(value):
+        return re.findall(r"\w+", _block_text(value).casefold())
+
+    original = markdown.rstrip()
+    seen = words(original)
+    additions = []
+    insertions = []
+    default_ignored = {"header", "footer", "footnote", "number", "aside_text",
+                       "header_image", "footer_image"}
+    for index, block in enumerate(blocks):
+        content = str(block.get("content") or "").strip()
+        tokens = words(content)
+        omitted_by_default = historical_filtered and block.get("label") in default_ignored
+        if tokens and (omitted_by_default or not any(seen[i:i + len(tokens)] == tokens
+                                                    for i in range(len(seen) - len(tokens) + 1))):
+            position = len(original)
+            for following in blocks[index + 1:]:
+                anchor = str(following.get("content") or "").strip().splitlines()
+                if not anchor:
+                    continue
+                candidate = anchor[0].strip()
+                if candidate.lower().startswith("<table"):
+                    candidate = "<table"
+                if len(candidate) < 4:
+                    continue
+                found = original.find(candidate)
+                if found >= 0:
+                    position = found
+                    break
+            additions.append({"label": block.get("label"), "order": block.get("order"),
+                              "bbox": block.get("bbox"), "content": content,
+                              "insert_before": position})
+            insertions.append((position, index, content))
+            seen.extend(tokens)
+    output = original
+    for position, _, content in sorted(
+            (item for item in insertions if item[0] < len(original)),
+            key=lambda item: (item[0], item[1]), reverse=True):
+        output = output[:position] + content + "\n\n" + output[position:]
+    at_end = [content for _, _, content in sorted(
+        (item for item in insertions if item[0] == len(original)), key=lambda item: item[1])]
+    if at_end:
+        output = output.rstrip() + "\n\n" + "\n\n".join(at_end)
+    return output, additions
 
 
 def _normalise_box(box, width: int, height: int):
@@ -224,7 +308,7 @@ class PaddleOCRVLInference:
             with tempfile.TemporaryDirectory() as td:
                 p = _Path(td) / "warm.png"
                 _PILImage.new("RGB", (1024, 1024), (255, 255, 255)).save(p)
-                list(self._pipeline.predict(str(p)))
+                list(self._pipeline.predict(str(p), markdown_ignore_labels=[]))
         except Exception:
             pass
 
@@ -261,7 +345,7 @@ class PaddleOCRVLInference:
                     paths.append(str(path))
 
                 rendered_results = list(
-                    self._pipeline.predict(paths, use_queues=True)
+                    self._pipeline.predict(paths, use_queues=True, markdown_ignore_labels=[])
                 )
                 if len(rendered_results) != len(files):
                     raise RuntimeError(
@@ -319,7 +403,7 @@ class PaddleOCRVLInference:
             p = Path(td) / f"input{ext}"
             p.write_bytes(image_bytes)
 
-            rendered_results = list(self._pipeline.predict(str(p)))
+            rendered_results = list(self._pipeline.predict(str(p), markdown_ignore_labels=[]))
             if len(rendered_results) != 1:
                 raise RuntimeError(
                     f"PaddleOCR-VL returned {len(rendered_results)} results for one input"
@@ -352,9 +436,9 @@ class PaddleOCRVLInference:
         the output of the call we already pay for.
         """
         md = res.markdown
-        text = md.get("markdown_texts", "") if isinstance(md, dict) else str(md)
+        markdown = md.get("markdown_texts", "") if isinstance(md, dict) else str(md)
 
-        structured: dict = {}
+        structured: dict = {"markdown": markdown, "markdown_ignore_labels": []}
 
         # --- layout blocks: label, content, bbox, reading order ---------------
         page_w, page_h = page_size
@@ -476,8 +560,14 @@ class PaddleOCRVLInference:
         except Exception as exc:
             structured["_debug_result_shape"] = f"{type(exc).__name__}: {exc}"
 
+        if structured.get("layout_blocks"):
+            structured["provider_markdown"] = markdown
+            structured["markdown"], structured["markdown_supplements"] = _complete_markdown(
+                markdown, structured["layout_blocks"])
+        elif markdown.strip():
+            raise ValueError("Paddle returned Markdown but no parsing blocks for plain text")
         return {
-            "raw_text": text,
+            "raw_text": _plain_text_from_blocks(structured.get("layout_blocks", [])),
             "structured_output": structured,
             "gpu_type": GPU_TYPE,
             "model_version": (

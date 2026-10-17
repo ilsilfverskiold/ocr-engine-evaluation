@@ -2,6 +2,7 @@
 small-model chain, run as its own engine beside the MinerU 2.5 VLM engine."""
 
 import modal
+from html.parser import HTMLParser
 
 GPU_TYPE = "T4"
 MINERU_VERSION = "2.5.4"
@@ -43,6 +44,119 @@ image = (
 )
 
 app = modal.App("ocr-bench-mineru-pipeline")
+
+
+class _HTMLText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"td", "th"} and self.parts:
+            self.parts.append("\t")
+        elif tag == "tr" and self.parts:
+            self.parts.append("\n")
+
+    def handle_data(self, data):
+        self.parts.append(data)
+
+
+def _plain(content: str) -> str:
+    if "<table" not in content.lower():
+        return content
+    parser = _HTMLText()
+    parser.feed(content)
+    return "".join(parser.parts).strip()
+
+
+def _block_lines(block):
+    for child in block.get("blocks") or []:
+        yield from _block_lines(child)
+    for line in block.get("lines") or []:
+        parts = []
+        for span in line.get("spans") or []:
+            content = (span.get("html") if span.get("type") == "table" and span.get("html")
+                       else span.get("content") or span.get("html"))
+            if content is not None and str(content).strip():
+                parts.append(str(content))
+        if parts:
+            yield " ".join(parts)
+
+
+def _complete_views(page: dict, provider_markdown: str) -> tuple[str, str, list[dict]]:
+    """Include every recognized span, even when MinerU classifies it as discarded."""
+    import re
+
+    para = page.get("para_blocks") or []
+    discarded = page.get("discarded_blocks") or []
+    text_parts = []
+    additions = []
+    # Preserve the provider's paragraph order. Insert page-furniture blocks
+    # before the first following paragraph by vertical position.
+    pending = sorted(discarded, key=lambda b: (b.get("bbox") or [0, 0])[1])
+    for block in para:
+        top = (block.get("bbox") or [0, float("inf")])[1]
+        while pending and (pending[0].get("bbox") or [0, float("inf")])[1] <= top:
+            item = pending.pop(0)
+            text_parts.extend(_plain(s) for s in _block_lines(item))
+            additions.append({"source": "discarded_blocks", "bbox": item.get("bbox"),
+                              "text": "\n".join(_block_lines(item))})
+        text_parts.extend(_plain(s) for s in _block_lines(block))
+    for item in pending:
+        text_parts.extend(_plain(s) for s in _block_lines(item))
+        additions.append({"source": "discarded_blocks", "bbox": item.get("bbox"),
+                          "text": "\n".join(_block_lines(item))})
+    # union_make renders para_blocks only. Keep its formatting and insert the
+    # excluded blocks before the next paragraph when an exact source anchor
+    # survives; page-footers naturally go at the end.
+    original = provider_markdown.rstrip()
+    insertions = []
+    for index, item in enumerate(additions):
+        if not item["text"].strip():
+            continue
+        position = len(original)
+        item_top = (item.get("bbox") or [0, float("inf")])[1]
+        for block in para:
+            block_top = (block.get("bbox") or [0, float("inf")])[1]
+            if block_top < item_top:
+                continue
+            first = next(_block_lines(block), "").strip()
+            if not first or first.lower().startswith("<table"):
+                continue
+            found = original.find(first)
+            if found >= 0:
+                position = original.rfind("\n", 0, found) + 1
+                break
+        item["insert_before"] = position
+        insertions.append((position, index, item["text"]))
+    markdown = original
+    for position, _, content in sorted(
+            (entry for entry in insertions if entry[0] < len(original)),
+            key=lambda value: (value[0], value[1]), reverse=True):
+        markdown = markdown[:position] + content + "\n\n" + markdown[position:]
+    at_end = [content for _, _, content in sorted(
+        (entry for entry in insertions if entry[0] == len(original)), key=lambda value: value[1])]
+    if at_end:
+        markdown = markdown.rstrip() + "\n\n" + "\n\n".join(at_end)
+    # The native renderer can join adjacent source lines without a separator
+    # (observed on a fax cover sheet). Keep those original lines recoverable.
+    def words(value):
+        return re.findall(r"\w+", _plain(value).casefold())
+
+    md_words = words(markdown)
+    for block in para:
+        for line in _block_lines(block):
+            tokens = words(line)
+            if tokens and not any(md_words[i:i + len(tokens)] == tokens
+                                  for i in range(len(md_words) - len(tokens) + 1)):
+                markdown += "\n\n" + line
+                additions.append({"source": "para_blocks", "bbox": block.get("bbox"),
+                                  "text": line})
+                md_words.extend(tokens)
+    plain_text = "\n".join(part for part in text_parts if part.strip())
+    if not plain_text and re.search(r"\w", _plain(provider_markdown)):
+        raise ValueError("MinerU returned Markdown but no recognized text spans")
+    return plain_text, markdown, additions
 
 
 def _norm_box(box, page_w: float, page_h: float):
@@ -277,8 +391,11 @@ class MinerUPipelineInference:
                 _walk_blocks(page.get("para_blocks"), page_w, page_h, layout, lines, spans, tables)
                 discarded = []
                 _walk_blocks(page.get("discarded_blocks"), page_w, page_h, discarded, [], [], [])
+                plain_text, complete_markdown, additions = _complete_views(page, markdown)
                 structured = {
-                    "markdown": markdown,
+                    "markdown": complete_markdown,
+                    "provider_markdown": markdown,
+                    "markdown_supplements": additions,
                     "layout_blocks": layout,
                     "discarded_blocks": discarded,
                     "text_regions": [dict(l) for l in lines],
@@ -301,7 +418,7 @@ class MinerUPipelineInference:
                 if tables:
                     structured["tables"] = tables
                 results.append({
-                    "raw_text": "\n".join(l["text"] for l in lines),
+                    "raw_text": plain_text,
                     "structured_output": structured,
                     "model_version": self._model_version(),
                     "prompt_used": None,

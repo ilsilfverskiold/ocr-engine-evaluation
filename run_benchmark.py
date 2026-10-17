@@ -1103,7 +1103,7 @@ def engine_operational(inference: list[dict]) -> dict[str, dict]:
     passes: dict[str, set[str]] = defaultdict(set)
 
     for r in unique_inference_calls(inference):
-        if r.get("error"):
+        if r.get("error") or r.get("measurement_scope") == "replayed_saved_call":
             continue
         engine, doc = r["engine_name"], r["document_path"]
         cost = r.get("steady_cost_per_page")
