@@ -118,7 +118,8 @@ def score_key_value(
     native_matches = native_field_matches(gt, pairs, pair_context or [])
     from evaluation.shared_fields import KV_VERSION, reference_id, score_shared, reference_fields
     from evaluation.kv_value_groups import resolve, relation
-    resolution = resolve(gt, pairs, use_judge=use_judge, pair_context=pair_context, native_matches=native_matches)
+    resolution = resolve(gt, pairs, use_judge=use_judge, pair_context=pair_context, native_matches=native_matches,
+                         engine=engine)
     res = score_shared(gt, pairs, "key_value", resolution.synonyms, resolution.groups, native_matches, pair_context)
     pending = resolution.pending
     for item in res.unresolved:

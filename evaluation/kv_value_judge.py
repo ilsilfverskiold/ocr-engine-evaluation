@@ -1,12 +1,19 @@
-"""KV judge request journaling, spending limits and saved-decision compatibility."""
+"""KV judge request journaling, spending limits and the per-document rulings file.
+
+One file per document, keyed by its reference fields. Under each field:
+`expected` (the reference value), `synonyms` (label means this field on this
+document, any engine), `pairs` (label only with this exact value) and
+`output_rulings` (accepted/rejected decisions about one engine output, with the
+pairs looked at; reused only for that identical output). Full requests and
+replies stay in the local, untracked calls/ journal.
+"""
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import defaultdict
 import hashlib
 import json
 import os
-from functools import lru_cache
-from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists, glob_paths
+from evaluation.artifacts import read_text as artifact_text, exists as artifact_exists
 from pathlib import Path
 from threading import RLock
 
@@ -39,7 +46,7 @@ def decode_reply(text: str) -> dict:
     return reply
 
 
-VERSION = "kv-value-assisted-v1"
+VERSION = "kv-field-rulings-v1"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results/kv_synonyms/value_assisted"
 _locks = defaultdict(RLock)
 _budget_lock = RLock()
@@ -59,94 +66,75 @@ def _read(gt):
     if artifact_exists(path):
         record = json.loads(artifact_text(path))
         if record.get("version") == VERSION and record.get("reference_id") == reference_id(gt):
-            _limit_repeated_aliases(record['decisions'], [f.path for f in reference_fields(gt)])
             return record
-    return {"version": VERSION, "reference_id": reference_id(gt), "decisions": []}
+    return {"version": VERSION, "reference_id": reference_id(gt), "fields": {}}
 
 
-def _limit_repeated_aliases(entries, keys):
-    # Repeated contextual labels remain exact-pair confirmations even when the
-    # model overstates their suitability as unconditional aliases.
+def repeated_label(path, gt) -> bool:
+    """A label printed for several reference fields (item vs summary "Net worth")
+    is never a value-independent synonym; it stays an exact key+value pair."""
     leaf = lambda key: normalize_label(key.split(' — ')[-1])
-    counts = Counter(leaf(key) for key in keys)
-    for entry in entries:
-        target = entry.get('reference_key')
-        if target and entry.get('synonym') and counts[leaf(target)] > 1:
-            entry['synonym'] = False
-            entry['alias_scope_reason'] = 'repeated reference label; exact key/value confirmation only'
+    return sum(leaf(f.path) == leaf(path) for f in reference_fields(gt)) > 1
 
 
-@lru_cache(maxsize=4)
-def _saved_calls(root):
-    """Index earlier paid replies once on startup, independent of batch grouping."""
-    by_reference = defaultdict(list)
-    for path in sorted(glob_paths(root / 'calls', '*.json')):
-        saved = json.loads(artifact_text(path))
-        request = saved.get('request', {})
-        if request.get('version') == VERSION and saved.get('raw_text'):
-            try:
-                entries = validate(request, decode_reply(saved['raw_text']))
-            except (ValueError, TypeError):
-                continue  # Preserve malformed paid replies for manual review.
-            by_reference[request['reference_id']].extend(entries)
-    return by_reference
+def _entries(record, gt, path, kind):
+    field = record["fields"].setdefault(path, {})
+    if "expected" not in field:
+        field["expected"] = next(f.value for f in reference_fields(gt) if f.path == path)
+    return field.setdefault(kind, [])
 
 
-def _recover_saved(gt):
-    record = _read(gt)
-    known = {pair_identity(d['key'], d['value']) for d in record['decisions']}
-    added = False
-    for entry in _saved_calls(CACHE_ROOT).get(record['reference_id'], []):
-        identity = pair_identity(entry['key'], entry['value'])
-        if identity not in known:
-            record['decisions'].append(entry)
-            known.add(identity)
-            added = True
-    if added:
-        _save(gt, record)
+def _identities(record):
+    return {pair_identity(e["key"], e["value"]): path
+            for path, kinds in record["fields"].items()
+            for kind in ("synonyms", "pairs") for e in kinds.get(kind, [])}
+
+
+def add_synonym(record, gt, path, key, value, request_id):
+    """A judge-approved label for a field. Repeated labels are never synonyms;
+    their approval stays with the output ruling it came from."""
+    key = str(key)
+    if any(e["key"] == key for e in record["fields"].get(path, {}).get("synonyms", [])):
+        return
+    if repeated_label(path, gt) or pair_identity(key, value) in _identities(record):
+        return
+    _entries(record, gt, path, "synonyms").append({"key": key, "value": value, "request_id": request_id})
+
+
+def looked_at(pairs, output_ids):
+    """Engine pairs by 1-based output ID (the numbering the judge saw)."""
+    return [{"output_id": i, "key": str(pairs[i - 1][0]), "value": pairs[i - 1][1]} for i in output_ids]
+
+
+def add_output_ruling(record, gt, path, ruling):
+    if ruling not in record["fields"].get(path, {}).get("output_rulings", []):
+        _entries(record, gt, path, "output_rulings").append(ruling)
+
+
+def output_rulings(record, output):
+    """This output's reviews, as the matcher uses them (reference field + indices)."""
+    return [{"reference_key": path,
+             "indices": [p["output_id"] - 1 for p in r["looked_at"]] if r["verdict"] == "accepted" else [],
+             **{k: v for k, v in r.items() if k not in ("output", "engine", "verdict", "looked_at")}}
+            for path, kinds in record["fields"].items()
+            for r in kinds.get("output_rulings", []) if r["output"] == output]
 
 
 def _cache_maps(record):
-    decisions, aliases = {}, defaultdict(set)
-    for entry in record["decisions"]:
-        decisions[pair_identity(entry["key"], entry["value"])] = entry["reference_key"]
-        if entry.get("synonym") and entry["reference_key"] is not None:
-            aliases[entry["key"]].add(entry["reference_key"])
-    # Conflicting aliases never resolve by last-write-wins.
-    result = {key: next(iter(refs)) for key, refs in aliases.items() if len(refs) == 1}
-    result.update({key: value for key, value in decisions.items() if value is not None})
-    return decisions, result
+    """Label -> field (unambiguous synonyms) plus exact (label, value) -> field."""
+    aliases = defaultdict(set)
+    for path, kinds in record["fields"].items():
+        for e in kinds.get("synonyms", []):
+            aliases[e["key"]].add(path)
+    # Conflicting synonyms never resolve by last-write-wins.
+    result = {key: next(iter(paths)) for key, paths in aliases.items() if len(paths) == 1}
+    result.update(_identities(record))
+    return result
 
 
 def validate(request, reply):
-    if request.get('version') == 'kv-context-groups-v2':
-        from evaluation.kv_value_groups import validate
-        return validate(request, reply)
-    pairs = request["output_pairs"]
-    if set(reply) != {str(p["id"]) for p in pairs}:
-        raise ValueError("Missing or invented pair IDs")
-    refs = {r["id"]: r["key"] for r in request["reference_fields"]}
-    entries = []
-    for pair in pairs:
-        row = reply[str(pair["id"])]
-        if not isinstance(row, dict) or set(row) != {"reference_id", "synonym"}:
-            raise ValueError("Invalid pair verdict")
-        rid = row["reference_id"]
-        if type(rid) is not int or rid not in [0, *refs]:
-            raise ValueError("Invented reference field ID")
-        if type(row["synonym"]) is not bool or (not rid and row["synonym"]):
-            raise ValueError("Invalid synonym flag")
-        # A real field with a wrong value is an incorrect pair, not a broken
-        # JSON batch. Keep the proposal for audit, reject credit, and preserve
-        # valid decisions for the other pairs without paying for a retry.
-        eligible = rid in pair['candidate_ids']
-        entries.append({"key": pair["key"], "value": pair["value"],
-                        "reference_key": refs.get(rid) if eligible else None,
-                        "synonym": row["synonym"] if eligible else False,
-                        "rejected_value_proposal": refs.get(rid) if rid and not eligible else None,
-                        "request_id": request["id"]})
-    _limit_repeated_aliases(entries, list(refs.values()))
-    return entries
+    from evaluation.kv_value_groups import validate
+    return validate(request, reply)
 
 
 def _ask(request):

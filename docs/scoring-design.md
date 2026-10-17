@@ -197,11 +197,15 @@ Match known keys first; use value evidence to nominate unresolved candidates:
    one-use component allocation. An empty returned value must identify its output
    component; an empty selection is not a match. There is no Seller/Client-specific rule.
 
-Group approvals bind to the full returned context and reference identity. Only
-explicitly approved single-key synonyms with complete matching values can be
-reused across contexts. Negative cache decisions do not suppress new partial-value
-candidates. Changed context/references invalidate affected decisions. Saved judge
-replies are journaled and not automatically retried.
+Rulings are stored per document in `results/kv_synonyms/value_assisted/<page>.json`,
+keyed by reference field: `synonyms` (label alone identifies the field, any engine),
+`pairs` (label only with that exact value) and `output_rulings` (accepted or
+rejected, with the engine pairs looked at). Output rulings bind to the full
+returned context and reference identity. Only explicitly approved single-key
+synonyms with complete matching values are reused across contexts; labels that
+repeat on the page never become synonyms. Changed references invalidate the file.
+Full judge requests and replies are journaled locally (`calls/`, untracked) and
+not automatically retried.
 
 The headline includes correct nonblank and blank fields. Missing keys do not
 count as correct blanks. Populated-only accuracy, blank accuracy and extra pairs
