@@ -9,7 +9,10 @@ from evaluation.modal_metrics import audit_modal_records
 from modal_apps.mineru_pipeline_app import _complete_views
 from modal_apps.paddleocr_vl_app import _complete_markdown, _plain_text_from_blocks
 from runners.docling_runner import DoclingRunner, _complete_export
+from runners.base import OCRResult, OCRRunner, OCRTask, sent_record
 from runners.llamaparse_runner import LlamaParseRunner
+from runners.mistral_runner import MistralOCRRunner
+from runners.modal_runner import ModalRunner
 
 
 OUTPUTS = (Path(__file__).resolve().parents[1]
@@ -134,6 +137,63 @@ class CompleteViewsTest(unittest.TestCase):
         self.assertNotIn("<table", text.lower())
         self.assertTrue(any(item["source"] == "discarded_blocks" and footer in item["text"]
                             for item in supplements))
+
+
+class SentRecordTest(unittest.TestCase):
+    """The call log records what reached the engine, never an unsent task prompt."""
+
+    def test_unsent_task_prompt_is_not_logged(self):
+        result = SimpleNamespace(metadata={"sent": sent_record(None, "endpoint takes no prompt")},
+                                 raw_response={})
+        self.assertIsNone(rb.sent_text(result))
+
+    def test_app_reported_prompt_is_still_read(self):
+        result = SimpleNamespace(metadata={}, raw_response={"prompt_used": "Free OCR."})
+        self.assertEqual(rb.sent_text(result), "Free OCR.")
+
+    def test_runner_without_task_records_no_instruction(self):
+        class Fixed(OCRRunner):
+            def run(self, document_path, task=None):
+                return OCRResult("fixed", str(document_path), "text", {}, 0.0, 0.0, 1, "v")
+        sent = Fixed().run_safe(Path("page.png")).metadata["sent"]
+        self.assertIsNone(sent["text"])
+
+    def test_mistral_schema_sends_schema_not_prompt(self):
+        task = OCRTask("schema", "Extract ... Schema: {...}", json_schema={"type": "object"})
+        kwargs, sent = MistralOCRRunner._annotation(task)
+        self.assertNotIn("document_annotation_prompt", kwargs)
+        self.assertIsNone(sent["text"])
+        self.assertTrue(sent["schema_separately"])
+
+    def test_mistral_key_value_sends_prompt_with_open_schema(self):
+        task = OCRTask("key_value", "Extract every printed label ...", response_format="json")
+        kwargs, sent = MistralOCRRunner._annotation(task)
+        self.assertEqual(kwargs["document_annotation_prompt"], task.prompt)
+        schema = kwargs["document_annotation_format"]["json_schema"]["schema"]
+        self.assertNotIn("properties", schema)
+        self.assertEqual(sent["text"], task.prompt)
+
+    def test_modal_selector_fixed_pipeline_and_task_prompt(self):
+        runner = object.__new__(ModalRunner)
+        runner.accepts_task = True
+        selector = runner._sent("__marker_ocr_converter__", None, {})
+        self.assertIsNone(selector["text"])
+        prompted = runner._sent("Read all the text.", {"type": "json_object"}, {})
+        self.assertEqual(prompted["text"], "Read all the text.")
+        self.assertIn("json_object", prompted["constraint"])
+        runner.accepts_task = False
+        self.assertIsNone(runner._sent(None, None, {})["text"])
+
+
+class TablesFromMarkdownViewTest(unittest.TestCase):
+    def test_llamaparse_tables_come_from_its_markdown_view(self):
+        from evaluation.ground_truth import GroundTruthLoader
+        from evaluation.table_leg import score_tables
+        call = saved_call("easy__invoice__invoice_000/llamaparse/default.call.json")
+        self.assertNotIn("|", call["raw_text"])
+        gt = GroundTruthLoader().load(Path(__file__).resolve().parents[1] / "documents/easy/invoice/invoice_000.png")
+        score = score_tables(call["raw_text"], gt, "llamaparse", call["structured_output"], use_judge=False)
+        self.assertGreater(score.score, 0.8)
 
 
 if __name__ == "__main__":

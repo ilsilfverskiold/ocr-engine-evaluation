@@ -1,0 +1,640 @@
+{
+  "engine": "gemini_flash",
+  "document": "documents/medium/bank_statement/bank_001.png",
+  "pass_name": "schema",
+  "legs_fed": [
+    "schema"
+  ],
+  "prompt_sent": "Extract the values from this document as JSON conforming exactly to this schema. Use null for fields not present on the page. Output only JSON.\n\nSchema:\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Institution\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Document title\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Account as of\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"CLIENT SERVICE INFORMATION — ID\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Contact Information — Business\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Page\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Footnote\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — BEGINNING BALANCE — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — BEGINNING BALANCE — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Transaction Fees — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Realized Capital Gains — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Realized Capital Gains — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Net Change in Portfolio — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Net Change in Portfolio — YTD Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"ACCOUNT OVERVIEW — Withdrawals — Current Period\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTV — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VTI — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VUG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VIG — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VOO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"QQQ — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IWF — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IWF — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IWF — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IWF — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IWF — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VGT — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VWO — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IVV — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"VXUS — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJR — Classification\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Exchange Fund\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IJH — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Security Identifier\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Price (Last Close)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"IEFA — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Price Change (YTD)\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — Avg. Daily Volume\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"SPY — One Day Change\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-30 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-29 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-28 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-27 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-26 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-23 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-19 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-12 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-09 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-07 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"DAILY BALANCES — 2023-12-06 — Amount\": {\n      \"type\": [\n        \"string\",\n        \"null\"\n      ]\n    },\n    \"Main designated recipient of account proceeds — Individual\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Main designated recipient of account proceeds — Trust\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Main designated recipient of account proceeds — Charity\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Backup beneficiary if the primary is unavailable — Trust\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Backup beneficiary if the primary is unavailable — Estate\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Backup beneficiary if the primary is unavailable — None\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    },\n    \"Preferred tax-lot approach for open-ended and mutual funds — LIFO\": {\n      \"type\": [\n        \"boolean\",\n        \"null\"\n      ]\n    }\n  },\n  \"required\": [\n    \"Institution\",\n    \"Document title\",\n    \"Account as of\",\n    \"CLIENT SERVICE INFORMATION — ID\",\n    \"Contact Information — Business\",\n    \"Page\",\n    \"ACCOUNT OVERVIEW — Footnote\",\n    \"ACCOUNT OVERVIEW — BEGINNING BALANCE — Current Period\",\n    \"ACCOUNT OVERVIEW — BEGINNING BALANCE — YTD Period\",\n    \"ACCOUNT OVERVIEW — Transaction Fees — Current Period\",\n    \"ACCOUNT OVERVIEW — Realized Capital Gains — Current Period\",\n    \"ACCOUNT OVERVIEW — Realized Capital Gains — YTD Period\",\n    \"ACCOUNT OVERVIEW — Net Change in Portfolio — Current Period\",\n    \"ACCOUNT OVERVIEW — Net Change in Portfolio — YTD Period\",\n    \"ACCOUNT OVERVIEW — Withdrawals — Current Period\",\n    \"VTV — Exchange Fund\",\n    \"VTV — Price Change (YTD)\",\n    \"VTV — One Day Change\",\n    \"VTI — Security Identifier\",\n    \"VTI — Exchange Fund\",\n    \"VTI — One Day Change\",\n    \"VTI — Classification\",\n    \"VUG — Security Identifier\",\n    \"VUG — Price (Last Close)\",\n    \"VUG — Price Change (YTD)\",\n    \"VUG — Avg. Daily Volume\",\n    \"VUG — One Day Change\",\n    \"VUG — Classification\",\n    \"VIG — Exchange Fund\",\n    \"VIG — One Day Change\",\n    \"VIG — Classification\",\n    \"VOO — Price Change (YTD)\",\n    \"QQQ — One Day Change\",\n    \"IWF — Security Identifier\",\n    \"IWF — Exchange Fund\",\n    \"IWF — Price Change (YTD)\",\n    \"IWF — One Day Change\",\n    \"IWF — Classification\",\n    \"VGT — Security Identifier\",\n    \"VGT — Price (Last Close)\",\n    \"VGT — Price Change (YTD)\",\n    \"VGT — One Day Change\",\n    \"VWO — Security Identifier\",\n    \"VWO — Price (Last Close)\",\n    \"VWO — Price Change (YTD)\",\n    \"VWO — Avg. Daily Volume\",\n    \"IVV — Price Change (YTD)\",\n    \"IVV — Avg. Daily Volume\",\n    \"IVV — Classification\",\n    \"VXUS — Exchange Fund\",\n    \"VXUS — Price (Last Close)\",\n    \"VXUS — Price Change (YTD)\",\n    \"VXUS — One Day Change\",\n    \"IJR — Security Identifier\",\n    \"IJR — Exchange Fund\",\n    \"IJR — Price (Last Close)\",\n    \"IJR — One Day Change\",\n    \"IJR — Classification\",\n    \"IJH — Exchange Fund\",\n    \"IJH — Price (Last Close)\",\n    \"IJH — Avg. Daily Volume\",\n    \"IEFA — Security Identifier\",\n    \"IEFA — Price (Last Close)\",\n    \"IEFA — Avg. Daily Volume\",\n    \"IEFA — One Day Change\",\n    \"SPY — Price Change (YTD)\",\n    \"SPY — Avg. Daily Volume\",\n    \"SPY — One Day Change\",\n    \"DAILY BALANCES — 2023-12-30 — Amount\",\n    \"DAILY BALANCES — 2023-12-29 — Amount\",\n    \"DAILY BALANCES — 2023-12-28 — Amount\",\n    \"DAILY BALANCES — 2023-12-27 — Amount\",\n    \"DAILY BALANCES — 2023-12-26 — Amount\",\n    \"DAILY BALANCES — 2023-12-23 — Amount\",\n    \"DAILY BALANCES — 2023-12-19 — Amount\",\n    \"DAILY BALANCES — 2023-12-12 — Amount\",\n    \"DAILY BALANCES — 2023-12-09 — Amount\",\n    \"DAILY BALANCES — 2023-12-07 — Amount\",\n    \"DAILY BALANCES — 2023-12-06 — Amount\",\n    \"Main designated recipient of account proceeds — Individual\",\n    \"Main designated recipient of account proceeds — Trust\",\n    \"Main designated recipient of account proceeds — Charity\",\n    \"Backup beneficiary if the primary is unavailable — Trust\",\n    \"Backup beneficiary if the primary is unavailable — Estate\",\n    \"Backup beneficiary if the primary is unavailable — None\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — FIFO\",\n    \"Preferred tax-lot approach for open-ended and mutual funds — LIFO\"\n  ],\n  \"additionalProperties\": false\n}",
+  "response_format": "json",
+  "json_schema_sent": true,
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "Institution": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Document title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Account as of": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "CLIENT SERVICE INFORMATION — ID": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Contact Information — Business": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Page": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Footnote": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — BEGINNING BALANCE — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — BEGINNING BALANCE — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Transaction Fees — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Realized Capital Gains — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Realized Capital Gains — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Net Change in Portfolio — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Net Change in Portfolio — YTD Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "ACCOUNT OVERVIEW — Withdrawals — Current Period": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTV — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VTI — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VUG — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VIG — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VIG — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VIG — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VOO — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "QQQ — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IWF — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IWF — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IWF — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IWF — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IWF — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VGT — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VWO — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IVV — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "VXUS — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJR — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJR — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJR — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJR — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJR — Classification": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — Exchange Fund": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IJH — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — Security Identifier": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — Price (Last Close)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "IEFA — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — Price Change (YTD)": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — Avg. Daily Volume": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "SPY — One Day Change": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-30 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-29 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-28 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-27 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-26 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-23 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-19 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-12 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-09 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-07 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "DAILY BALANCES — 2023-12-06 — Amount": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Main designated recipient of account proceeds — Individual": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Main designated recipient of account proceeds — Trust": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Main designated recipient of account proceeds — Charity": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Backup beneficiary if the primary is unavailable — Trust": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Backup beneficiary if the primary is unavailable — Estate": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Backup beneficiary if the primary is unavailable — None": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Preferred tax-lot approach for open-ended and mutual funds — FIFO": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "Preferred tax-lot approach for open-ended and mutual funds — LIFO": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "Institution",
+      "Document title",
+      "Account as of",
+      "CLIENT SERVICE INFORMATION — ID",
+      "Contact Information — Business",
+      "Page",
+      "ACCOUNT OVERVIEW — Footnote",
+      "ACCOUNT OVERVIEW — BEGINNING BALANCE — Current Period",
+      "ACCOUNT OVERVIEW — BEGINNING BALANCE — YTD Period",
+      "ACCOUNT OVERVIEW — Transaction Fees — Current Period",
+      "ACCOUNT OVERVIEW — Realized Capital Gains — Current Period",
+      "ACCOUNT OVERVIEW — Realized Capital Gains — YTD Period",
+      "ACCOUNT OVERVIEW — Net Change in Portfolio — Current Period",
+      "ACCOUNT OVERVIEW — Net Change in Portfolio — YTD Period",
+      "ACCOUNT OVERVIEW — Withdrawals — Current Period",
+      "VTV — Exchange Fund",
+      "VTV — Price Change (YTD)",
+      "VTV — One Day Change",
+      "VTI — Security Identifier",
+      "VTI — Exchange Fund",
+      "VTI — One Day Change",
+      "VTI — Classification",
+      "VUG — Security Identifier",
+      "VUG — Price (Last Close)",
+      "VUG — Price Change (YTD)",
+      "VUG — Avg. Daily Volume",
+      "VUG — One Day Change",
+      "VUG — Classification",
+      "VIG — Exchange Fund",
+      "VIG — One Day Change",
+      "VIG — Classification",
+      "VOO — Price Change (YTD)",
+      "QQQ — One Day Change",
+      "IWF — Security Identifier",
+      "IWF — Exchange Fund",
+      "IWF — Price Change (YTD)",
+      "IWF — One Day Change",
+      "IWF — Classification",
+      "VGT — Security Identifier",
+      "VGT — Price (Last Close)",
+      "VGT — Price Change (YTD)",
+      "VGT — One Day Change",
+      "VWO — Security Identifier",
+      "VWO — Price (Last Close)",
+      "VWO — Price Change (YTD)",
+      "VWO — Avg. Daily Volume",
+      "IVV — Price Change (YTD)",
+      "IVV — Avg. Daily Volume",
+      "IVV — Classification",
+      "VXUS — Exchange Fund",
+      "VXUS — Price (Last Close)",
+      "VXUS — Price Change (YTD)",
+      "VXUS — One Day Change",
+      "IJR — Security Identifier",
+      "IJR — Exchange Fund",
+      "IJR — Price (Last Close)",
+      "IJR — One Day Change",
+      "IJR — Classification",
+      "IJH — Exchange Fund",
+      "IJH — Price (Last Close)",
+      "IJH — Avg. Daily Volume",
+      "IEFA — Security Identifier",
+      "IEFA — Price (Last Close)",
+      "IEFA — Avg. Daily Volume",
+      "IEFA — One Day Change",
+      "SPY — Price Change (YTD)",
+      "SPY — Avg. Daily Volume",
+      "SPY — One Day Change",
+      "DAILY BALANCES — 2023-12-30 — Amount",
+      "DAILY BALANCES — 2023-12-29 — Amount",
+      "DAILY BALANCES — 2023-12-28 — Amount",
+      "DAILY BALANCES — 2023-12-27 — Amount",
+      "DAILY BALANCES — 2023-12-26 — Amount",
+      "DAILY BALANCES — 2023-12-23 — Amount",
+      "DAILY BALANCES — 2023-12-19 — Amount",
+      "DAILY BALANCES — 2023-12-12 — Amount",
+      "DAILY BALANCES — 2023-12-09 — Amount",
+      "DAILY BALANCES — 2023-12-07 — Amount",
+      "DAILY BALANCES — 2023-12-06 — Amount",
+      "Main designated recipient of account proceeds — Individual",
+      "Main designated recipient of account proceeds — Trust",
+      "Main designated recipient of account proceeds — Charity",
+      "Backup beneficiary if the primary is unavailable — Trust",
+      "Backup beneficiary if the primary is unavailable — Estate",
+      "Backup beneficiary if the primary is unavailable — None",
+      "Preferred tax-lot approach for open-ended and mutual funds — FIFO",
+      "Preferred tax-lot approach for open-ended and mutual funds — LIFO"
+    ],
+    "additionalProperties": false
+  },
+  "model_version": "unknown",
+  "latency_seconds": 0.0,
+  "cost_per_page": 0.0,
+  "page_count": 0,
+  "error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The service is currently unavailable.', 'status': 'UNAVAILABLE'}}",
+  "raw_text": "",
+  "structured_output": {},
+  "metadata": {
+    "original_source_timestamp": "20261006T205850Z",
+    "reconciled_run": "20261017T065717Z"
+  },
+  "raw_response": {}
+}

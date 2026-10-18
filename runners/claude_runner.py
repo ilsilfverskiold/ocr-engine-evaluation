@@ -5,7 +5,7 @@ import io
 import os
 from pathlib import Path
 
-from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
+from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload, sent_record
 
 _MAX_BYTES = 4_900_000  # Claude API hard limit is 5MB; stay under with margin
 
@@ -162,6 +162,12 @@ class ClaudeRunner(OCRRunner):
             model_version=self._model,
             metadata={
                 "prompt_used": request["messages"][0]["content"][1]["text"],
+                "sent": sent_record(
+                    request["messages"][0]["content"][1]["text"],
+                    "runner geometry prompt (pixel frame; replaces the task prompt)" if geometry_frame
+                    else "task prompt" if task else "runner built-in prompt (_PROMPT)",
+                    "free text; JSON asked for in the prompt, temperature 0"
+                    if task and task.wants_json else "free text"),
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
                 "leg": task.leg if task else "default",

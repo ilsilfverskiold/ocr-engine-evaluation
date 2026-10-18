@@ -4,7 +4,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from modal_apps._shared import GPU_SECOND_RATES_USD, calculate_modal_cost
-from runners.base import OCRResult, OCRRunner, OCRTask
+from runners.base import OCRResult, OCRRunner, OCRTask, sent_record
 
 # Registry-derived Modal configuration. Response GPU type overrides the registry cost fallback.
 from engines import ENGINES as _ENGINE_SPECS
@@ -66,7 +66,27 @@ class ModalRunner(OCRRunner):
             else "image/png"
         )
 
-    def _to_result(self, document_path: Path, response: dict) -> OCRResult:
+    def _sent(self, prompt: str | None, response_format: dict | None, response: dict) -> dict:
+        """What reached the app: the prompt passed (or the default it reports) and the JSON directive."""
+        if prompt is not None and prompt.startswith("__") and prompt.endswith("__"):
+            return sent_record(None, f"converter selector {prompt}: chooses a pipeline, not sent to a model")
+        if prompt is not None:
+            text, source = response.get("prompt_used") or prompt, "task prompt"
+        elif not self.accepts_task:
+            text, source = None, "none from us: fixed pipeline; any internal prompts are set by the library"
+        else:
+            text = response.get("prompt_used")
+            source = "app built-in default prompt" if text else "app built-in default (text not reported by the app)"
+        kind = (response_format or {}).get("type")
+        constraint = ("JSON schema passed to the app as response_format" if kind == "json_schema"
+                      else "JSON mode passed to the app (json_object)" if kind == "json_object"
+                      else "free text" if self.accepts_task else "none (native output)")
+        if response.get("response_format_applied") is False:
+            constraint += "; the app reports it was not applied"
+        return sent_record(text, source, constraint, schema_separately=kind == "json_schema")
+
+    def _to_result(self, document_path: Path, response: dict, prompt: str | None = None,
+                   response_format: dict | None = None) -> OCRResult:
         gpu_seconds = response.get("gpu_seconds", 0.0)
         # The app reports the GPU it actually ran on; trust that over the registry
         # fallback so changing GPU_TYPE in one place cannot mis-bill a whole run.
@@ -88,6 +108,7 @@ class ModalRunner(OCRRunner):
                 "startup_gpu_seconds": response.get("startup_gpu_seconds", 0.0),
                 "is_cold_start": response.get("is_cold_start", False),
                 "startup_excluded": True,
+                "sent": self._sent(prompt, response_format, response),
             },
             # The app's whole reply. raw_text/structured_output are the two keys
             # we read; an app that also returns a finish reason, a per-page
@@ -126,7 +147,7 @@ class ModalRunner(OCRRunner):
         else:
             response = cls().run_ocr.remote(raw_bytes, mime_type, prompt,
                                             response_format)
-        return self._to_result(document_path, response)
+        return self._to_result(document_path, response, prompt, response_format)
 
     @staticmethod
     def _response_format(task: OCRTask | None) -> dict | None:
@@ -201,7 +222,7 @@ class ModalRunner(OCRRunner):
             response["startup_gpu_seconds"] = startup_gpu_seconds
             response["is_cold_start"] = is_cold_start
             result_path = Path(response.get("document_path") or path)
-            result = self._to_result(result_path, response)
+            result = self._to_result(result_path, response, prompt, response_format)
             result.metadata.update({
                 "measurement_scope": "modal_batch",
                 "batch_id": batch_id,
@@ -288,7 +309,8 @@ class ModalRunner(OCRRunner):
             result_path = Path(
                 response.get("document_path") or item.get("document_path", "")
             )
-            result = self._to_result(result_path, response)
+            result = self._to_result(result_path, response, item.get("prompt"),
+                                     item.get("response_format"))
             result.metadata.update({
                 "measurement_scope": "modal_batch",
                 "batch_id": batch_id,

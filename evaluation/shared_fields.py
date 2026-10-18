@@ -17,7 +17,7 @@ from evaluation.kv_schema_code import FieldVerdict, is_blank_value, value_equal
 from evaluation.structured_metrics import normalize_label, walk_fields
 
 VERSION = "shared-fields-v1"
-KV_VERSION = "shared-fields-v8-identifiers-native-checkboxes"
+KV_VERSION = "shared-fields-v9-unreturned-blanks-not-counted"
 CACHE_ROOT = Path(__file__).resolve().parents[1] / "results" / "kv_synonyms"
 
 
@@ -159,7 +159,9 @@ def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = No
             how = "judge-confirmed value group; request " + group['request_id']
             verdict = "blank_ok" if blank else "correct"
         elif hit is None:
-            verdict = "missing"
+            # key_value: a reference blank whose label was not returned is left
+            # out of the score; the blank itself may be a reference problem.
+            verdict = "blank_not_returned" if blank and leg == "key_value" else "missing"
         else:
             i, how = hit
             key, value = pairs[i]
@@ -189,7 +191,7 @@ def score_shared(gt, pairs: list, leg: str, confirmed_synonyms: dict | None = No
                                "reason": "duplicate key" if counts[key] > 1 else "unexpected key"})
     counts = Counter(v.verdict for v in verdicts)
     correct = counts["correct"] + counts["blank_ok"]
-    total = len(fields)
+    total = len(fields) - counts["blank_not_returned"]
     return Result(correct / (total + len(extras)) if total + len(extras) else 0,
                   correct / total if total else 0, total, counts["correct"], counts["missing"],
                   counts["wrong"], counts["invented"], sum(v.is_blank for v in verdicts),

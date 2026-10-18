@@ -54,7 +54,11 @@ class OCRRunner(ABC):
 
     def run_safe(self, document_path: Path, task: OCRTask | None = None) -> OCRResult:
         try:
-            return self.run(document_path, task)
+            result = self.run(document_path, task)
+            # A runner that was handed no task and reports nothing sent no instruction.
+            if task is None and "sent" not in result.metadata:
+                result.metadata["sent"] = sent_record(None, "none: no task passed, default conversion")
+            return result
         except Exception as exc:
             message = str(exc) or repr(exc)
             return OCRResult(
@@ -77,6 +81,18 @@ class OCRRunner(ABC):
     @staticmethod
     def _elapsed(start: float) -> float:
         return time.perf_counter() - start
+
+
+def sent_record(text: str | None, source: str, constraint: str = "none (native output)",
+                schema_separately: bool = False) -> dict[str, Any]:
+    """What actually reached the engine on one call, stored as OCRResult.metadata["sent"].
+
+    `text` is the instruction text the engine received (None when it received
+    none); `source` says where it came from. The call log records this, never
+    the task prompt a runner may have ignored.
+    """
+    return {"text": text, "source": source, "constraint": constraint,
+            "schema_separately": schema_separately}
 
 
 def provider_payload(response: Any, max_bytes: int = 4_000_000) -> dict[str, Any]:

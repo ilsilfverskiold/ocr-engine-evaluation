@@ -322,7 +322,7 @@ def plan_saved(sources):
             if not gt.has_gt_for('key_value'):
                 continue
             timestamp = rec.get('source_timestamp') or source
-            name = rec.get('pass_name') or 'default'
+            name = rec.get('source_pass_name') or rec.get('pass_name') or 'default'
             identity = (timestamp, rec['engine_name'], gt.document_path, name)
             if identity in seen:
                 continue

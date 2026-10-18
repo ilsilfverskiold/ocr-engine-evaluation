@@ -5,7 +5,15 @@ schemas and geometry. **93 pages· 16 measured engine configurations.**
 
 ## Results
 
-Saved run: **`20261017T065717Z`**. Rankings use the saved outputs and current scoring rules.
+Saved run: **`20261018T111413Z`**. All deterministic legs were replayed from the selected responses in `reconciled_outputs/`; 110 saved document-judge verdicts were reused. Three unresolved KV reviews were completed after deterministic and cached matches, for $0.0666575. Only those three rows changed from the preceding verified replay; all other 4,750 rows match, including field-level evidence. **Unresolved: 9 failed result rows. No KV judgments remain pending.**
+[Complete old-versus-new comparison](results/reports/old-vs-new.html).
+
+All nine failed cases were retried. The [Marker retry log](results/logs/20261018T093009Z.log)
+records five repeated exceptions and three collected responses that contain no
+text or regions. The [DeepSeek retry log](results/logs/20261018T092656Z.log)
+records another HTTP 500 on `shipping_003` schema. The earlier reconciliation
+kept the old error records when a retry failed; these logs retain the retry history.
+
 The [text/Markdown output repair](docs/text-markdown-output-repair.md) rescored
 LlamaParse, PaddleOCR-VL v1 and MinerU pipeline from retained calls, and Docling
 from a new local conversion of the same 93 pages. PaddleOCR-VL 1.6 is a separate
@@ -114,14 +122,15 @@ calls.
 
 Correct values under eligible printed labels. Exact/cached mappings come first;
 ambiguous wording or split values use contextual judge decisions, cached for reuse.
-Missing decisions stay pending. Blank-inclusive headline; extras are diagnostic.
+Missing decisions stay pending. Unreturned blank reference fields are excluded;
+returned blanks and invented values still count. Extras are diagnostic.
 
 | Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages |
 | --- | --- | --- | --- | --- | --- | --- |
-| `textract_structured` | 0.7829 | 0.7840 | 0.8502 | 0.7943 | 0.7291 | 62 |
-| `claude_sonnet_4_6` | 0.7752 | 0.7902 | 0.7864 | 0.7960 | 0.7332 | 65 |
-| `qwen3_vl` | 0.6196 | 0.6335 | 0.6669 | 0.5498 | 0.7182 | 65 |
-| `gemini_flash` | 0.5086 | 0.5185 | 0.4923 | 0.4320 | 0.6507 | 63 |
+| `textract_structured` | 0.8036 | 0.8048 | 0.8502 | 0.8162 | 0.7584 | 65 |
+| `claude_sonnet_4_6` | 0.7962 | 0.8112 | 0.7864 | 0.8173 | 0.7642 | 65 |
+| `qwen3_vl` | 0.6574 | 0.6713 | 0.6681 | 0.5947 | 0.7616 | 65 |
+| `gemini_flash` | 0.5392 | 0.5491 | 0.4923 | 0.4640 | 0.6942 | 65 |
 
 ### Supplied-schema extraction
 
@@ -130,13 +139,22 @@ engine receives the same frozen sample: 3,316 fields across 65 pages. No judge.
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | Errors |
 | --- | --- | --- | --- | --- | --- | --- |
-| `gemini_flash` | 0.9679 | 0.9843 | 0.9489 | 0.9930 | 64 | 1 |
+| `gemini_flash` | 0.9680 | 0.9843 | 0.9490 | 0.9930 | 65 | 0 |
 | `claude_sonnet_4_6` | 0.9597 | 0.9858 | 0.9409 | 0.9796 | 65 | 0 |
 | `llamaparse` | 0.8998 | 0.9398 | 0.9162 | 0.8512 | 65 | 0 |
 | `mistral_ocr_4` | 0.8635 | 0.9371 | 0.8472 | 0.8554 | 65 | 0 |
 | `qwen3_vl` | 0.8591 | 0.9140 | 0.8254 | 0.8906 | 65 | 0 |
 | `glm_ocr` | 0.6660 | 0.7883 | 0.6342 | 0.6607 | 65 | 0 |
 | `deepseek_ocr` | 0.1604 | 0.3236 | 0.1429 | 0.1094 | 64 | 1 |
+
+Three fresh Gemini schema calls used the same saved prompts, field schemas and
+model (`gemini-3.1-flash-lite`): `bank_002` 1.0000 → 1.0000, `payslip_003`
+1.0000 → 1.0000, and `funsd_003` 1.0000 → 0.7895. The form's fresh answer shifted
+table rows. All 65 scored saved Gemini schema answers match their stored provider
+response text. Schema supplies exact field/row identities and credits correct
+blanks; populated-field accuracy across the saved run is 0.9649.
+[All validation fields and raw calls](results/reports/gemini-schema-validation.html).
+These three calls cost $0.010452 and remain separate from the published scores.
 
 ### Geometry
 
@@ -289,14 +307,37 @@ pip install -r requirements.txt
 python run_benchmark.py --report current
 ```
 
-`current` reads the committed files under `results/runs/` and the calls under
-`results/ocr_outputs/reconciled_outputs/`. No credentials or model calls.
+`current` reads the newest complete, scored run under `results/runs/` and its
+saved calls. No credentials or model calls.
 Add `--legs text --report-sort cer` to sort text results by error rate, or
 `--report-details` for document-family breakdowns.
 
-The result tree contains one reconciled run. `reconciled_outputs/` contains the
-2,636 OCR calls actually used by its scores; superseded calls are not retained.
-Each saved call records its original source timestamp in metadata.
+All 2,857 saved call versions selected for scoring live in one folder:
+`results/ocr_outputs/reconciled_outputs/`, organized by document and engine.
+Different scored views are files beside each other, such as `default.call.json`
+and `default.tables.call.json`. Each inference row's `source_pass_name` selects
+its exact file; the original logical pass and timestamps remain recorded.
+The six retained rerun responses are selected for their corresponding cases.
+Earlier attempts and the three Gemini schema validation responses remain
+available under distinct filenames; validation responses do not replace the
+published answers.
+
+To recalculate saved outputs with the current scorers, without OCR or new
+judge calls:
+
+```bash
+python run_benchmark.py --rescore current
+```
+
+This creates a separate run and preserves historical document verdicts once.
+Changes to scorers or cached KV rulings can change scores. New paid KV rulings
+require `--allow-kv-judge`; that flag never refreshes document verdicts.
+`python scripts/verify_published_replay.py --historical` audits the original
+evaluator and judgment caches pinned in Git. It blocks network and new judge
+calls and fails on any score difference. To audit the current evaluator while
+checking the current publication, omit `--historical`; it requires every score,
+applicability flag and error to match. `--allow-kv-changes` is only for reviewing
+an intentional KV scorer change; every difference is still recorded.
 
 For the browser report, open `results/reports/ocr-benchmark-final.html`. To
 rebuild it with the source images:

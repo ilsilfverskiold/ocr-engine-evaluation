@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v6-continuations"
+VERSION = "gold-table-values-v7-header-units-spans"
 
 
 def normalize_cell(text: str) -> str:
@@ -389,12 +389,30 @@ def _views(reference, predicted):
     return refs, list(grouped.values())
 
 
+def _header_identity(text):
+    """Allow parenthetical qualifiers to move, retaining their full content.
+
+    This is only a header identity, not a normalization of cell values. Keep
+    the order of both the field words and qualifiers; do not sort all tokens
+    or discard units, currencies, dates or punctuation.
+    """
+    text = normalize_cell(text)
+    qualifiers = tuple(re.findall(r"\([^()]*\)", text))
+    field = normalize_cell(re.sub(r"\([^()]*\)", " ", text))
+    return field, qualifiers
+
+
+def _header_credit(a, b):
+    return 1.0 if _header_identity(a) == _header_identity(b) else _value_credit(a, b)
+
+
 def _flex_columns(ref, pred):
     rh, ph = _header(ref), _header(pred)
     if rh == ph or len(rh) != ref.cols or len(ph) != pred.cols:
         return {i: i for i in range(min(ref.cols, pred.cols))}
     # Added/missing columns do not shift the other uniquely labelled fields.
-    weights = [[_value_credit(a, b) if a and b and rh.count(a) == ph.count(b) == 1 else 0
+    rk, pk = list(map(_header_identity, rh)), list(map(_header_identity, ph))
+    weights = [[_header_credit(a, b) if a and b and rk.count(_header_identity(a)) == pk.count(_header_identity(b)) == 1 else 0
                 for b in ph] for a in rh]
     matched = _assignment(weights, .74)
     if len(matched) >= 2 or len(matched) == len(rh) == len(ph) == 1:
@@ -495,6 +513,16 @@ def _item_rows(ref, pred, columns, column_groups=None):
             occupied.add(start)
             continue
         rows = [start]
+        label_cell = next(c for c in ref.cells if c.row == rr and c.col == label_col)
+        span_columns = {pc for col in range(label_col, label_col + label_cell.colspan)
+                        for pc in (column_groups or {}).get(col, [columns.get(col)])}
+
+        def row_label(pr):
+            if label_cell.colspan == 1:
+                return plabels.get(pr, '')
+            return ' '.join(c.normalized for c in sorted(pred.cells, key=lambda c: c.col)
+                            if c.row == pr and c.col in span_columns and c.normalized)
+
         # A printed item code may precede its description on the row above.
         if (start - 1 not in occupied and start - 1 not in starts.values()
                 and _preceding_item_code(ref, pred, labels[rr], start - 1, label_columns)):
@@ -508,7 +536,7 @@ def _item_rows(ref, pred, columns, column_groups=None):
             # A complete record must not absorb a subsequent unlabeled total
             # or numeric-only record. Use label completion and field lengths,
             # not a search for whichever later amount matches the reference.
-            label_text = ' '.join(plabels.get(r, '') for r in rows).strip()
+            label_text = ' '.join(row_label(r) for r in rows).strip()
             required = [c for c in ref.cells if c.row == rr and c.normalized]
             complete = _similarity(labels[rr], label_text) >= .95 and all(
                 sum(len(c.normalized.split()) for c in pred.cells
@@ -529,7 +557,7 @@ def _item_rows(ref, pred, columns, column_groups=None):
                     break
             if boundary:
                 break
-            label = plabels.get(pr, '')
+            label = row_label(pr)
             if label and not re.search(r"(?<!\w)" + re.escape(label) + r"(?!\w)", labels[rr]):
                 break
             rows.append(pr)
@@ -807,6 +835,11 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
         reserved_units = {(pr, col) for rr, cs in unit_rows.items() for pr in rows.get(rr, [])
                           for c in cs for col in columns.get(c.col, [])}
         for cell in ref.cells:
+            # A reference span explicitly covers these physical columns.
+            # Collect only their mapped output slots, in source order, so a
+            # split label/value can be scored without borrowing other fields.
+            cell_columns = {col for rc in range(cell.col, cell.col + cell.colspan)
+                            for col in columns.get(rc, [])}
             def label_span(c):
                 return c.colspan > 1 and any(
                     rc.row == cell.row and c.col in columns.get(rc.col, [])
@@ -816,7 +849,7 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                        and (cell.row in unit_rows or (c.row, c.col) not in reserved_units)
                        and any(c.col == col or (c.col < col < c.col + c.colspan
                                and (not label_span(c) or not cell.normalized))
-                               for col in columns.get(cell.col, []))] if pred else []
+                               for col in cell_columns)] if pred else []
             matches.sort(key=lambda c: (c.row, c.col))
             item_rows = rows.get(cell.row, [])
             if pred and len(item_rows) > 1:
@@ -920,7 +953,8 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                     used.setdefault((src['table'], src['row'], src['col']), [])
                     continue
                 used.setdefault((src['table'], src['row'], src['col']), []).append((src['start'], src['end']))
-            value = _value_credit(cell.text, text) if sources else 0.0
+            value = ((_header_credit(cell.text, text) if cell in _header_cells(ref)
+                      else _value_credit(cell.text, text)) if sources else 0.0)
             credit += value
             correct += value == 1
             partial += 0 < value < 1

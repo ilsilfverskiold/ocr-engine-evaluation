@@ -416,6 +416,19 @@ def read_jsonl(path: Path) -> list[dict]:
     return records
 
 
+def sent_text(result) -> str | None:
+    """The instruction text a result's engine actually received.
+
+    Runners record it in metadata["sent"]; an app that only reports the prompt
+    it used is still read. A task prompt is never assumed to have been sent.
+    """
+    metadata = getattr(result, "metadata", None) or {}
+    if "sent" in metadata:
+        return (metadata["sent"] or {}).get("text")
+    return ((getattr(result, "raw_response", None) or {}).get("prompt_used")
+            or metadata.get("prompt_used"))
+
+
 def _write_ocr_output(
     engine: str, doc_path: Path, gt, text: str, timestamp: str,
     pass_name: str, structured_output: dict | None = None,
@@ -433,14 +446,10 @@ def _write_ocr_output(
             "document": str(doc_path),
             "pass_name": pass_name,
             "legs_fed": list(legs),
-            # The exact ask. An app that falls back to its own default reports
-            # the prompt it actually used, because a stored `null` becomes
-            # unreadable as soon as that default changes.
-            "prompt_sent": (
-                ((getattr(result, "raw_response", None) or {}).get("prompt_used"))
-                or ((getattr(result, "metadata", None) or {}).get("prompt_used"))
-                or getattr(task, "prompt", None)
-            ),
+            # The exact instruction the engine received, as the runner reports
+            # it; never the task prompt, which a runner may not send.
+            "prompt_sent": sent_text(result),
+            "sent": (getattr(result, "metadata", None) or {}).get("sent"),
             "response_format": getattr(task, "response_format", None),
             "json_schema_sent": getattr(task, "json_schema", None) is not None,
             "json_schema": getattr(task, "json_schema", None),
@@ -598,12 +607,20 @@ def _strip_html_regions(regions: list[dict]) -> list[dict]:
     return out
 
 
+def _repo_path(path) -> str:
+    """A document path as stored in result files: relative to the repository."""
+    try:
+        return Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def _base_record(engine: str, doc_path: Path, gt, timestamp: str) -> dict:
     return {
         "engine_name": engine,
         "tier": gt.tier,
         "doc_type": gt.doc_type,
-        "document_path": str(doc_path),
+        "document_path": _repo_path(doc_path),
         "gt_source": gt.gt_source,
         "timestamp": timestamp,
     }
@@ -763,6 +780,12 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
 
     loader = GroundTruthLoader()
     use_judge = False if skip_judge else None
+    manifest = read_run_manifest(timestamp)
+    if manifest:
+        manifest["scored"] = False
+        manifest.pop("scored_at", None)
+        (RUNS_DIR / f"{timestamp}_run.json").write_text(
+            json.dumps(manifest, indent=2), encoding="utf-8")
     scored = skipped = missing = 0
     judge_spend = 0.0
     for rec in inference:
@@ -776,8 +799,7 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
         try:
             gt = loader.load(doc_path)
         except Exception as exc:
-            log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
-            continue
+            raise RuntimeError(f"{engine}/{doc_path.name}: cannot load reference") from exc
         wants_silver_judge = (
             not skip_judge and "text" in (rec.get("legs") or [])
             and gt.gt_source == "silver_tesseract"
@@ -786,12 +808,14 @@ def score_stored_run(timestamp: str, log: logging.Logger, skip_judge: bool) -> N
         if not legs and not wants_silver_judge:
             skipped += 1
             continue
-        call = _read_stored_call(timestamp, engine, doc_path, gt, pass_name)
+        # Published rows explicitly name their source; never substitute a
+        # different run's output when a source folder is missing.
+        call = _read_stored_call(rec.get("source_timestamp") or timestamp,
+                                 engine, doc_path, gt, rec.get("source_pass_name") or pass_name)
         if call is None:
-            missing += 1
-            log.warning(f"  [{engine}/{pass_name}] {doc_path.name}: no stored "
-                        f".call.json — cannot score")
-            continue
+            raise FileNotFoundError(
+                f"{engine}/{pass_name}/{doc_path.name}: no stored .call.json; "
+                "scoring is incomplete and must not be published")
         base = _base_record(engine, doc_path, gt, timestamp)
         text = call.get("raw_text") or ""
         structured_output = call.get("structured_output") or {}
@@ -858,7 +882,9 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     rows go to `{target}_results.jsonl`. Inference records are copied to
     `{target}_inference.jsonl` with a `source_timestamp`, so cost/latency
     reporting works unchanged. Failed calls become error rows (never 0.0).
-    The manifest records `rescore_of` and the scorer versions.
+    The manifest records `rescore_of` and the scorer versions. Document-judge
+    verdicts are copied once, never refreshed here. skip_judge=False permits
+    new KV rulings only; CLI rescoring uses cached rulings by default.
     """
     from evaluation.ground_truth import GroundTruthLoader
     from evaluation.shared_fields import VERSION as SCHEMA_VERSION, KV_VERSION
@@ -883,6 +909,9 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     kv_pool = ThreadPoolExecutor(max_workers=4) if selected_legs == ["key_value"] else None
     kv_futures = {}
     source_records = [read_jsonl(RUNS_DIR / f"{src}_inference.jsonl") for src in sources]
+    for src, records in zip(sources, source_records):
+        if not records:
+            raise FileNotFoundError(f"No inference records for source run {src}; cannot rescore")
     selected = _rescore_selection(source_records)
     historical_judge = {}
     if selected_legs is None or 'text' in selected_legs:
@@ -891,8 +920,12 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                 if row.get('leg') == 'judge' and not row.get('error'):
                     historical_judge[(row['engine_name'], row['document_path'])] = (src, row)
         for src, row in historical_judge.values():
-            log_record({**row, 'timestamp': target, 'source_timestamp': src,
-                        'metrics': {**row.get('metrics', {}), 'historical_verdicts': True}}, results_jsonl)
+            copied = {**row, 'timestamp': target, 'source_timestamp': src,
+                      'document_path': _repo_path(row['document_path']),
+                      'metrics': {**row.get('metrics', {}), 'historical_verdicts': True}}
+            if copied.get('source_document_path') == copied['document_path']:
+                del copied['source_document_path']  # added by read_jsonl, not part of the record
+            log_record(copied, results_jsonl)
         copied_judge = len(historical_judge)
     for source_index, src in enumerate(sources):
         inference = source_records[source_index]
@@ -925,12 +958,15 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
             for l in legs:
                 if l not in legs_seen:
                     legs_seen.append(l)
-            log_record({**rec, "legs": legs, "timestamp": target, "source_timestamp": call_source}, inference_jsonl)
+            copied = {**rec, "legs": legs, "timestamp": target, "source_timestamp": call_source,
+                      "document_path": _repo_path(rec["document_path"])}
+            if copied.get("source_document_path") == copied["document_path"]:
+                del copied["source_document_path"]  # added by read_jsonl, not part of the record
+            log_record(copied, inference_jsonl)
             try:
                 gt = loader.load(doc_path)
             except Exception as exc:
-                log.warning(f"{engine} <- {doc_path.name}  GT ERROR: {exc}")
-                continue
+                raise RuntimeError(f"{engine}/{doc_path.name}: cannot load reference") from exc
             base = _base_record(engine, doc_path, gt, target)
             if rec.get("error"):
                 key = (engine, rec["document_path"], pass_name)
@@ -959,11 +995,12 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                                 "error": rec.get("error")}, results_jsonl)
                 failed += 1
                 continue
-            call = _read_stored_call(call_source, engine, doc_path, gt, pass_name)
+            call = _read_stored_call(call_source, engine, doc_path, gt,
+                                     rec.get("source_pass_name") or pass_name)
             if call is None:
-                missing += 1
-                log.warning(f"  [{engine}/{pass_name}] {doc_path.name}: no stored .call.json")
-                continue
+                raise FileNotFoundError(
+                    f"{engine}/{pass_name}/{doc_path.name}: no stored .call.json in {call_source}; "
+                    "rescore is incomplete and must not be published")
             text = call.get("raw_text") or ""
             structured_output = call.get("structured_output") or {}
             if kv_pool is not None:
@@ -1002,8 +1039,9 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
             scored += len(legs)
             if parts:
                 log.info(f"  [{engine}/{pass_name}] {doc_path.name}  " + "  ".join(parts))
-            if (not skip_judge and "text" in legs and gt.gt_source == "silver_tesseract"):
-                judge_spend += _judge_silver_document(engine, doc_path, text, base, results_jsonl, log)
+            # A rescore preserves the historical document verdicts copied above.
+            # Enabling KV rulings must not refresh document judgments or append
+            # a second row for an already judged engine/page.
     if kv_pool is not None:
         for future in as_completed(kv_futures):
             engine, doc_path, pass_name = kv_futures[future]
@@ -1015,6 +1053,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         "rescore_of": sources, "collect_only": False, "scored": True,
         "source_selection": "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run",
         "scored_with_judge": not skip_judge,
+        "document_judge_policy": "preserve_saved_verdicts",
+        "kv_judge_policy": "cached_only" if skip_judge else "allow_new_rulings",
         "adapters": {"textract_tables": TABLE_ADAPTER_VERSION},
         "scorers": {"markdown": MARKDOWN_VERSION, "tables": TABLE_VERSION,
                     "key_value": KV_VERSION, "schema": SCHEMA_VERSION,
@@ -1077,6 +1117,7 @@ def unique_inference_calls(records: list[dict]) -> list[dict]:
         key = (record.get("engine_name"), record.get("document_path"),
                record.get("pass_name") or DEFAULT_PASS,
                record.get("source_timestamp") or record.get("timestamp"),
+               record.get("source_pass_name") or record.get("pass_name") or DEFAULT_PASS,
                bool(record.get("error")))
         if key not in calls:
             calls[key] = dict(record)
@@ -1850,8 +1891,12 @@ def parse_args():
     p.add_argument("--rescore", metavar="TIMESTAMP[,TIMESTAMP]",
                    help="Score every stored output of the given run(s) with the "
                         "current scorers into ONE new run (new timestamp, manifest "
-                        "rescore_of=...). Source runs are never modified. Combine "
-                        "with --skip-judge to leave the document judge out.")
+                        "rescore_of=...). Source runs are never modified. It "
+                        "uses cached judgments only by default and always preserves "
+                        "saved document verdicts. New KV rulings require --allow-kv-judge.")
+    p.add_argument("--allow-kv-judge", action="store_true",
+                   help="With --rescore, allow paid KV judge calls for unresolved pairs. "
+                        "Does not rerun document judgments or OCR engines.")
     p.add_argument("--score", metavar="TIMESTAMP",
                    help="Score a stored run from its persisted outputs (the second "
                         "half of --collect-only), then print the report. Rows already "
@@ -1860,6 +1905,8 @@ def parse_args():
                    help="Record which baseline run this run adds engines to "
                         "(written to the run manifest; report both with --report A,B)")
     args = p.parse_args()
+    if args.allow_kv_judge and (not args.rescore or args.skip_judge):
+        p.error('--allow-kv-judge requires --rescore and cannot combine with --skip-judge')
     if args.resume_unattempted:
         if args.resume or args.rerun_errors:
             p.error("--resume-unattempted cannot combine with --resume/--rerun-errors")
@@ -2068,12 +2115,12 @@ def main() -> None:
             return
         run_ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         log = setup_logging(run_ts)
-        if not args.skip_judge and not os.environ.get("GOOGLE_API_KEY"):
-            log.error("GOOGLE_API_KEY is needed for the document judge — set it, or use --skip-judge")
+        if args.allow_kv_judge and not os.environ.get("GOOGLE_API_KEY"):
+            log.error("GOOGLE_API_KEY is needed for --allow-kv-judge")
             sys.exit(1)
         log.info(f"Rescoring {', '.join(sources)} into new run {run_ts} "
-                 f"({'cached judgments only' if args.skip_judge else 'judging enabled where required'})")
-        rescore_runs(sources, run_ts, log, skip_judge=args.skip_judge,
+                 f"({'new KV rulings allowed' if args.allow_kv_judge else 'cached judgments only'})")
+        rescore_runs(sources, run_ts, log, skip_judge=not args.allow_kv_judge,
                      selected_legs=None if args.legs == "all" else parse_legs(args.legs))
         report(run_ts, log)
         return
@@ -2294,7 +2341,7 @@ def main() -> None:
             "legs": list(plan.legs),
             # docs/scoring-design.md rule 2: a result whose prompt cannot be
             # reproduced is not a result. None = the engine's own default ask.
-            "prompt_used": metadata.get("prompt_used") or (task.prompt if task is not None else None),
+            "prompt_used": sent_text(result),
             "latency_seconds": latency if is_batch else round(latency, 3),
             "cost_per_page": cost if is_batch else round(cost, 6),
             "startup_seconds": round(startup, 3),

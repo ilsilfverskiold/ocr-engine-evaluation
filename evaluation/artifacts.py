@@ -28,11 +28,15 @@ def read_text(path):
     return path.read_text(encoding='utf-8')
 
 def current_timestamp():
-    candidates = sorted((RESULTS_DIR / 'runs').glob('*_results.jsonl'))
-    if not candidates:
-        raise FileNotFoundError(
-            'No reconciled results in results/runs/')
-    return candidates[-1].name.removesuffix('_results.jsonl')
+    """The newest run in results/runs/ that is complete and scored."""
+    runs = RESULTS_DIR / 'runs'
+    for manifest in sorted(runs.glob('*_run.json'), reverse=True):
+        timestamp = manifest.name[:-len('_run.json')]
+        complete = all((runs / f'{timestamp}_{suffix}').is_file()
+                       for suffix in ('results.jsonl', 'inference.jsonl'))
+        if complete and json.loads(manifest.read_text()).get('scored'):
+            return timestamp
+    raise FileNotFoundError(f'No complete scored run in {runs}')
 
 def location(path):
     return str(Path(path))

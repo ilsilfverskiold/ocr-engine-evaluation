@@ -329,7 +329,10 @@ def score_tables(
               if isinstance(t, dict) and isinstance(t.get("html"), str) and t["html"].strip()]
     # Never combine native tables with their Markdown export. Duplicates within
     # the chosen representation are real predictions and must remain counted.
-    htmls = native if native else extract_all_tables_html(output_text or "", engine)
+    # Engines that keep plain text in raw_text carry their Markdown separately;
+    # tables are read from that Markdown, the same view the Markdown leg scores.
+    markdown = (structured_output or {}).get("markdown")
+    htmls = native if native else extract_all_tables_html(markdown or output_text or "", engine)
     predicted = [table for html in htmls for table in parse_tables(html)]
     references = {"gold" if gt.metadata.get("table_gold_reference") else "original": gt.table_html}
     if gt.doc_type == "shipping" and gt.metadata.get("table_original_reference"):

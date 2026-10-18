@@ -61,7 +61,7 @@ The other three engines' repaired text/Markdown scores are replays of saved
 provider results. MinerU pipeline has only 17 saved pages, so its new text and
 Markdown numbers are 17-page measurements, not a 93-page ranking.
 
-The published scored run is `20261017T065717Z`, assembled from the old
+The historical scored run was `20261017T065717Z`, assembled from the old
 `20261013T154858Z` run, saved-call patch `20261016T205200Z`, and Docling
 native-document patch `20261017T065648Z`. The Docling patch comes from local
 conversion run `20261016T202358Z`. The score uses the unchanged text coverage

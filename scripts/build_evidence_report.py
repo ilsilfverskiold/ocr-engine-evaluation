@@ -21,24 +21,30 @@ parser.add_argument('--status',default='Saved benchmark results. Coverage, faile
 args=parser.parse_args(); TS=rb._resolve_timestamp(args.run)
 rb.RUNS_DIR=args.runs_dir
 rows=rb.read_jsonl(rb.RUNS_DIR/f'{TS}_results.jsonl'); inf=rb.read_jsonl(rb.RUNS_DIR/f'{TS}_inference.jsonl')
-lookup={(r['engine_name'],r['document_path'],r.get('pass_name') or 'default'):r for r in inf}
+lookup={(inf[index]['engine_name'],inf[index]['document_path'],leg):inf[index]
+        for (_,index),legs in rb._rescore_selection([inf]).items() for leg in legs}
 old=rb.read_jsonl(rb.RUNS_DIR/f'{args.compare_with}_results.jsonl') if args.compare_with else []; old={(r['engine_name'],r['document_path'],r['leg']):r for r in old}
 loader=GroundTruthLoader(); calls={}; images={}; gts={}; evidence=[]
 for r in rows:
- d=r['document_path']; e=r['engine_name']; p=r.get('pass_name') or 'default'; key=e+'|'+d+'|'+p
+ d=r['document_path']; e=r['engine_name']; p=r.get('pass_name') or 'default'
+ rec=lookup.get((e,d,'text' if r['leg']=='judge' else r['leg']),{})
+ src=rec.get('source_timestamp') or rec.get('timestamp'); stored_pass=rec.get('source_pass_name') or p
+ key=e+'|'+d+'|'+p+'|'+str(src)+'|'+stored_pass
  if d not in images:
   path=Path(d)
   with Image.open(path) as source:
    preview=source.convert('RGB'); preview.thumbnail((1700,2200)); buffer=io.BytesIO(); preview.save(buffer,format='JPEG',quality=82)
   images[d]='data:image/jpeg;base64,'+base64.b64encode(buffer.getvalue()).decode();gts[d]=loader.load(path)
  if key not in calls:
-  rec=lookup.get((e,d,p),{}); src=rec.get('source_timestamp') or rec.get('timestamp'); call=rb._read_stored_call(src,e,Path(d),gts[d],p) if src else None
+  call=rb._read_stored_call(src,e,Path(d),gts[d],stored_pass) if src else None
   call=call or {}; raw=call.get('raw_text') or '';so=call.get('structured_output') or {};prompt=call.get('prompt_sent');prompt_note='Saved per-call prompt.'
   if not prompt and e in ('claude_sonnet_4_6','gemini_flash') and p=='default':
    from runners.claude_runner import ClaudeRunner
    from runners.gemini_runner import GeminiRunner
    prompt=(ClaudeRunner if e=='claude_sonnet_4_6' else GeminiRunner)._PROMPT;prompt_note='Recovered from the unchanged historical runner default; omitted by the original call logger.'
   if not prompt:prompt_note='No free-form prompt persisted for this native pipeline pass.'
+  sent=call.get('sent') or (call.get('metadata') or {}).get('sent')
+  if sent:prompt=sent.get('text');prompt_note='What the engine received: '+str(sent.get('source'))+'. Output constraint: '+str(sent.get('constraint'))+'.'+(' (Corrected log record, 2026-10-18.)' if sent.get('correction') else '')
   finish=[]
   def find_stops(v):
    if isinstance(v,dict):
@@ -48,7 +54,7 @@ for r in rows:
    elif isinstance(v,list):
     for x in v:find_stops(x)
   find_stops(call.get('raw_response',{}))
-  calls[key]={'raw':raw,'structured':so,'model':call.get('model_version') or rec.get('model_version'),'prompt':prompt,'prompt_note':prompt_note,'source':src,'pass':p,'stop_reasons':sorted(set(finish)),'path':location(rb.OCR_OUTPUTS_DIR/str(src)/f'{gts[d].tier}__{gts[d].doc_type}__{Path(d).stem}'/e/(p+'.call.json')),'raw_sha256':hashlib.sha256(raw.encode()).hexdigest(),'json_schema':call.get('json_schema')}
+  calls[key]={'raw':raw,'structured':so,'model':call.get('model_version') or rec.get('model_version'),'prompt':prompt,'prompt_note':prompt_note,'source':src,'pass':p,'stop_reasons':sorted(set(finish)),'path':location(rb.OCR_OUTPUTS_DIR/str(src)/f'{gts[d].tier}__{gts[d].doc_type}__{Path(d).stem}'/e/(stored_pass+'.call.json')),'raw_sha256':hashlib.sha256(raw.encode()).hexdigest(),'json_schema':call.get('json_schema')}
  item={**r,'call_key':key,'page':Path(d).stem,'observation':rb._diagnose(r) if r['leg']!='judge' else ('Historical model-judged estimate, copied unchanged.' if (r.get('metrics') or {}).get('historical_verdicts') else 'Model-judged checklist estimate.')}
  c=calls[key]
  if r['leg']=='markdown':
@@ -101,12 +107,14 @@ for r in rows:
    item['method']+=' Repeated column groups can reflow under matching headers with unique row anchors.'
    if e=='llamaparse' and Path(d).stem=='bank_000':
     item['case_note']='Source-image review: the returned Account Transfers Out row contains the opening balances, and ETF numeric values shift onto the following funds. Consultant/address/preference text is omitted. Daily Date/Amount pairs may legitimately reflow into a narrow table; this score now accepts that layout while checking each date’s own amount. Three cached reference typos were corrected against the image and accepted gold.'
- if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')in ('gold-table-values-v3-items', 'gold-table-values-v4-sections', 'gold-table-values-v5-record-layout', 'gold-table-values-v6-continuations'):
+ if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')in ('gold-table-values-v3-items', 'gold-table-values-v4-sections', 'gold-table-values-v5-record-layout', 'gold-table-values-v6-continuations', 'gold-table-values-v7-header-units-spans'):
   item['method']='Reference value credit / reference cells: exact normalized values earn 1, partial text earns its similarity (at least 0.5), wrong numeric values earn 0. Match label-associated logical items across adjacent rows and ordered, disjoint cell spans. New item labels stop a group; values cannot move between items or columns. Header-confirmed column changes, transpose, repeated groups and logical sections across physical tables are normalized. Blank components of a combined field can be established by headers or spans. Extras do not lower this headline; strict F1 and extra counts remain diagnostics.'
-  if r['metrics']['scorer'] in ('gold-table-values-v5-record-layout', 'gold-table-values-v6-continuations'):
+  if r['metrics']['scorer'] in ('gold-table-values-v5-record-layout', 'gold-table-values-v6-continuations', 'gold-table-values-v7-header-units-spans'):
    item['method']+=' Spanning and multi-tier headers identify split fields. Descriptions and record IDs identify label/value records even with repeated IDs or multiple records on one printed row; expected amounts do not select the record.'
-  if r['metrics']['scorer']=='gold-table-values-v6-continuations':
+  if r['metrics']['scorer'] in ('gold-table-values-v6-continuations', 'gold-table-values-v7-header-units-spans'):
    item['method']+=' Unique item codes can link preceding amount rows to descriptions. Header-confirmed compact columns and labels moved into adjacent empty slots retain logical blank credit.'
+  if r['metrics']['scorer']=='gold-table-values-v7-header-units-spans':
+   item['method']+=' Parenthetical header qualifiers may move without changing field identity; units and currencies remain significant. Reference colspans collect covered output cells in source order, stopping at unrelated following row labels.'
  if r['leg']=='tables' and (r.get('metrics') or {}).get('scorer')=='gold-table-values-v2':
   item['method']='Saved v2 reference value credit: physical cell alignment with column/reflow normalization; partial text credit; extras reported separately. This saved score predates logical item grouping.'
  if r['leg']=='geometry':

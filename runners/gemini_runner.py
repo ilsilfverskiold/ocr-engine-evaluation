@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
+from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload, sent_record
 
 INPUT_PRICE_PER_TOKEN = 0.25 / 1_000_000   # gemini-3.1-flash-lite
 OUTPUT_PRICE_PER_TOKEN = 1.50 / 1_000_000  # gemini-3.1-flash-lite
@@ -79,6 +79,10 @@ class GeminiRunner(OCRRunner):
             model_version=self._model_name,
             metadata={
                 "prompt_used": prompt,
+                "sent": sent_record(
+                    prompt, "task prompt" if task else "runner built-in prompt (_PROMPT)",
+                    "JSON mode (response_mime_type application/json, no schema), temperature 0"
+                    if task and task.wants_json else "free text"),
                 "input_tokens": input_tokens,
                 "output_tokens": output_tokens,
                 "thinking_tokens": thinking_tokens,

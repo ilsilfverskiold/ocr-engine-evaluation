@@ -72,11 +72,63 @@ class RulingsTest(unittest.TestCase):
 
     def test_stored_rulings_are_reused_without_asking_again(self):
         self.judge(OUTPUT, lambda item: ([1], True) if item["reference_key"] == "Seller" else ([], False))
-        res = groups.resolve(self.gt, OUTPUT, use_judge=False)
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "test"}), \
+             patch.object(rulings, '_ask') as ask:
+            res = groups.resolve(self.gt, OUTPUT, use_judge=True)
+            ask.assert_not_called()
         self.assertEqual(res.pending, [])  # the rejection settles Client too
         got = verdicts(self.gt, OUTPUT, res)
         self.assertEqual(got["Seller"].verdict, "correct")
         self.assertEqual(got["Client"].verdict, "missing")
+
+    def test_determined_matches_and_wrong_values_need_no_judge(self):
+        pairs = [('Seller', 'Bradley-Andrade'), ('Client', 'Definitely wrong company')]
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "test"}), \
+             patch.object(rulings, '_ask') as ask:
+            res = groups.resolve(self.gt, pairs, use_judge=True)
+            ask.assert_not_called()
+        self.assertEqual(res.pending, [])
+        got = verdicts(self.gt, pairs, res)
+        self.assertEqual(got['Seller'].verdict, 'correct')
+        self.assertEqual(got['Client'].verdict, 'wrong')
+
+    def test_only_undetermined_fields_are_reviewed_after_exact_and_cached_matches(self):
+        self.judge(OUTPUT, lambda item: ([1], True) if item['reference_key'] == 'Seller' else ([], False))
+        pairs = [('Invoice no', '97159829'), ('Seller Name', 'Bradley-Andrade'),
+                 ('Customer legal name', 'Castro PLC')]
+        def answer(request):
+            self.assertEqual([i['reference_key'] for i in request['review_items']], ['Client'])
+            self.assertEqual(request['already_assigned_output_ids'], [1, 2])
+            # Resolved fields may supply context but are not review items.
+            self.assertEqual(len(request['returned_pairs']), 3)
+            item = request['review_items'][0]
+            reply = {str(item['id']): {'output_ids': [3], 'synonym': False, 'reason': 'test'}}
+            return rulings.validate(request, reply), 0.0
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "test"}), \
+             patch.object(rulings, '_ask', side_effect=answer) as ask:
+            res = groups.resolve(self.gt, pairs, use_judge=True)
+            self.assertEqual(ask.call_count, 1)
+            self.assertEqual(res.pending, [])
+            self.assertEqual(verdicts(self.gt, pairs, res)['Client'].verdict, 'correct')
+            # The new decision is saved and must settle the next replay too.
+            again = groups.resolve(self.gt, pairs, use_judge=True)
+            self.assertEqual(again.pending, [])
+            self.assertEqual(ask.call_count, 1)
+
+    def test_saved_judge_response_is_recovered_without_another_api_call(self):
+        request = groups.prepare(self.gt, OUTPUT)[-1][0]
+        reply = {str(i['id']): {'output_ids': [1] if i['reference_key'] == 'Seller' else [],
+                                'synonym': False, 'reason': 'test'} for i in request['review_items']}
+        path = rulings.CACHE_ROOT / 'calls' / (request['id'] + '.json')
+        path.parent.mkdir()
+        path.write_text(json.dumps({'raw_text': json.dumps(reply)}))
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "test"}), \
+             patch('google.genai.Client') as client:
+            res = groups.resolve(self.gt, OUTPUT, use_judge=True)
+            client.assert_not_called()
+        self.assertEqual(res.pending, [])
+        self.assertEqual(res.cost_usd, 0.0)
+        self.assertEqual(verdicts(self.gt, OUTPUT, res)['Seller'].verdict, 'correct')
 
     def test_synonym_reaches_another_engine_output(self):
         self.judge(OUTPUT, lambda item: ([1], True) if item["reference_key"] == "Seller" else ([], False))
@@ -135,6 +187,48 @@ class CommittedRulingsTest(unittest.TestCase):
                     self.assertIn(ruling["verdict"], ("accepted", "rejected"))
                     self.assertTrue(ruling["looked_at"], (page.name, path))
                     self.assertTrue(all({"output_id", "key", "value"} <= set(p) for p in ruling["looked_at"]))
+
+
+class BlankFieldTest(unittest.TestCase):
+    """KV: a reference blank whose label is not returned is not counted; an invented value is."""
+
+    def setUp(self):
+        self.gt = GroundTruthLoader().load(ROOT / "documents/hard/form/funsd_003.png")
+        fields = reference_fields(self.gt, "key_value")
+        self.blanks = [f for f in fields if f.value in (None, "")]
+        self.filled = [f for f in fields if f.value not in (None, "")]
+
+    def test_unreturned_blank_is_not_counted(self):
+        result = score_shared(self.gt, [], "key_value")
+        self.assertEqual(result.total, len(self.filled))
+        self.assertTrue(all(v.verdict == "blank_not_returned" for v in result.verdicts if v.is_blank))
+
+    def test_invented_value_for_a_blank_still_counts(self):
+        blank = self.blanks[0]
+        result = score_shared(self.gt, [(blank.path, "made up")], "key_value")
+        verdict = next(v for v in result.verdicts if v.path == blank.path)
+        self.assertEqual(verdict.verdict, "invented")
+        self.assertEqual(result.total, len(self.filled) + 1)
+
+    def test_schema_leg_counts_every_field(self):
+        result = score_shared(self.gt, [], "schema")
+        self.assertNotIn("blank_not_returned", {v.verdict for v in result.verdicts})
+
+
+class PublishedTextractTest(unittest.TestCase):
+    def test_bank_balances_retain_published_matches_without_judging(self):
+        from evaluation.keyvalue_leg import score_key_value
+        gt = GroundTruthLoader().load(ROOT / 'documents/medium/bank_statement/bank_002.png')
+        call = json.loads((ROOT / 'results/ocr_outputs/reconciled_outputs/'
+                           'medium__bank_statement__bank_002/textract_structured/default.call.json').read_text())
+        with patch.object(rulings, '_ask', side_effect=AssertionError('Unexpected judge request')):
+            result = score_key_value(call['raw_text'], gt, 'textract_structured',
+                                     call['structured_output'], use_judge=False)
+        self.assertEqual(result.score, 58 / 62)
+        self.assertEqual(result.pending_key_review, [])
+        balances = [v for v in result.verdicts if v.path.startswith('Daily Balances — ')]
+        self.assertEqual(len(balances), 22)
+        self.assertTrue(all(v.verdict == 'correct' for v in balances))
 
 
 if __name__ == "__main__":

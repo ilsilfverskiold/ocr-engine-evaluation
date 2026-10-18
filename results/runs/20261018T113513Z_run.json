@@ -1,0 +1,50 @@
+{
+  "timestamp": "20261018T113513Z",
+  "engines": [
+    "tesseract",
+    "gemini_flash",
+    "mistral_ocr_4",
+    "textract_text",
+    "textract_structured",
+    "llamaparse",
+    "claude_sonnet_4_6",
+    "mineru",
+    "paddleocr_vl",
+    "marker",
+    "glm_ocr",
+    "deepseek_ocr",
+    "qwen3_vl",
+    "mineru_pipeline",
+    "paddleocr_ppocrv5",
+    "docling"
+  ],
+  "legs": [
+    "text",
+    "geometry",
+    "markdown",
+    "tables",
+    "schema",
+    "key_value"
+  ],
+  "rescore_of": [
+    "20261018T111413Z"
+  ],
+  "collect_only": false,
+  "scored": true,
+  "source_selection": "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run",
+  "scored_with_judge": false,
+  "document_judge_policy": "preserve_saved_verdicts",
+  "kv_judge_policy": "cached_only",
+  "adapters": {
+    "textract_tables": "textract-merged-cells-v2-selection-metadata (2026-10-09)"
+  },
+  "scorers": {
+    "markdown": "markdown-structure-v3-spans-reflow",
+    "tables": "gold-table-values-v7-header-units-spans",
+    "key_value": "shared-fields-v9-unreturned-blanks-not-counted",
+    "schema": "shared-fields-v1",
+    "geometry": "geometry-v8 (2026-10-13; declared granularity/frame, invalid-coordinate penalties)",
+    "text": "gt coverage (unchanged)"
+  },
+  "scored_at": "20261018T115124Z"
+}

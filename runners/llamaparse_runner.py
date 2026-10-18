@@ -5,7 +5,7 @@ import html
 import re
 from pathlib import Path
 
-from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload
+from runners.base import OCRResult, OCRRunner, OCRTask, provider_payload, sent_record
 
 COST_PER_PAGE = 0.00375  # cost_effective tier: 3 credits/page × $1.25/1K credits
 EXTRACT_COST_PER_PAGE = 0.025  # v1 MULTIMODAL: 20 credits × $1.25/1000
@@ -135,6 +135,7 @@ class LlamaParseRunner(OCRRunner):
             cost_per_page=COST_PER_PAGE,
             page_count=page_count,
             model_version="llamaparse-latest",
+            metadata={"sent": sent_record(None, "no instruction text: the parse endpoint takes no prompt")},
         )
 
     def _run_extract(self, document_path: Path, schema: dict) -> OCRResult:
@@ -186,7 +187,11 @@ class LlamaParseRunner(OCRRunner):
             page_count=1, model_version="llama-extract",
             metadata={"extraction_mode": "MULTIMODAL", "extraction_target": "PER_DOC",
                       "interface": "v1 stateless extraction", "job_id": job.id,
-                      "submission_attempts": 1, "cost_is_estimate": True},
+                      "submission_attempts": 1, "cost_is_estimate": True,
+                      "sent": sent_record(
+                          None, "no instruction text: LlamaExtract receives only the schema",
+                          "JSON schema as LlamaExtract data_schema (MULTIMODAL)",
+                          schema_separately=True)},
             raw_response={"job": provider_payload(job), "result": provider_payload(reply) if reply else {}},
             error=error,
         )

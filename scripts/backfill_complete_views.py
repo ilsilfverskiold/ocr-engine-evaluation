@@ -110,7 +110,8 @@ def main(source_run: str, patch_run: str) -> None:
         doc = Path(rec["document_path"])
         ground_truth = loader.load(doc)
         original_run = rec.get("source_timestamp") or source_run
-        call = rb._read_stored_call(original_run, engine, doc, ground_truth, "default")
+        call = rb._read_stored_call(original_run, engine, doc, ground_truth,
+                                   rec.get("source_pass_name") or "default")
         if call is None:
             raise FileNotFoundError((original_run, engine, doc))
         fixed, report = _repair(engine, call)
@@ -121,6 +122,7 @@ def main(source_run: str, patch_run: str) -> None:
         target.write_text(json.dumps(fixed, ensure_ascii=False), encoding="utf-8")
         row = {**rec, "timestamp": patch_run, "legs": ["text", "markdown"]}
         row.pop("source_timestamp", None)
+        row.pop("source_pass_name", None)
         # This is a second view of an existing physical call, not another
         # member of its Modal batch. The original call still carries the batch
         # measurement on its tables/geometry row in the combined rescore.
