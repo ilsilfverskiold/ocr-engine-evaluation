@@ -1,0 +1,225 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/invoice/invoice_000.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 8.125244083348662,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Invoice no\": \"97159829\", \"Date of issue\": null, \"Seller\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\", \"Tax Id\": \"985-73-8194\", \"IBAN\": \"GB81LZWO32519172531418\", \"Client\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\", \"Tax Id.2\": \"994-72-1270\", \"No.\": \"1.\", \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\", \"Qty\": \"2,00\", \"UM\": \"each\", \"Net price\": \"444,60\", \"Net worth\": \"889,20\", \"VAT [%]\": \"10%\", \"Gross worth\": \"978,12\", \"VAT [%]\": \"10%\", \"Net worth.2\": \"889,20\", \"VAT.2\": \"88,92\", \"Gross worth.2\": \"978,12\", \"Total\": \"$ 889,20\", \"Total.2\": \"$ 88,92\", \"Total.3\": \"$ 978,12\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "Invoice no: 97159829\n\nDate of issue:\n\n09/18/2015\n\nSeller:\n\nBradley-Andrade\n\n9879 Elizabeth Common\n\nLake Jonathan, RI 12335\n\nTax Id: 985-73-8194\n\nIBAN: GB81LZWO32519172531418\n\nClient:\n\nCastro PLC\n\nUnit 9678 Box 9664\n\nDPO AP 69387\n\nTax Id: 994-72-1270\n\nITEMS\n\n|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | 12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537 | 2,00 | each | 444,60 | 889,20 | 10% | 978,12  |\n\nSUMMARY\n\n|   | VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 889,20 | 88,92 | 978,12  |\n|  Total |  | $ 889,20 | $ 88,92 | $ 978,12  |",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 3508,
+     "width": 2481
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 191,
+      "top_left_y": 102,
+      "bottom_right_x": 810,
+      "bottom_right_y": 162,
+      "content": "Invoice no: 97159829",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 207,
+      "bottom_right_x": 522,
+      "bottom_right_y": 260,
+      "content": "Date of issue:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1197,
+      "top_left_y": 207,
+      "bottom_right_x": 1470,
+      "bottom_right_y": 260,
+      "content": "09/18/2015",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 191,
+      "top_left_y": 657,
+      "bottom_right_x": 380,
+      "bottom_right_y": 716,
+      "content": "Seller:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 204,
+      "top_left_y": 751,
+      "bottom_right_x": 566,
+      "bottom_right_y": 804,
+      "content": "Bradley-Andrade",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 811,
+      "bottom_right_x": 725,
+      "bottom_right_y": 853,
+      "content": "9879 Elizabeth Common",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 864,
+      "bottom_right_x": 723,
+      "bottom_right_y": 913,
+      "content": "Lake Jonathan, RI 12335",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 966,
+      "bottom_right_x": 638,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 985-73-8194",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 206,
+      "top_left_y": 1022,
+      "bottom_right_x": 954,
+      "bottom_right_y": 1071,
+      "content": "IBAN: GB81LZWO32519172531418",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1232,
+      "top_left_y": 657,
+      "bottom_right_x": 1426,
+      "bottom_right_y": 716,
+      "content": "Client:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 751,
+      "bottom_right_x": 1480,
+      "bottom_right_y": 804,
+      "content": "Castro PLC",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1244,
+      "top_left_y": 811,
+      "bottom_right_x": 1666,
+      "bottom_right_y": 853,
+      "content": "Unit 9678 Box 9664",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1247,
+      "top_left_y": 864,
+      "bottom_right_x": 1555,
+      "bottom_right_y": 913,
+      "content": "DPO AP 69387",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 1242,
+      "top_left_y": 966,
+      "bottom_right_x": 1679,
+      "bottom_right_y": 1018,
+      "content": "Tax Id: 994-72-1270",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1131,
+      "bottom_right_x": 373,
+      "bottom_right_y": 1187,
+      "content": "ITEMS",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1236,
+      "bottom_right_x": 2285,
+      "bottom_right_y": 1549,
+      "content": "|  No. | Description | Qty | UM | Net price | Net worth | VAT [%] | Gross worth  |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n|  1. | 12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537 | 2,00 | each | 444,60 | 889,20 | 10% | 978,12  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1612,
+      "bottom_right_x": 494,
+      "bottom_right_y": 1668,
+      "content": "SUMMARY",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 194,
+      "top_left_y": 1714,
+      "bottom_right_x": 2285,
+      "bottom_right_y": 1995,
+      "content": "|   | VAT [%] | Net worth | VAT | Gross worth  |\n| --- | --- | --- | --- | --- |\n|   | 10% | 889,20 | 88,92 | 978,12  |\n|  Total |  | $ 889,20 | $ 88,92 | $ 978,12  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 539083
+  },
+  "document_annotation": "{\"Invoice no\": \"97159829\", \"Date of issue\": null, \"Seller\": \"Bradley-Andrade\\n9879 Elizabeth Common\\nLake Jonathan, RI 12335\", \"Tax Id\": \"985-73-8194\", \"IBAN\": \"GB81LZWO32519172531418\", \"Client\": \"Castro PLC\\nUnit 9678 Box 9664\\nDPO AP 69387\", \"Tax Id.2\": \"994-72-1270\", \"No.\": \"1.\", \"Description\": \"12\\\" Marble Lapis Inlay Chess Table Top With 2\\\" Pieces & 15\\\" Wooden Stand W537\", \"Qty\": \"2,00\", \"UM\": \"each\", \"Net price\": \"444,60\", \"Net worth\": \"889,20\", \"VAT [%]\": \"10%\", \"Gross worth\": \"978,12\", \"VAT [%]\": \"10%\", \"Net worth.2\": \"889,20\", \"VAT.2\": \"88,92\", \"Gross worth.2\": \"978,12\", \"Total\": \"$ 889,20\", \"Total.2\": \"$ 88,92\", \"Total.3\": \"$ 978,12\"}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

@@ -1,5 +1,5 @@
 """Shared, deterministic reporting diagnostics; never changes saved scores."""
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 import math
 
@@ -62,24 +62,24 @@ def comparison(rows):
 METRICS = {
     'text': [('CER', 'cer', False), ('WER', 'wer', False), ('Word F1', 'word_f1', True)],
     'markdown': [('Text CER', 'markdown_cer', False), ('Text WER', 'markdown_wer', False), ('Block F1', 'element_f1', True), ('Order', 'order_score', True)],
-    'tables': [('Strict F1', 'cell_f1', True), ('Extra rate', 'extra_cell_rate', False), ('Structure', 'structure_similarity', True)],
-    'geometry': [('Precision', 'geometry_precision', True), ('F1', 'geometry_f1', True), ('Box CER', 'geometry_cer', False), ('Box WER', 'geometry_wer', False)],
+    'tables': [('Numbers', 'numeric_accuracy', True), ('Invented', 'invented_number_rate', False), ('Strict F1', 'cell_f1', True), ('Extra rate', 'extra_cell_rate', False), ('Structure', 'structure_similarity', True)],
+    'geometry': [('Line', 'geometry_line_score', True), ('Block cov', 'geometry_block_score', True), ('Words/box', 'geometry_words_per_box', False), ('Precision', 'geometry_precision', True), ('F1', 'geometry_f1', True), ('Box CER', 'geometry_cer', False), ('Box WER', 'geometry_wer', False)],
     'key_value': [('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Unmapped', 'kv_unresolved_keys', False)],
     'schema': [('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Extra/page', 'schema_extra_fields', False), ('Valid JSON', 'schema_valid_json', True)],
 }
 EXTRA_METRICS = {
     'key_value': [('Populated fields', 'kv_populated_accuracy', True), ('Blank fields', 'kv_blank_accuracy', True)],
     'text': [('Word P', 'word_precision', True), ('Word R', 'word_recall', True)],
-    'tables': [('Strict P', 'cell_precision', True), ('Strict R', 'cell_recall', True)],
+    'tables': [('Numbers anywhere', 'numeric_found_rate', True), ('Strict P', 'cell_precision', True), ('Strict R', 'cell_recall', True)],
     'markdown': [('Block P', 'element_precision', True), ('Block R', 'element_recall', True)],
 }
 METHOD = {
     'text': 'Distinct-token coverage; CER/WER measure sequence errors separately.',
     'markdown': 'Correct structure + half partial credit per reference element; text fidelity is separate.',
-    'tables': 'Reference value credit, including blanks and partial text matches. Labels and headers align supported split, merged or reordered fields; identical physical grids are not required. Extras, strict F1 and structure are separate diagnostics.',
+    'tables': 'Reference value credit, including returned blanks, checkbox states and partial text matches; gold blanks with no returned slot and unprinted header rows are not counted. Labels and headers align supported split, merged or reordered fields; identical physical grids are not required. Numbers = gold numeric cells correct in place; Invented = returned numeric cells printed nowhere on the page. Extras, strict F1 and structure are separate diagnostics.',
     'key_value': 'Correct values / counted printed-label fields; unreturned reference blanks are excluded. Unmapped is a count of returned keys per page.',
     'schema': 'Correct values / (requested fields + unexpected fields). Same frozen field sample.',
-    'geometry': 'Located reference-unit recall. Word/line units and layout-only predictions remain distinct.',
+    'geometry': 'Full = Word: located reference-unit recall (words; line segments on receipts). Line: both sides merged into visual lines, fuzzy text, mutual centre containment. Block cov: reference words inside a returned block that contains their text; block engines only, read with Words/box. Boxes are never invented at a finer unit than returned.',
 }
 
 
@@ -194,6 +194,16 @@ def print_report(rows, inference, log, legs, *, sort_by='score', details=False):
             log.info('  Outlier comparison excludes: ' + '; '.join(f"{c['page']} ({c['doc_type']}, {c['engines']} engines, max {c['max']:.3f})" for c in cases))
         else:
             log.info('  No outlier exclusions in this leg; Full and No outl are identical.')
+        # Recorded reply usability (metrics.reply_condition, see scoring-design); rows are scored as returned.
+        unusable = sorted((r['engine_name'], Path(r['document_path']).stem, (r.get('metrics') or {}).get('reply_condition'))
+                          for r in records if (r.get('metrics') or {}).get('reply_condition') not in (None, 'ok', 'no_table', 'no_pairs'))
+        if unusable:
+            log.info('  Unusable replies, scored as returned: ' + '; '.join(f'{e} {p} ({c})' for e, p, c in unusable))
+        for condition, label in (('no_table', 'Readable reply without a table (scored 0)'),
+                                 ('no_pairs', 'Readable reply without field pairs (scored as returned)')):
+            without = Counter(r['engine_name'] for r in records if valid(r) and (r.get('metrics') or {}).get('reply_condition') == condition)
+            if without:
+                log.info(f'  {label}: ' + ', '.join(f'{e} {n}' for e, n in sorted(without.items())))
         tiers = [t for t in ('easy', 'medium', 'hard') if any(valid(r) and r['tier'] == t for r in records)]
         split = len(scored_pages) >= 24 and len(tiers) > 1
         scopes = [('Overall', records)]

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OCR Benchmark Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<!-- The page's own files are loaded with a per-load query string: python -m http.server sends no cache headers,
+     and a browser that kept an old viewer.js next to a new results.js breaks ("pyFixed is not defined"). -->
+<script>
+  (() => { const t = Date.now(), css = document.createElement("link"); css.rel = "stylesheet"; css.href = "viewer.css?t=" + t; document.head.appendChild(css); })();
+</script>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">OCR benchmark</div>
+    <div class="hint">↑/↓ engine · 1–6 leg · 0 all legs · ←/→ page</div>
+    <nav id="engine-list"></nav>
+  </aside>
+  <main id="main">
+    <header id="topbar">
+      <div id="doc-tabs" class="tabs"></div>
+      <div id="leg-tabs" class="tabs"></div>
+    </header>
+    <section id="engine-head"></section>
+    <section id="content"><div class="empty">Loading the saved results…</div></section>
+  </main>
+</div>
+<script>
+  (() => { const t = Date.now();
+    for (const f of ["viewer.js", "results.js"]) { const s = document.createElement("script"); s.src = f + "?t=" + t; s.async = false; document.body.appendChild(s); } })();
+</script>
+</body>
+</html>

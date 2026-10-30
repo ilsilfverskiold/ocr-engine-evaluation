@@ -1,0 +1,394 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_000.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 10.59691920876503,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"LB\": null, \"SEMBOYAN TEGAS SDN BHD\": null, \"No.\": \"5 & 7\", \"Jalan\": \"TSJ 2\", \"Taman\": \"Subang Jasa\", \"Kg. Baru\": \"Subang\", \"Postcode\": \"40150\", \"City\": \"Shah Alam\", \"State\": \"Selangor Darul Ehsan\", \"Tel\": \"03-7846 1113\", \"Fax\": \"03-7832 1368\", \"Hp\": \"012-396 1688 012-353 7738\", \"www\": \"semboyan.com\", \"Email\": \"semboyantegas@gmail.com\", \"GST Reg No\": \"001538965504\", \"Check #\": \"549146\", \"Pax(s)\": \"5\", \"Date\": \"06-03-2018 07:24:06\", \"Cashier\": \"CASHIER 4\", \"Description\": \"taucu kisar, Teh wangi ros 180g, ASAM JAWA 1KG\", \"Qty\": \"2, 2, 1\", \"U.price\": \"6.50, 4.20, 4.80\", \"Total\": \"13.00, 8.40, 4.80\", \"TAX\": \"SR, ZR, ZRL\", \"Total (Excluding GST)\": \"26.20\", \"GST Payable\": \"0.78\", \"Total (Inclusive of GST)\": \"26.98\", \"Rounding Adj\": \"0.02\", \"TOTAL\": \"27.27.00\", \"Closed\": \"06-03-2018 07:24:44\", \"CASH\": \"52.00\", \"CHANGE\": \"25.00\", \"GST Summary Amount (RM)\": \"13.00, 8.40, 4.80\", \"Tax (RM)\": \"0.78, 0.00, 0.00\", \"SR (@ 6%)\": \"13.00 0.78\", \"ZR (@ %)\": \"8.40 0.00\", \"ZRL (@ 0%)\": \"4.80 0.00\"}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "LB\n\nSEMBOYAN TEGAS SDN BHD\n\nNo.5 & 7, Jalan TSJ 2,\n\nTaman Subang Jasa\n\nKg. Baru Subang, 40150 Shah Alam\n\nSelangor Darul Ehsan\n\nTel 03-7846 1113 Fax: 03-7832 1368\n\nHp: 012-396 1688 012-353 7738\n\nwww.semboyan.com\n\nEmail: semboyantegas@gmail.com\n\n(GST Reg No: 001538965504)\n\n# Tax Invoice\n\nCheck #: 549146\n\nPax(s): 5\n\nDate : 06-03-2018 07:24:06\n\nCashier: CASHIER 4\n\nDescription Qty U.price Total TAX\n\ntaucu kisar\n\n2 x 6.50 13.00 SR\n\nTeh wangi ros 180g\n\n2 x 4.20 8.40 ZR\n\nASAM JAWA 1KG\n\n1 x 4.80 4.80 ZRL\n\nTotal (Excluding GST) 26.20\n\nGST Payable: 0.78\n\nTotal (Inclusive of GST) 26.98\n\nRounding Adj: 0.02\n\nTOTAL: 27.27.00\n\nClosed 06-03-2018 07:24:44\n\nCASH : 52.00\n\nCHANGE : 25.00\n\nGST Summary Amount (RM) Tax (RM)\n\nSR (@ 6%) 13.00 0.78\n\nZR (@ %) 8.40 0.00\n\nZRL (@ 0%) 4.80 0.00\n\n*** Thank You ***\n\nPlease Come Again",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 2164,
+     "width": 741
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 491,
+      "top_left_y": 76,
+      "bottom_right_x": 602,
+      "bottom_right_y": 206,
+      "content": "LB",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 181,
+      "top_left_y": 173,
+      "bottom_right_x": 526,
+      "bottom_right_y": 208,
+      "content": "SEMBOYAN TEGAS SDN BHD",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 165,
+      "top_left_y": 212,
+      "bottom_right_x": 522,
+      "bottom_right_y": 247,
+      "content": "No.5 & 7, Jalan TSJ 2,",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 213,
+      "top_left_y": 251,
+      "bottom_right_x": 481,
+      "bottom_right_y": 284,
+      "content": "Taman Subang Jasa",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 102,
+      "top_left_y": 288,
+      "bottom_right_x": 607,
+      "bottom_right_y": 323,
+      "content": "Kg. Baru Subang, 40150 Shah Alam",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 195,
+      "top_left_y": 327,
+      "bottom_right_x": 512,
+      "bottom_right_y": 362,
+      "content": "Selangor Darul Ehsan",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 73,
+      "top_left_y": 366,
+      "bottom_right_x": 637,
+      "bottom_right_y": 401,
+      "content": "Tel 03-7846 1113 Fax: 03-7832 1368",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 117,
+      "top_left_y": 407,
+      "bottom_right_x": 590,
+      "bottom_right_y": 442,
+      "content": "Hp: 012-396 1688 012-353 7738",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 226,
+      "top_left_y": 451,
+      "bottom_right_x": 481,
+      "bottom_right_y": 481,
+      "content": "www.semboyan.com",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 119,
+      "top_left_y": 490,
+      "bottom_right_x": 590,
+      "bottom_right_y": 522,
+      "content": "Email: semboyantegas@gmail.com",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 138,
+      "top_left_y": 526,
+      "bottom_right_x": 570,
+      "bottom_right_y": 563,
+      "content": "(GST Reg No: 001538965504)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 168,
+      "top_left_y": 607,
+      "bottom_right_x": 508,
+      "bottom_right_y": 643,
+      "content": "# Tax Invoice",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 687,
+      "bottom_right_x": 281,
+      "bottom_right_y": 723,
+      "content": "Check #: 549146",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 443,
+      "top_left_y": 687,
+      "bottom_right_x": 590,
+      "bottom_right_y": 721,
+      "content": "Pax(s): 5",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 728,
+      "bottom_right_x": 481,
+      "bottom_right_y": 760,
+      "content": "Date : 06-03-2018 07:24:06",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 769,
+      "bottom_right_x": 328,
+      "bottom_right_y": 801,
+      "content": "Cashier: CASHIER 4",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 845,
+      "bottom_right_x": 665,
+      "bottom_right_y": 884,
+      "content": "Description Qty U.price Total TAX",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 47,
+      "top_left_y": 929,
+      "bottom_right_x": 215,
+      "bottom_right_y": 960,
+      "content": "taucu kisar",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 243,
+      "top_left_y": 964,
+      "bottom_right_x": 664,
+      "bottom_right_y": 999,
+      "content": "2 x 6.50 13.00 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 45,
+      "top_left_y": 1003,
+      "bottom_right_x": 325,
+      "bottom_right_y": 1038,
+      "content": "Teh wangi ros 180g",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 243,
+      "top_left_y": 1042,
+      "bottom_right_x": 664,
+      "bottom_right_y": 1074,
+      "content": "2 x 4.20 8.40 ZR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1079,
+      "bottom_right_x": 249,
+      "bottom_right_y": 1109,
+      "content": "ASAM JAWA 1KG",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 246,
+      "top_left_y": 1116,
+      "bottom_right_x": 662,
+      "bottom_right_y": 1150,
+      "content": "1 x 4.80 4.80 ZRL",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1191,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1228,
+      "content": "Total (Excluding GST) 26.20",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1233,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1267,
+      "content": "GST Payable: 0.78",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1272,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1306,
+      "content": "Total (Inclusive of GST) 26.98",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1311,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1345,
+      "content": "Rounding Adj: 0.02",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1363,
+      "bottom_right_x": 722,
+      "bottom_right_y": 1490,
+      "content": "TOTAL: 27.27.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1495,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1529,
+      "content": "Closed 06-03-2018 07:24:44",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1573,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1605,
+      "content": "CASH : 52.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 43,
+      "top_left_y": 1612,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1644,
+      "content": "CHANGE : 25.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 39,
+      "top_left_y": 1726,
+      "bottom_right_x": 659,
+      "bottom_right_y": 1763,
+      "content": "GST Summary Amount (RM) Tax (RM)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 39,
+      "top_left_y": 1768,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1802,
+      "content": "SR (@ 6%) 13.00 0.78",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 39,
+      "top_left_y": 1807,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1841,
+      "content": "ZR (@ %) 8.40 0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 39,
+      "top_left_y": 1846,
+      "bottom_right_x": 663,
+      "bottom_right_y": 1880,
+      "content": "ZRL (@ 0%) 4.80 0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 195,
+      "top_left_y": 2045,
+      "bottom_right_x": 491,
+      "bottom_right_y": 2080,
+      "content": "*** Thank You ***",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 224,
+      "top_left_y": 2086,
+      "bottom_right_x": 493,
+      "bottom_right_y": 2121,
+      "content": "Please Come Again",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 455703
+  },
+  "document_annotation": "{\"LB\": null, \"SEMBOYAN TEGAS SDN BHD\": null, \"No.\": \"5 & 7\", \"Jalan\": \"TSJ 2\", \"Taman\": \"Subang Jasa\", \"Kg. Baru\": \"Subang\", \"Postcode\": \"40150\", \"City\": \"Shah Alam\", \"State\": \"Selangor Darul Ehsan\", \"Tel\": \"03-7846 1113\", \"Fax\": \"03-7832 1368\", \"Hp\": \"012-396 1688 012-353 7738\", \"www\": \"semboyan.com\", \"Email\": \"semboyantegas@gmail.com\", \"GST Reg No\": \"001538965504\", \"Check #\": \"549146\", \"Pax(s)\": \"5\", \"Date\": \"06-03-2018 07:24:06\", \"Cashier\": \"CASHIER 4\", \"Description\": \"taucu kisar, Teh wangi ros 180g, ASAM JAWA 1KG\", \"Qty\": \"2, 2, 1\", \"U.price\": \"6.50, 4.20, 4.80\", \"Total\": \"13.00, 8.40, 4.80\", \"TAX\": \"SR, ZR, ZRL\", \"Total (Excluding GST)\": \"26.20\", \"GST Payable\": \"0.78\", \"Total (Inclusive of GST)\": \"26.98\", \"Rounding Adj\": \"0.02\", \"TOTAL\": \"27.27.00\", \"Closed\": \"06-03-2018 07:24:44\", \"CASH\": \"52.00\", \"CHANGE\": \"25.00\", \"GST Summary Amount (RM)\": \"13.00, 8.40, 4.80\", \"Tax (RM)\": \"0.78, 0.00, 0.00\", \"SR (@ 6%)\": \"13.00 0.78\", \"ZR (@ %)\": \"8.40 0.00\", \"ZRL (@ 0%)\": \"4.80 0.00\"}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

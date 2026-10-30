@@ -9,14 +9,15 @@ Configuration and cost assumptions for the benchmark results in the
 | --- | --- | --- |
 | `claude_sonnet_4_6` | `claude-sonnet-4-6` | Anthropic API; default text transcription; dedicated Markdown/tables/schema/KV and pixel-frame geometry |
 | `deepseek_ocr` | `deepseek-ai/DeepSeek-OCR` (v1); source pin `9f30c71f441d` | vLLM, Modal A100-80GB |
-| `docling` | `2.118.1` (reconstructed environment; calls saved `docling-latest`) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6 |
+| `docling` | `docling==2.118.1` (recorded in every reply; local re-conversion 2026-10-17) | Standard pipeline: Heron layout + TableFormer Accurate + RapidOCR/PP-OCRv6 |
 | `gemini_flash` | `gemini-3.1-flash-lite` | Google API; dedicated Markdown/table, schema/KV and geometry passes |
 | `glm_ocr` | `zai-org/GLM-OCR`; source pin `ca5d8b3e287e` | vLLM, Modal A10 |
 | `llamaparse` | v1 Balanced / Parse with LLM, August 10 run (dated release unconfirmed); schema `openai-gpt-4-1` | Hosted Parse/Extract APIs; recovered client packages `llama-cloud-services==0.6.94`, `llama-cloud==0.1.46` |
+| `llamaparse_granular` | LlamaParse `latest`, `output_options.granular_bboxes=[word, line]`, cost_effective tier, run 2026-10-20 (17 pages, 8.6 s/page) | Hosted Parse API; geometry only |
 | `marker` | `marker-pdf==1.8.2` | Modal A100-80GB; 11 conversion workers; separate OCR geometry pass |
 | `mineru` | `MinerU2.5-2509-1.2B`; source pin `1aa090b41282` | vLLM native batch, Modal A100-80GB |
 | `mineru_pipeline` | `mineru[pipeline]==2.5.4`; Torch `2.6.0+cu124`; weights `ed6b654c018d` | DocLayout-YOLO + PP-OCR + UniMERNet/table models, Modal T4; geometry only |
-| `mistral_ocr_4` | **4.1 conversion** (dated alias resolution); **4.0 schema** (saved reply) | Mistral OCR/Annotations API |
+| `mistral_ocr_4_1` | `mistral-ocr-4-1` pinned for key_value and schema (replies record it); conversion `mistral-ocr-latest`, 4.1 by dated alias resolution | Mistral OCR/Annotations API |
 | `paddleocr_ppocrv5` | PP-OCRv5 server det `ca867c89` / rec `b26c3587`; PaddleOCR `3.7.0`; Paddle GPU `3.2.1` | Modal A10; geometry only |
 | `paddleocr_vl` | `PaddleOCR-VL@7fa00a8c55b7`, pipeline v1 | Layout + vLLM recognition, Modal A100-80GB |
 | `qwen3_vl` | `Qwen/Qwen3-VL-8B-Instruct`; source pin `0c351dd01ed8` | vLLM, Modal A100-80GB |
@@ -26,21 +27,45 @@ Configuration and cost assumptions for the benchmark results in the
 
 ### Version certainty
 
-- **Mistral:** conversion replies record `mistral-ocr-latest`; the vendor's
-  [alias history](https://docs.mistral.ai/resources/changelogs) resolves the run
-  to OCR 4.1. Schema replies explicitly identify 4.0. The runner pins these
-  separately; retired 4.0 may be unavailable for new schema runs.
-- **Docling:** 2.118.1 is reconstructed from the installed environment, not
-  independently pinned in each reply. Dependencies: docling-core 2.91.0,
+- **Mistral:** the 93 conversion replies (2026-08-10) record only the alias
+  `mistral-ocr-latest`. Per the vendor's
+  [changelog](https://docs.mistral.ai/getting-started/changelog), the alias
+  pointed to OCR 4.0 from 2026-06-23 and to OCR 4.1 from 2026-07-16, so those
+  calls ran on 4.1. The key_value and schema annotation replies (collected
+  2026-10-19) explicitly identify `mistral-ocr-4-1`, which the runner pins on
+  every pass. The earlier 4.0 schema replies were replaced, not mixed in.
+- **Docling:** every reply records `docling==2.118.1`; the model weights are
+  the ones that package version resolves. Dependencies: docling-core 2.91.0,
   docling-ibm-models 3.13.3, docling-parse 7.11.0, RapidOCR 3.9.2. The pipeline
   uses Heron layout, TableFormer Accurate and Torch RapidOCR with PP-OCRv6
   detection/recognition and a PP-OCRv2 orientation classifier.
 - **LlamaParse:** the configured v1 default is Parse with LLM / Balanced. Its
-  hosted parser release and underlying model are unrecorded. Client SDK
+  hosted parser release and underlying model are unrecorded; the saved replies
+  (page items, layout and job metadata) name no parser version. Client SDK
   versions do not identify them. Schema extraction separately records GPT-4.1.
-- **Open models:** source revisions identify configured weights. Calls that omit
-  the revision do not independently verify the deployed hash. Full pins are in
+- **Open models:** every Modal app has passed its `MODEL_REVISION` to the
+  model loader since the first commit (2026-08-11); the strings saved with calls
+  before 2026-10-13 omit the hash, so a call does not verify it on its own.
+  Hugging Face commit history, checked 2026-10-19: the pinned commit was the
+  repository head on every collection date for MinerU (head since 2026-04-09),
+  DeepSeek-OCR (since 2025-11-04), Qwen3-VL (since 2025-10-15) and PaddleOCR-VL
+  (2026-08-08; recorded per call). GLM-OCR's pin was head from 2026-05-19 until
+  2026-09-11, when `config.json`, `tokenizer_config.json` and a new
+  `processor_config.json` changed with no weight change; the 100 GLM calls of
+  2026-10-06/07 postdate that and rely on the deployment passing the pin.
+  PaddleOCR-VL's layout model is fetched by the `paddleocr` pipeline at container
+  start without a pin and is saved as `layout=unknown`. Full pins are in
   [the Modal apps](../modal_apps).
+- **Marker:** `marker-pdf==1.8.2` resolves `surya-ocr` to 0.14.6 or 0.14.7 at
+  image build (not recorded); both ship the same date-stamped checkpoints
+  (detection 2025_05_07, recognition 2025_05_16, layout, table and OCR-error
+  2025_02_18), so the weights are determined.
+- **Hosted LLMs:** `gemini-3.1-flash-lite` is Google's stable model code with no
+  dated variant published, and every reply's `model_version` echoes it;
+  `claude-sonnet-4-6` is the complete Anthropic model ID with no dated snapshot,
+  and every reply echoes it.
+- **Tesseract:** 5.5.2 is the binary; the `eng` traineddata variant is not
+  recorded.
 
 Sonnet and Gemini use separate dedicated requests for Markdown (92 pages each)
 and tables (42 pages each). Exact prompts and provider settings are saved with
@@ -59,7 +84,8 @@ page or GPU-time formula; failed calls are excluded from the comparison.
 | Gemini 3.1 Flash-Lite | $0.25 / million input tokens + $1.50 / million output and thinking tokens | [Google](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite) |
 | Mistral OCR | $4 / 1,000 conversion pages; $5 / 1,000 annotated pages | [Mistral](https://docs.mistral.ai/models/ocr-4-1) |
 | LlamaParse v1 Parse with LLM | 3 credits/page × $1.25 / 1,000 credits = $0.00375/page | [LlamaIndex](https://developers.llamaindex.ai/llamaparse/general/pricing/) |
-| LlamaExtract v1 Multimodal | 20 credits = $0.025/page; cached extract-only can be 14 credits = $0.0175 | [LlamaIndex](https://developers.llamaindex.ai/llamaparse/general/pricing/) |
+| LlamaParse granular boxes (`llamaparse_granular`) | same 3 credits/page = $0.00375/page; no extra credits listed for `granular_bboxes` |  [LlamaIndex](https://developers.llamaindex.ai/llamaparse/general/pricing/) |
+| LlamaExtract v1 Multimodal | 20 credits = $0.025/page; cached extract-only can be 14 credits = $0.0175; `cite_sources` lists no extra credits | [LlamaIndex](https://developers.llamaindex.ai/llamaparse/general/pricing/) |
 | Textract text | $0.0015/page for the first million monthly pages | [AWS](https://aws.amazon.com/textract/pricing/) |
 | Textract TABLES + FORMS | $0.015 + $0.05 = $0.065/page for the first million; OCR included | [AWS](https://aws.amazon.com/textract/pricing/) |
 | Modal A100-80GB / A10 / T4 | $0.000694 / $0.000306 / $0.000164 per GPU-second | [Modal](https://modal.com/pricing) |

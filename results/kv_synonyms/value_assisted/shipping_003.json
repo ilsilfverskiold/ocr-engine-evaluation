@@ -70,6 +70,20 @@
           ],
           "reason": "Output ID 19 correctly identifies the null sender/reference number for this shipment.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 6,
+              "key": "Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Correctly identifies the empty sender/reference number for shipment 0304996236.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -132,6 +146,20 @@
           ],
           "reason": "Output ID 21 provides the complete and correct dispatch station/sender.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 8,
+              "key": "Dispatch Station / Sender",
+              "value": "ADAMS - MACEJKOVIC 80496 Lime Grove GRADYSIDE, 87884"
+            }
+          ],
+          "reason": "Output ID 8 provides the complete and correct dispatch station/sender address.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -337,6 +365,30 @@
           ],
           "reason": "Output ID 27 contains multiple descriptions; cannot isolate the first charge.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 66,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE FRAGILE ITEM FEE"
+            },
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge description.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -377,6 +429,20 @@
           ],
           "reason": "Output ID 28 contains multiple values; cannot isolate the first charge amount.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "Additional Charges",
+              "value": "9.03 2.76 4.93 8.03 4.41"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge amount.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -417,6 +483,20 @@
           ],
           "reason": "Output ID 29 contains multiple values; cannot isolate the first charge VAT.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "VAT / Code",
+              "value": "2.38 4.74 3.65 2.66 4.46"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific VAT code.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -457,6 +537,20 @@
           ],
           "reason": "Output ID 30 contains multiple values; cannot isolate the first charge gross value.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "Gross Value",
+              "value": "11.72 33.89 11.51 23.68 41.52"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific gross value.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -505,6 +599,20 @@
           ],
           "reason": "Output ID 27 contains multiple descriptions; cannot isolate the second charge.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge description.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -553,6 +661,20 @@
           ],
           "reason": "Output ID 28 contains multiple values; cannot isolate the second charge amount.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "Additional Charges",
+              "value": "9.03 2.76 4.93 8.03 4.41"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge amount.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -601,6 +723,20 @@
           ],
           "reason": "Output ID 29 contains multiple values; cannot isolate the second charge VAT.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "VAT / Code",
+              "value": "2.38 4.74 3.65 2.66 4.46"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific VAT code.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -649,6 +785,20 @@
           ],
           "reason": "Output ID 30 contains multiple values; cannot isolate the second charge gross value.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "Gross Value",
+              "value": "11.72 33.89 11.51 23.68 41.52"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific gross value.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -707,6 +857,25 @@
           ],
           "reason": "Output ID 27 contains multiple descriptions; cannot isolate the third charge.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge description.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -755,6 +924,20 @@
           ],
           "reason": "Output ID 28 contains multiple values; cannot isolate the third charge amount.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "Additional Charges",
+              "value": "9.03 2.76 4.93 8.03 4.41"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge amount.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -803,6 +986,20 @@
           ],
           "reason": "Output ID 29 contains multiple values; cannot isolate the third charge VAT.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "VAT / Code",
+              "value": "2.38 4.74 3.65 2.66 4.46"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific VAT code.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -851,6 +1048,20 @@
           ],
           "reason": "Output ID 30 contains multiple values; cannot isolate the third charge gross value.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "Gross Value",
+              "value": "11.72 33.89 11.51 23.68 41.52"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific gross value.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -899,6 +1110,20 @@
           ],
           "reason": "Output ID 27 contains multiple descriptions; cannot isolate the fourth charge.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge description.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -947,6 +1172,20 @@
           ],
           "reason": "Output ID 28 contains multiple values; cannot isolate the fourth charge amount.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "Additional Charges",
+              "value": "9.03 2.76 4.93 8.03 4.41"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge amount.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -995,6 +1234,20 @@
           ],
           "reason": "Output ID 29 contains multiple values; cannot isolate the fourth charge VAT.",
           "request_id": "93c3b920004e93b467e10aa137bff4772547cbefcc0e3cc4aa86f62319a6945e"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "VAT / Code",
+              "value": "2.38 4.74 3.65 2.66 4.46"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific VAT code.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1043,6 +1296,20 @@
           ],
           "reason": "The output ID contains the correct gross value for Charge 4 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "Gross Value",
+              "value": "11.72 33.89 11.51 23.68 41.52"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific gross value.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1091,6 +1358,20 @@
           ],
           "reason": "The output ID contains the correct description for Charge 5 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge description.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1139,6 +1420,20 @@
           ],
           "reason": "The output ID contains the correct additional charge amount for Charge 5 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 15,
+              "key": "Additional Charges",
+              "value": "9.03 2.76 4.93 8.03 4.41"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific charge amount.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1187,6 +1482,20 @@
           ],
           "reason": "The output ID contains the correct VAT code for Charge 5 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "VAT / Code",
+              "value": "2.38 4.74 3.65 2.66 4.46"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific VAT code.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1243,6 +1552,20 @@
               "value": "11.72 33.89 11.51 23.68 41.52"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "Gross Value",
+              "value": "11.72 33.89 11.51 23.68 41.52"
+            }
+          ],
+          "reason": "The value is part of a concatenated field; cannot isolate the specific gross value.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1314,6 +1637,20 @@
           ],
           "reason": "The output ID correctly provides the complete null value for this field.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 19,
+              "key": "Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Correctly identifies the empty sender/reference number for shipment 0135277879.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1407,6 +1744,20 @@
           ],
           "reason": "The output ID correctly provides the complete receiving station and recipient details.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "Receiving Station / Recipient",
+              "value": "REINGER - BERGSTROM 41153 Rohan Unions SCHROEDERBOROUGH, 43301-8290"
+            }
+          ],
+          "reason": "Output ID 22 provides the complete and correct receiving station/recipient address.",
+          "request_id": "6c31687e5066858f5394143bab128ad6b32c0d2cc692ae9a5cf50c7fce0b19b5"
         }
       ]
     },
@@ -1571,6 +1922,20 @@
           ],
           "reason": "The output ID contains the correct description for Charge 1 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ],
+          "reason": "The first item in the multi-value output matches the expected description for Charge 1.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -1611,6 +1976,20 @@
           ],
           "reason": "The output ID contains the correct additional charge amount for Charge 1 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ],
+          "reason": "The first item in the multi-value output matches the expected amount for Charge 1.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -1651,6 +2030,20 @@
           ],
           "reason": "The output ID contains the correct VAT code for Charge 1 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ],
+          "reason": "The first item in the multi-value output matches the expected VAT for Charge 1.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -1691,6 +2084,20 @@
           ],
           "reason": "The output ID contains the correct gross value for Charge 1 within the shipment.",
           "request_id": "92908c006daf60d86fce7b8bb2075aceca3289224928561e5f456d9d4bba3173"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ],
+          "reason": "The first item in the multi-value output matches the expected gross value for Charge 1.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -1725,6 +2132,28 @@
               "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ],
+          "reason": "The second item in the multi-value output matches the expected description for Charge 2.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ]
         }
       ]
     },
@@ -1756,6 +2185,28 @@
             {
               "output_id": 41,
               "key": "0135277879 — Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ],
+          "reason": "The second item in the multi-value output matches the expected amount for Charge 2.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
               "value": "4.03 3.7 8.92 5.95 1.5"
             }
           ]
@@ -1807,6 +2258,28 @@
               "value": "1.77 2.74 2.28 3.84 4.8"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ],
+          "reason": "The second item in the multi-value output matches the expected VAT for Charge 2.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ]
         }
       ]
     },
@@ -1855,6 +2328,28 @@
               "value": "26.96 18.8 49.38 25.08 20.05"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ],
+          "reason": "The second item in the multi-value output matches the expected gross value for Charge 2.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ]
         }
       ]
     },
@@ -1886,6 +2381,28 @@
             {
               "output_id": 40,
               "key": "0135277879 — Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ],
+          "reason": "The third item in the multi-value output matches the expected description for Charge 3.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
               "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
             }
           ]
@@ -1923,6 +2440,28 @@
               "value": "4.03 3.7 8.92 5.95 1.5"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ],
+          "reason": "The third item in the multi-value output matches the expected amount for Charge 3.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ]
         }
       ]
     },
@@ -1949,6 +2488,28 @@
           ],
           "reason": "Output ID 42 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ],
+          "reason": "The third item in the multi-value output matches the expected VAT for Charge 3.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ]
         }
       ]
     },
@@ -1975,6 +2536,28 @@
           ],
           "reason": "Output ID 43 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ],
+          "reason": "The third item in the multi-value output matches the expected gross value for Charge 3.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ]
         }
       ]
     },
@@ -1986,6 +2569,30 @@
           "value": "INSURANCE PREMIUM",
           "request_id": "ffdca0cea03711cb5a8526d363f0e5ab248123db47a90392f777e7bc11b29107"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ],
+          "reason": "The fourth item in the multi-value output matches the expected description for Charge 4.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ]
+        }
       ]
     },
     "Shipment 0135277879 — Charge 4 — Additional Charges": {
@@ -1995,6 +2602,30 @@
           "key": "Additional Charges[8]",
           "value": "5.95",
           "request_id": "8bc8d9358e95568e48112cab99a4d08a2d044293714cb8066bac8a5595653902"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ],
+          "reason": "The fourth item in the multi-value output matches the expected amount for Charge 4.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ]
         }
       ]
     },
@@ -2021,6 +2652,28 @@
           ],
           "reason": "Output ID 42 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ],
+          "reason": "The fourth item in the multi-value output matches the expected VAT for Charge 4.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ]
         }
       ]
     },
@@ -2047,6 +2700,28 @@
           ],
           "reason": "Output ID 43 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ],
+          "reason": "The fourth item in the multi-value output matches the expected gross value for Charge 4.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ]
         }
       ]
     },
@@ -2058,6 +2733,30 @@
           "value": "HANDLING CHARGE",
           "request_id": "ffdca0cea03711cb5a8526d363f0e5ab248123db47a90392f777e7bc11b29107"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ],
+          "reason": "The fifth item in the multi-value output matches the expected description for Charge 5.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 27,
+              "key": "Description of Additional Charges",
+              "value": "DANGEROUS GOODS HANDLING FEE SPECIAL HANDLING FEE HANDLING CHARGE INSURANCE PREMIUM HANDLING CHARGE"
+            }
+          ]
+        }
       ]
     },
     "Shipment 0135277879 — Charge 5 — Additional Charges": {
@@ -2067,6 +2766,30 @@
           "key": "Additional Charges[9]",
           "value": "1.5",
           "request_id": "8bc8d9358e95568e48112cab99a4d08a2d044293714cb8066bac8a5595653902"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ],
+          "reason": "The fifth item in the multi-value output matches the expected amount for Charge 5.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 28,
+              "key": "Additional Charges",
+              "value": "4.03 3.7 8.92 5.95 1.5"
+            }
+          ]
         }
       ]
     },
@@ -2093,6 +2816,28 @@
           ],
           "reason": "Output ID 42 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ],
+          "reason": "The fifth item in the multi-value output matches the expected VAT for Charge 5.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 29,
+              "key": "VAT / Code",
+              "value": "1.77 2.74 2.28 3.84 4.8"
+            }
+          ]
         }
       ]
     },
@@ -2119,6 +2864,28 @@
           ],
           "reason": "Output ID 43 is already assigned. Value is part of a concatenated string.",
           "request_id": "bda65dd2f05af552b042e912ede733a79bbe915b064b156f49874db9bd651382"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ],
+          "reason": "The fifth item in the multi-value output matches the expected gross value for Charge 5.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 30,
+              "key": "Gross Value",
+              "value": "26.96 18.8 49.38 25.08 20.05"
+            }
+          ]
         }
       ]
     },
@@ -2190,6 +2957,20 @@
           ],
           "reason": "Output is an empty field with the correct key for this shipment.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 32,
+              "key": "Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "The output ID 32 correctly identifies the null value for Sender / Reference Number.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -2252,6 +3033,20 @@
           ],
           "reason": "Output matches the dispatch station and sender address exactly for this shipment.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 34,
+              "key": "Dispatch Station / Sender",
+              "value": "WALKER - LABADIE 2821 Stanley Street HELOISEVIEW, 59075-2518"
+            }
+          ],
+          "reason": "The output ID 34 correctly provides the complete dispatch station and sender address.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -2323,6 +3118,20 @@
           ],
           "reason": "Output matches the type of service exactly from the correct shipment row.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 36,
+              "key": "Type of Service / Charge",
+              "value": "EXPRESS WORLDWIDE"
+            }
+          ],
+          "reason": "The output ID 36 correctly provides the complete type of service/charge value.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -2394,6 +3203,20 @@
           ],
           "reason": "Output matches the number of shipments exactly from the correct shipment row.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 38,
+              "key": "Number of Shipments",
+              "value": "7"
+            }
+          ],
+          "reason": "The output ID 38 correctly provides the complete number of shipments value.",
+          "request_id": "9a3c646d08942689ce7f5b8b3e50177a5f5392c0b568716ad54ec58a1e523ff5"
         }
       ]
     },
@@ -2465,6 +3288,20 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the first charge description.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 40,
+              "key": "Description of Additional Charges",
+              "value": "CARBON OFFSET FEE ENVIRONMENTAL SURCHARGE"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 description.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2505,6 +3342,20 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the first additional charge amount.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 41,
+              "key": "Additional Charges",
+              "value": "2.16 3.3"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 additional charges.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2545,6 +3396,20 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the first VAT code.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 42,
+              "key": "VAT / Code",
+              "value": "3.11 2.01"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 VAT/Code.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2585,6 +3450,20 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the first gross value.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 43,
+              "key": "Gross Value",
+              "value": "45.26 35.13"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 gross value.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2625,6 +3504,28 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the second charge description.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 40,
+              "key": "Description of Additional Charges",
+              "value": "CARBON OFFSET FEE ENVIRONMENTAL SURCHARGE"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 description.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 40,
+              "key": "Description of Additional Charges",
+              "value": "CARBON OFFSET FEE ENVIRONMENTAL SURCHARGE"
+            }
+          ]
         }
       ]
     },
@@ -2665,6 +3566,28 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the second additional charge amount.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 41,
+              "key": "Additional Charges",
+              "value": "2.16 3.3"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 additional charges.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 41,
+              "key": "Additional Charges",
+              "value": "2.16 3.3"
+            }
+          ]
         }
       ]
     },
@@ -2705,6 +3628,28 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the second VAT code.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 42,
+              "key": "VAT / Code",
+              "value": "3.11 2.01"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 VAT/Code.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 42,
+              "key": "VAT / Code",
+              "value": "3.11 2.01"
+            }
+          ]
         }
       ]
     },
@@ -2745,6 +3690,28 @@
           ],
           "reason": "The output contains multiple charges; cannot isolate the second gross value.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 43,
+              "key": "Gross Value",
+              "value": "45.26 35.13"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 gross value.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 43,
+              "key": "Gross Value",
+              "value": "45.26 35.13"
+            }
+          ]
         }
       ]
     },
@@ -2816,6 +3783,20 @@
           ],
           "reason": "Output is an empty field with the correct key for this shipment.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 45,
+              "key": "Sender / Reference Number",
+              "value": ""
+            }
+          ],
+          "reason": "Output key and value match the reference for Sender / Reference Number.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2909,6 +3890,20 @@
           ],
           "reason": "Output matches the receiving station and recipient address exactly for this shipment.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 48,
+              "key": "Receiving Station / Recipient",
+              "value": "O'KON AND SONS 7351 Waverley Road ROBERTSMOUTH, 37035-3113"
+            }
+          ],
+          "reason": "Output key and value match the reference for Receiving Station / Recipient.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -2949,6 +3944,20 @@
           ],
           "reason": "Output matches the type of service exactly from the correct shipment row.",
           "request_id": "059eca4da9c840b736e0a9c17885a5db68b1ed51ddbb238ee2bd13263e2b5930"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 49,
+              "key": "Type of Service / Charge",
+              "value": "EXPRESS WORLDWIDE"
+            }
+          ],
+          "reason": "Output key and value match the reference for Type of Service / Charge.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3082,6 +4091,20 @@
           ],
           "reason": "Output ID 66 correctly provides the description of additional charges for the specified shipment.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 53,
+              "key": "Description of Additional Charges",
+              "value": "REMOTE AREA SURCHARGE"
+            }
+          ],
+          "reason": "Output key and value match the reference for Charge 1 description.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3144,6 +4167,20 @@
           ],
           "reason": "Output ID 68 correctly provides the VAT code for the specified shipment.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 55,
+              "key": "VAT / Code",
+              "value": "4.69"
+            }
+          ],
+          "reason": "Output key and value match the reference for Charge 1 VAT/Code.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3299,6 +4336,20 @@
           ],
           "reason": "Output ID 74 correctly provides the receiving station and recipient for the specified shipment.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 61,
+              "key": "Receiving Station / Recipient",
+              "value": "MCKENZIE - LUBOWITZ 963 Avis Ways PEMBROKE PINES, 39364-4915"
+            }
+          ],
+          "reason": "Output key and value match the reference for Receiving Station / Recipient.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3339,6 +4390,20 @@
           ],
           "reason": "Output ID 75 correctly provides the type of service/charge for the specified shipment.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 62,
+              "key": "Type of Service / Charge",
+              "value": "EXPRESS WORLDWIDE"
+            }
+          ],
+          "reason": "Output key and value match the reference for Type of Service / Charge.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3477,6 +4542,20 @@
           ],
           "reason": "The value is present in output ID 79, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 66,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE FRAGILE ITEM FEE"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 description.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3517,6 +4596,20 @@
           ],
           "reason": "The value is present in output ID 80, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 67,
+              "key": "Additional Charges",
+              "value": "9.99 6.87"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 additional charges.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3557,6 +4650,20 @@
           ],
           "reason": "The value is present in output ID 81, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 68,
+              "key": "VAT / Code",
+              "value": "3.16 3.42"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 VAT/Code.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3597,6 +4704,20 @@
           ],
           "reason": "The value is present in output ID 82, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 69,
+              "key": "Gross Value",
+              "value": "19.19 22.92"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 1 gross value.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -3645,6 +4766,28 @@
           ],
           "reason": "The value is present in output ID 79, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 66,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE FRAGILE ITEM FEE"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 description.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 66,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE FRAGILE ITEM FEE"
+            }
+          ]
         }
       ]
     },
@@ -3693,6 +4836,28 @@
           ],
           "reason": "The value is present in output ID 80, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 67,
+              "key": "Additional Charges",
+              "value": "9.99 6.87"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 additional charges.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 67,
+              "key": "Additional Charges",
+              "value": "9.99 6.87"
+            }
+          ]
         }
       ]
     },
@@ -3741,6 +4906,28 @@
           ],
           "reason": "The value is present in output ID 81, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 68,
+              "key": "VAT / Code",
+              "value": "3.16 3.42"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 VAT/Code.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 68,
+              "key": "VAT / Code",
+              "value": "3.16 3.42"
+            }
+          ]
         }
       ]
     },
@@ -3789,6 +4976,28 @@
           ],
           "reason": "The value is present in output ID 82, but it is a combined field for multiple charges.",
           "request_id": "7edf7985e643c26ff74d7eef74dc87d64c92fc0f5686a6145dc4cc0e0061dfcf"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 69,
+              "key": "Gross Value",
+              "value": "19.19 22.92"
+            }
+          ],
+          "reason": "Output contains the complete expected value for Charge 2 gross value.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 69,
+              "key": "Gross Value",
+              "value": "19.19 22.92"
+            }
+          ]
         }
       ]
     },
@@ -3913,6 +5122,20 @@
           ],
           "reason": "Complete value found in the native table for the specific dispatch station.",
           "request_id": "b503ea1e5c51fc89cba10325d7c1cfca054478a654ae5035472a98d68e8f48b0"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 73,
+              "key": "Dispatch Station / Sender",
+              "value": "GOYETTE - CUMMERATA 1151 Erdman Plain FORT WARREN, 06081-0070"
+            }
+          ],
+          "reason": "Output key and value match the reference for Dispatch Station / Sender.",
+          "request_id": "77c590a2341b914e572db793b766fb1b41aaf4eaa157bdebf6c1c095d3fae944"
         }
       ]
     },
@@ -4017,6 +5240,22 @@
           "value": "1",
           "request_id": "ffdca0cea03711cb5a8526d363f0e5ab248123db47a90392f777e7bc11b29107"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 77,
+              "key": "Number of Shipments",
+              "value": "1"
+            }
+          ],
+          "reason": "Output ID 77 provides the complete and correct value for number of shipments.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee"
+        }
       ]
     },
     "Shipment 5746129347 — Base Charge": {
@@ -4087,6 +5326,20 @@
           ],
           "reason": "First value in the concatenated description field matches the expected charge.",
           "request_id": "b503ea1e5c51fc89cba10325d7c1cfca054478a654ae5035472a98d68e8f48b0"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 79 contains the complete and correct description for Charge 1.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee"
         }
       ]
     },
@@ -4127,6 +5380,20 @@
           ],
           "reason": "First value in the concatenated additional charges field matches the expected charge.",
           "request_id": "b503ea1e5c51fc89cba10325d7c1cfca054478a654ae5035472a98d68e8f48b0"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ],
+          "reason": "Output ID 80 contains the complete and correct additional charge for Charge 1.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee"
         }
       ]
     },
@@ -4167,6 +5434,20 @@
           ],
           "reason": "First value in the concatenated VAT code field matches the expected charge.",
           "request_id": "b503ea1e5c51fc89cba10325d7c1cfca054478a654ae5035472a98d68e8f48b0"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ],
+          "reason": "Output ID 81 contains the complete and correct VAT/Code for Charge 1.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee"
         }
       ]
     },
@@ -4207,6 +5488,20 @@
           ],
           "reason": "First value in the concatenated gross value field matches the expected charge.",
           "request_id": "b503ea1e5c51fc89cba10325d7c1cfca054478a654ae5035472a98d68e8f48b0"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ],
+          "reason": "Output ID 82 contains the complete and correct gross value for Charge 1.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee"
         }
       ]
     },
@@ -4260,6 +5555,28 @@
             {
               "output_id": 92,
               "key": "5746129347 — Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 79 contains the complete and correct description for Charge 2.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
               "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
             }
           ]
@@ -4319,6 +5636,28 @@
               "value": "3.94 5.38 4.78 8.55"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ],
+          "reason": "Output ID 80 contains the complete and correct additional charge for Charge 2.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ]
         }
       ]
     },
@@ -4372,6 +5711,28 @@
             {
               "output_id": 94,
               "key": "5746129347 — VAT Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ],
+          "reason": "Output ID 81 contains the complete and correct VAT/Code for Charge 2.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
               "value": "2.4 1.6 1.26 2.43"
             }
           ]
@@ -4431,6 +5792,28 @@
               "value": "25.61 13.22 15.12 28.88"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ],
+          "reason": "Output ID 82 contains the complete and correct gross value for Charge 2.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ]
         }
       ]
     },
@@ -4484,6 +5867,28 @@
             {
               "output_id": 92,
               "key": "5746129347 — Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 79 contains the complete and correct description for Charge 3.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
               "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
             }
           ]
@@ -4543,6 +5948,28 @@
               "value": "3.94 5.38 4.78 8.55"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ],
+          "reason": "Output ID 80 contains the complete and correct additional charge for Charge 3.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ]
         }
       ]
     },
@@ -4599,6 +6026,28 @@
               "value": "2.4 1.6 1.26 2.43"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ],
+          "reason": "Output ID 81 contains the complete and correct VAT/Code for Charge 3.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ]
         }
       ]
     },
@@ -4652,6 +6101,28 @@
             {
               "output_id": 95,
               "key": "5746129347 — Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ],
+          "reason": "Output ID 82 contains the complete and correct gross value for Charge 3.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
               "value": "25.61 13.22 15.12 28.88"
             }
           ]
@@ -4721,6 +6192,33 @@
               "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "Description of Additional Charges",
+              "value": "OUT-OF-HOURS DELIVERY FEE CHANGE OF ADDRESS FEE SAME-DAY DELIVERY CHARGE ADDRESS CORRECTION FEE HOLIDAY DELIVERY FEE"
+            },
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ],
+          "reason": "Output ID 79 contains the complete and correct description for Charge 4.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 79,
+              "key": "Description of Additional Charges",
+              "value": "SAME-DAY DELIVERY CHARGE REMOTE AREA SURCHARGE FUEL ADJUSTMENT CHARGE OUT-OF-HOURS DELIVERY FEE"
+            }
+          ]
         }
       ]
     },
@@ -4774,6 +6272,28 @@
             {
               "output_id": 93,
               "key": "5746129347 — Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
+              "value": "3.94 5.38 4.78 8.55"
+            }
+          ],
+          "reason": "Output ID 80 contains the complete and correct additional charge for Charge 4.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 80,
+              "key": "Additional Charges",
               "value": "3.94 5.38 4.78 8.55"
             }
           ]
@@ -4833,6 +6353,28 @@
               "value": "2.4 1.6 1.26 2.43"
             }
           ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ],
+          "reason": "Output ID 81 contains the complete and correct VAT/Code for Charge 4.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 81,
+              "key": "VAT / Code",
+              "value": "2.4 1.6 1.26 2.43"
+            }
+          ]
         }
       ]
     },
@@ -4864,6 +6406,28 @@
             {
               "output_id": 95,
               "key": "5746129347 — Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ]
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "417938eb74742ee3c63e8c130c70759ee42eb703565ee2aa2057e716b2761433",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
+              "value": "25.61 13.22 15.12 28.88"
+            }
+          ],
+          "reason": "Output ID 82 contains the complete and correct gross value for Charge 4.",
+          "request_id": "1dc2f783e353607e4ff9cde1595b5d0dc97ae926f7ef4669829ef8be5275cfee",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 82,
+              "key": "Gross Value",
               "value": "25.61 13.22 15.12 28.88"
             }
           ]

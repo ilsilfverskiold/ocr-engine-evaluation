@@ -18,7 +18,7 @@ KV_ANNOTATION_SCHEMA = {"type": "object", "additionalProperties": {"type": ["str
 class MistralOCRRunner(OCRRunner):
     """Mistral OCR 4.1: conversion, and schema/KV through document annotations."""
 
-    name = "mistral_ocr_4"
+    name = "mistral_ocr_4_1"
     supports_pdf = True
     accepts_task = True  # schema and key_value, via the OCR API's Annotations feature
 

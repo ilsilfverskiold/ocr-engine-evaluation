@@ -132,6 +132,22 @@
           "value": "114.98",
           "request_id": "747f67b6eec44ecb6c8ff9c7a2cc8ec783d7ae4a2e118c0384384d2e04bb7972"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "+Non Vat",
+              "value": "114.98 0.00 114.98"
+            }
+          ],
+          "reason": "The value '114.98' is correctly extracted from the '+Non Vat' line.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1"
+        }
       ]
     },
     "*Non Vat — VAT": {
@@ -141,6 +157,30 @@
           "key": "VAT",
           "value": "0.00",
           "request_id": "747f67b6eec44ecb6c8ff9c7a2cc8ec783d7ae4a2e118c0384384d2e04bb7972"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "+Non Vat",
+              "value": "114.98 0.00 114.98"
+            }
+          ],
+          "reason": "The value '0.00' is correctly extracted from the '+Non Vat' line for VAT.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 22,
+              "key": "+Non Vat",
+              "value": "114.98 0.00 114.98"
+            }
+          ]
         }
       ]
     },
@@ -160,6 +200,28 @@
           ],
           "reason": "The value 114.98 correctly matches the *Non Vat — TOTAL.",
           "request_id": "be389fcd20d175abc8ee8eb07781386569d0f6113b658d2852aeda03d4ad9b91"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 22,
+              "key": "+Non Vat",
+              "value": "114.98 0.00 114.98"
+            }
+          ],
+          "reason": "The value '114.98' is correctly extracted from the '+Non Vat' line for TOTAL.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 22,
+              "key": "+Non Vat",
+              "value": "114.98 0.00 114.98"
+            }
+          ]
         }
       ]
     },
@@ -176,6 +238,22 @@
           "value": "85.60",
           "request_id": "9488ba147e0372ede28ccc3d46448fe856032c74f6d3a9b73073515c3d3d8492"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            }
+          ],
+          "reason": "The value '85.60' is correctly extracted from the 'VAT' line for NET.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1"
+        }
       ]
     },
     "VAT — VAT": {
@@ -185,6 +263,35 @@
           "key": "VAT",
           "value": "12.86",
           "request_id": "747f67b6eec44ecb6c8ff9c7a2cc8ec783d7ae4a2e118c0384384d2e04bb7972"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            },
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ],
+          "reason": "The value '12.86' is correctly extracted from the 'VAT' line for VAT.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            }
+          ]
         }
       ]
     },
@@ -200,6 +307,22 @@
           "key": "VAT TOTALS",
           "value": "200.58",
           "request_id": "9488ba147e0372ede28ccc3d46448fe856032c74f6d3a9b73073515c3d3d8492"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ],
+          "reason": "The value '200.58' is correctly extracted from the 'VAT TOTALS' line for NET.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1"
         }
       ]
     },
@@ -232,6 +355,108 @@
           "key": "Customer Care:",
           "value": "0860 007 728",
           "request_id": "747f67b6eec44ecb6c8ff9c7a2cc8ec783d7ae4a2e118c0384384d2e04bb7972"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 30,
+              "key": "Customer Care",
+              "value": "0860 007 728"
+            }
+          ],
+          "reason": "The value '0860 007 728' is correctly extracted for Customer Care Telephone.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1"
+        }
+      ]
+    },
+    "VAT — TOTAL": {
+      "expected": "98.46",
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            }
+          ],
+          "reason": "The value '98.46' is correctly extracted from the 'VAT' line for TOTAL.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            }
+          ]
+        }
+      ]
+    },
+    "VAT TOTALS — VAT": {
+      "expected": "12.86",
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 23,
+              "key": "VAT",
+              "value": "85.60 12.86 98.46"
+            },
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ],
+          "reason": "The value '12.86' is correctly extracted from the 'VAT TOTALS' line for VAT.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ]
+        }
+      ]
+    },
+    "VAT TOTALS — TOTAL": {
+      "expected": "213.44",
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "0f65eff1b06d29771b89bcb392710d62ccd4f9edbb7261ecf7432572367ae5de",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ],
+          "reason": "The value '213.44' is correctly extracted from the 'VAT TOTALS' line for TOTAL.",
+          "request_id": "31a5db4498ee9572ec01872ad0cdcacfa6c7491e5921094b6e54faa0707a1dc1",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 24,
+              "key": "VAT TOTALS",
+              "value": "200.58 12.86 213.44"
+            }
+          ]
         }
       ]
     }

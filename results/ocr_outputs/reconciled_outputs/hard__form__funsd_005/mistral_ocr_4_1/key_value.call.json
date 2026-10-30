@@ -1,0 +1,205 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_005.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 3.8420767090283334,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"CASE NAME\": \"Donald D. Sellers and Robin J. Sellers v. Raybestos-Manhattan, et al.\", \"COURT\": \"San Francisco Superior Court - No. 996382\", \"LORILLARD\": null, \"ENTITIES\": \"Lorillard Tobacco Company\", \"DATE FILED\": null, \"DATE SERVED\": \"August 3, 1998\", \"CASE TYPE\": \"Asbestos\", \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith & Tigerman\\nStephen M. Tigerman\\n101 California Street, Suite 2200\\nSan Francisco, California 94111\\n415/986-5566\", \"LORILLARD COUNSEL\": null, \"JUDGE\": null, \"TRIAL DATE\": null, \"82504862\": null, \"94625115\": null}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# CASE FORM\n\nCASE NAME: Donald D. Sellers and Robin J. Sellers v. Raybestos-Manhattan, et al.\n\nCOURT: San Francisco Superior Court - No. 996382\n\nLORILLARD\n\nENTITIES: Lorillard Tobacco Company\n\nDATE FILED:\n\nDATE SERVED: August 3, 1998\n\nCASE TYPE: Asbestos\n\nPLAINTIFF'S\n\nCOUNSEL: Wartnick, Chaber, Harowitz, Smith & Tigerman\nStephen M. Tigerman\n101 California Street, Suite 2200\nSan Francisco, California 94111\n415/986-5566\n\nLORILLARD\n\nCOUNSEL:\n\nJUDGE:\n\nTRIAL DATE:\n\n82504862\n\n94625115",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1000,
+     "width": 754
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 331,
+      "top_left_y": 141,
+      "bottom_right_x": 405,
+      "bottom_right_y": 155,
+      "content": "# CASE FORM",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 169,
+      "bottom_right_x": 593,
+      "bottom_right_y": 184,
+      "content": "CASE NAME: Donald D. Sellers and Robin J. Sellers v. Raybestos-Manhattan, et al.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 196,
+      "bottom_right_x": 460,
+      "bottom_right_y": 211,
+      "content": "COURT: San Francisco Superior Court - No. 996382",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 226,
+      "bottom_right_x": 187,
+      "bottom_right_y": 239,
+      "content": "LORILLARD",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 240,
+      "bottom_right_x": 386,
+      "bottom_right_y": 255,
+      "content": "ENTITIES: Lorillard Tobacco Company",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 267,
+      "bottom_right_x": 191,
+      "bottom_right_y": 280,
+      "content": "DATE FILED:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 296,
+      "bottom_right_x": 318,
+      "bottom_right_y": 311,
+      "content": "DATE SERVED: August 3, 1998",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 323,
+      "bottom_right_x": 287,
+      "bottom_right_y": 337,
+      "content": "CASE TYPE: Asbestos",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 350,
+      "bottom_right_x": 189,
+      "bottom_right_y": 363,
+      "content": "PLAINTIFF'S",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 364,
+      "bottom_right_x": 485,
+      "bottom_right_y": 430,
+      "content": "COUNSEL: Wartnick, Chaber, Harowitz, Smith & Tigerman\nStephen M. Tigerman\n101 California Street, Suite 2200\nSan Francisco, California 94111\n415/986-5566",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 444,
+      "bottom_right_x": 186,
+      "bottom_right_y": 457,
+      "content": "LORILLARD",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 458,
+      "bottom_right_x": 176,
+      "bottom_right_y": 471,
+      "content": "COUNSEL:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 484,
+      "bottom_right_x": 158,
+      "bottom_right_y": 497,
+      "content": "JUDGE:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 112,
+      "top_left_y": 512,
+      "bottom_right_x": 191,
+      "bottom_right_y": 525,
+      "content": "TRIAL DATE:",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 586,
+      "top_left_y": 787,
+      "bottom_right_x": 608,
+      "bottom_right_y": 891,
+      "content": "82504862",
+      "confidence_scores": null,
+      "type": "aside_text"
+     },
+     {
+      "top_left_x": 636,
+      "top_left_y": 778,
+      "bottom_right_x": 654,
+      "bottom_right_y": 862,
+      "content": "94625115",
+      "confidence_scores": null,
+      "type": "aside_text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 29487
+  },
+  "document_annotation": "{\"CASE NAME\": \"Donald D. Sellers and Robin J. Sellers v. Raybestos-Manhattan, et al.\", \"COURT\": \"San Francisco Superior Court - No. 996382\", \"LORILLARD\": null, \"ENTITIES\": \"Lorillard Tobacco Company\", \"DATE FILED\": null, \"DATE SERVED\": \"August 3, 1998\", \"CASE TYPE\": \"Asbestos\", \"PLAINTIFF'S COUNSEL\": \"Wartnick, Chaber, Harowitz, Smith & Tigerman\\nStephen M. Tigerman\\n101 California Street, Suite 2200\\nSan Francisco, California 94111\\n415/986-5566\", \"LORILLARD COUNSEL\": null, \"JUDGE\": null, \"TRIAL DATE\": null, \"82504862\": null, \"94625115\": null}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

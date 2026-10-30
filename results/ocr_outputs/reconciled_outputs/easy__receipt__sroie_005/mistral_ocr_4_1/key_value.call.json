@@ -1,0 +1,296 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/easy/receipt/sroie_005.jpg",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 6.571852166205645,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"YPA\":\"Jeff Pro 2pvs\",\"#\":\"UROKO JAPANESE CUISINE SDN BHD\",\"Address\":\"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR\",\"Phone\":\"03-7932 1023/0191\",\"GST Reg No\":\"001126838272\",\"Bill No\":\"01H-25029\",\"Date\":\"20/03/2018 6:41:12 PM\",\"Cashier\":\"RESAN\",\"Table No\":\"S09\",\"Qty\":\"\",\"Description\":\"\",\"Amount\":\"\",\"|  1 KO NABE INANIWA UDON @ 24.00\":\"24.00 SR\",\"|  1 GREEN TEA @ 1.00\":\"1.00 SR\",\"|  1 GYOZA 5pcs @ 15.00\":\"15.00 SR\",\"|  1 GARLIC CHAHAN @ [T A]\":\"6.00 SR\",\"4 Total :\":\"46.00\",\"Discount :\":\"(.00)\",\"Service Chg 10.00% :\":\"4.00\",\"GST :\":\"3.00\",\"Grand Total :\":\"53.00\",\"Net Total :\":\"53.00\",\"GST Summary %\":\"\",\"SR 6.00\":\"\",\"Amount(RM)\":\"50.00\",\"Tax(RM)\":\"3.00\",\"M\":null}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "YPA Jeff Pro 2pvs.\n\n# UROKO JAPANESE CUISINE SDN BHD\n\n22A-1, JALAN 17/54,\n\nSECTION 17,\n\n46400 PETALING JAYA,\n\nSELANGOR.\n\n03-7932 1023/0191\n\nGST Reg No: 001126838272\n\nBill No : 01H-25029\n\nDate : 20/03/2018 6:41:02 PM\n\nCashier : RESAN\n\nTable No : S09\n\nQty Description\n\nAmount\n\n|  1 KO NABE INANIWA UDON @ 24.00 | 24.00 SR  |\n| --- | --- |\n|  1 GREEN TEA @ 1.00 | 1.00 SR  |\n|  1 GYOZA 5pcs @ 15.00 | 15.00 SR  |\n|  1 GARLIC CHAHAN @ [T A] | 6.00 SR  |\n\n4 Total : 46.00\n\nDiscount : (.00)\n\nService Chg 10.00% : 4.00\n\nGST : 3.00\n\nGrand Total : 53.00\n\nNet Total : 53.00\n\nGST Summary %\n\nSR 6.00\n\nAmount(RM) Tax(RM)\n\n50.00 3.00\n\nM",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 1071,
+     "width": 627
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 169,
+      "top_left_y": 34,
+      "bottom_right_x": 558,
+      "bottom_right_y": 102,
+      "content": "YPA Jeff Pro 2pvs.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 55,
+      "top_left_y": 121,
+      "bottom_right_x": 578,
+      "bottom_right_y": 151,
+      "content": "# UROKO JAPANESE CUISINE SDN BHD",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 199,
+      "top_left_y": 153,
+      "bottom_right_x": 431,
+      "bottom_right_y": 182,
+      "content": "22A-1, JALAN 17/54,",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 242,
+      "top_left_y": 184,
+      "bottom_right_x": 388,
+      "bottom_right_y": 213,
+      "content": "SECTION 17,",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 186,
+      "top_left_y": 217,
+      "bottom_right_x": 445,
+      "bottom_right_y": 247,
+      "content": "46400 PETALING JAYA,",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 250,
+      "top_left_y": 249,
+      "bottom_right_x": 380,
+      "bottom_right_y": 276,
+      "content": "SELANGOR.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 205,
+      "top_left_y": 280,
+      "bottom_right_x": 425,
+      "bottom_right_y": 309,
+      "content": "03-7932 1023/0191",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 150,
+      "top_left_y": 312,
+      "bottom_right_x": 467,
+      "bottom_right_y": 342,
+      "content": "GST Reg No: 001126838272",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 377,
+      "bottom_right_x": 386,
+      "bottom_right_y": 406,
+      "content": "Bill No : 01H-25029",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 53,
+      "top_left_y": 412,
+      "bottom_right_x": 489,
+      "bottom_right_y": 438,
+      "content": "Date : 20/03/2018 6:41:02 PM",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 53,
+      "top_left_y": 444,
+      "bottom_right_x": 314,
+      "bottom_right_y": 468,
+      "content": "Cashier : RESAN",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 53,
+      "top_left_y": 475,
+      "bottom_right_x": 284,
+      "bottom_right_y": 500,
+      "content": "Table No : S09",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 522,
+      "bottom_right_x": 245,
+      "bottom_right_y": 553,
+      "content": "Qty Description",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 461,
+      "top_left_y": 524,
+      "bottom_right_x": 563,
+      "bottom_right_y": 551,
+      "content": "Amount",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 77,
+      "top_left_y": 555,
+      "bottom_right_x": 589,
+      "bottom_right_y": 748,
+      "content": "|  1 KO NABE INANIWA UDON @ 24.00 | 24.00 SR  |\n| --- | --- |\n|  1 GREEN TEA @ 1.00 | 1.00 SR  |\n|  1 GYOZA 5pcs @ 15.00 | 15.00 SR  |\n|  1 GARLIC CHAHAN @ [T A] | 6.00 SR  |",
+      "confidence_scores": null,
+      "type": "table",
+      "table_id": null
+     },
+     {
+      "top_left_x": 75,
+      "top_left_y": 753,
+      "bottom_right_x": 549,
+      "bottom_right_y": 778,
+      "content": "4 Total : 46.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 278,
+      "top_left_y": 785,
+      "bottom_right_x": 549,
+      "bottom_right_y": 815,
+      "content": "Discount : (.00)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 158,
+      "top_left_y": 817,
+      "bottom_right_x": 549,
+      "bottom_right_y": 845,
+      "content": "Service Chg 10.00% : 4.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 327,
+      "top_left_y": 848,
+      "bottom_right_x": 549,
+      "bottom_right_y": 873,
+      "content": "GST : 3.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 242,
+      "top_left_y": 878,
+      "bottom_right_x": 549,
+      "bottom_right_y": 905,
+      "content": "Grand Total : 53.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 272,
+      "top_left_y": 916,
+      "bottom_right_x": 549,
+      "bottom_right_y": 942,
+      "content": "Net Total : 53.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 67,
+      "top_left_y": 973,
+      "bottom_right_x": 267,
+      "bottom_right_y": 1003,
+      "content": "GST Summary %",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 67,
+      "top_left_y": 1008,
+      "bottom_right_x": 273,
+      "bottom_right_y": 1032,
+      "content": "SR 6.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 319,
+      "top_left_y": 976,
+      "bottom_right_x": 553,
+      "bottom_right_y": 1003,
+      "content": "Amount(RM) Tax(RM)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 379,
+      "top_left_y": 1008,
+      "bottom_right_x": 549,
+      "bottom_right_y": 1032,
+      "content": "50.00 3.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 568,
+      "top_left_y": 969,
+      "bottom_right_x": 600,
+      "bottom_right_y": 1002,
+      "content": "M",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 70869
+  },
+  "document_annotation": "{\"YPA\":\"Jeff Pro 2pvs\",\"#\":\"UROKO JAPANESE CUISINE SDN BHD\",\"Address\":\"22A-1, JALAN 17/54, SECTION 17, 46400 PETALING JAYA, SELANGOR\",\"Phone\":\"03-7932 1023/0191\",\"GST Reg No\":\"001126838272\",\"Bill No\":\"01H-25029\",\"Date\":\"20/03/2018 6:41:12 PM\",\"Cashier\":\"RESAN\",\"Table No\":\"S09\",\"Qty\":\"\",\"Description\":\"\",\"Amount\":\"\",\"|  1 KO NABE INANIWA UDON @ 24.00\":\"24.00 SR\",\"|  1 GREEN TEA @ 1.00\":\"1.00 SR\",\"|  1 GYOZA 5pcs @ 15.00\":\"15.00 SR\",\"|  1 GARLIC CHAHAN @ [T A]\":\"6.00 SR\",\"4 Total :\":\"46.00\",\"Discount :\":\"(.00)\",\"Service Chg 10.00% :\":\"4.00\",\"GST :\":\"3.00\",\"Grand Total :\":\"53.00\",\"Net Total :\":\"53.00\",\"GST Summary %\":\"\",\"SR 6.00\":\"\",\"Amount(RM)\":\"50.00\",\"Tax(RM)\":\"3.00\",\"M\":null}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

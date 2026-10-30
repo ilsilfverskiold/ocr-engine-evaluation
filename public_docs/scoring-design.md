@@ -1,7 +1,7 @@
 # Scoring design
 
 How each leg is scored, as implemented in `evaluation/` and used for published run
-`20261018T111413Z`. [Results and commands](../README.md) ·
+`20261020T120222Z`. [Results and commands](../README.md) ·
 [Engine versions and pricing](engines-and-pricing.md).
 
 The published rescore retains the original Textract KV adapter. The row-label
@@ -17,7 +17,7 @@ combined score across legs.
 | --- | --- | --- | --- |
 | Text | Did the engine read the words? | Unique reference-token coverage | `evaluation/text_leg.py` |
 | Markdown | Is the page structure right? | `(correct + 0.5 × partial) / elements` | `markdown-structure-v3-spans-reflow` |
-| Tables | Are table cells right? | Value credit / reference logical cells | `gold-table-values-v7-header-units-spans` |
+| Tables | Are table cells right? | Value credit / counted reference cells | `gold-table-values-v9-numeric-diagnostics` |
 | Key/value | Did it pull printed fields? | `(correct + blank_ok) / counted fields` | `shared-fields-v9-unreturned-blanks-not-counted` |
 | Schema | Can it fill a given schema? | `(correct + blank_ok) / (fields + extra fields)` | `shared-fields-v1` |
 | Geometry | Are the boxes in the right place? | Located reference units / reference units | `geometry-v8` |
@@ -35,11 +35,23 @@ Engines with scored pages in the published run:
 | Leg | Engines |
 | --- | --- |
 | Text | 15: every engine in the run except PP-OCRv5 (MinerU pipeline on 17 pages) |
-| Markdown | 12 (MinerU pipeline on 17 pages): Sonnet, DeepSeek-OCR, Docling, Gemini, GLM-OCR, LlamaParse, Marker, MinerU, MinerU pipeline, Mistral OCR 4, PaddleOCR-VL, Qwen3-VL |
-| Tables | 12: Sonnet, DeepSeek-OCR, Docling, Gemini, GLM-OCR, LlamaParse, Marker, MinerU, Mistral OCR 4, PaddleOCR-VL, Qwen3-VL, Textract structured |
-| Key/value | 4: Textract structured, Sonnet, Gemini, Qwen3-VL |
-| Schema | 7: Sonnet, DeepSeek-OCR, Gemini, GLM-OCR, LlamaParse, Mistral OCR 4, Qwen3-VL |
-| Geometry | 12: Sonnet, DeepSeek-OCR, Gemini, Marker, MinerU, MinerU pipeline, PP-OCRv5, PaddleOCR-VL, Qwen3-VL, Tesseract, Textract text, Textract structured |
+| Markdown | 12 (MinerU pipeline on 17 pages): Sonnet, DeepSeek-OCR, Docling, Gemini, GLM-OCR, LlamaParse, Marker, MinerU, MinerU pipeline, Mistral OCR 4.1, PaddleOCR-VL, Qwen3-VL |
+| Tables | 12: Sonnet, DeepSeek-OCR, Docling, Gemini, GLM-OCR, LlamaParse, Marker, MinerU, Mistral OCR 4.1, PaddleOCR-VL, Qwen3-VL, Textract structured |
+| Key/value | 5: Textract structured, Sonnet, Gemini, Mistral OCR 4.1, Qwen3-VL |
+| Schema | 7: Sonnet, DeepSeek-OCR, Gemini, GLM-OCR, LlamaParse, Mistral OCR 4.1, Qwen3-VL |
+| Geometry | 15: Sonnet, DeepSeek-OCR, Docling, Gemini, LlamaParse, LlamaParse granular, Marker, MinerU, MinerU pipeline, PP-OCRv5, PaddleOCR-VL, Qwen3-VL, Tesseract, Textract text, Textract structured |
+
+**Retries.** A call whose reply is empty, a generation loop, or cannot be
+parsed into the leg's format (recorded as `reply_condition`) gets one retry on
+the hosted engines, whose output can differ between calls. The self-hosted
+Modal apps decode at temperature 0 and Docling is a fixed local library, so
+their replies are kept as returned; LlamaParse is not retried because its
+service version cannot be pinned. A retry is collected as its own run and
+merged with `--rescore <current>,<retry> --best-attempt`: the retry and the
+original answer are both scored, the attempt with the higher mean over the
+retried legs is published (ties keep the original), only the published call is
+kept, and the manifest's `retries` entry and the row's `attempt` field record
+the choice.
 
 **References.** Source images are pinned by `documents/manifest.json` and
 downloaded separately. Text and geometry references ship as sidecars beside each
@@ -55,7 +67,7 @@ format, provider reply, cost and latency, with these gaps:
 - The provider reply is empty for Mistral OCR, Docling, Tesseract and LlamaParse;
   their output is kept in `structured_output`.
 - `prompt_sent` is empty on Sonnet's and Gemini's default (transcription) calls.
-- For Mistral OCR 4 and LlamaParse, `prompt_sent` on the schema call shows the
+- For Mistral OCR 4.1 and LlamaParse, `prompt_sent` on the schema call shows the
   generic schema prompt, but their runners send only the JSON schema through the
   vendor's extraction feature (Mistral `document_annotation_format`, LlamaExtract
   `data_schema`); no prompt text is sent.
@@ -105,7 +117,7 @@ key/value lines, paragraphs) is rendered correctly.
 
 **Pages and engines.** 92 pages with shared structural catalogues; 12 engines (11
 on all 92 pages, MinerU pipeline on 17). Docling, LlamaParse, MinerU, MinerU
-pipeline, Mistral OCR 4 and PaddleOCR-VL answer natively; Sonnet, Gemini,
+pipeline, Mistral OCR 4.1 and PaddleOCR-VL answer natively; Sonnet, Gemini,
 GLM-OCR, DeepSeek-OCR and Qwen3-VL through a Markdown request; Marker through its
 converter setting.
 
@@ -188,6 +200,21 @@ default conversion.
   text recognised when present. An engine without a declared format (Textract
   structured) is scored on its native tables only. Native HTML is preferred over
   a Markdown export of the same answer.
+- A reply that hides a table where a consuming pipeline would not find it,
+  such as a Markdown table inside a JSON string, scores as that pipeline would
+  score it: no table. No reading rule is added after inspecting an engine's
+  reply.
+- Every result row of every leg records `reply_condition`, never scored: `ok`;
+  `empty`; `degenerate` (an unterminated HTML table, a line with content
+  repeated 10+ times in a row, an empty table row repeated 100+ times, or a
+  3-40 character unit with a letter or digit repeated 20+ times, so dot leaders,
+  separator rows, `&nbsp;`, tags and JSON literals do not count, and a run counts only when it exceeds twice
+  the number of times the page text reference contains that line or unit);
+  `no_table` (tables: readable text without a table); `no_pairs` (key/value
+  and schema: a readable reply with no field pairs); `unparsed` (geometry: no
+  usable boxes or blocks); `truncated` (key/value and schema: pairs salvaged
+  from a cut-off reply). Rows are scored as returned; the report lists the unusable replies
+  under each leg.
 
 **How it is scored.**
 
@@ -200,13 +227,22 @@ engine tables ──► logical cells (merged cells once) ──► match to gol
 | --- | --- |
 | Exact normalized text or numerically equivalent amount | 1 |
 | Nonnumeric text similarity ≥0.5 | the similarity value |
-| Lower similarity, wrong number or missing cell | 0 |
+| Printed checkbox (`□`, `☑`) against any recognised rendering of the same state (`[x]`, `✓`, `[ ]`; an empty returned cell is unchecked) | 1 |
+| Lower similarity, wrong number, wrong checkbox state or missing cell | 0 |
 
 Currency formatting may differ. Signs, percentage units and leading-zero
-identifiers stay significant. A blank needs a returned blank, or an empty
+identifiers stay significant. A checkbox is compared as a state, using the
+same true/false sets as the key/value leg, only when the gold cell is a
+checkbox glyph. A blank earns credit from a returned blank, or from an empty
 component established by headers and a combined column layout or by a returned
-merged cell spanning several gold columns. A missing row
-cannot earn blank credit. Empty output against a nonempty gold table scores zero.
+merged cell spanning several gold columns. A gold blank with no returned slot
+at all (`blank_not_returned`) is not counted, as in key/value: the blank may be
+a layout artefact, and a missing row costs its printed values only. A value
+returned in a blank slot is wrong. Gold header cells marked
+`data-unprinted="true"` (the `Line / Description / Amount` row on the five
+1040 pages, which the form does not print) keep column identity for alignment
+and are never scored, returned or not. Empty output against a nonempty gold
+table scores zero.
 
 Matching keeps logical row/column associations and uses each returned span
 once; it does not require identical physical grids:
@@ -248,16 +284,31 @@ original reference; the higher score is used, gold on ties, and both comparisons
 are kept. This applies to every engine and never mixes cells from the two.
 
 **Score and limits.**
-- Headline: summed cell credit / reference logical cells. A merged cell counts
-  once; actual blanks count, parser padding does not.
+- Headline: summed cell credit / counted reference cells, where counted cells
+  are the logical cells minus unreturned blanks and unprinted headers. A merged
+  cell counts once; returned blanks count, parser padding does not.
+- Numbers are also reported on their own, as diagnostics beside the headline.
+  A gold cell is numeric when its text parses as a number (amounts, quantities,
+  percentages, numeric identifiers such as a spaced SSN; dates and codes such
+  as `1a` are text). `numeric_accuracy` = numeric gold cells with full credit
+  in place / counted numeric gold cells. `numeric_found_rate` = numeric gold
+  values present in any returned cell, ignoring position. `invented_number_rate`
+  = returned numeric cells whose digit string and value occur nowhere in the
+  page text reference or the gold tables / returned numeric cells; every
+  verdict carries `numeric`, and such extras carry `invented`. A merged cell
+  such as `7 4927` passes when each digit group is printed. A number
+  reformatted beyond separators and currency (`1,232` returned as `1232.00`)
+  can be flagged, and so can a number the page shows but the text reference
+  omits (the handwritten `1809` beside two items on sroie_001); a number
+  printed elsewhere on the page never is.
 - Extra cells, rows and tables do not lower the headline. Extra-cell counts,
   unmatched tables, table-count differences and strict cell precision/recall/F1
   are separate diagnostics. The metric named `teds` is a custom row/cell
   edit-distance diagnostic, not the official PubTabNet implementation;
   `structure_similarity` omits text costs.
 - Every scored verdict keeps original coordinates, component cells and span
-  offsets; the evidence report (`results/reports/ocr-benchmark-evidence.html`)
-  shows the returned tables beside the normalized matches.
+  offsets; the browser viewer shows the returned tables beside the reference
+  with every cell verdict.
 
 ---
 
@@ -266,9 +317,9 @@ are kept. This applies to every engine and never mixes cells from the two.
 **What it measures.** Whether the engine pulled the printed fields off the page
 as label/value pairs.
 
-**Pages and engines.** 65 pages with accepted structured references. Four
+**Pages and engines.** 65 pages with accepted structured references. Five
 engines in the published run: Textract structured (native) and Sonnet, Gemini,
-Qwen3-VL (prompted). GLM-OCR and DeepSeek-OCR declare a key/value prompt in
+Mistral OCR 4.1, Qwen3-VL (prompted). GLM-OCR and DeepSeek-OCR declare a key/value prompt in
 `engines.py` but the published run has no key/value call for them.
 
 **Which fields are scored.** The answer key is the accepted structured reference
@@ -418,7 +469,7 @@ A changed reference invalidates the file. Rulings never cross documents.
 **What it measures.** Whether the engine can fill a JSON schema it is given.
 
 **Pages and engines.** 65 pages; seven engines (Sonnet, DeepSeek-OCR, Gemini,
-GLM-OCR, LlamaParse, Mistral OCR 4, Qwen3-VL). Textract FORMS has no
+GLM-OCR, LlamaParse, Mistral OCR 4.1, Qwen3-VL). Textract FORMS has no
 supplied-schema interface and does not take part.
 
 **Which fields are scored.** The same accepted structured references as
@@ -435,7 +486,7 @@ the model does not have to discover those identities independently.
 
 | Engine | How the schema is sent |
 | --- | --- |
-| Mistral OCR 4 | Vendor extraction: `document_annotation_format` with the schema; no prompt text |
+| Mistral OCR 4.1 | Vendor extraction: `document_annotation_format` with the schema; no prompt text |
 | LlamaParse | LlamaExtract `data_schema`; no prompt text |
 | Gemini | Schema in the prompt; JSON mode (`response_mime_type`), no schema constraint |
 | Sonnet | Schema in the prompt; temperature 0; no constraint (see below) |
@@ -481,13 +532,21 @@ returned keys ──► exact literal key match (no synonyms, no judge) ──�
 **What it measures.** Whether the engine's text boxes are in the right place.
 
 **Pages and engines.** 17 pages with box references: SROIE lines, FUNSD and
-SynFinTabs words; 12 engines.
+SynFinTabs words; 15 engine configurations (Docling and LlamaParse element/item
+boxes and the `llamaparse_granular` word/line configuration added 2026-10-20).
 
 **How each engine's answer is read.** Each adapter delivers boxes from the
 engine's stored output. Layout-only engines (MinerU, PaddleOCR-VL, DeepSeek-OCR)
 keep their actual `layout_block` boxes; no word boxes are invented. Mixed
 line/table interfaces keep each region's type. Box text comes from region
-content, not region-type labels.
+content, not region-type labels. Docling's element boxes are `prov[0].bbox` of
+every text item and table in the saved export (bottom-left origin flipped,
+divided by the recorded page size). LlamaParse's item boxes (`items[].bBox`,
+x/y/w/h) are in the source image's pixel frame, not the page's reported 72-dpi
+point size; both are `layout_block` and are recovered from the stored replies.
+`llamaparse_granular` reads the parse endpoint's `grounded_items` sidecar: word
+and line boxes in page points with the page size declared per row, word text
+sliced from the item's Markdown by UTF-8 byte span; its words are scored.
 
 Coordinates: boxes are expected in a 0–1 frame. Layout-block engines are never
 rescaled (DeepSeek-OCR's 0–999 grid is divided by 999 in its adapter). For the
@@ -519,8 +578,20 @@ reference unit ◄── matching text ──► predicted box
   take part unless their centre is in an excluded region.
 
 **Score and limits.**
-- Headline: recall = located reference units / reference units. Precision and
-  F1 expose extra, duplicated and misplaced predictions.
+- Headline (Word): recall = located reference units / reference units.
+  Precision and F1 expose extra, duplicated and misplaced predictions.
+- Line: the reference merged into visual lines, the prediction merged the same
+  way, paired by text similarity of at least 0.7, one-to-one, same centre rule.
+  The fair number for engines that return one box per line (PaddleOCR-VL 1.6
+  Spotting, Gemini in practice); for word engines it tracks the headline.
+- Block coverage (block engines only): a reference word is covered when a
+  returned block contains its centre and its text. A page-sized box scores 1.0
+  on it, so it is shown with the median words per box and never replaces the
+  headline.
+- Boxes do two jobs. Acting on text (redaction, searchable-PDF layers, layout
+  models) needs words: the Word column. Navigating to text (citations, review,
+  RAG provenance) tolerates lines or blocks: the Line and Block coverage
+  columns. No number is inflated to look like another.
 - Geometry CER/WER use the text from the returned boxes, including unmatched,
   duplicate and invalid ones, in visual line order then left to right, with
   NFKC, case folding and whitespace collapse. The default transcription is never
@@ -555,12 +626,13 @@ refresh them. Judged-text rows exist for 10 engines.
 - Costs belong to unique calls: a conversion serving several legs is paid once.
   Modal per-page cost and latency use processing-only batch time; startup and
   shutdown are excluded. See [pricing](engines-and-pricing.md#pricing-audit).
-- `current` is the newest complete, scored run in `results/runs/`; superseded
-  runs are deleted, so `results/runs/` holds only the published run. All published call versions live in `reconciled_outputs/`. Per-leg inference
-  records use `source_pass_name` to select distinct view files within the same
-  document/engine folder. Different scored views of the same physical call
-  retain separate source references. Report commands read these files
-  without changing scores. `--rescore` uses cached judgments by default and
+- `current` is the newest complete, scored run in `results/runs/`; its
+  `_results.jsonl` is committed gzipped (`.jsonl.gz`) and every reader accepts
+  either form. Every published call lives under
+  `results/ocr_outputs/reconciled_outputs/`; each inference row's engine,
+  document and `pass_name` (`source_pass_name` when set) select the file. One
+  physical call scored as several views has one file per view. Report commands read these files without
+  changing scores. `--rescore` uses cached judgments by default and
   preserves document verdicts exactly once. Only `--allow-kv-judge` permits new
   KV rulings; it cannot refresh document judgments. Missing source calls fail
   the rescore rather than producing an apparently complete partial run.

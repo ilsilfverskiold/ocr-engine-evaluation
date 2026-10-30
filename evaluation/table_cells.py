@@ -16,7 +16,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz.fuzz import ratio
 from scipy.optimize import linear_sum_assignment
 
-VERSION = "gold-table-values-v7-header-units-spans"
+VERSION = "gold-table-values-v9-numeric-diagnostics"
 
 
 def normalize_cell(text: str) -> str:
@@ -30,6 +30,9 @@ class Cell:
     text: str
     rowspan: int = 1
     colspan: int = 1
+    # Reference-only: a header the page does not print, kept for column
+    # identity (`<th data-unprinted="true">`). Never scored on either side.
+    unprinted: bool = False
 
     @property
     def normalized(self) -> str:
@@ -70,7 +73,8 @@ def parse_tables(markup: str) -> list[Table]:
                         span = 1
                     spans.append(max(1, min(span, 1000)))
                 rs, cs = spans
-                cells.append(Cell(ri, ci, cell.get_text(" ", strip=True), rs, cs))
+                cells.append(Cell(ri, ci, cell.get_text(" ", strip=True), rs, cs,
+                                  cell.get("data-unprinted") == "true"))
                 occupied.update((r, c) for r in range(ri, ri + rs)
                                 for c in range(ci, ci + cs))
                 ci += cs
@@ -159,6 +163,8 @@ def _compare_strict(reference: list[Table], predicted: list[Table]) -> dict:
         rows = _row_map(ref, pred, columns) if pred else {}
         positions = {(c.row, c.col): (i, c) for i, c in enumerate(pred.cells)} if pred else {}
         for cell in ref.cells:
+            if cell.unprinted:
+                continue
             target = positions.get((rows.get(cell.row), columns.get(cell.col)))
             if target is not None and (pt, target[0]) in used:
                 target = None
@@ -177,7 +183,8 @@ def _compare_strict(reference: list[Table], predicted: list[Table]) -> dict:
             if (pt, ci) not in used:
                 verdicts.append({"reference_table": None, "output_table": pt,
                                  "reference": None, "output": asdict(cell), "verdict": "extra"})
-    rc, pc = sum(len(t.cells) for t in reference), sum(len(t.cells) for t in predicted)
+    rc = sum(not c.unprinted for t in reference for c in t.cells)
+    pc = sum(len(t.cells) for t in predicted)
     return {"correct": correct, "reference_cells": rc, "output_cells": pc,
             "precision": correct / pc if pc else None,
             "recall": correct / rc if rc else None,
@@ -188,11 +195,20 @@ def _compare_strict(reference: list[Table], predicted: list[Table]) -> dict:
             "table_matches": table_map}
 
 
+_CHECKBOX_GLYPHS = frozenset({"☐", "□", "☑", "☒", "✓", "✔", "[x]", "[ ]", "[]", "[✓]", "[✔]"})
+
+
 def _value_credit(a: str, b: str) -> float:
     """Partial text fidelity; complete numeric values, never digit substrings."""
     a, b = normalize_cell(a), normalize_cell(b)
     if a == b:
         return 1.0
+    if a in _CHECKBOX_GLYPHS:
+        # A printed checkbox is a state, not a glyph. Any recognised rendering
+        # of the same state is correct; an empty returned cell is unchecked
+        # (the key/value leg's sets in kv_schema_code).
+        from evaluation.kv_schema_code import as_bool
+        return float(as_bool(b) is not None and as_bool(a) == as_bool(b))
     if not a or not b:
         return 0.0
     na, nb = _num(a), _num(b)
@@ -815,7 +831,7 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
     table_map = _assignment([[_table_similarity(r, p) + _header_overlap(r, p) for p in preds] for r in refs])
     used, verdicts = {}, []
     credit = 0.0
-    correct = partial = blanks_correct = 0
+    correct = partial = blanks_correct = blank_not_returned = unprinted = 0
     for rt, ref in enumerate(refs):
         pt = table_map.get(rt)
         pred = preds[pt] if pt is not None else None
@@ -953,31 +969,50 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
                     used.setdefault((src['table'], src['row'], src['col']), [])
                     continue
                 used.setdefault((src['table'], src['row'], src['col']), []).append((src['start'], src['end']))
-            value = ((_header_credit(cell.text, text) if cell in _header_cells(ref)
-                      else _value_credit(cell.text, text)) if sources else 0.0)
-            credit += value
-            correct += value == 1
-            partial += 0 < value < 1
-            blanks_correct += value == 1 and not cell.normalized
             rs = ref.origins[(cell.row, cell.col)]
             output = {k: sources[0][k] for k in ('row', 'col', 'text', 'rowspan', 'colspan')} if sources else None
+            how = ("description/record-ID anchored fields in source order" if (cell.row, cell.col) in record_candidates
+                   else "header-associated item rows and columns; ordered, non-overlapping content spans")
+            if rs[0][1].unprinted:
+                # Column identity only: the page never printed this header,
+                # so neither its absence nor an invented copy is scored.
+                unprinted += 1
+                value, verdict, counted = 0.0, "unprinted", False
+                how = "reference header not printed on the page; column identity only, not scored"
+            elif not cell.normalized and not sources:
+                # No returned slot for a reference blank: the blank may be a
+                # layout artefact, so it is not counted (as key_value does).
+                blank_not_returned += 1
+                value, verdict, counted = 0.0, "blank_not_returned", False
+            else:
+                value = ((_header_credit(cell.text, text) if cell in _header_cells(ref)
+                          else _value_credit(cell.text, text)) if sources else 0.0)
+                credit += value
+                correct += value == 1
+                partial += 0 < value < 1
+                blanks_correct += value == 1 and not cell.normalized
+                verdict = "correct" if value == 1 else "partial" if value else "wrong" if sources else "missing"
+                counted = True
             verdicts.append({"reference_table": rs[0][0], "output_table": sources[0]['table'] if sources else None,
                 "reference": asdict(rs[0][1]), "output": output, "matched_text": text,
                 "reference_components": [{"table": ti, **asdict(c)} for ti, c in rs],
                 "output_components": sources, "output_rows": rows.get(cell.row, []),
-                "credit": value, "verdict": "correct" if value == 1 else "partial" if value else "wrong" if sources else "missing",
-                "how": ("description/record-ID anchored fields in source order" if (cell.row, cell.col) in record_candidates
-                        else "header-associated item rows and columns; ordered, non-overlapping content spans")})
+                "credit": value, "verdict": verdict, "counted": counted,
+                "numeric": _num(rs[0][1].text) is not None, "how": how})
     verdicts.sort(key=lambda v: (v['reference_table'], v['reference']['row'], v['reference']['col']))
     extra = []
     for ti, table in enumerate(predicted):
         for cell in table.cells:
             if (ti, cell.row, cell.col) not in used:
                 extra.append({"reference_table": None, "output_table": ti, "reference": None,
-                              "output": asdict(cell), "credit": 0, "verdict": "extra"})
+                              "output": asdict(cell), "credit": 0, "verdict": "extra",
+                              "numeric": _num(cell.text) is not None})
     rc = sum(len(t.cells) for t in refs)
     pc = sum(len(t.cells) for t in predicted)
-    return {**strict, "score": credit / rc if rc else 1.0, "value_credit": credit,
+    counted = rc - unprinted - blank_not_returned
+    return {**strict, "score": credit / counted if counted else (1.0 if rc == 0 else 0.0),
+            "value_credit": credit, "counted_cells": counted,
+            "blank_not_returned": blank_not_returned, "unprinted_cells": unprinted,
             "correct": correct, "partial": partial, "reference_cells": rc, "output_cells": pc,
             "reference_physical_cells": sum(len(t.cells) for t in reference),
             "reference_blank_cells": sum(not c.normalized for t in refs for c in t.cells),
@@ -988,6 +1023,73 @@ def compare_cells(reference: list[Table], predicted: list[Table]) -> dict:
             "unmatched_tables": sum(not any(i == ti for i, _, _ in used) for ti in range(len(predicted))),
             "verdicts": verdicts + extra, "alignment_table_matches": table_map,
             "normalization": "label-associated adjacent item rows; ordered cell spans; repeated columns, transpose and header-defined sections/chunks; source positions retained"}
+
+
+def _digits(text: str) -> str:
+    return re.sub(r"\D", "", normalize_cell(text))
+
+
+def _printed_numbers(page_text: str) -> tuple[set, set]:
+    """Digit strings and values of every number run on the page text reference.
+
+    A run is a maximal sequence of digits, separators and spaces, so a spaced
+    identifier such as `956 80 8005` is kept whole and as its groups.
+    """
+    digits, values = set(), set()
+    for run in re.findall(r"[0-9][0-9.,\s]*[0-9]|[0-9]", unicodedata.normalize("NFKC", page_text or "")):
+        for piece in [run, *run.split()]:
+            d = re.sub(r"\D", "", piece)
+            if d:
+                digits.add(d)
+            v = _num(piece.strip(" ,."))
+            if v is not None:
+                values.add(round(v, 6))
+    return digits, values
+
+
+def numeric_diagnostics(verdicts: list[dict], predicted: list[Table], page_text: str) -> dict:
+    """Numbers only; diagnostics beside the headline, never part of it.
+
+    A gold cell is numeric when its text parses as a number (amounts,
+    quantities, percentages, numeric identifiers; dates and codes such as
+    `1a` are text). `numeric_accuracy` counts those with full credit in place;
+    `numeric_found_rate` ignores position. A returned numeric cell is
+    `invented` when neither its digit string nor its value occurs in the page
+    text reference or the gold tables (a spaced cell passes when every digit
+    group is printed). Extras are annotated in place.
+    """
+    gold = [v for v in verdicts if v.get("reference") and v.get("counted", True)
+            and _num(v["reference"]["text"]) is not None]
+    correct = sum(v["credit"] == 1 for v in gold)
+    out_cells = [c for t in predicted for c in t.cells if _num(c.text) is not None]
+    out_values = {round(_num(c.text), 6) for c in out_cells}
+    found = sum(round(_num(v["reference"]["text"]), 6) in out_values for v in gold)
+    digits, values = _printed_numbers(page_text)
+    for v in verdicts:
+        if v.get("reference") and _num(v["reference"]["text"]) is not None:
+            digits.add(_digits(v["reference"]["text"]))
+            values.add(round(_num(v["reference"]["text"]), 6))
+    def printed(cell):
+        # A merged cell such as `7 4927` (line number and amount) is printed
+        # when each of its digit groups is; a fabricated spaced identifier
+        # still needs every group on the page.
+        text = normalize_cell(cell.text)
+        groups = [re.sub(r"\D", "", g) for g in text.split()]
+        groups = [g for g in groups if g]
+        return (_digits(cell.text) in digits or round(_num(cell.text), 6) in values
+                or (len(groups) > 1 and all(g in digits for g in groups)))
+    invented = [c for c in out_cells if not printed(c)]
+    invented_keys = {(c.row, c.col) for c in invented}
+    for v in verdicts:
+        if v["verdict"] == "extra" and v.get("numeric"):
+            v["invented"] = (v["output"]["row"], v["output"]["col"]) in invented_keys and any(
+                c.text == v["output"]["text"] for c in invented)
+    return {"numeric_cells": len(gold), "numeric_correct": correct,
+            "numeric_accuracy": correct / len(gold) if gold else None,
+            "numeric_found": found, "numeric_found_rate": found / len(gold) if gold else None,
+            "output_numeric_cells": len(out_cells), "invented_numbers": len(invented),
+            "invented_number_rate": len(invented) / len(out_cells) if out_cells else None,
+            "invented_number_values": [c.text for c in invented][:40]}
 
 
 def _num(s: Any):

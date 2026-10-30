@@ -1,6 +1,7 @@
 """Gold-reference table value credit, with precision/recall/F1 and structure diagnostics.
 
-Logical cells, including blanks, count once; extras reduce diagnostic precision only.
+Logical cells count once. A reference blank with no returned slot and a header the
+page does not print (`data-unprinted`) are not counted; extras reduce diagnostic precision only.
 Native tables take precedence over another rendering of the same answer.
 Logical sections may cross physical table boundaries; content spans match at most once. Shipping alone accepts the better
 whole-page comparison against the original or human-gold reference.
@@ -13,7 +14,7 @@ from html import unescape
 from typing import Any
 
 from evaluation.ground_truth import GroundTruth
-from evaluation.table_extractor import extract_all_tables_html
+from evaluation.table_extractor import extract_all_tables_html, reply_condition
 
 # Table references derived from schema field names rather than printed page
 # columns. Scored, but the report flags them — see gt_limitations.json,
@@ -72,6 +73,7 @@ class TableScore:
     reference_comparisons: dict[str, Any] = field(default_factory=dict)
     selected_reference: str | None = None
     output_tables: list[str] = field(default_factory=list)
+    reply_condition: str | None = None   # ok | no_table | empty | degenerate (recorded, never scored)
 
     @property
     def score(self) -> float | None:
@@ -85,6 +87,8 @@ class TableScore:
 
     def as_metrics(self) -> dict[str, Any]:
         d: dict[str, Any] = {}
+        if self.reply_condition:
+            d["reply_condition"] = self.reply_condition
         if self.cell_f1 is not None:
             d.update(table_value_accuracy=self.value_accuracy, cell_f1=self.cell_f1, cell_precision=self.cell_precision,
                      cell_recall=self.cell_recall, structure_similarity=self.structure_similarity,
@@ -322,7 +326,7 @@ def score_tables(
 ) -> TableScore:
     """Score every gold cell. No image checklist or model call is used."""
     import hashlib
-    from evaluation.table_cells import VERSION, compare_cells, parse_tables
+    from evaluation.table_cells import VERSION, compare_cells, numeric_diagnostics, parse_tables
     if not gt.has_gt_for("tables"):
         return TableScore(applicable=False, reason=gt.missing_gt_reason("tables"))
     native = [t["html"] for t in (structured_output or {}).get("tables", [])
@@ -333,6 +337,7 @@ def score_tables(
     # tables are read from that Markdown, the same view the Markdown leg scores.
     markdown = (structured_output or {}).get("markdown")
     htmls = native if native else extract_all_tables_html(markdown or output_text or "", engine)
+    condition = "ok" if native else reply_condition(markdown or output_text or "", htmls, gt.plain_text or "")
     predicted = [table for html in htmls for table in parse_tables(html)]
     references = {"gold" if gt.metadata.get("table_gold_reference") else "original": gt.table_html}
     if gt.doc_type == "shipping" and gt.metadata.get("table_original_reference"):
@@ -352,13 +357,17 @@ def score_tables(
         comparisons[name] = result
     if not comparisons:
         return TableScore(applicable=False, reason="table reference parsed to no logical cells")
+    no_table_reason = {"empty": "empty reply", "degenerate": "degenerate reply: repetition loop or unterminated table",
+                       "no_table": "no table in reply", "ok": "tables parsed to no cells"}[condition]
     # In a tie, prefer gold. Dict insertion order above makes this deterministic.
     selected = max(comparisons, key=lambda name: comparisons[name]["score"])
     winner = comparisons[selected]
     ref = parsed_refs[selected]
-    counts = {key: winner[key] for key in ("correct", "reference_cells", "output_cells",
+    counts = numeric_diagnostics(winner["verdicts"], predicted, gt.plain_text or "")
+    counts.update({key: winner[key] for key in ("correct", "reference_cells", "counted_cells",
+              "blank_not_returned", "unprinted_cells", "output_cells",
               "reference_blank_cells", "output_blank_cells", "correct_blank_cells",
-              "partial", "value_credit", "extra_cells", "extra_cell_rate", "extra_tables", "physical_table_count_difference", "reference_physical_cells")}
+              "partial", "value_credit", "extra_cells", "extra_cell_rate", "extra_tables", "physical_table_count_difference", "reference_physical_cells")})
     return TableScore(
         applicable=True, value_accuracy=winner["score"], cell_f1=winner["f1"], cell_precision=winner["precision"],
         cell_recall=winner["recall"], structure_similarity=winner["structure_similarity"],
@@ -369,6 +378,6 @@ def score_tables(
         reference_source=gt.table_html_source, reference_is_weak=gt.table_html_source in WEAK_TABLE_SOURCES,
         cell_counts=counts, code_verdicts=winner["verdicts"], scorer=VERSION,
         reference_comparisons=comparisons, selected_reference=selected,
-        output_tables=[t.html for t in predicted],
-        reason=None if predicted else "engine produced no recoverable table structure",
+        output_tables=[t.html for t in predicted], reply_condition=condition,
+        reason=None if predicted else f"engine produced no recoverable table structure ({no_table_reason})",
     )

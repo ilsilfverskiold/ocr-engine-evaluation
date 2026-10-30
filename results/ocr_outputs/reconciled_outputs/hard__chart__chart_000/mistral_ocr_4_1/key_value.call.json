@@ -1,0 +1,99 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/chart/chart_000.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 3.943182833958417,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Global Metal Prices (USD/ton, 2015–2020)\": null, \"Copper\": \"2500\", \"Steel\": \"2300\", \"2015\": null, \"2000\": null, \"1800\": null, \"2016\": null, \"1800\": null, \"1600\": null, \"2017\": null, \"2100\": null, \"1900\": null, \"2018\": null, \"2400\": null, \"2200\": null, \"2019\": null, \"2300\": null, \"2000\": null, \"2020\": null, \"2500\": null, \"2300\": null, \"Source: World Bank, London Metal Exchange\": null}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "# Global Metal Prices (USD/ton, 2015–2020)\n\n![img-0.jpeg](img-0.jpeg)\n\n**Source: World Bank, London Metal Exchange**",
+    "images": [
+     {
+      "id": "img-0.jpeg",
+      "top_left_x": 108,
+      "top_left_y": 78,
+      "bottom_right_x": 832,
+      "bottom_right_y": 491,
+      "image_base64": null,
+      "image_annotation": null
+     }
+    ],
+    "dimensions": {
+     "dpi": 200,
+     "height": 603,
+     "width": 950
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 61,
+      "top_left_y": 28,
+      "bottom_right_x": 737,
+      "bottom_right_y": 66,
+      "content": "# Global Metal Prices (USD/ton, 2015–2020)",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 108,
+      "top_left_y": 78,
+      "bottom_right_x": 832,
+      "bottom_right_y": 491,
+      "content": "![img-0.jpeg](img-0.jpeg)",
+      "image_id": "img-0.jpeg",
+      "confidence_scores": null,
+      "type": "image"
+     },
+     {
+      "top_left_x": 61,
+      "top_left_y": 542,
+      "bottom_right_x": 663,
+      "bottom_right_y": 575,
+      "content": "**Source: World Bank, London Metal Exchange**",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 70638
+  },
+  "document_annotation": "{\"Global Metal Prices (USD/ton, 2015–2020)\": null, \"Copper\": \"2500\", \"Steel\": \"2300\", \"2015\": null, \"2000\": null, \"1800\": null, \"2016\": null, \"1800\": null, \"1600\": null, \"2017\": null, \"2100\": null, \"1900\": null, \"2018\": null, \"2400\": null, \"2200\": null, \"2019\": null, \"2300\": null, \"2000\": null, \"2020\": null, \"2500\": null, \"2300\": null, \"Source: World Bank, London Metal Exchange\": null}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

@@ -1,0 +1,511 @@
+{
+ "engine": "mistral_ocr_4_1",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/medium/photo_receipt/photo_001.png",
+ "pass_name": "key_value",
+ "legs_fed": [
+  "key_value"
+ ],
+ "prompt_sent": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+ "sent": {
+  "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+  "source": "task prompt as document_annotation_prompt",
+  "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": false,
+ "json_schema": null,
+ "model_version": "mistral-ocr-4-1",
+ "latency_seconds": 18.808640416245908,
+ "cost_per_page": 0.005,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"1.07\": null, \"SUPER SEVEN CASH & CARRY SDN BHD\": null, \"(590150-A)\": null, \"PASARAYA BORONG SUPER SEVEN\": null, \"NO.\": \"1 Jalan Euro 1\", \"Off\": \"Jalan Batu Tiga\", \"Sungai Buloh Seksyen U3 Shah Alam\": \"40150\", \"http://www.super7.com.my\": null, \"TEL\": \"03-78590861\", \"FAX\": \"03-78590864\", \"GST ID\": \"000639090688\", \"Customer\": \"[77853745]\", \"TAX INVOICE NO\": \"179509\", \"COUNTER\": \"004\", \"OPERATOR\": \"[NUR ATIQAH BINTI MUH-CASHIER]\", \"Date\": \"01-03-2018\", \"Time\": \"09:23:06 AM\", \"TENDERLION @43.37\": \"43.37\", \"4C212 *1\": \"43.37\", \"ZR\": null, \"D31 TENDERLOIN @49.42\": \"49.42\", \"4C240 *1\": \"49.42\", \"D31 TENDERLOIN @43.90\": \"43.90\", \"D31 TENDERLOIN @49.66\": \"49.66\", \"AYAMAS CHICKEN FRANKFURTER 340G @4.30\": \"4.30\", \"9556276020392 *8\": \"34.40\", \"SR\": null, \"BUTTERCUP LUXURY SPREAD 500G @9.90\": \"9.90\", \"6888010995552 *1\": \"9.90\", \"QY CINCAU 2KG @3.90\": \"3.90\", \"9554100149455 *1\": \"3.90\", \"CRAB NUGGET 500G MUSHROOM @8.20\": \"8.20\", \"9557240160502 *20\": \"164.00\", \"QUANTITY\": \"35 Units\", \"Total Sales (Incl. GST @6%)\": \"RM408.45\", \"Rounding Adjustment\": \"RM0.00\", \"Net Total\": \"RM408.45\", \"Payment Method\": \"MASTER CARD\", \"GST Summary Sales Amt\": \"(RM)\", \"GST Summary Tax Amt\": \"(RM)\", \"ZR (0%)\": \"186.35\", \"0.00\": null, \"SR (6%)\": \"209.53\", \"12.57\": null, \"PLEASE VERIFY YOUR RECEIPT\": null, \"BEFORE LEAVING THE COUNTER.\": null, \"GOODS SOLD ARE NOT RETURNABLE.\": null, \"THANK YOU\": null, \"408-45\": null}",
+ "structured_output": {
+  "pages": [
+   {
+    "index": 0,
+    "markdown": "1.07\n\nSUPER SEVEN CASH & CARRY SDN BHD\n\n(590150-A)\n\nPASARAYA BORONG SUPER SEVEN\n\nNO. 1 Jalan Euro 1\n\nOff Jalan Batu Tiga\n\nSungai Buloh Seksyen U3 Shah Alam,40150\n\nhttp://www.super7.com.my\n\nTEL : 03-78590861\n\nFAX : 03-78590864\n\nGST ID : 000639090688\n\n# TAX INVOICE\n\nCustomer : [77853745]\n\nMrs. ONG GUAT CHYE\n\nTAX INVOICE NO : 179509 COUNTER :004\n\nOPERATOR :[NUR ATIQAH BINTI MUH-CASHIER]\n\n01-03-2018 09:23:06 AM\n\n(RM)\n\nTENDERLION @43.37\n\n4C212 *1 43.37 ZR\n\nD31 TENDERLOIN @49.42\n\n4C240 *1 49.42 ZR\n\nD31 TENDERLOIN @43.90\n\n4C240 *1 43.90 ZR\n\nD31 TENDERLOIN @49.66\n\n4C240 *1 49.66 ZR\n\nAYAMAS CHICKEN FRANKFURTER 340G @4.30\n\n9556276020392 *8 34.40 SR\n\nBUTTERCUP LUXURY SPREAD 500G @9.90\n\n6888010995552 *1 9.90 SR\n\nBUTTERCUP LUXURY SPREAD 500G @9.90\n\n6888010995552 *1 9.90 SR\n\nQY CINCAU 2KG @3.90\n\n9554100149455 *1 3.90 SR\n\nCRAB NUGGET 500G MUSHROOM @8.20\n\n9557240160502 *20 164.00 SR\n\nQUANTITY : 35 Units\n\nTotal Sales (Incl. GST @6%) RM408.45\n\nRounding Adjustment RM0.00\n\nNet Total RM408.45\n\nPayment Method MASTER CARD\n\nGST Summary Sales Amt Tax Amt\n\n(RM) (RM)\n\nZR (0%) 186.35 0.00\n\nSR (6%) 209.53 12.57\n\nPLEASE VERIFY YOUR RECEIPT\n\nBEFORE LEAVING THE COUNTER.\n\nGOODS SOLD ARE NOT RETURNABLE.\n\nTHANK YOU\n\n408-45",
+    "images": [],
+    "dimensions": {
+     "dpi": 200,
+     "height": 2171,
+     "width": 744
+    },
+    "tables": [],
+    "hyperlinks": [],
+    "header": null,
+    "footer": null,
+    "confidence_scores": null,
+    "blocks": [
+     {
+      "top_left_x": 254,
+      "top_left_y": 17,
+      "bottom_right_x": 427,
+      "bottom_right_y": 150,
+      "content": "1.07",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 27,
+      "top_left_y": 124,
+      "bottom_right_x": 496,
+      "bottom_right_y": 163,
+      "content": "SUPER SEVEN CASH & CARRY SDN BHD",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 165,
+      "bottom_right_x": 179,
+      "bottom_right_y": 200,
+      "content": "(590150-A)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 198,
+      "bottom_right_x": 431,
+      "bottom_right_y": 228,
+      "content": "PASARAYA BORONG SUPER SEVEN",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 233,
+      "bottom_right_x": 292,
+      "bottom_right_y": 265,
+      "content": "NO. 1 Jalan Euro 1",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 267,
+      "bottom_right_x": 307,
+      "bottom_right_y": 300,
+      "content": "Off Jalan Batu Tiga",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 300,
+      "bottom_right_x": 594,
+      "bottom_right_y": 335,
+      "content": "Sungai Buloh Seksyen U3 Shah Alam,40150",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 337,
+      "bottom_right_x": 378,
+      "bottom_right_y": 369,
+      "content": "http://www.super7.com.my",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 372,
+      "bottom_right_x": 276,
+      "bottom_right_y": 404,
+      "content": "TEL : 03-78590861",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 406,
+      "bottom_right_x": 278,
+      "bottom_right_y": 441,
+      "content": "FAX : 03-78590864",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 33,
+      "top_left_y": 474,
+      "bottom_right_x": 336,
+      "bottom_right_y": 513,
+      "content": "GST ID : 000639090688",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 248,
+      "top_left_y": 545,
+      "bottom_right_x": 407,
+      "bottom_right_y": 585,
+      "content": "# TAX INVOICE",
+      "confidence_scores": null,
+      "type": "title"
+     },
+     {
+      "top_left_x": 33,
+      "top_left_y": 617,
+      "bottom_right_x": 334,
+      "bottom_right_y": 654,
+      "content": "Customer : [77853745]",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 656,
+      "bottom_right_x": 294,
+      "bottom_right_y": 691,
+      "content": "Mrs. ONG GUAT CHYE",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 721,
+      "bottom_right_x": 606,
+      "bottom_right_y": 756,
+      "content": "TAX INVOICE NO : 179509 COUNTER :004",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 758,
+      "bottom_right_x": 602,
+      "bottom_right_y": 793,
+      "content": "OPERATOR :[NUR ATIQAH BINTI MUH-CASHIER]",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 795,
+      "bottom_right_x": 606,
+      "bottom_right_y": 830,
+      "content": "01-03-2018 09:23:06 AM",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 520,
+      "top_left_y": 830,
+      "bottom_right_x": 575,
+      "bottom_right_y": 863,
+      "content": "(RM)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 900,
+      "bottom_right_x": 294,
+      "bottom_right_y": 934,
+      "content": "TENDERLION @43.37",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 937,
+      "bottom_right_x": 591,
+      "bottom_right_y": 969,
+      "content": "4C212 *1 43.37 ZR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 971,
+      "bottom_right_x": 351,
+      "bottom_right_y": 1004,
+      "content": "D31 TENDERLOIN @49.42",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1008,
+      "bottom_right_x": 591,
+      "bottom_right_y": 1039,
+      "content": "4C240 *1 49.42 ZR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1043,
+      "bottom_right_x": 351,
+      "bottom_right_y": 1074,
+      "content": "D31 TENDERLOIN @43.90",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1078,
+      "bottom_right_x": 591,
+      "bottom_right_y": 1108,
+      "content": "4C240 *1 43.90 ZR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1110,
+      "bottom_right_x": 351,
+      "bottom_right_y": 1141,
+      "content": "D31 TENDERLOIN @49.66",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1145,
+      "bottom_right_x": 591,
+      "bottom_right_y": 1176,
+      "content": "4C240 *1 49.66 ZR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1178,
+      "bottom_right_x": 577,
+      "bottom_right_y": 1210,
+      "content": "AYAMAS CHICKEN FRANKFURTER 340G @4.30",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1215,
+      "bottom_right_x": 606,
+      "bottom_right_y": 1245,
+      "content": "9556276020392 *8 34.40 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1250,
+      "bottom_right_x": 534,
+      "bottom_right_y": 1280,
+      "content": "BUTTERCUP LUXURY SPREAD 500G @9.90",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1284,
+      "bottom_right_x": 606,
+      "bottom_right_y": 1315,
+      "content": "6888010995552 *1 9.90 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1319,
+      "bottom_right_x": 534,
+      "bottom_right_y": 1352,
+      "content": "BUTTERCUP LUXURY SPREAD 500G @9.90",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1356,
+      "bottom_right_x": 606,
+      "bottom_right_y": 1386,
+      "content": "6888010995552 *1 9.90 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1391,
+      "bottom_right_x": 322,
+      "bottom_right_y": 1423,
+      "content": "QY CINCAU 2KG @3.90",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1428,
+      "bottom_right_x": 606,
+      "bottom_right_y": 1458,
+      "content": "9554100149455 *1 3.90 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1460,
+      "bottom_right_x": 492,
+      "bottom_right_y": 1491,
+      "content": "CRAB NUGGET 500G MUSHROOM @8.20",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1495,
+      "bottom_right_x": 606,
+      "bottom_right_y": 1528,
+      "content": "9557240160502 *20 164.00 SR",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1563,
+      "bottom_right_x": 308,
+      "bottom_right_y": 1599,
+      "content": "QUANTITY : 35 Units",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1632,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1669,
+      "content": "Total Sales (Incl. GST @6%) RM408.45",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1671,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1704,
+      "content": "Rounding Adjustment RM0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1706,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1736,
+      "content": "Net Total RM408.45",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1741,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1773,
+      "content": "Payment Method MASTER CARD",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1808,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1843,
+      "content": "GST Summary Sales Amt Tax Amt",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 393,
+      "top_left_y": 1845,
+      "bottom_right_x": 591,
+      "bottom_right_y": 1878,
+      "content": "(RM) (RM)",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1880,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1912,
+      "content": "ZR (0%) 186.35 0.00",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 51,
+      "top_left_y": 1915,
+      "bottom_right_x": 608,
+      "bottom_right_y": 1947,
+      "content": "SR (6%) 209.53 12.57",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 1982,
+      "bottom_right_x": 407,
+      "bottom_right_y": 2017,
+      "content": "PLEASE VERIFY YOUR RECEIPT",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 2019,
+      "bottom_right_x": 419,
+      "bottom_right_y": 2051,
+      "content": "BEFORE LEAVING THE COUNTER.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 2056,
+      "bottom_right_x": 461,
+      "bottom_right_y": 2088,
+      "content": "GOODS SOLD ARE NOT RETURNABLE.",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 36,
+      "top_left_y": 2125,
+      "bottom_right_x": 168,
+      "bottom_right_y": 2160,
+      "content": "THANK YOU",
+      "confidence_scores": null,
+      "type": "text"
+     },
+     {
+      "top_left_x": 451,
+      "top_left_y": 1969,
+      "bottom_right_x": 714,
+      "bottom_right_y": 2038,
+      "content": "408-45",
+      "confidence_scores": null,
+      "type": "text"
+     }
+    ]
+   }
+  ],
+  "model": "mistral-ocr-4-1",
+  "usage_info": {
+   "pages_processed": 1,
+   "doc_size_bytes": 644669
+  },
+  "document_annotation": "{\"1.07\": null, \"SUPER SEVEN CASH & CARRY SDN BHD\": null, \"(590150-A)\": null, \"PASARAYA BORONG SUPER SEVEN\": null, \"NO.\": \"1 Jalan Euro 1\", \"Off\": \"Jalan Batu Tiga\", \"Sungai Buloh Seksyen U3 Shah Alam\": \"40150\", \"http://www.super7.com.my\": null, \"TEL\": \"03-78590861\", \"FAX\": \"03-78590864\", \"GST ID\": \"000639090688\", \"Customer\": \"[77853745]\", \"TAX INVOICE NO\": \"179509\", \"COUNTER\": \"004\", \"OPERATOR\": \"[NUR ATIQAH BINTI MUH-CASHIER]\", \"Date\": \"01-03-2018\", \"Time\": \"09:23:06 AM\", \"TENDERLION @43.37\": \"43.37\", \"4C212 *1\": \"43.37\", \"ZR\": null, \"D31 TENDERLOIN @49.42\": \"49.42\", \"4C240 *1\": \"49.42\", \"D31 TENDERLOIN @43.90\": \"43.90\", \"D31 TENDERLOIN @49.66\": \"49.66\", \"AYAMAS CHICKEN FRANKFURTER 340G @4.30\": \"4.30\", \"9556276020392 *8\": \"34.40\", \"SR\": null, \"BUTTERCUP LUXURY SPREAD 500G @9.90\": \"9.90\", \"6888010995552 *1\": \"9.90\", \"QY CINCAU 2KG @3.90\": \"3.90\", \"9554100149455 *1\": \"3.90\", \"CRAB NUGGET 500G MUSHROOM @8.20\": \"8.20\", \"9557240160502 *20\": \"164.00\", \"QUANTITY\": \"35 Units\", \"Total Sales (Incl. GST @6%)\": \"RM408.45\", \"Rounding Adjustment\": \"RM0.00\", \"Net Total\": \"RM408.45\", \"Payment Method\": \"MASTER CARD\", \"GST Summary Sales Amt\": \"(RM)\", \"GST Summary Tax Amt\": \"(RM)\", \"ZR (0%)\": \"186.35\", \"0.00\": null, \"SR (6%)\": \"209.53\", \"12.57\": null, \"PLEASE VERIFY YOUR RECEIPT\": null, \"BEFORE LEAVING THE COUNTER.\": null, \"GOODS SOLD ARE NOT RETURNABLE.\": null, \"THANK YOU\": null, \"408-45\": null}"
+ },
+ "metadata": {
+  "requested_model": "mistral-ocr-4-1",
+  "sent": {
+   "text": "Extract every printed label and its value from this document as a flat JSON object of label -> value. Use the label exactly as printed. Use null where a printed field is blank. Output only JSON.",
+   "source": "task prompt as document_annotation_prompt",
+   "constraint": "open label -> value JSON schema as document_annotation_format (strict false)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {}
+}

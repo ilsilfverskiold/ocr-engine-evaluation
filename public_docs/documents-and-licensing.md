@@ -67,7 +67,8 @@ The active targets for 65 pages are accepted records in
 `documents/structured_references/gold/`. Each contains `true_json`, `json_schema`,
 exclusions, aliases and source-image identity. They override adjacent
 `<stem>_structured_gt.json` sidecars. KV applies the printed-label review;
-schema uses the frozen shared field sample. See [field selection](scoring-design.md#shared-structured-references).
+schema uses the frozen shared field sample. Field selection is described in the
+[key/value](scoring-design.md#keyvalue) and [schema](scoring-design.md#schema) sections of the scoring rules.
 
 Table gold is separate, under `documents/table_references/gold/`. Shipping also
 compares the frozen original table reference; other scored pages use accepted gold.

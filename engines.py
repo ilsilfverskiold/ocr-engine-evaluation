@@ -56,6 +56,11 @@ class EngineSpec:
     schema_render: str = "json_schema"
     # Disable provider JSON mode for native non-JSON formats such as grounding markup.
     non_json_legs: tuple[str, ...] = ()
+    # Native legs declared after the published runs were collected and served
+    # by the stored default conversion (its reply already carried the data):
+    # a rescore scores them from the saved reply instead of needing a new call.
+    # Every other stored pass keeps exactly the legs it was saved for.
+    default_pass_added_legs: tuple[str, ...] = ()
 
     def response_format_for(self, leg: str, needs_schema: bool) -> str | None:
         """The provider response format for this engine on this leg."""
@@ -98,8 +103,13 @@ ENGINES: dict[str, EngineSpec] = {
         name="docling", kind="local",
         runner="runners.docling_runner:DoclingRunner",
         cost_notes="local, free",
-        native_legs=_CONVERSION_LEGS,
-        leg_notes="fixed pipeline: cannot be given a prompt or a schema",
+        # geometry added 2026-10-20: every export carries prov[0].bbox per
+        # text item and table (bottom-left origin, page size recorded);
+        # scored as layout_block, never turned into word boxes.
+        native_legs=_CONVERSION_LEGS + ("geometry",),
+        default_pass_added_legs=("geometry",),
+        leg_notes="fixed pipeline: cannot be given a prompt or a schema; "
+                  "geometry is element boxes (layout_block)",
         table_format="markdown",
     ),
     # --- Cloud APIs --------------------------------------------------------
@@ -124,17 +134,23 @@ ENGINES: dict[str, EngineSpec] = {
             "applicable (no schema/queries interface in this integration)"
         ),
     ),
-    "mistral_ocr_4": EngineSpec(
-        name="mistral_ocr_4", kind="cloud",
+    "mistral_ocr_4_1": EngineSpec(
+        name="mistral_ocr_4_1", kind="cloud",
         runner="runners.mistral_runner:MistralOCRRunner",
         required_env=("MISTRAL_API_KEY",),
         cost_per_page=0.004,
         native_legs=_CONVERSION_LEGS,
-        # schema via the vendor's own extraction feature (Mistral Annotations /
-        # LlamaExtract), not a prompt. UNVALIDATED until the 2-doc check runs.
-        prompted_legs=("schema",),
+        # All passes pin `mistral-ocr-4-1` (runners/mistral_runner.py). schema
+        # and key_value go through the vendor's Annotations feature, not a
+        # prompt we invented: schema sends the page's JSON schema only;
+        # key_value sends the generic leg prompt as the documented
+        # `document_annotation_prompt` with an object schema that names no
+        # fields (additionalProperties string|null), so the printed labels are
+        # the model's own. Probed 2026-10-17 on funsd_003: 18 labels returned.
+        prompted_legs=("key_value", "schema"),
         accepts_task=True,
-        leg_notes="OCR endpoint takes no prompt: markdown/tables from default conversion",
+        leg_notes="OCR endpoint takes no free-text prompt: markdown/tables from "
+                  "default conversion; key_value and schema via Annotations",
         table_format="markdown",
     ),
     "llamaparse": EngineSpec(
@@ -143,13 +159,37 @@ ENGINES: dict[str, EngineSpec] = {
         required_env=("LLAMA_CLOUD_API_KEY",),
         cost_per_page=0.00375,
         cost_notes="cost_effective tier: 3 credits × $1.25/1K; free tier: 10K credits/mo",
-        native_legs=_CONVERSION_LEGS,
+        # geometry added 2026-10-20: every parse reply carries one bBox per
+        # layout item (heading/text/table) in the source image's pixel frame;
+        # scored as layout_block, never turned into word boxes. Word and line
+        # boxes are the separate `llamaparse_granular` configuration.
+        native_legs=_CONVERSION_LEGS + ("geometry",),
+        default_pass_added_legs=("geometry",),
         # schema via the vendor's own extraction feature (Mistral Annotations /
         # LlamaExtract), not a prompt. UNVALIDATED until the 2-doc check runs.
         prompted_legs=("schema",),
         accepts_task=True,
-        leg_notes="parse endpoint takes no prompt in the cost_effective tier",
+        leg_notes="parse endpoint takes no prompt in the cost_effective tier; "
+                  "geometry is item boxes (layout_block); LlamaExtract runs with "
+                  "cite_sources; the citations are saved with the call, not scored",
         table_format="markdown",
+    ),
+    "llamaparse_granular": EngineSpec(
+        name="llamaparse_granular", kind="cloud",
+        runner="runners.llamaparse_runner:LlamaParseGranularRunner",
+        required_env=("LLAMA_CLOUD_API_KEY",),
+        cost_per_page=0.00375,
+        cost_notes="cost_effective tier: 3 credits × $1.25/1K; granular_bboxes "
+                   "lists no extra credits (confirm on the job's credit usage)",
+        default=False,
+        # A measured geometry configuration of llamaparse (the pattern of
+        # textract_text / textract_structured): the parse endpoint's documented
+        # output_options.granular_bboxes=[word, line], scored on word boxes.
+        # Text/markdown/tables stay with `llamaparse`; this row answers
+        # geometry only, so the saved conversion run is untouched.
+        native_legs=("geometry",),
+        leg_notes="geometry only: word and line boxes from the grounded_items "
+                  "sidecar; same parse tier and price as llamaparse",
     ),
     "gemini_flash": EngineSpec(
         name="gemini_flash", kind="cloud",

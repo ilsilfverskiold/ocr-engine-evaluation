@@ -383,6 +383,8 @@ _write_lock = threading.Lock()
 
 def log_record(record: dict, path: Path) -> None:
     with _write_lock:
+        if not path.exists() and path.with_name(path.name + ".gz").is_file():
+            raise FileExistsError(f"{path.name} is stored gzipped; gunzip it before appending to it")
         with open(path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
@@ -508,7 +510,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             raise RuntimeError(so.get("geometry_error") or
                                "geometry coordinate frame unresolved after provider rotation")
         # Score returned boxes at their actual granularity; never manufacture word boxes from layout regions.
-        blocks = _geometry_blocks(engine, so)
+        blocks = _geometry_blocks(engine, so, gt)
         if blocks is not None:
             if not gt.has_gt_for("geometry"):
                 return score_geometry(None, gt)
@@ -541,6 +543,12 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
                 # other two pages crashed: a failed call, not an answer.
                 raise RuntimeError("marker OCR pass returned no regions and no text "
                                    "(pipeline failure, not an engine score)")
+        elif engine == "llamaparse_granular" and so.get("grounded_items"):
+            # The stored sidecar is the source of truth: words are rebuilt
+            # with the current adapter so an adapter fix needs no new call.
+            from runners.llamaparse_runner import regions_from_grounded_items
+            predicted, _ = regions_from_grounded_items(so["grounded_items"])
+            prediction_granularity = "word"
         else:
             predicted = so.get("words") or so.get("text_regions") or text
         if spec.answers("geometry") == "native" and not predicted:
@@ -556,12 +564,12 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
     raise ValueError(f"No scorer for leg {leg!r}")
 
 
-BLOCK_GEOMETRY_ENGINES = ("mineru", "paddleocr_vl", "deepseek_ocr")
+BLOCK_GEOMETRY_ENGINES = ("mineru", "paddleocr_vl", "deepseek_ocr", "docling", "llamaparse")
 # Optional saved-pass overrides. Marker uses its OCR geometry, not document-layout boxes.
 GEOMETRY_SOURCE_PASS: dict[str, str] = {}
 
 
-def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
+def _geometry_blocks(engine: str, so: dict, gt=None) -> list[dict] | None:
     """Layout blocks (text + bbox 0-1) for the block-level engines, from what
     the run stored; None for every other engine."""
     import re as _re
@@ -573,6 +581,15 @@ def _geometry_blocks(engine: str, so: dict) -> list[dict] | None:
         return list(so.get("text_regions") or [])
     if engine not in BLOCK_GEOMETRY_ENGINES:
         return None
+    if engine == "docling":
+        # Element boxes saved in every run's native_document export.
+        from runners.docling_runner import layout_blocks_from_native_document
+        return layout_blocks_from_native_document(so.get("native_document") or {})
+    if engine == "llamaparse":
+        # Item boxes saved in every parse reply, in the source image's pixel frame.
+        from runners.llamaparse_runner import image_frame, layout_blocks_from_pages
+        frame = image_frame(gt.document_path) if gt is not None and getattr(gt, "document_path", None) else None
+        return layout_blocks_from_pages(so.get("pages") or [], frame)
     if engine == "deepseek_ocr":
         raw = so.get("raw_model_output") or ""
         out = []
@@ -669,6 +686,12 @@ def _score_pass_legs(
             }, results_jsonl)
             parts.append(f"{leg}=ERROR")
             continue
+        metrics = {**score.as_metrics(), **contract}
+        if "reply_condition" not in metrics:
+            # Recorded reply usability (empty / degenerate / unparsed / ok); the
+            # tables leg records its own. Never part of any score.
+            from evaluation.table_extractor import leg_reply_condition
+            metrics["reply_condition"] = leg_reply_condition(leg, text, structured_output, score, gt.plain_text or "")
         log_record({
             **base,
             "leg": leg,
@@ -676,7 +699,7 @@ def _score_pass_legs(
             "applicable": score.applicable,
             "score": score.score,
             "reason": score.reason,
-            "metrics": {**score.as_metrics(), **contract},
+            "metrics": metrics,
             "detail": score.as_detail(),
             "latency_seconds": round(steady_latency, 3),
             "cost_per_page": round(steady_cost, 6),
@@ -856,12 +879,31 @@ def _rescore_selection(source_records):
     """
     chosen = {}
     for source_index, records in enumerate(source_records):
+        listed: dict[tuple, set] = {}   # legs any record of this source lists per engine/page
+        primary: dict[tuple, int] = {}  # first successful default-pass record per engine/page
+        for record_index, record in enumerate(records):
+            key = (record['engine_name'], record['document_path'])
+            listed.setdefault(key, set()).update(record.get('legs') or [])
+            if (record.get('pass_name') or DEFAULT_PASS) == DEFAULT_PASS and not record.get('error'):
+                primary.setdefault(key, record_index)
         for record_index, record in enumerate(records):
             engine, document = record['engine_name'], record['document_path']
             spec = ENGINES.get(engine)
-            priority = (source_index, (record.get('pass_name') or DEFAULT_PASS) != DEFAULT_PASS,
+            pass_name = record.get('pass_name') or DEFAULT_PASS
+            priority = (source_index, pass_name != DEFAULT_PASS,
                         not bool(record.get('error')), record_index)
-            for leg in record.get('legs') or []:
+            legs = list(record.get('legs') or [])
+            if spec is not None and primary.get((engine, document)) == record_index:
+                # A leg the registry added to the default conversion after the
+                # run (EngineSpec.default_pass_added_legs: Docling and LlamaParse
+                # geometry, 2026-10-20) is scored from the stored reply when no
+                # record of the run lists it. Only the primary view gets it; a
+                # second stored view (default.tables) keeps exactly the legs it
+                # was saved for, as does every other pass.
+                legs += [l for l in spec.default_pass_added_legs
+                         if spec.answers(l) == "native"
+                         and l not in legs and l not in listed[(engine, document)]]
+            for leg in legs:
                 if spec is not None and spec.answers(leg) is None:
                     continue
                 key = engine, document, leg
@@ -873,9 +915,86 @@ def _rescore_selection(source_records):
     return selected
 
 
+def _publish_best_attempt(rec, copied, legs, baseline_records, baseline_ts, baseline_only,
+                          target, loader, use_judge, results_jsonl, inference_jsonl, retries, log):
+    """Score a retry and the baseline answer it challenges; publish the better.
+
+    Returns the number of leg rows published, or None when the baseline has no
+    answer for these legs (the retry is then published as an ordinary record).
+    """
+    engine, doc_path = rec["engine_name"], Path(rec["document_path"])
+    pass_name = rec.get("pass_name") or DEFAULT_PASS
+    key = (engine, _repo_path(rec["document_path"]))
+    candidates = [(idx, served) for (si, idx), served in baseline_only.items()
+                  if si == 0 and (baseline_records[idx]["engine_name"], _repo_path(baseline_records[idx]["document_path"])) == key
+                  and set(served) & set(legs) and not baseline_records[idx].get("error")]
+    if not candidates:
+        return None
+    base_idx, base_served = candidates[0]
+    base_rec = baseline_records[base_idx]
+    base_pass = base_rec.get("pass_name") or DEFAULT_PASS
+    gt = loader.load(doc_path)
+
+    def attempt(source_ts, record, pass_label, served_legs):
+        call = _read_stored_call(record.get("source_timestamp") or source_ts, engine, doc_path, gt,
+                                 record.get("source_pass_name") or pass_label)
+        if call is None:
+            raise FileNotFoundError(f"{engine}/{pass_label}/{doc_path.name}: no stored .call.json for best-attempt scoring")
+        buffer = results_jsonl.with_name(f"{results_jsonl.stem}.attempt.jsonl")
+        buffer.unlink(missing_ok=True)
+        base = _base_record(engine, doc_path, gt, target)
+        _score_pass_legs(engine, doc_path, gt, base, pass_label, served_legs,
+                         call.get("raw_text") or "", call.get("structured_output") or {},
+                         float(record.get("steady_latency_seconds") or 0.0),
+                         float(record.get("steady_cost_per_page") or 0.0),
+                         record.get("model_version") or "unknown", use_judge, buffer,
+                         supplied_schema=call.get("json_schema"))
+        rows = read_jsonl(buffer)
+        buffer.unlink(missing_ok=True)
+        for row in rows:
+            # read_jsonl localises paths for scoring; published rows stay repository-relative.
+            row["document_path"] = _repo_path(row["document_path"])
+            if row.get("source_document_path") == row["document_path"]:
+                del row["source_document_path"]
+        scores = [r["score"] for r in rows if r.get("applicable") and r.get("score") is not None]
+        return rows, (sum(scores) / len(scores) if scores else 0.0)
+
+    contested = [l for l in legs if l in base_served]
+    retry_rows, retry_mean = attempt(rec.get("source_timestamp") or rec["timestamp"], rec, pass_name, contested)
+    base_rows, base_mean = attempt(baseline_ts, base_rec, base_pass, contested)
+    keep_retry = retry_mean > base_mean
+    chosen_rows = retry_rows if keep_retry else base_rows
+    label = f"{engine}/{doc_path.stem}/{pass_name}"
+    retries[label] = {"legs": contested, "retry_run": rec["timestamp"], "retry_mean": round(retry_mean, 6),
+                      "baseline_mean": round(base_mean, 6), "retry_condition": sorted({(r.get("metrics") or {}).get("reply_condition") or "" for r in retry_rows}),
+                      "selected": "retry" if keep_retry else "baseline"}
+    for row in chosen_rows:
+        row["metrics"] = {**(row.get("metrics") or {}), "attempt": "retry" if keep_retry else "baseline",
+                          "attempts_compared": 2}
+        log_record(row, results_jsonl)
+    published = copied if keep_retry else {**base_rec, "legs": contested, "timestamp": target,
+                                            "source_timestamp": base_rec.get("source_timestamp") or baseline_ts,
+                                            "document_path": _repo_path(base_rec["document_path"])}
+    if published.get("source_document_path") == published["document_path"]:
+        del published["source_document_path"]
+    published = {**published, "attempt": "retry" if keep_retry else "baseline", "retry_run": rec["timestamp"],
+                 "attempts_compared": 2}
+    log_record(published, inference_jsonl)
+    log.info(f"  [{label}] retry {retry_mean:.3f} vs baseline {base_mean:.3f} -> {'retry' if keep_retry else 'baseline'} kept")
+    return len(chosen_rows)
+
+
 def rescore_runs(sources: list[str], target: str, log: logging.Logger,
-                 skip_judge: bool, selected_legs: list[str] | None = None) -> None:
+                 skip_judge: bool, selected_legs: list[str] | None = None,
+                 best_attempt: bool = False) -> None:
     """Score every stored output of one or more runs into ONE new run.
+
+    With `best_attempt`, a later source is a retry: for every engine/page/pass
+    it supplies, both the retry and the baseline answer are scored and only
+    the attempt with the higher mean score over the retried legs is published
+    (ties keep the baseline). Both calls stay on disk; the manifest's
+    `retries` entry and the published inference record (`attempt`,
+    `retry_run`) say which was kept and why.
 
     Nothing in the source runs is touched: their `.call.json` files are read,
     every leg each pass serves is scored with the current scorers, and the
@@ -913,6 +1032,8 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
         if not records:
             raise FileNotFoundError(f"No inference records for source run {src}; cannot rescore")
     selected = _rescore_selection(source_records)
+    baseline_only = _rescore_selection(source_records[:1]) if best_attempt and len(sources) > 1 else {}
+    retries: dict[str, dict] = {}
     historical_judge = {}
     if selected_legs is None or 'text' in selected_legs:
         for src in sources:
@@ -962,6 +1083,13 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
                       "document_path": _repo_path(rec["document_path"])}
             if copied.get("source_document_path") == copied["document_path"]:
                 del copied["source_document_path"]  # added by read_jsonl, not part of the record
+            if best_attempt and source_index > 0 and not rec.get("error"):
+                # A retry competes with the baseline answer for the legs it lists.
+                kept = _publish_best_attempt(rec, copied, legs, source_records[0], sources[0], baseline_only,
+                                             target, loader, use_judge, results_jsonl, inference_jsonl, retries, log)
+                if kept is not None:
+                    scored += kept
+                    continue
             log_record(copied, inference_jsonl)
             try:
                 gt = loader.load(doc_path)
@@ -1051,7 +1179,10 @@ def rescore_runs(sources: list[str], target: str, log: logging.Logger,
     manifest = {
         "timestamp": target, "engines": engines, "legs": legs_seen,
         "rescore_of": sources, "collect_only": False, "scored": True,
-        "source_selection": "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run",
+        "source_selection": ("retry sources compete with the baseline per engine/page/pass; the attempt with the higher mean "
+                             "score over the retried legs is published, ties keep the baseline" if best_attempt else
+                             "later supplied runs override engine/page/leg; dedicated pass then successful attempt within each run"),
+        **({"retries": retries} if retries else {}),
         "scored_with_judge": not skip_judge,
         "document_judge_policy": "preserve_saved_verdicts",
         "kv_judge_policy": "cached_only" if skip_judge else "allow_new_rulings",
@@ -1897,6 +2028,10 @@ def parse_args():
     p.add_argument("--allow-kv-judge", action="store_true",
                    help="With --rescore, allow paid KV judge calls for unresolved pairs. "
                         "Does not rerun document judgments or OCR engines.")
+    p.add_argument("--best-attempt", action="store_true",
+                   help="With --rescore A,B[,C]: B, C... are retry runs. For each engine/page/pass they "
+                        "supply, score the retry and A's answer and publish the higher mean over the "
+                        "retried legs (ties keep A). Both calls stay on disk; the manifest records the choice")
     p.add_argument("--score", metavar="TIMESTAMP",
                    help="Score a stored run from its persisted outputs (the second "
                         "half of --collect-only), then print the report. Rows already "
@@ -1926,12 +2061,10 @@ def _resolve_timestamp(value: str) -> str:
         return current_timestamp()
     if value != "latest":
         return value
-    candidates = sorted(RUNS_DIR.glob("*_results.jsonl"))
+    candidates = sorted(RUNS_DIR.glob("*_results.jsonl*"))
     if not candidates:
         return current_timestamp()
-    if not candidates:
-        raise FileNotFoundError("No results JSONL found in results/runs/")
-    return candidates[-1].name.replace("_results.jsonl", "")
+    return candidates[-1].name.split("_results.jsonl")[0]
 
 
 def validate_keys(engines: list[str], skip_judge: bool) -> list[str]:
@@ -2121,7 +2254,8 @@ def main() -> None:
         log.info(f"Rescoring {', '.join(sources)} into new run {run_ts} "
                  f"({'new KV rulings allowed' if args.allow_kv_judge else 'cached judgments only'})")
         rescore_runs(sources, run_ts, log, skip_judge=not args.allow_kv_judge,
-                     selected_legs=None if args.legs == "all" else parse_legs(args.legs))
+                     selected_legs=None if args.legs == "all" else parse_legs(args.legs),
+                     best_attempt=args.best_attempt)
         report(run_ts, log)
         return
 

@@ -1,0 +1,103 @@
+{
+  "timestamp": "20261020T120222Z",
+  "engines": [
+    "tesseract",
+    "gemini_flash",
+    "mistral_ocr_4_1",
+    "textract_text",
+    "textract_structured",
+    "llamaparse",
+    "claude_sonnet_4_6",
+    "mineru",
+    "paddleocr_vl",
+    "marker",
+    "glm_ocr",
+    "deepseek_ocr",
+    "qwen3_vl",
+    "mineru_pipeline",
+    "paddleocr_ppocrv5",
+    "docling",
+    "llamaparse_granular"
+  ],
+  "legs": [
+    "text",
+    "geometry",
+    "markdown",
+    "tables",
+    "schema",
+    "key_value"
+  ],
+  "rescore_of": [
+    "20261020T111257Z",
+    "20261020T114920Z",
+    "20261020T114925Z"
+  ],
+  "collect_only": false,
+  "scored": true,
+  "source_selection": "retry sources compete with the baseline per engine/page/pass; the attempt with the higher mean score over the retried legs is published, ties keep the baseline",
+  "retries": {
+    "gemini_flash/funsd_002/tables": {
+      "legs": [
+        "tables"
+      ],
+      "retry_run": "20261020T114920Z",
+      "retry_mean": 0.894737,
+      "baseline_mean": 0.0,
+      "retry_condition": [
+        "ok"
+      ],
+      "selected": "retry"
+    },
+    "mistral_ocr_4_1/sroie_000/default": {
+      "legs": [
+        "tables"
+      ],
+      "retry_run": "20261020T114925Z",
+      "retry_mean": 0.0,
+      "baseline_mean": 0.0,
+      "retry_condition": [
+        "no_table"
+      ],
+      "selected": "baseline"
+    },
+    "mistral_ocr_4_1/photo_000/default": {
+      "legs": [
+        "tables"
+      ],
+      "retry_run": "20261020T114925Z",
+      "retry_mean": 0.0,
+      "baseline_mean": 0.0,
+      "retry_condition": [
+        "no_table"
+      ],
+      "selected": "baseline"
+    },
+    "mistral_ocr_4_1/photo_003/default": {
+      "legs": [
+        "tables"
+      ],
+      "retry_run": "20261020T114925Z",
+      "retry_mean": 0.0,
+      "baseline_mean": 0.0,
+      "retry_condition": [
+        "no_table"
+      ],
+      "selected": "baseline"
+    }
+  },
+  "scored_with_judge": false,
+  "document_judge_policy": "preserve_saved_verdicts",
+  "kv_judge_policy": "cached_only",
+  "adapters": {
+    "textract_tables": "textract-merged-cells-v2-selection-metadata (2026-10-09)"
+  },
+  "scorers": {
+    "markdown": "markdown-structure-v3-spans-reflow",
+    "tables": "gold-table-values-v9-numeric-diagnostics",
+    "key_value": "shared-fields-v9-unreturned-blanks-not-counted",
+    "schema": "shared-fields-v1",
+    "geometry": "geometry-v8 (2026-10-13; declared granularity/frame, invalid-coordinate penalties)",
+    "text": "gt coverage (unchanged)"
+  },
+  "scored_at": "20261020T120958Z"
+}

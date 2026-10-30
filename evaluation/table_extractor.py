@@ -41,9 +41,85 @@ def extract_all_tables_html(text: str, engine: str) -> list[str]:
     A financial statement comes back from mistral as one pipe table per
     section and from textract as several table objects; scoring only the first
     charged those engines for segmenting the page. The tables leg treats each
-    of these — and their concatenation — as candidates.
+    of these — and their concatenation — as candidates. A reply that hides a
+    table where a pipeline would not find it (inside a JSON string, say) is
+    scored as that pipeline would score it: no table.
     """
-    table_format = _declared_format(engine)
+    return _extract(text, engine)
+
+
+def _has_content(unit: str) -> bool:
+    """A letter or digit that is not markup or a JSON literal: `&nbsp;`, `<br>`,
+    `null,` and underscores are layout, not content."""
+    stripped = re.sub(r"&[a-z#0-9]+;|</?[a-z][^>]*>|\b(?:null|true|false)\b", "", unit, flags=re.IGNORECASE)
+    return bool(re.search(r"[^\W_]", stripped))
+
+
+def reply_condition(text: str, tables: list, page_text: str = "") -> str:
+    """How usable a reply was for this leg; recorded with the row, never scored.
+
+    `empty`: nothing returned. `degenerate`: an unterminated HTML table, a
+    line with content repeated 10+ times in a row, a content-free line (empty
+    table row) repeated 100+ times, or any 3-40 character unit with a letter
+    or digit repeated 20+ times (a generation loop). Repetition the page
+    itself carries is not a loop: a run counts only when it exceeds twice the
+    number of times the page text reference contains that line or unit.
+    `no_table`: readable text without a table. `ok`: at least one table was read.
+    """
+    t = (text or "").strip()
+    if not t:
+        return "empty"
+    if re.search(r"<table[\s>]", t, re.IGNORECASE) and "</table>" not in t.lower():
+        return "degenerate"
+    page = " ".join((page_text or "").casefold().split())
+    def on_page(unit):
+        return page.count(" ".join(unit.casefold().split())) if page else 0
+    # Separator rows, dot leaders and padding are layout, not a loop: a
+    # repeated line or unit must carry a letter or digit.
+    lines = [l.strip() for l in t.splitlines() if l.strip()]
+    run = 1
+    for a, b in zip(lines, lines[1:]):
+        run = run + 1 if a == b else 1
+        # Ten identical lines with content, or a hundred identical empty table
+        # rows (a form has a dozen; a runaway has thousands).
+        content = _has_content(a)
+        if run >= (10 if content else 100) and (not content or run > 2 * on_page(a)):
+            return "degenerate"
+    for m in re.finditer(r"(.{3,40}?)\1{19,}", t, re.DOTALL):
+        unit = m.group(1)
+        if _has_content(unit) and len(m.group(0)) // len(unit) > 2 * on_page(unit):
+            return "degenerate"
+    return "ok" if tables else "no_table"
+
+
+def leg_reply_condition(leg: str, text: str, structured_output: dict | None, score, page_text: str = "") -> str:
+    """The recorded usability of a pass's reply for one leg (never scored).
+
+    Tables record their own condition. Text and Markdown use the reply text
+    (`empty`, `degenerate`, `ok`). Key/value and schema add `no_pairs` when a
+    readable reply yielded no field pairs and `truncated` when the pairs came
+    from a salvaged cut-off reply; geometry adds `unparsed` when the scorer
+    found no usable boxes or blocks.
+    """
+    source = ((structured_output or {}).get("markdown") or text) if leg == "markdown" else text
+    condition = reply_condition(source or "", [True], page_text)
+    if leg == "markdown" and getattr(score, "reason", None) == "engine produced no markdown output":
+        return "empty"
+    if leg in ("key_value", "schema") and condition == "ok":
+        if getattr(score, "engine_pairs", None) == 0:
+            return "no_pairs"
+        if "truncated" in str(getattr(score, "parsed_how", "") or ""):
+            return "truncated"
+    if leg == "geometry":
+        reason = getattr(score, "reason", None) or ""
+        if not getattr(score, "applicable", True) and ("not parseable" in reason or "no blocks returned" in reason):
+            return "unparsed"
+        return "ok" if getattr(score, "applicable", True) else condition
+    return condition
+
+
+def _extract(text: str, engine: str | None) -> list[str]:
+    table_format = _declared_format(engine) if engine else "auto"
     if table_format == "auto":
         table_format = _sniff_format(text)
     elif table_format is not None and _sniff_format(text) == TSV:

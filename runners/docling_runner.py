@@ -119,6 +119,45 @@ def _silence_loggers() -> None:
             logger.propagate = False
 
 
+def layout_blocks_from_native_document(native_document: dict) -> list[dict]:
+    """Element boxes from a Docling export as normalized top-left xyxy.
+
+    Every text item and table carries ``prov[0].bbox`` in page units with a
+    declared origin (``BOTTOMLEFT`` for images and PDFs); the page size sits
+    under ``pages``. These are paragraph, heading and table boxes, never
+    words, so the geometry leg scores them as ``layout_block``. Works on the
+    saved ``native_document`` of every stored run, so no re-conversion is
+    needed to score geometry from a run that predates this adapter.
+    """
+    pages = native_document.get("pages") or {}
+    blocks: list[dict] = []
+    for collection in ("texts", "tables"):
+        for item in native_document.get(collection) or []:
+            prov = item.get("prov") or []
+            if not prov:
+                continue
+            box = prov[0].get("bbox") or {}
+            page = pages.get(str(prov[0].get("page_no"))) or next(iter(pages.values()), {})
+            size = page.get("size") or {}
+            width, height = size.get("width"), size.get("height")
+            if not (width and height and all(k in box for k in ("l", "t", "r", "b"))):
+                continue
+            if collection == "tables":
+                cells = (item.get("data") or {}).get("table_cells") or []
+                text = " ".join(str(cell.get("text") or "") for cell in cells)
+            else:
+                text = str(item.get("text") or "")
+            if not text.strip():
+                continue
+            if box.get("coord_origin") == "BOTTOMLEFT":
+                y0, y1 = (height - box["t"]) / height, (height - box["b"]) / height
+            else:
+                y0, y1 = box["t"] / height, box["b"] / height
+            blocks.append({"text": text, "label": item.get("label"),
+                           "bbox": [box["l"] / width, min(y0, y1), box["r"] / width, max(y0, y1)]})
+    return blocks
+
+
 class DoclingRunner(OCRRunner):
     """
     Docling (IBM Research) — local CPU document understanding library.
@@ -191,6 +230,12 @@ class DoclingRunner(OCRRunner):
         }
         if tables:
             structured_output["tables"] = tables
+        blocks = layout_blocks_from_native_document(native_document)
+        if blocks:
+            # Declared geometry contract: element boxes, already normalized.
+            structured_output["text_regions"] = blocks
+            structured_output["geometry_granularity"] = "layout_block"
+            structured_output["geometry_coordinates"] = "normalized_xyxy"
 
         # Page count from document metadata
         page_count = len(doc.pages) if hasattr(doc, "pages") else 1

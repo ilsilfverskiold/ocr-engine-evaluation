@@ -25,6 +25,22 @@
           "value": "2896 Ward Rapid",
           "request_id": "794638e4f1f1f8a2411a33fe022f937612e293f5b503020bdbbfa97a08d571d4"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 2,
+              "key": "street address",
+              "value": "2896 Ward Rapid"
+            }
+          ],
+          "reason": "The street address for the Lessor matches the expected value exactly.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
+        }
       ]
     },
     "Lessor — State of": {
@@ -118,6 +134,22 @@
           "value": "7230 Elda Divide",
           "request_id": "5f458956ab25e085ab7771d95e5f9f67f022b572d2298e40eec82dd7feb0a3d4"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 5,
+              "key": "street address",
+              "value": "7230 Elda Divide"
+            }
+          ],
+          "reason": "The street address for the Lessee matches the expected value exactly.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
+        }
       ]
     },
     "Lessee — State of": {
@@ -203,6 +235,22 @@
           "value": "6638",
           "request_id": "575ee3e02e7477c0e2fabf5b813e988eba1a2c13126bf299e4e85c8fc5325b78"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 8,
+              "key": "LEASED PREMISES",
+              "value": "6638 square feet (SF) of Retail Space"
+            }
+          ],
+          "reason": "The square footage is correctly extracted from the LEASED PREMISES field.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
+        }
       ]
     },
     "1. DESCRIPTION OF LEASED PREMISES — of": {
@@ -219,6 +267,30 @@
           "key": "square feet (SF) of",
           "value": "Retail Space",
           "request_id": "575ee3e02e7477c0e2fabf5b813e988eba1a2c13126bf299e4e85c8fc5325b78"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 8,
+              "key": "LEASED PREMISES",
+              "value": "6638 square feet (SF) of Retail Space"
+            }
+          ],
+          "reason": "The type of space is correctly extracted from the LEASED PREMISES field.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 8,
+              "key": "LEASED PREMISES",
+              "value": "6638 square feet (SF) of Retail Space"
+            }
+          ]
         }
       ]
     },
@@ -249,6 +321,22 @@
           "key": "[street address]",
           "value": "580 Birch Close",
           "request_id": "5f458956ab25e085ab7771d95e5f9f67f022b572d2298e40eec82dd7feb0a3d4"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 9,
+              "key": "street address",
+              "value": "580 Birch Close"
+            }
+          ],
+          "reason": "The street address for the leased premises matches the expected value exactly.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -343,6 +431,22 @@
           "value": "3",
           "request_id": "794638e4f1f1f8a2411a33fe022f937612e293f5b503020bdbbfa97a08d571d4"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 11,
+              "key": "TERM OF LEASE",
+              "value": "3 year(s) 10 month(s)"
+            }
+          ],
+          "reason": "The number of years for the lease term is correctly extracted.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
+        }
       ]
     },
     "2. TERM OF LEASE — month(s)": {
@@ -387,6 +491,28 @@
           ],
           "reason": "Value '10' correctly extracted for months from the lease term section.",
           "request_id": "76c42b41477c0fb3e9c3fec8695df5715af68bf1a31198abcbbd17f4d5cfdd52"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 11,
+              "key": "TERM OF LEASE",
+              "value": "3 year(s) 10 month(s)"
+            }
+          ],
+          "reason": "The number of months for the lease term is correctly extracted.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 11,
+              "key": "TERM OF LEASE",
+              "value": "3 year(s) 10 month(s)"
+            }
+          ]
         }
       ]
     },
@@ -466,6 +592,20 @@
           ],
           "reason": "Output ID 3 correctly provides the first day of July 2025.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 12,
+              "key": "commencing on the",
+              "value": "7 day of July 2025"
+            }
+          ],
+          "reason": "The first day of the commencing term is correctly extracted from the date.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -520,6 +660,20 @@
           ],
           "reason": "Output ID 9 correctly provides the second day of July 2025.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 12,
+              "key": "commencing on the",
+              "value": "7 day of July 2025"
+            }
+          ],
+          "reason": "The reference specifies 'second day', but only one day is present in the output.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -610,6 +764,20 @@
           ],
           "reason": "Output ID 12 correctly provides the first day of May 2029.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "expiring at Midnight on the",
+              "value": "7 day of May 2029"
+            }
+          ],
+          "reason": "The first day of the expiring term is correctly extracted from the date.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -650,6 +818,20 @@
           ],
           "reason": "Output ID 21 correctly provides the second day of May 2029.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 14,
+              "key": "expiring at Midnight on the",
+              "value": "7 day of May 2029"
+            }
+          ],
+          "reason": "The reference specifies 'second day', but only one day is present in the output.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -666,6 +848,22 @@
           "value": "7769",
           "request_id": "794638e4f1f1f8a2411a33fe022f937612e293f5b503020bdbbfa97a08d571d4"
         }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "BASE RENT",
+              "value": "7769 dollars ($7769)"
+            }
+          ],
+          "reason": "The net monthly payment amount is correctly extracted from BASE RENT.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
+        }
       ]
     },
     "3. BASE RENT — dollars per month (printed)": {
@@ -675,6 +873,30 @@
           "key": "net monthly payment (numeric)",
           "value": "$7769",
           "request_id": "794638e4f1f1f8a2411a33fe022f937612e293f5b503020bdbbfa97a08d571d4"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 16,
+              "key": "BASE RENT",
+              "value": "7769 dollars ($7769)"
+            }
+          ],
+          "reason": "The printed dollars per month value is correctly extracted from BASE RENT.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 16,
+              "key": "BASE RENT",
+              "value": "7769 dollars ($7769)"
+            }
+          ]
         }
       ]
     },
@@ -690,6 +912,22 @@
           "key": "security deposit (written)",
           "value": "6579",
           "request_id": "794638e4f1f1f8a2411a33fe022f937612e293f5b503020bdbbfa97a08d571d4"
+        }
+      ],
+      "output_rulings": [
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "accepted",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "security deposit",
+              "value": "6579 dollars ($6579)"
+            }
+          ],
+          "reason": "The security deposit amount is correctly extracted from the security deposit field.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -723,6 +961,28 @@
           ],
           "reason": "Output 23 provides the complete security deposit amount with currency symbol.",
           "request_id": "f9db6c81b4ce68f9cdf9ba77570efa3c222b7e6f6f21ee9bc500d3d9f1cf44fc"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 17,
+              "key": "security deposit",
+              "value": "6579 dollars ($6579)"
+            }
+          ],
+          "reason": "The printed security deposit dollars value is correctly extracted.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf",
+          "rejected_because": "output reused",
+          "gemini_picked": [
+            {
+              "output_id": 17,
+              "key": "security deposit",
+              "value": "6579 dollars ($6579)"
+            }
+          ]
         }
       ]
     },
@@ -1024,6 +1284,65 @@
           ],
           "reason": "Output ID 24 is an empty string, correctly representing the null expected value.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "State of California",
+              "value": ""
+            },
+            {
+              "output_id": 6,
+              "key": "State of California.0",
+              "value": ""
+            },
+            {
+              "output_id": 7,
+              "key": "Parties",
+              "value": ""
+            },
+            {
+              "output_id": 10,
+              "key": "State of California.1",
+              "value": ""
+            },
+            {
+              "output_id": 13,
+              "key": "day of July 2025",
+              "value": ""
+            },
+            {
+              "output_id": 15,
+              "key": "day of May 2029",
+              "value": ""
+            },
+            {
+              "output_id": 18,
+              "key": "payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 19,
+              "key": "is required. payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 20,
+              "key": "commencement of the Lease and each monthly installment payable thereafter on the 1st day of each month",
+              "value": ""
+            },
+            {
+              "output_id": 22,
+              "key": "The Lessee may have the right to renew the Lease with a total of renewal period(s) with each term being year(s) month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+              "value": ""
+            }
+          ],
+          "reason": "The expected value is null, but no empty field specifically for renewal periods exists.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -1164,6 +1483,65 @@
           ],
           "reason": "Output ID 32 is an empty string, correctly representing the null expected value.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "State of California",
+              "value": ""
+            },
+            {
+              "output_id": 6,
+              "key": "State of California.0",
+              "value": ""
+            },
+            {
+              "output_id": 7,
+              "key": "Parties",
+              "value": ""
+            },
+            {
+              "output_id": 10,
+              "key": "State of California.1",
+              "value": ""
+            },
+            {
+              "output_id": 13,
+              "key": "day of July 2025",
+              "value": ""
+            },
+            {
+              "output_id": 15,
+              "key": "day of May 2029",
+              "value": ""
+            },
+            {
+              "output_id": 18,
+              "key": "payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 19,
+              "key": "is required. payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 20,
+              "key": "commencement of the Lease and each monthly installment payable thereafter on the 1st day of each month",
+              "value": ""
+            },
+            {
+              "output_id": 22,
+              "key": "The Lessee may have the right to renew the Lease with a total of renewal period(s) with each term being year(s) month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+              "value": ""
+            }
+          ],
+          "reason": "The expected value is null, but no empty field specifically for renewal years exists.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     },
@@ -1314,6 +1692,65 @@
           ],
           "reason": "No available output ID is an empty string to represent the null expected value.",
           "request_id": "c3d63c62bb06b198df8bd376b4109323a8f964ae8cf877c27765b08dcdd6aef9"
+        },
+        {
+          "engine": "mistral_ocr_4_1",
+          "output": "d3b294de50c3ca2964725a4d009dad373f5247a49c104348130429ee20b6472a",
+          "verdict": "rejected",
+          "looked_at": [
+            {
+              "output_id": 3,
+              "key": "State of California",
+              "value": ""
+            },
+            {
+              "output_id": 6,
+              "key": "State of California.0",
+              "value": ""
+            },
+            {
+              "output_id": 7,
+              "key": "Parties",
+              "value": ""
+            },
+            {
+              "output_id": 10,
+              "key": "State of California.1",
+              "value": ""
+            },
+            {
+              "output_id": 13,
+              "key": "day of July 2025",
+              "value": ""
+            },
+            {
+              "output_id": 15,
+              "key": "day of May 2029",
+              "value": ""
+            },
+            {
+              "output_id": 18,
+              "key": "payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 19,
+              "key": "is required. payable monthly with the first payment due upon the",
+              "value": ""
+            },
+            {
+              "output_id": 20,
+              "key": "commencement of the Lease and each monthly installment payable thereafter on the 1st day of each month",
+              "value": ""
+            },
+            {
+              "output_id": 22,
+              "key": "The Lessee may have the right to renew the Lease with a total of renewal period(s) with each term being year(s) month(s) which may be exercised by giving written notice to Lessor no less than 60 days prior to the expiration of the Lease or renewal period.",
+              "value": ""
+            }
+          ],
+          "reason": "The expected value is null, but no empty field specifically for renewal months exists.",
+          "request_id": "eafbb827001a02da0464756965d71f4625060006cbcb5d93798d9f9fa2a391bf"
         }
       ]
     }

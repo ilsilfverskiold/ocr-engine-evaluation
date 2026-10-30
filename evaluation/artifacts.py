@@ -21,18 +21,34 @@ def source_image_hash(path):
         pass
     raise FileNotFoundError(f'Image absent and not pinned in corpus manifest: {path}')
 
-def read_text(path):
+def stored_path(path):
+    """`path` if it exists, else its gzipped twin `<name>.gz`, else None.
+
+    The published run's `_results.jsonl` is committed gzipped to stay under
+    GitHub's file-size limit; every reader accepts either form."""
     path = Path(path)
-    if not path.is_file():
+    if path.is_file():
+        return path
+    gz = path.with_name(path.name + '.gz')
+    return gz if gz.is_file() else None
+
+
+def read_text(path):
+    found = stored_path(path)
+    if found is None:
         raise FileNotFoundError(path)
-    return path.read_text(encoding='utf-8')
+    if found.suffix == '.gz':
+        import gzip
+        with gzip.open(found, 'rt', encoding='utf-8') as f:
+            return f.read()
+    return found.read_text(encoding='utf-8')
 
 def current_timestamp():
     """The newest run in results/runs/ that is complete and scored."""
     runs = RESULTS_DIR / 'runs'
     for manifest in sorted(runs.glob('*_run.json'), reverse=True):
         timestamp = manifest.name[:-len('_run.json')]
-        complete = all((runs / f'{timestamp}_{suffix}').is_file()
+        complete = all(stored_path(runs / f'{timestamp}_{suffix}') is not None
                        for suffix in ('results.jsonl', 'inference.jsonl'))
         if complete and json.loads(manifest.read_text()).get('scored'):
             return timestamp

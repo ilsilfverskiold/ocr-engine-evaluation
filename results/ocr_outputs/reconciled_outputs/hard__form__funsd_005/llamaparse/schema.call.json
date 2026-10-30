@@ -1,101 +1,659 @@
 {
-  "engine": "llamaparse",
-  "document": "documents/hard/form/funsd_005.png",
-  "pass_name": "schema",
-  "legs_fed": [
-    "schema"
-  ],
-  "prompt_sent": null,
-  "sent": {
-    "text": null,
-    "source": "no instruction text: LlamaExtract receives only the schema",
-    "constraint": "JSON schema as LlamaExtract data_schema (MULTIMODAL)",
-    "schema_separately": true,
-    "correction": "2026-10-18 correction: the call log used to fall back to the task prompt; this record follows the runner code (unchanged for these calls since e649e5ac)"
+ "engine": "llamaparse",
+ "document": "/Users/idasilfverskiold/tech-projects/ocr-test/ocr-benchmark/documents/hard/form/funsd_005.png",
+ "pass_name": "schema",
+ "legs_fed": [
+  "schema"
+ ],
+ "prompt_sent": null,
+ "sent": {
+  "text": null,
+  "source": "no instruction text: LlamaExtract receives only the schema",
+  "constraint": "JSON schema as LlamaExtract data_schema (MULTIMODAL)",
+  "schema_separately": true
+ },
+ "response_format": "json",
+ "json_schema_sent": true,
+ "json_schema": {
+  "type": "object",
+  "properties": {
+   "Document title": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "CASE NAME": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "COURT": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "LORILLARD ENTITIES": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "DATE FILED": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "DATE SERVED": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "CASE TYPE": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "LORILLARD COUNSEL": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "JUDGE": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "TRIAL DATE": {
+    "type": [
+     "string",
+     "boolean",
+     "null"
+    ]
+   },
+   "Right margin stamp": {
+    "type": [
+     "string",
+     "null"
+    ]
+   },
+   "Left margin stamp": {
+    "type": [
+     "string",
+     "null"
+    ]
+   }
   },
-  "response_format": "json",
-  "json_schema_sent": true,
-  "json_schema": {
-    "type": "object",
-    "properties": {
+  "required": [
+   "Document title",
+   "CASE NAME",
+   "COURT",
+   "LORILLARD ENTITIES",
+   "DATE FILED",
+   "DATE SERVED",
+   "CASE TYPE",
+   "LORILLARD COUNSEL",
+   "JUDGE",
+   "TRIAL DATE",
+   "Right margin stamp",
+   "Left margin stamp"
+  ],
+  "additionalProperties": false
+ },
+ "model_version": "llama-extract",
+ "latency_seconds": 8.921052416786551,
+ "cost_per_page": 0.025,
+ "page_count": 1,
+ "error": null,
+ "raw_text": "{\"Document title\": null, \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\", \"COURT\": \"San Francisco Superior Court - No. 996382\", \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\", \"DATE FILED\": null, \"DATE SERVED\": \"August 3, 1998\", \"CASE TYPE\": \"Asbestos\", \"LORILLARD COUNSEL\": null, \"JUDGE\": null, \"TRIAL DATE\": null, \"Right margin stamp\": \"82504862\", \"Left margin stamp\": \"9H625115\"}",
+ "structured_output": {
+  "config": {
+   "chunk_mode": "PAGE",
+   "citation_bbox": true,
+   "cite_sources": true,
+   "confidence_scores": false,
+   "extract_model": "openai-gpt-4-1",
+   "extraction_mode": "MULTIMODAL",
+   "extraction_target": "PER_DOC",
+   "high_resolution_mode": false,
+   "invalidate_cache": false,
+   "multimodal_fast_mode": false,
+   "num_pages_context": null,
+   "page_range": null,
+   "parse_model": null,
+   "priority": null,
+   "system_prompt": null,
+   "use_reasoning": false
+  },
+  "created_at": "2026-10-20 11:08:22.054350+00:00",
+  "data": {
+   "Document title": null,
+   "CASE NAME": "Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
+   "COURT": "San Francisco Superior Court - No. 996382",
+   "LORILLARD ENTITIES": "Lorillard Tobacco Company",
+   "DATE FILED": null,
+   "DATE SERVED": "August 3, 1998",
+   "CASE TYPE": "Asbestos",
+   "LORILLARD COUNSEL": null,
+   "JUDGE": null,
+   "TRIAL DATE": null,
+   "Right margin stamp": "82504862",
+   "Left margin stamp": "9H625115"
+  },
+  "data_schema": {
+   "type": "object",
+   "properties": {
+    "Document title": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "CASE NAME": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "COURT": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "LORILLARD ENTITIES": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "DATE FILED": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "DATE SERVED": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "CASE TYPE": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "LORILLARD COUNSEL": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "JUDGE": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "TRIAL DATE": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Right margin stamp": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "Left margin stamp": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Document title",
+    "CASE NAME",
+    "COURT",
+    "LORILLARD ENTITIES",
+    "DATE FILED",
+    "DATE SERVED",
+    "CASE TYPE",
+    "LORILLARD COUNSEL",
+    "JUDGE",
+    "TRIAL DATE",
+    "Right margin stamp",
+    "Left margin stamp"
+   ],
+   "additionalProperties": false
+  },
+  "error": null,
+  "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+  "extraction_metadata": {
+   "field_metadata": {
+    "CASE NAME": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "**CASE NAME:** Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
+       "bounding_boxes": [
+        {
+         "x": 27.12,
+         "y": 41.04,
+         "w": 113.74,
+         "h": 2.88
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "COURT": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "**COURT:** San Francisco Superior Court - No. 996382",
+       "bounding_boxes": [
+        {
+         "x": 26.88,
+         "y": 47.28,
+         "w": 83.28,
+         "h": 3.6
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "LORILLARD ENTITIES": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "**LORILLARD ENTITIES:** Lorillard Tobacco Company",
+       "bounding_boxes": [
+        {
+         "x": 26.88,
+         "y": 54.72,
+         "w": 65.52,
+         "h": 6.24
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "DATE SERVED": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "**DATE SERVED:** August 3, 1998",
+       "bounding_boxes": [
+        {
+         "x": 26.64,
+         "y": 71.28,
+         "w": 49.68,
+         "h": 3.6
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "CASE TYPE": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "**CASE TYPE:** Asbestos",
+       "bounding_boxes": [
+        {
+         "x": 26.64,
+         "y": 77.04,
+         "w": 42.48,
+         "h": 4.08
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "Right margin stamp": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "9H625115 | 82504862",
+       "bounding_boxes": [
+        {
+         "x": 140.4,
+         "y": 186.24,
+         "w": 17.76,
+         "h": 28.08
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    },
+    "Left margin stamp": {
+     "citation": [
+      {
+       "page": 1,
+       "matching_text": "9H625115 | 82504862",
+       "bounding_boxes": [
+        {
+         "x": 140.4,
+         "y": 186.24,
+         "w": 17.76,
+         "h": 28.08
+        }
+       ],
+       "page_dimensions": {
+        "width": 180.96,
+        "height": 240.0
+       }
+      }
+     ]
+    }
+   },
+   "usage": {
+    "num_pages_extracted": 1,
+    "num_document_tokens": 184,
+    "num_output_tokens": 115
+   },
+   "parse_job_id": "cc48f2d6-7129-4af0-90be-9ee8d8f90690"
+  },
+  "file": {
+   "created_at": null,
+   "data_source_id": null,
+   "expires_at": null,
+   "external_file_id": "file-not-found",
+   "file_size": null,
+   "file_type": null,
+   "id": "00000000-0000-0000-0000-000000000000",
+   "last_modified_at": null,
+   "name": "File not found",
+   "permission_info": null,
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "purpose": null,
+   "resource_info": null,
+   "updated_at": null
+  },
+  "file_id": "86779106-b3fb-41f8-a195-33492ca317da",
+  "from_ui": false,
+  "id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+  "job_id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+  "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+  "status": "SUCCESS",
+  "updated_at": "2026-10-20 11:08:27.208126+00:00"
+ },
+ "metadata": {
+  "extraction_mode": "MULTIMODAL",
+  "extraction_target": "PER_DOC",
+  "cite_sources": true,
+  "interface": "v1 stateless extraction",
+  "job_id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+  "submission_attempts": 1,
+  "cost_is_estimate": true,
+  "sent": {
+   "text": null,
+   "source": "no instruction text: LlamaExtract receives only the schema",
+   "constraint": "JSON schema as LlamaExtract data_schema (MULTIMODAL)",
+   "schema_separately": true
+  }
+ },
+ "raw_response": {
+  "job": {
+   "error": null,
+   "extraction_agent": {
+    "config": {
+     "chunk_mode": "PAGE",
+     "citation_bbox": true,
+     "cite_sources": true,
+     "confidence_scores": false,
+     "extract_model": "openai-gpt-4-1",
+     "extraction_mode": "MULTIMODAL",
+     "extraction_target": "PER_DOC",
+     "high_resolution_mode": false,
+     "invalidate_cache": false,
+     "multimodal_fast_mode": false,
+     "num_pages_context": null,
+     "page_range": null,
+     "parse_model": null,
+     "priority": null,
+     "system_prompt": null,
+     "use_reasoning": false
+    },
+    "created_at": "2026-10-06 21:18:19.441456+00:00",
+    "custom_configuration": "default",
+    "data_schema": {
+     "type": "object",
+     "properties": {
       "Document title": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "CASE NAME": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "COURT": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "LORILLARD ENTITIES": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "DATE FILED": {
-        "type": [
-          "string",
-          "boolean",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "DATE SERVED": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "CASE TYPE": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "LORILLARD COUNSEL": {
-        "type": [
-          "string",
-          "boolean",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "JUDGE": {
-        "type": [
-          "string",
-          "boolean",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "TRIAL DATE": {
-        "type": [
-          "string",
-          "boolean",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "Right margin stamp": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       },
       "Left margin stamp": {
-        "type": [
-          "string",
-          "null"
-        ]
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
       }
-    },
-    "required": [
+     },
+     "required": [
       "Document title",
       "CASE NAME",
       "COURT",
@@ -108,670 +666,398 @@
       "TRIAL DATE",
       "Right margin stamp",
       "Left margin stamp"
-    ],
-    "additionalProperties": false
-  },
-  "model_version": "llama-extract",
-  "latency_seconds": 8.885752000380307,
-  "cost_per_page": 0.025,
-  "page_count": 1,
-  "error": null,
-  "raw_text": "{\"Document title\": null, \"CASE NAME\": \"Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.\", \"COURT\": \"San Francisco Superior Court - No. 996382\", \"LORILLARD ENTITIES\": \"Lorillard Tobacco Company\", \"DATE FILED\": null, \"DATE SERVED\": \"August 3, 1998\", \"CASE TYPE\": \"Asbestos\", \"LORILLARD COUNSEL\": null, \"JUDGE\": null, \"TRIAL DATE\": null, \"Right margin stamp\": \"82504862\", \"Left margin stamp\": \"9H625115\"}",
-  "structured_output": {
-    "config": {
-      "chunk_mode": "PAGE",
-      "citation_bbox": false,
-      "cite_sources": false,
-      "confidence_scores": false,
-      "extract_model": "openai-gpt-4-1",
-      "extraction_mode": "MULTIMODAL",
-      "extraction_target": "PER_DOC",
-      "high_resolution_mode": false,
-      "invalidate_cache": false,
-      "multimodal_fast_mode": false,
-      "num_pages_context": null,
-      "page_range": null,
-      "parse_model": null,
-      "priority": null,
-      "system_prompt": null,
-      "use_reasoning": false
+     ],
+     "additionalProperties": false
     },
-    "created_at": "2026-10-06 21:41:52.762696+00:00",
-    "data": {
-      "Document title": null,
-      "CASE NAME": "Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
-      "COURT": "San Francisco Superior Court - No. 996382",
-      "LORILLARD ENTITIES": "Lorillard Tobacco Company",
-      "DATE FILED": null,
-      "DATE SERVED": "August 3, 1998",
-      "CASE TYPE": "Asbestos",
-      "LORILLARD COUNSEL": null,
-      "JUDGE": null,
-      "TRIAL DATE": null,
-      "Right margin stamp": "82504862",
-      "Left margin stamp": "9H625115"
-    },
-    "data_schema": {
-      "type": "object",
-      "properties": {
-        "Document title": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "CASE NAME": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "COURT": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "LORILLARD ENTITIES": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "DATE FILED": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "DATE SERVED": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "CASE TYPE": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "LORILLARD COUNSEL": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "JUDGE": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "TRIAL DATE": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "Right margin stamp": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "Left margin stamp": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "required": [
-        "Document title",
-        "CASE NAME",
-        "COURT",
-        "LORILLARD ENTITIES",
-        "DATE FILED",
-        "DATE SERVED",
-        "CASE TYPE",
-        "LORILLARD COUNSEL",
-        "JUDGE",
-        "TRIAL DATE",
-        "Right margin stamp",
-        "Left margin stamp"
-      ],
-      "additionalProperties": false
-    },
-    "error": null,
-    "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
-    "extraction_metadata": {
-      "field_metadata": {},
-      "usage": {
-        "num_pages_extracted": 1,
-        "num_document_tokens": 191,
-        "num_output_tokens": 115
-      },
-      "parse_job_id": "89f8f4e8-aadd-4d35-92dc-70e3e7bafe2f"
-    },
-    "file": {
-      "created_at": null,
-      "data_source_id": null,
-      "expires_at": null,
-      "external_file_id": "file-not-found",
-      "file_size": null,
-      "file_type": null,
-      "id": "00000000-0000-0000-0000-000000000000",
-      "last_modified_at": null,
-      "name": "File not found",
-      "permission_info": null,
-      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-      "purpose": null,
-      "resource_info": null,
-      "updated_at": null
-    },
-    "file_id": "babf6533-fdbe-4b02-ae0b-77ce75944674",
-    "from_ui": false,
-    "id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
-    "job_id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
+    "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+    "name": "Default Extraction Agent",
     "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-    "status": "SUCCESS",
-    "updated_at": "2026-10-06 21:41:59.899011+00:00"
+    "updated_at": "2026-10-06 21:18:19.441456+00:00"
+   },
+   "file": {
+    "created_at": "2026-10-20 11:08:21.966487+00:00",
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "extraction_file-suh6qvpn.png",
+    "file_size": 29487,
+    "file_type": "png",
+    "id": "86779106-b3fb-41f8-a195-33492ca317da",
+    "last_modified_at": "2026-10-20 11:08:21+00:00",
+    "name": "extraction_file-suh6qvpn.png",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": {
+     "file_size": 29487,
+     "last_modified_at": "2026-10-20T11:08:21"
+    },
+    "updated_at": "2026-10-20 11:08:21.966487+00:00"
+   },
+   "file_id": "86779106-b3fb-41f8-a195-33492ca317da",
+   "id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+   "status": "PENDING"
   },
-  "metadata": {
+  "result": {
+   "config": {
+    "chunk_mode": "PAGE",
+    "citation_bbox": true,
+    "cite_sources": true,
+    "confidence_scores": false,
+    "extract_model": "openai-gpt-4-1",
     "extraction_mode": "MULTIMODAL",
     "extraction_target": "PER_DOC",
-    "interface": "v1 stateless extraction",
-    "job_id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
-    "submission_attempts": 1,
-    "cost_is_estimate": true,
-    "original_source_timestamp": "20261006T211813Z",
-    "reconciled_run": "20261017T065717Z"
-  },
-  "raw_response": {
-    "job": {
-      "error": null,
-      "extraction_agent": {
-        "config": {
-          "chunk_mode": "PAGE",
-          "citation_bbox": false,
-          "cite_sources": false,
-          "confidence_scores": false,
-          "extract_model": "openai-gpt-4-1",
-          "extraction_mode": "MULTIMODAL",
-          "extraction_target": "PER_DOC",
-          "high_resolution_mode": false,
-          "invalidate_cache": false,
-          "multimodal_fast_mode": false,
-          "num_pages_context": null,
-          "page_range": null,
-          "parse_model": null,
-          "priority": null,
-          "system_prompt": null,
-          "use_reasoning": false
-        },
-        "created_at": "2026-10-06 21:18:19.441456+00:00",
-        "custom_configuration": "default",
-        "data_schema": {
-          "type": "object",
-          "properties": {
-            "Document title": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "CASE NAME": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "COURT": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "LORILLARD ENTITIES": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "DATE FILED": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "DATE SERVED": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "CASE TYPE": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "LORILLARD COUNSEL": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "JUDGE": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "TRIAL DATE": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "Right margin stamp": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "Left margin stamp": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            }
-          },
-          "required": [
-            "Document title",
-            "CASE NAME",
-            "COURT",
-            "LORILLARD ENTITIES",
-            "DATE FILED",
-            "DATE SERVED",
-            "CASE TYPE",
-            "LORILLARD COUNSEL",
-            "JUDGE",
-            "TRIAL DATE",
-            "Right margin stamp",
-            "Left margin stamp"
-          ],
-          "additionalProperties": false
-        },
-        "id": "491ff6be-18e8-4af1-a710-b8d991b20220",
-        "name": "Default Extraction Agent",
-        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-        "updated_at": "2026-10-06 21:18:19.441456+00:00"
-      },
-      "file": {
-        "created_at": "2026-10-06 21:41:52.617862+00:00",
-        "data_source_id": null,
-        "expires_at": null,
-        "external_file_id": "extraction_file-o0vj6p7i.png",
-        "file_size": 29487,
-        "file_type": "png",
-        "id": "babf6533-fdbe-4b02-ae0b-77ce75944674",
-        "last_modified_at": "2026-10-06 21:41:52+00:00",
-        "name": "extraction_file-o0vj6p7i.png",
-        "permission_info": null,
-        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-        "purpose": null,
-        "resource_info": {
-          "file_size": 29487,
-          "last_modified_at": "2026-10-06T21:41:52"
-        },
-        "updated_at": "2026-10-06 21:41:52.617862+00:00"
-      },
-      "file_id": "babf6533-fdbe-4b02-ae0b-77ce75944674",
-      "id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
-      "status": "PENDING"
+    "high_resolution_mode": false,
+    "invalidate_cache": false,
+    "multimodal_fast_mode": false,
+    "num_pages_context": null,
+    "page_range": null,
+    "parse_model": null,
+    "priority": null,
+    "system_prompt": null,
+    "use_reasoning": false
+   },
+   "created_at": "2026-10-20 11:08:22.054350+00:00",
+   "data": {
+    "Document title": null,
+    "CASE NAME": "Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
+    "COURT": "San Francisco Superior Court - No. 996382",
+    "LORILLARD ENTITIES": "Lorillard Tobacco Company",
+    "DATE FILED": null,
+    "DATE SERVED": "August 3, 1998",
+    "CASE TYPE": "Asbestos",
+    "LORILLARD COUNSEL": null,
+    "JUDGE": null,
+    "TRIAL DATE": null,
+    "Right margin stamp": "82504862",
+    "Left margin stamp": "9H625115"
+   },
+   "data_schema": {
+    "type": "object",
+    "properties": {
+     "Document title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "CASE NAME": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "COURT": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "LORILLARD ENTITIES": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "DATE FILED": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "DATE SERVED": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "CASE TYPE": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "LORILLARD COUNSEL": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "JUDGE": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "TRIAL DATE": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Right margin stamp": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "Left margin stamp": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
     },
-    "result": {
-      "config": {
-        "chunk_mode": "PAGE",
-        "citation_bbox": false,
-        "cite_sources": false,
-        "confidence_scores": false,
-        "extract_model": "openai-gpt-4-1",
-        "extraction_mode": "MULTIMODAL",
-        "extraction_target": "PER_DOC",
-        "high_resolution_mode": false,
-        "invalidate_cache": false,
-        "multimodal_fast_mode": false,
-        "num_pages_context": null,
-        "page_range": null,
-        "parse_model": null,
-        "priority": null,
-        "system_prompt": null,
-        "use_reasoning": false
-      },
-      "created_at": "2026-10-06 21:41:52.762696+00:00",
-      "data": {
-        "Document title": null,
-        "CASE NAME": "Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
-        "COURT": "San Francisco Superior Court - No. 996382",
-        "LORILLARD ENTITIES": "Lorillard Tobacco Company",
-        "DATE FILED": null,
-        "DATE SERVED": "August 3, 1998",
-        "CASE TYPE": "Asbestos",
-        "LORILLARD COUNSEL": null,
-        "JUDGE": null,
-        "TRIAL DATE": null,
-        "Right margin stamp": "82504862",
-        "Left margin stamp": "9H625115"
-      },
-      "data_schema": {
-        "type": "object",
-        "properties": {
-          "Document title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "CASE NAME": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "COURT": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "LORILLARD ENTITIES": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "DATE FILED": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "DATE SERVED": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "CASE TYPE": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "LORILLARD COUNSEL": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "JUDGE": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "TRIAL DATE": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "Right margin stamp": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "Left margin stamp": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "Document title",
-          "CASE NAME",
-          "COURT",
-          "LORILLARD ENTITIES",
-          "DATE FILED",
-          "DATE SERVED",
-          "CASE TYPE",
-          "LORILLARD COUNSEL",
-          "JUDGE",
-          "TRIAL DATE",
-          "Right margin stamp",
-          "Left margin stamp"
+    "required": [
+     "Document title",
+     "CASE NAME",
+     "COURT",
+     "LORILLARD ENTITIES",
+     "DATE FILED",
+     "DATE SERVED",
+     "CASE TYPE",
+     "LORILLARD COUNSEL",
+     "JUDGE",
+     "TRIAL DATE",
+     "Right margin stamp",
+     "Left margin stamp"
+    ],
+    "additionalProperties": false
+   },
+   "error": null,
+   "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
+   "extraction_metadata": {
+    "field_metadata": {
+     "CASE NAME": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "**CASE NAME:** Donald D. Sellers and Robin J . Sellers v. Raybestos-Manhattan, et al.",
+        "bounding_boxes": [
+         {
+          "x": 27.12,
+          "y": 41.04,
+          "w": 113.74,
+          "h": 2.88
+         }
         ],
-        "additionalProperties": false
-      },
-      "error": null,
-      "extraction_agent_id": "491ff6be-18e8-4af1-a710-b8d991b20220",
-      "extraction_metadata": {
-        "field_metadata": {},
-        "usage": {
-          "num_pages_extracted": 1,
-          "num_document_tokens": 191,
-          "num_output_tokens": 115
-        },
-        "parse_job_id": "89f8f4e8-aadd-4d35-92dc-70e3e7bafe2f"
-      },
-      "file": {
-        "created_at": null,
-        "data_source_id": null,
-        "expires_at": null,
-        "external_file_id": "file-not-found",
-        "file_size": null,
-        "file_type": null,
-        "id": "00000000-0000-0000-0000-000000000000",
-        "last_modified_at": null,
-        "name": "File not found",
-        "permission_info": null,
-        "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-        "purpose": null,
-        "resource_info": null,
-        "updated_at": null
-      },
-      "file_id": "babf6533-fdbe-4b02-ae0b-77ce75944674",
-      "from_ui": false,
-      "id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
-      "job_id": "ef4387d1-362a-4d10-8b17-9cd93382940f",
-      "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
-      "status": "SUCCESS",
-      "updated_at": "2026-10-06 21:41:59.899011+00:00"
-    }
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "COURT": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "**COURT:** San Francisco Superior Court - No. 996382",
+        "bounding_boxes": [
+         {
+          "x": 26.88,
+          "y": 47.28,
+          "w": 83.28,
+          "h": 3.6
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "LORILLARD ENTITIES": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "**LORILLARD ENTITIES:** Lorillard Tobacco Company",
+        "bounding_boxes": [
+         {
+          "x": 26.88,
+          "y": 54.72,
+          "w": 65.52,
+          "h": 6.24
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "DATE SERVED": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "**DATE SERVED:** August 3, 1998",
+        "bounding_boxes": [
+         {
+          "x": 26.64,
+          "y": 71.28,
+          "w": 49.68,
+          "h": 3.6
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "CASE TYPE": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "**CASE TYPE:** Asbestos",
+        "bounding_boxes": [
+         {
+          "x": 26.64,
+          "y": 77.04,
+          "w": 42.48,
+          "h": 4.08
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "Right margin stamp": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "9H625115 | 82504862",
+        "bounding_boxes": [
+         {
+          "x": 140.4,
+          "y": 186.24,
+          "w": 17.76,
+          "h": 28.08
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     },
+     "Left margin stamp": {
+      "citation": [
+       {
+        "page": 1,
+        "matching_text": "9H625115 | 82504862",
+        "bounding_boxes": [
+         {
+          "x": 140.4,
+          "y": 186.24,
+          "w": 17.76,
+          "h": 28.08
+         }
+        ],
+        "page_dimensions": {
+         "width": 180.96,
+         "height": 240.0
+        }
+       }
+      ]
+     }
+    },
+    "usage": {
+     "num_pages_extracted": 1,
+     "num_document_tokens": 184,
+     "num_output_tokens": 115
+    },
+    "parse_job_id": "cc48f2d6-7129-4af0-90be-9ee8d8f90690"
+   },
+   "file": {
+    "created_at": null,
+    "data_source_id": null,
+    "expires_at": null,
+    "external_file_id": "file-not-found",
+    "file_size": null,
+    "file_type": null,
+    "id": "00000000-0000-0000-0000-000000000000",
+    "last_modified_at": null,
+    "name": "File not found",
+    "permission_info": null,
+    "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+    "purpose": null,
+    "resource_info": null,
+    "updated_at": null
+   },
+   "file_id": "86779106-b3fb-41f8-a195-33492ca317da",
+   "from_ui": false,
+   "id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+   "job_id": "b30eb49f-5a94-4ac1-9560-c60e8f7c0e2d",
+   "project_id": "6aa4b217-479f-4e2b-bb07-61ff80e1bc50",
+   "status": "SUCCESS",
+   "updated_at": "2026-10-20 11:08:27.208126+00:00"
   }
+ }
 }
