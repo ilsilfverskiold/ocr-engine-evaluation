@@ -2548,6 +2548,9 @@ def main() -> None:
             "startup_excluded": metadata.get("startup_excluded"),
             "gpu_type": metadata.get("gpu_type"),
             "gpu_rate_usd_per_second": metadata.get("gpu_rate_usd_per_second"),
+            # Recorded by token-billed engines; token-per-minute limits cap their parallel rate.
+            "input_tokens": metadata.get("input_tokens"),
+            "output_tokens": metadata.get("output_tokens"),
             "model_version": result.model_version,
             "error": None,
         }, inference_jsonl)
