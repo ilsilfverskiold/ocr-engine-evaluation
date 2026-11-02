@@ -10,7 +10,7 @@ const D = {legs: [], docs: {}, baseline: null, manifest: null, ledger: new Map()
   results: {rows: [], judge: [], ledger: []}};
 let docs = [], engines = [];
 const state = {view: "page", engine: null, doc: null, leg: "text", filter: "all",
-  layers: {ref: true, pred: true, unmatched: true}};
+  layers: {ref: true, pred: true, unmatched: true}, geoLevel: "word"};
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const clean = html => window.DOMPurify ? DOMPurify.sanitize(html) : esc(html);
@@ -358,9 +358,7 @@ function callBlock(info, call, leg) {
     + (schema && !where ? `<p class="muted">The schema is inside the prompt text above.</p>` : "");
   // The leg panel below already shows raw_text for these legs; don't repeat it here.
   const replyBelow = ["text", "key_value", "schema"].includes(leg) || (leg === "markdown" && (call.structured_output || {}).markdown == null);
-  return `<div class="panel prompt"><h3>How we asked: call "${esc(call.pass_name)}" → ${esc(servedLegs(info).join(", "))}
-      <span class="muted">${meta.gpu_type ? ` · ran on ${esc(meta.gpu_type)} (this saved call's GPU, not necessarily the engine's current one)` : ""} · $${fmt(call.cost_per_page)} estimate · ${fmt(call.latency_seconds)} ${timeLabel}</span></h3>
-    ${meta.measurement_scope === "modal_batch" ? '<p class="muted">Cost is an equal share of measured batch work. GPU costs exclude CPU/RAM; CPU costs are allocation floors. Startup, idle and unmetered failures are excluded.</p>' : ""}
+  return `<div class="panel prompt"><h3>How we asked: call "${esc(call.pass_name)}" → ${esc(servedLegs(info).join(", "))}</h3>
     ${sentRecord(call) ? `<table class="v tree"><tr><th>Prompt</th><td>${esc(sent.source)}</td></tr>
       <tr><th>Output constraint</th><td>${esc(sent.constraint)}</td></tr>
       <tr><th>Schema sent separately</th><td>${esc(sent.schema_separately)}</td></tr></table>`
@@ -369,7 +367,7 @@ function callBlock(info, call, leg) {
       <tr><th>json_schema_sent</th><td>${esc(call.json_schema_sent)}</td></tr></table>`}
     ${call.error ? `<pre class="warn">${esc(call.error)}</pre>` : ""}
     <details><summary>Prompt sent</summary>${promptSent}</details>
-    <details><summary>Settings and usage recorded in this call</summary>${tree(recorded)}</details>
+    <details><summary>Settings and usage recorded in this call</summary>${meta.measurement_scope === "modal_batch" ? '<p class="muted">Cost is an equal share of measured batch work. GPU costs exclude CPU/RAM; CPU costs are allocation floors. Startup, idle and unmetered failures are excluded.</p>' : ""}${tree(recorded)}</details>
     ${replyBelow ? "" : `<details><summary>Reply (raw_text, ${(call.raw_text || "").length} chars)</summary>${formatReply(call.raw_text)}</details>`}
     <details><summary>Full provider reply</summary>${providerReply(call.raw_response)}</details>
     <div class="muted" style="font-size:11px;margin-top:4px">${esc(rel(info.url))}</div></div>`;
@@ -419,42 +417,67 @@ async function renderHead() {
 }
 
 // ---------- pieces ----------
+// The geometry levels the scorer recorded for a row: Word always, Line and Block when their evidence is saved.
+function geoLevels(row) {
+  const d = row?.detail || {}, m = row?.metrics || {};
+  return [["word", "Word", row?.score], ...(d.line_matches ? [["line", "Line", m.geometry_line_score]] : []),
+    ...(d.block_matches ? [["block", "Block cov", m.geometry_block_score]] : [])];
+}
+const geoLevel = row => geoLevels(row).some(([k]) => k === state.geoLevel) ? state.geoLevel : "word";
+const clip = (t, n = 200) => { t = String(t ?? ""); return t.length > n ? t.slice(0, n) + "…" : t; };
+
 function imagePanel(withBoxes) {
   const doc = D.docs[state.doc];
-  let svg = "";
+  let svg = "", controls = "";
   if (withBoxes) {
-    const row = legRow(state.engine, state.doc, "geometry"), d = row?.detail || {};
+    const row = legRow(state.engine, state.doc, "geometry"), d = row?.detail || {}, level = geoLevel(row);
     const rect = (b, color, title, dash) => b && b.length === 4 ?
       `<rect x="${b[0]}" y="${b[1]}" width="${Math.max(b[2] - b[0], 0)}" height="${Math.max(b[3] - b[1], 0)}" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="1.5" vector-effect="non-scaling-stroke" ${dash ? 'stroke-dasharray="4 3"' : ""}><title>${esc(title)}</title></rect>` : "";
     let parts = "";
-    if (state.layers.ref) for (const m of d.matches || []) parts += rect(m.reference_bbox, m.hit ? "var(--ok)" : "var(--bad)", `reference: ${m.text}${m.hit ? " (located)" : " (not located)"}`, true);
-    if (state.layers.pred) for (const b of d.scored_boxes || []) parts += rect(b.bbox, "var(--accent)", `predicted: ${b.text}`);
-    if (state.layers.unmatched) for (const b of d.unmatched_predictions || []) parts += rect(b.bbox, "var(--part)", `unmatched prediction: ${b.text}`);
+    if (level === "word") {
+      if (state.layers.ref) for (const m of d.matches || []) parts += rect(m.reference_bbox, m.hit ? "var(--ok)" : "var(--bad)", `reference: ${m.text}${m.hit ? " (located)" : " (not located)"}`, true);
+      if (state.layers.pred) for (const b of d.scored_boxes || []) parts += rect(b.bbox, "var(--accent)", `predicted: ${b.text}`);
+      if (state.layers.unmatched) for (const b of d.unmatched_predictions || []) parts += rect(b.bbox, "var(--part)", `unmatched prediction: ${b.text}`);
+    } else if (level === "line") {
+      if (state.layers.ref) for (const x of d.line_matches || []) parts += rect(x.bbox, x.hit ? "var(--ok)" : "var(--bad)", `reference line: ${x.text}${x.hit ? " (located)" : " (not located)"}`, true);
+      if (state.layers.pred) for (const x of d.predicted_lines || []) parts += rect(x.bbox, "var(--accent)", `engine line: ${clip(x.text)}`);
+    } else {
+      if (state.layers.ref) for (const x of d.block_matches || []) parts += rect(x.bbox, x.covered ? "var(--ok)" : "var(--bad)", `reference: ${x.text}${x.covered ? ` (inside block ${x.block + 1})` : " (not inside a block with its text)"}`, true);
+      if (state.layers.pred) (d.blocks || []).forEach((x, i) => { parts += rect(x.bbox, "var(--accent)", `block ${i + 1}: ${clip(x.text)}`); });
+    }
     svg = `<svg viewBox="0 0 1 1" preserveAspectRatio="none">${parts}</svg>`;
+    const labels = {
+      word: {ref: "reference boxes (green located / red missed)", pred: "predicted boxes (as scored)", unmatched: "unmatched predictions"},
+      line: {ref: "reference lines (green located / red missed)", pred: "engine lines (its boxes merged into visual lines)"},
+      block: {ref: "reference units (green inside a block with their text / red not)", pred: "engine blocks"}}[level];
+    controls = `<div class="geo-levels">${geoLevels(row).map(([k, label, v]) => `<button data-geo="${k}" class="${k === level ? "on" : ""}">${label} ${fmt(v)}</button>`).join("")}</div>
+      <div class="layers">${Object.entries(labels).map(([k, text]) => `<label><input type="checkbox" data-layer="${k}" ${state.layers[k] ? "checked" : ""}> ${text}</label>`).join("")}</div>`;
   }
-  const layers = withBoxes ? `<div class="layers">
-      ${["ref", "pred", "unmatched"].map(k => `<label><input type="checkbox" data-layer="${k}" ${state.layers[k] ? "checked" : ""}> ${{ref: "reference boxes (green located / red missed)", pred: "predicted boxes (as scored)", unmatched: "unmatched predictions"}[k]}</label>`).join("")}
-    </div>` : "";
-  return `<div class="panel sticky"><h3>${esc(doc.path)}</h3>${layers}<div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div>`;
+  return `<div class="panel sticky"><h3>${esc(doc.path)}</h3>${controls}<div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div>`;
 }
 
+// Geometry: Word is the score; Line and Block cov are shown beside it where the scorer recorded them.
+const geoExtra = row => row && !row.error ? [["Line", row.metrics?.geometry_line_score], ["Block cov", row.metrics?.geometry_block_score]]
+  .filter(([, v]) => v != null).map(([k, v]) => `${k} <b>${fmt(v)}</b>`).join(" · ") : "";
+
 function scorePanel(row) {
-  const leg = state.leg;
+  const leg = state.leg, geo = leg === "geometry";
   const all = engines.map(e => ({e, row: legRow(e, state.doc, leg)})).filter(x => x.row)
     .sort((a, b) => (b.row.score ?? -1) - (a.row.score ?? -1));
-  const bars = all.length ? `<div class="bars">${all.map(x => `<div class="bar ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
+  const bars = all.length ? `<div class="bars">${all.map(x => `<div class="bar ${geo ? "geo" : ""} ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
       <span>${esc(x.e)}</span><span class="track"><span class="fill" style="display:block;width:${(x.row.score ?? 0) * 100}%"></span></span>
-      <span>${(st => st === "s" ? fmt(x.row.score) : st === "err" ? '<span class="err">error</span>' : STATUS_TEXT[st])(legStatus(x.e, state.doc, leg))}</span></div>`).join("")}</div>`
+      <span>${(st => st === "s" ? fmt(x.row.score) : st === "err" ? '<span class="err">error</span>' : STATUS_TEXT[st])(legStatus(x.e, state.doc, leg))}</span>${geo ? `<span class="geo-extra">${geoExtra(x.row)}</span>` : ""}</div>`).join("")}</div>`
     : '<span class="muted">none</span>';
   const metrics = Object.entries(row?.metrics || {}).filter(([, v]) => v == null || typeof v !== "object")
     .map(([k, v]) => `<span>${esc(k)}: <b>${fmt(v)}</b></span>`).join("");
-  return `<div class="panel"><h3>${LEG_TITLES[leg]} score on this page</h3>
+  return `<div class="panel"><h3>${LEG_TITLES[leg]} score on this page${geo ? " · Word" : ""}</h3>
     ${row ? `<div class="score-big" style="color:${scoreColor(row.score)}">${row.error ? "error" : row.scoring_status === "unscored" ? "Unscored" : row.scoring_status === "pending_review" ? "Pending review" : fmt(row.score)}</div>
+      ${geo && geoExtra(row) ? `<div class="geo-sub">${geoExtra(row)}</div>` : ""}
       ${row.error ? `<pre class="warn">${esc(row.error)}</pre>` : ""}
       ${row.reason ? `<div class="muted">${esc(row.reason)}</div>` : ""}
       ${metrics ? `<details><summary class="muted">all metrics</summary><div class="metrics">${metrics}</div></details>` : ""}`
       : `<div class="muted">No ${LEG_TITLES[leg]} result is recorded for ${esc(state.engine)} on this page.</div>`}
-    <h3 style="margin-top:12px">All engines, this page (click to switch)</h3>${bars}</div>`;
+    <h3 style="margin-top:12px">All engines, this page${geo ? ": Word, with Line and Block cov where recorded" : ""} (click to switch)</h3>${bars}</div>`;
 }
 
 function callPointer(row, info, call) {
@@ -464,6 +487,21 @@ function callPointer(row, info, call) {
     return `<div class="panel prompt"><h3>How we asked</h3><p class="warn">${row.error ? `This call failed and no call file was saved (${where}). Error: ${esc(row.error)}` : `Call file not found: ${where}`}</p></div>`;
   }
   return callBlock(info, call, state.leg);
+}
+
+// The "Why" table for the geometry level shown on the image.
+function geoWhy(row, d) {
+  const level = geoLevel(row);
+  if (level === "line") return `<div class="panel"><h3>Why: reference lines</h3>
+    <p class="muted">Reference and engine boxes are each merged into visual lines. Each reference line is paired with the unused engine line of most similar text (at least 0.7) and is located when each box contains the other's centre.</p>
+    ${verdictTable((d.line_matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.predicted_text != null ? "text matched, box missed" : "no line with similar text"})), [
+      ["reference line", r => r.text], ["engine line", r => r.predicted_text], ["text similarity", r => r.similarity], ["verdict", r => r.verdict]])}</div>`;
+  if (level === "block") return `<div class="panel"><h3>Why: reference units inside blocks</h3>
+    <p class="muted">A reference unit is covered when an engine block contains its text and its centre. This shows where text sits, not word-level boxes.</p>
+    ${verdictTable((d.block_matches || []).map(x => ({...x, verdict: x.covered ? "correct" : "not covered", inBlock: x.block == null ? null : `block ${x.block + 1}: ${clip(d.blocks?.[x.block]?.text, 120)}`})), [
+      ["reference", r => r.text], ["covering block", r => r.inBlock], ["verdict", r => r.verdict]])}</div>`;
+  return `<div class="panel"><h3>Why: reference units</h3>${verdictTable((d.matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.matched ? "text matched, box missed" : "missing"})), [
+    ["reference", r => r.text], ["engine text", r => r.predicted_text], ["IoU", r => r.iou], ["verdict", r => r.verdict]])}</div>`;
 }
 
 function verdictTable(rows, cols) {
@@ -563,8 +601,7 @@ function legBody(row, call, ref) {
           ${m.geometry_prediction_granularity === "layout_block" && m.geometry_scoring_unit !== "layout_block" ? `<p class="warn">The engine returned layout blocks; the headline counts ${esc(m.geometry_scoring_unit)}-level reference units one-to-one, so a block covering several ${esc(m.geometry_scoring_unit)}s can locate at most one of them. The block score above shows box placement separately.</p>` : ""}
           <p class="muted">Boxes are drawn on the page image to the left, in the scorer's normalised coordinates (${esc(d.scored_box_coordinates || "not recorded")}); hover a box for its text.</p>
           ${repairs(m.geometry_reference_repairs)}</div>
-        <div class="panel"><h3>Why: reference units</h3>${verdictTable((d.matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.matched ? "text matched, box missed" : "missing"})), [
-          ["reference", r => r.text], ["engine text", r => r.predicted_text], ["IoU", r => r.iou], ["verdict", r => r.verdict]])}</div>`;
+        ${geoWhy(row, d)}`;
     }
   }
   return "";
@@ -583,6 +620,7 @@ async function renderContent() {
   el("content").querySelectorAll(".bar").forEach(n => n.onclick = () => go({engine: n.dataset.e}));
   el("content").querySelectorAll(".filter button").forEach(b => b.onclick = () => go({filter: b.dataset.f}));
   el("content").querySelectorAll("[data-layer]").forEach(c => c.onchange = () => { state.layers[c.dataset.layer] = c.checked; renderContent(); });
+  el("content").querySelectorAll("[data-geo]").forEach(b => b.onclick = () => { state.geoLevel = b.dataset.geo; renderContent(); });
 }
 
 // ---------- routing ----------

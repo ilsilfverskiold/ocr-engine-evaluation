@@ -33,7 +33,8 @@ const Results = (() => {
   };
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
   const DEFAULTS = {leg: "all", tier: "all", type: "all", sort: "score", dir: "desc",
-    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0"};
+    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", top: "1"};
+  const VOLUMES = [["1000", "1,000"], ["10000", "10,000"], ["100000", "100,000"], ["1000000", "1 million"]];
   const rf = {...DEFAULTS};
 
   // ---------- numbers, exactly as the report computes and prints them ----------
@@ -251,18 +252,23 @@ const Results = (() => {
     });
     return {leg, legRows, data, tiers, absent, buckets, pages: new Set(legRows.filter(valid).map(r => r.stem)).size};
   }
+  // Geometry leads with Word (the score), then Line and Block cov beside it where the scorer records them.
+  const GEO_LEAD = ["geometry_line_score", "geometry_block_score"];
   function legColumns(L) {
     const showNoOut = L.data.some(r => f4(r.noout) !== f4(r.score));
+    const metricCol = ([label, key, up]) => ({key: "m:" + key, label, fmt: f4, higher: up, countKey: "mn:" + key, title: `${key}: family-weighted mean over scored pages that record it`});
+    const geo = L.leg === "geometry";
     return [
       {key: "rank", label: "#"}, {key: "engine", label: "Engine"},
-      {key: "score", label: "Score", fmt: f4, higher: true, tint: true, title: "Full: mean of the document-family means of page scores; errors and N/A excluded"},
+      {key: "score", label: geo ? "Word" : "Score", fmt: f4, higher: true, tint: true, title: "Full: mean of the document-family means of page scores; errors and N/A excluded"},
+      ...(geo ? METRICS.geometry.filter(m => GEO_LEAD.includes(m[1])).map(m => ({...metricCol(m), tint: true})) : []),
       showNoOut && {key: "noout", label: "Without low", fmt: f4, higher: true, tint: true, title: "the same without the low-scoring page cases listed under Notes"},
       ...L.tiers.map(t => ({key: "tier:" + t, label: cap(t), fmt: f4, higher: true, tint: true, title: `family-weighted mean over the ${t} tier`})),
       {key: "pages", label: "Pages", fmt: fi, title: "pages with a score"},
       {key: "errors", label: "Err", fmt: fi, title: "rows recorded with an error"},
       L.data.some(r => r.unscored) && {key: "unscored", label: "Unscored", fmt: fi, title: "collected replies this run never scored"},
       L.data.some(r => r.pending) && {key: "pending", label: "Pending", fmt: fi, title: "rows awaiting a key review"},
-      ...METRICS[L.leg].map(([label, key, up]) => ({key: "m:" + key, label, fmt: f4, higher: up, countKey: "mn:" + key, title: `${key}: family-weighted mean over scored pages that record it`})),
+      ...METRICS[L.leg].filter(m => !(geo && GEO_LEAD.includes(m[1]))).map(metricCol),
       {key: "cost", label: XM.cost.label, fmt: XM.cost.fmt, higher: false, countKey: "cost_n", title: XM.cost.title},
       {key: "rec", label: XM.rec.label, fmt: XM.rec.fmt, higher: false, countKey: "rec_n", title: XM.rec.title},
     ].filter(Boolean);
@@ -570,6 +576,42 @@ const Results = (() => {
       ${L.leg === "text" ? judgePanel() : ""}
       ${notesPanel([L.leg])}`;
   }
+  // ---------- best per leg at scale: the leg table's own $/page and s/page, multiplied by a page volume ----------
+  const money = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  function duration(sec) {
+    if (sec == null) return "—";
+    if (sec < 60) return `${Math.round(sec)} sec`;
+    const mins = Math.round(sec / 60);
+    if (sec < 86400) return mins < 60 ? `${mins} min` : `${Math.floor(mins / 60)} hr${mins % 60 ? ` ${mins % 60} min` : ""}`;
+    const hrs = Math.round(sec / 3600), d = Math.floor(hrs / 24);
+    return `${d} day${d === 1 ? "" : "s"}${hrs % 24 ? ` ${hrs % 24} hr` : ""}`;
+  }
+  function scalePanel(Ls) {
+    const vol = +rf.vol || 1e6, top = +rf.top || 1, volText = (VOLUMES.find(v => +v[0] === vol) || [, String(vol)])[1];
+    const rows = [];
+    for (const l of D.legs) {
+      Ls[l].data.filter(r => isNum(r.score)).sort((a, b) => b.score - a.score || a.engine.localeCompare(b.engine)).slice(0, top)
+        .forEach((r, i) => rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec,
+          costAt: isNum(r.cost) ? r.cost * vol : null, timeAt: isNum(r.rec) ? r.rec * vol : null}));
+    }
+    const empty = D.legs.filter(l => !Ls[l].data.some(r => isNum(r.score)));
+    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
+    const maxCost = Math.max(0, ...rows.map(r => r.costAt || 0)), maxTime = Math.max(0, ...rows.map(r => r.timeAt || 0));
+    const bar = (v, max, text, cls) => `<div class="scale-cell"><span class="track"><span class="fill ${cls}" style="width:${max > 0 && v ? Math.max(v / max * 100, 0.6) : 0}%"></span></span><span class="val">${text}</span></div>`;
+    const body = rows.map(r => `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
+        <td data-v="${r.leg}">${r.rank === 1 ? esc(LEG_TITLES[r.leg]) : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
+        <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}</td>
+        <td data-v="${r.cost ?? ""}">${XM.cost.fmt(r.cost)}</td><td data-v="${r.rec ?? ""}">${XM.rec.fmt(r.rec)}</td>
+        <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}</td>
+        <td data-v="${r.timeAt ?? ""}">${bar(r.timeAt, maxTime, duration(r.timeAt), "time")}</td></tr>`).join("");
+    const heads = [["leg", "Leg"], ["engine", "Engine"], ["score", "Score"], ["cost", XM.cost.label], ["rec", XM.rec.label],
+      ["costAt", `Cost for ${volText} pages`], ["timeAt", `Time for ${volText} pages`]];
+    return `<div class="panel"><h3>Best per leg at scale — cost and time for ${esc(volText)} pages · ${esc(where)}</h3>
+        <p class="muted">Cost = ${esc(XM.cost.label)} × pages. Time = ${esc(XM.rec.label)} × pages, one call at a time or one warm GPU container at the measured throughput; running N workers in parallel divides the time by about N and leaves the cost the same. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced.</p>
+        <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("vol", VOLUMES, "pages")}${selectHTML("top", [["1", "best engine"], ["3", "top 3"], ["5", "top 5"]], "per leg")}</div>
+        <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
+        ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
+  }
   function overviewView(rows) {
     const Ls = cached("legs", () => Object.fromEntries(D.legs.map(l => [l, legData(l, rows)])));
     const engines = [...new Set(rows.filter(r => valid(r) || r.error).map(r => r.engine_name))].sort();
@@ -595,6 +637,7 @@ const Results = (() => {
     return `<div class="panel"><h3>At a glance — full scores per leg; bold marks the column's best</h3>
         <p class="muted">Each leg is scored on its own pages; no cross-leg blended score. Cost and time are the engine's primary pass; † marks a time taken from a batch that also ran other passes (hover for which). Click a column to sort.</p>
         ${table("glance", cols, data)}</div>
+      ${scalePanel(Ls)}
       <div class="panel"><h3>Cost and time per engine — recorded calls in this selection</h3>
         <p class="muted">Primary pass = one call per page ("default", else the text pass). All-passes figures add every pass the benchmark asked of the engine, so they depend on how many legs it was prompted for.</p>
         ${table("ops", opsCols, opsData)}</div>
@@ -618,7 +661,7 @@ const Results = (() => {
       update(rf.sort === key ? {dir: rf.dir === "asc" ? "desc" : "asc"} : {sort: key, dir: LOWER.has(key) ? "asc" : "desc"});
     });
     c.querySelectorAll("[data-o]").forEach(n => n.onchange = () => update({[n.dataset.o]: n.type === "checkbox" ? (n.checked ? "1" : "0") : n.value}));
-    c.querySelectorAll("table[data-table^='leg:'] tr[data-e], table[data-table='glance'] tr[data-e], table[data-table='ops'] tr[data-e], table[data-table^='families:'] tr[data-e], table[data-table='judge'] tr[data-e]").forEach(tr => {
+    c.querySelectorAll("table[data-table^='leg:'] tr[data-e], table[data-table='glance'] tr[data-e], table[data-table='ops'] tr[data-e], table[data-table='scale'] tr[data-e], table[data-table^='families:'] tr[data-e], table[data-table='judge'] tr[data-e]").forEach(tr => {
       tr.classList.add("link"); tr.ondblclick = () => go({view: "page", engine: tr.dataset.e, leg: rf.leg === "all" ? state.leg : rf.leg}); tr.title = "double-click to open this engine in the page view";
     });
     c.querySelectorAll("table[data-table^='pages:'] tr[data-e]").forEach(tr => tr.onclick = () => go({view: "page", engine: tr.dataset.e, doc: tr.dataset.d, leg: rf.leg}));
