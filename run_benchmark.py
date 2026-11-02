@@ -431,6 +431,51 @@ def sent_text(result) -> str | None:
             or metadata.get("prompt_used"))
 
 
+# Keys a Modal app echoes in its reply that the call file already holds under
+# its own name.
+_ECHOED_REPLY_FIELDS = {"raw_text": "raw_text", "structured_output": "structured_output",
+                        "prompt_used": "prompt_sent", "model_version": "model_version",
+                        "document_path": "document", "error": "error"}
+
+
+def compact_call_record(call: dict) -> dict:
+    """One copy of each thing in a call file.
+
+    Each layer used to record its own copy: the prompt sat in `prompt_sent`,
+    `sent.text`, `metadata.sent.text` and `raw_response.prompt_used`, the
+    reply in `raw_text` and `raw_response.raw_text`, and a schema in all of
+    those plus `json_schema` and `structured_output.response_format`. The
+    prompt text lives in `prompt_sent` only, `sent` keeps its provenance
+    fields, `raw_response` keeps only what the envelope does not already
+    hold, and the app's echo of the schema it applied is reduced to its type.
+    Nothing a scorer reads changes; files already on disk are rewritten by
+    the same rule.
+    """
+    call = dict(call)
+    metadata = dict(call.get("metadata") or {})
+    sent = call.get("sent") or metadata.get("sent")
+    if sent:
+        sent = dict(sent)
+        if call.get("prompt_sent") is None:
+            call["prompt_sent"] = sent.get("text")
+        if sent.get("text") == call.get("prompt_sent"):
+            sent.pop("text", None)
+        call["sent"] = sent
+    metadata.pop("sent", None)
+    call["metadata"] = metadata
+    raw = call.get("raw_response")
+    if isinstance(raw, dict):
+        call["raw_response"] = {
+            k: v for k, v in raw.items()
+            if not (k in _ECHOED_REPLY_FIELDS and v == call.get(_ECHOED_REPLY_FIELDS[k]))}
+    so = call.get("structured_output")
+    fmt = so.get("response_format") if isinstance(so, dict) else None
+    if (isinstance(fmt, dict) and call.get("json_schema") is not None
+            and fmt.get("json_schema") == call["json_schema"]):
+        call["structured_output"] = {**so, "response_format": {k: v for k, v in fmt.items() if k != "json_schema"}}
+    return call
+
+
 def _write_ocr_output(
     engine: str, doc_path: Path, gt, text: str, timestamp: str,
     pass_name: str, structured_output: dict | None = None,
@@ -466,6 +511,7 @@ def _write_ocr_output(
             "metadata": getattr(result, "metadata", None) or {},
             "raw_response": getattr(result, "raw_response", None) or {},
         }
+        envelope = compact_call_record(envelope)
         try:
             payload = json.dumps(envelope, ensure_ascii=False, indent=1, default=str)
         except Exception as exc:  # never lose a run over an exotic payload

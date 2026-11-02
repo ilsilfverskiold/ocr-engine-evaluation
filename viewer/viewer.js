@@ -318,9 +318,10 @@ function formatReply(text) {
 
 const sentRecord = call => call.sent || (call.metadata || {}).sent || null;
 const servedLegs = info => D.legs.filter(l => (info.scored_legs || []).includes(l));
-// Recorded markers in the saved reply that output was cut off.
+// Recorded markers in the saved reply that output was cut off. A Modal app's
+// finish_reason is kept once, in structured_output, so search both.
 function truncationHints(call) {
-  const blob = JSON.stringify(call.raw_response ?? {});
+  const blob = JSON.stringify([call.raw_response ?? {}, call.structured_output ?? {}]);
   return ['"finish_reason":"length"', '"stop_reason":"max_tokens"', '"finishReason":"MAX_TOKENS"', '"truncated":true']
     .filter(needle => blob.includes(needle));
 }
@@ -349,7 +350,7 @@ function callBlock(info, call, leg) {
     : /Extract schema/.test(sent.constraint || "") ? "Datalab Extract schema"
     : /response_format/.test(sent.constraint || "") ? "response_format (json_schema)" : null;
   const promptSent = (sentRecord(call)
-    ? (sent.text ? `<pre>${esc(sent.text)}</pre>`
+    ? ((sent.text ?? call.prompt_sent) ? `<pre>${esc((sent.text ?? call.prompt_sent))}</pre>`
       : `<p><b>${/^(none|no instruction|converter selector)/.test(sent.source || "") ? "No prompt text was sent." : "Prompt text not recorded."}</b> ${esc(sent.source)}</p>`)
     : call.prompt_sent ? `<p class="muted">prompt_sent, as recorded:</p><pre>${esc(call.prompt_sent)}</pre>`
     : '<p><b>No prompt.</b> <span class="muted">prompt_sent is null in this call file.</span></p>')
@@ -384,7 +385,7 @@ function promptByLeg(legCalls) {
     const fold = text => text.length <= 90 && !text.includes("\n") ? `<div>${esc(text)}</div>`
       : `<details><summary>${esc(text.slice(0, 90).replace(/\n/g, " "))}…</summary><pre>${esc(text)}</pre></details>`;
     if (!sent) return `<tr>${head}<td>${esc(call.pass_name)}</td><td>${call.prompt_sent ? `prompt_sent${fold(call.prompt_sent)}` : "none (prompt_sent is null)"}</td><td>response_format: ${esc(call.response_format ?? "null")}</td></tr>`;
-    return `<tr>${head}<td>${esc(call.pass_name)}</td><td>${esc(sent.source)}${sent.text ? fold(sent.text) : ""}</td><td>${esc(sent.constraint)}</td></tr>`;
+    return `<tr>${head}<td>${esc(call.pass_name)}</td><td>${esc(sent.source)}${(sent.text ?? call.prompt_sent) ? fold((sent.text ?? call.prompt_sent)) : ""}</td><td>${esc(sent.constraint)}</td></tr>`;
   }).join("");
   return `<table class="v tree"><tr><th>Leg</th><th>Call</th><th>Prompt received</th><th>Output constraint</th></tr>${rows}</table>`;
 }
