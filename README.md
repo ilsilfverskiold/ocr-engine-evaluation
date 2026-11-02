@@ -1,39 +1,35 @@
 # OCR Benchmark
 
-Compares OCR engines on six tasks: text, Markdown, tables, key/value
+OCR engines compared on six tasks: text, Markdown, tables, key/value
 extraction, supplied-schema extraction and geometry. **93 single-page
-documents · 17 engine configurations.** Every call, reply and reference the
-scores are computed from is saved in this repository, so each number can be
-inspected and recomputed.
+documents · 17 engine configurations · one published run.** Every call, reply
+and reference behind the scores is in this repository.
 
-- [Results](#results) · [Cost and latency](#cost-and-latency) ·
-  [Engines and versions](#engines-and-versions-tested) · [Documents](#documents)
-- [View the published results](#view-the-published-results)
-- [Run a new benchmark](#run-a-new-benchmark)
-- [How scoring works](#how-scoring-works)
+- [Results](#results), then [cost and latency](#cost-and-latency)
+- [How it was tested](#how-it-was-tested): engines and versions, documents, scoring
+- [View the results yourself](#view-the-results-yourself): terminal report and browser viewer
+- [Run the benchmark](#run-the-benchmark): with the engines here, or with an engine you add
 
 ## Results
 
 Published run `20261020T120222Z`. Each leg is a separate task with its own
-reference and score; there is no combined score across legs. Tables are
-sorted by overall score, highest first. Overall gives each document family
-equal weight. Easy, medium and hard are difficulty tiers. Pages counts
-successfully scored pages, Errors counts inference failures, and — means no
-score, not zero. CER (character error rate) and WER (word error rate) are
-lower-is-better and can exceed 1. A Without low column appears where excluding
-a page that every engine scored low (`chart_003` for key/value) changes the
-result; it is a sensitivity check, not a replacement ranking.
+reference; there is no combined score. Tables are sorted by Overall, highest
+first.
 
-Nine result rows are inference errors: eight Marker geometry pages and one
-DeepSeek-OCR schema page. They count as no score and are shown in the Errors
-columns. The scoring rules for every leg are in
-[public_docs/scoring-design.md](public_docs/scoring-design.md).
+- **Overall** weights every document family equally. Easy, Medium and Hard
+  are difficulty tiers.
+- **Pages** counts scored pages. **Errors** counts failed calls, which get no
+  score rather than zero; — also means no score.
+- **CER** and **WER**, character and word error rate, are lower-is-better and
+  can exceed 1.
+- Nine rows are inference errors: eight Marker geometry pages and one
+  DeepSeek-OCR schema page.
 
 ### Text accuracy
 
-Share of distinct normalized reference tokens the engine returned. CER/WER also
-count omissions, insertions and ordering; coverage ignores extra text. Scored on
-the 82 pages with reliable text references. No judge.
+Share of the reference's distinct words the engine returned, on the 82 pages
+with reliable text references. CER/WER also count order and extra text.
+[How text is scored](public_docs/scoring-design.md#text).
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | CER ↓ | WER ↓ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -52,17 +48,15 @@ the 82 pages with reliable text references. No judge.
 | `deepseek_ocr` | 0.8243 | 0.8910 | 0.7837 | 0.8458 | 82 | 0.2319 | 0.3298 |
 | `tesseract` | 0.7391 | 0.8682 | 0.7539 | 0.6874 | 82 | 0.3532 | 0.5126 |
 
-`mineru_pipeline` was run on the 17 geometry pages only; its text and Markdown
-scores on that subset (0.8599 and 0.6348) are not ranked against the full
-cohorts.
+`mineru_pipeline` ran on the 17 geometry pages only; its text and Markdown
+scores there, 0.8599 and 0.6348, are not ranked against the full set.
 
 ### Judged text (estimate)
 
-An estimate for the 11 hard pages without reliable text references: a model
-checks each output against a cached image-derived checklist. It is not a leg
-and is not combined with text accuracy or CER/WER. The published verdicts are
-cached and may include substring-matching errors. Engines without saved
-verdicts are omitted.
+The 11 hard pages without reliable text references: a model checks each output
+against a cached checklist built from the page image. This is an estimate, not
+a leg, and is not combined with text accuracy. The cached verdicts may include
+substring-matching errors; engines without saved verdicts are omitted.
 
 | Engine | Overall ↑ | Hard | Pages |
 | --- | --- | --- | --- |
@@ -79,10 +73,10 @@ verdicts are omitted.
 
 ### Markdown structure
 
-Correct structural elements plus half credit for partial matches; bold is not
-a heading. A cached model-authored checklist per page is shared by all engines
-and the answers are scored by code. CER/WER measure the rendered text
-separately.
+Correct structural elements, with half credit for partial matches; bold text
+is not a heading. One cached, model-written checklist per page is shared by
+all engines, and the answers are scored by code.
+[How Markdown is scored](public_docs/scoring-design.md#markdown).
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | CER ↓ | WER ↓ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -100,16 +94,11 @@ separately.
 
 ### Tables
 
-Value credit per reference cell against accepted gold tables, including
-returned blanks, checkbox states and partial text matches. Row and column
-associations matter; compatible reflow is allowed. A gold blank the engine
-returns no slot for, and the unprinted `Line / Description / Amount` header on
-the 1040 pages, are not counted. Numbers is the share of numeric gold cells
-(amounts, quantities, numeric identifiers) returned correct in place; Invented
-is the share of returned numeric cells printed nowhere on the page. Strict F1
-is cell-exact. Shipping pages use the better of the gold and original
-references for every engine. Sonnet and Gemini use a separate table-extraction
-call.
+Credit per reference cell; row and column associations matter, and partial
+text earns partial credit. **Numbers**: share of numeric reference cells
+returned correct in place. **Invented**: share of returned numbers printed
+nowhere on the page. **Strict F1**: exact cell match. Sonnet and Gemini use
+a separate table-extraction call. [How tables are scored](public_docs/scoring-design.md#tables).
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | Numbers ↑ | Invented ↓ | Strict F1 ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -128,10 +117,11 @@ call.
 
 ### Key/value extraction
 
-Correct values under eligible printed labels. Exact and cached matches are
-settled by code; ambiguous wording or split values go to a judge whose rulings
-are cached and reused. Unreturned blank reference fields are not counted;
-returned blanks and invented values are. Extra pairs are diagnostic.
+Correct values under the page's printed labels. Exact matches are settled by
+code; ambiguous wording or split values go to a judge whose cached rulings are
+reused. **Without low** leaves out `chart_003`, a page every engine scored
+low; it is a sensitivity check, not a ranking.
+[How key/value is scored](public_docs/scoring-design.md#keyvalue).
 
 | Engine | Overall ↑ | Without low ↑ | Easy | Medium | Hard | Pages |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -144,8 +134,8 @@ returned blanks and invented values are. Extra pairs are diagnostic.
 ### Supplied-schema extraction
 
 Correct values under the exact requested keys, with a penalty for extra or
-duplicate keys. Every engine receives the same frozen sample: 3,316 fields
-across 65 pages. No judge.
+duplicate keys. Every engine gets the same 3,316 fields across 65 pages. No
+judge. [How schema is scored](public_docs/scoring-design.md#schema).
 
 | Engine | Overall ↑ | Easy | Medium | Hard | Pages | Errors |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -159,14 +149,13 @@ across 65 pages. No judge.
 
 ### Geometry
 
-Word: share of reference units located, where the text matches and each box
-contains the other's centre. Receipts use lines; forms and financial tables use
-words. Line: both sides merged into visual lines with fuzzy text and the same
-containment rule, the fair number for engines that return one box per line.
-Block cov: share of reference words inside a returned block that contains their
-text, for engines that return layout blocks, read with the median words per
-box. Coarse boxes are never split into finer units. F1 penalizes extra boxes;
-CER/WER use the returned box text.
+**Word**: share of reference words, or lines on receipts, located with
+matching text where each box contains the other's centre. **Line**: the same
+after merging both sides into visual lines, the fair number for engines that
+return one box per line. **Block cov**: for engines that return layout blocks,
+share of reference words inside a block that contains their text; the bracket
+is the median words per block. F1 penalizes extra boxes.
+[How geometry is scored](public_docs/scoring-design.md#geometry).
 
 | Engine | Word ↑ | Line ↑ | Block cov (words/box) | Easy | Medium | Hard | Pages | F1 ↑ | CER ↓ | WER ↓ | Errors |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -187,18 +176,17 @@ CER/WER use the returned box text.
 | `qwen3_vl` | 0.0052 | 0.0282 | — | 0.0142 | — | 0.0007 | 17 | 0.0057 | 0.5342 | 0.6834 | 0 |
 
 `deepseek_ocr`, `mineru`, `paddleocr_vl`, `docling` and `llamaparse` return
-layout blocks rather than word boxes, so their Word scores are low and their
-block coverage is shown beside them. `mineru_pipeline` mixes line and
-whole-table boxes. `llamaparse_granular` is LlamaParse's word/line box option
-on the same parse tier, measured as its own configuration.
+layout blocks rather than word boxes, so read their Block cov.
+`llamaparse_granular` is LlamaParse's word and line box option, measured as
+its own configuration; `mineru_pipeline` mixes line and whole-table boxes.
 
 ## Cost and latency
 
-Based on the same **82 text-scored pages per engine**, scaled to the same
-document mix. Costs cover one inference pass. **Modal startup/shutdown is
-excluded**; Modal prices cover GPU processing only, and local CPU cost is
-unpriced.
-[Pricing sources and assumptions](public_docs/engines-and-pricing.md#pricing-audit).
+Per-page means over the same 82 text-scored pages, multiplied out to volume,
+for one inference pass. Modal figures are GPU processing only, without
+container startup or shutdown; local CPU engines are unpriced. Volume times
+assume sequential calls or one warm GPU container; parallel workers would be
+faster. [Pricing sources and assumptions](public_docs/engines-and-pricing.md#pricing-audit).
 
 ### Cost — lowest first
 
@@ -221,10 +209,6 @@ unpriced.
 
 ### Latency — fastest first
 
-Volume times assume **sequential API/local calls** or **one warm GPU container
-at measured batch throughput**. Parallel workers can shorten elapsed time;
-these are projections, not measured production runs.
-
 | Engine | Per page | 1,000 pages | 100,000 pages | 1 million pages |
 | --- | --- | --- | --- | --- |
 | `deepseek_ocr` | 1.08 sec | 18 min | 1 day 6 hr | 12 days 12 hr |
@@ -244,7 +228,7 @@ these are projections, not measured production runs.
 
 ### Geometry-only pipelines
 
-These configurations were measured on 17 pages, separately from text OCR.
+Measured on the 17 geometry pages.
 
 | Engine | USD/page | 1,000 pages | 100,000 pages | 1 million pages |
 | --- | --- | --- | --- | --- |
@@ -258,7 +242,9 @@ These configurations were measured on 17 pages, separately from text OCR.
 | `mineru_pipeline` | 2.62 sec | 44 min | 3 days 1 hr | 30 days 8 hr |
 | `llamaparse_granular` | 8.59 sec | 2 hr 23 min | 9 days 22 hr | 99 days 10 hr |
 
-## Engines and versions tested
+## How it was tested
+
+### Engines and versions
 
 The engine ID is the value `--engines` takes.
 
@@ -284,15 +270,13 @@ The engine ID is the value `--engines` takes.
 
 [Full version evidence, dependencies and limitations](public_docs/engines-and-pricing.md#engine-versions-and-provenance).
 
-## Documents
+### Documents
 
-Single-page images from public datasets. Ground-truth sidecars and accepted
-references are committed under `documents/`; the images are hosted on the
-HuggingFace dataset
-[`ilsilfverskiold/ocr-benchmark`](https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark)
-and fetched by `scripts/download_data.py`. Text references: **63 human + 19
-model-verified** pages. The remaining **11** use the judged-text estimate.
-Counts below show reference coverage per leg.
+93 single-page images from public datasets, hosted as the HuggingFace dataset
+[`ilsilfverskiold/ocr-benchmark`](https://huggingface.co/datasets/ilsilfverskiold/ocr-benchmark).
+References are committed under `documents/`. Text references are 63
+human-written and 19 model-verified pages; the other 11 use the judged-text
+estimate. The table shows reference coverage per leg.
 
 | Tier | Document family | Pages | Text | Judged | Markdown | Tables | KV | Schema | Geometry |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -317,66 +301,67 @@ Counts below show reference coverage per leg.
 Source IDs, image hashes and selection are in `documents/manifest.json`.
 [Dataset attribution and licences](public_docs/documents-and-licensing.md).
 
-## View the published results
+### Scoring
+
+| Leg | Question | Headline score |
+| --- | --- | --- |
+| [Text](public_docs/scoring-design.md#text) | Did the engine read the words? | Unique reference-token coverage |
+| [Markdown](public_docs/scoring-design.md#markdown) | Is the page structure right? | (correct + 0.5 × partial) / elements |
+| [Tables](public_docs/scoring-design.md#tables) | Are the table cells right? | Value credit / counted reference cells |
+| [Key/value](public_docs/scoring-design.md#keyvalue) | Did it pull the printed fields? | (correct + blank_ok) / counted fields |
+| [Schema](public_docs/scoring-design.md#schema) | Can it fill a given schema? | (correct + blank_ok) / (fields + extra fields) |
+| [Geometry](public_docs/scoring-design.md#geometry) | Are the boxes in the right place? | Located reference units / reference units |
+
+- [Scoring design](public_docs/scoring-design.md): for each leg, what is
+  asked, the reference, the scorer, normalisation and known issues; which engines take part; the retry
+  policy; averaging; the judged-text estimate; limitations.
+- [Engine configuration and pricing](public_docs/engines-and-pricing.md): the
+  exact model or version behind each engine ID, how certain each version is,
+  pricing sources and how cost and latency scale.
+- [Documents, references and licensing](public_docs/documents-and-licensing.md):
+  corpus layout, attribution and licences, reference provenance, and how to
+  add documents.
+
+## View the results yourself
+
+Set up once from the repository directory. Tested with Python 3.13.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ### Terminal report
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
 python run_benchmark.py --report current
 ```
 
-`current` is the newest complete, scored run under `results/runs/`. Its score
-ledger, `<run>_results.jsonl.gz`, is committed gzipped to stay under GitHub's
-file-size limit; the harness and the viewer read it as is. The report is
-rendered from the saved result rows; no credentials or model calls. Add
-`--legs text --report-sort cer` to sort the text leg by error rate, or
-`--report-details` for document-family breakdowns.
-
-### Saved calls
-
-Every call the published scores come from is under
-`results/ocr_outputs/reconciled_outputs/<tier>__<type>__<stem>/<engine>/<pass>.call.json`;
-each inference row names its file by `engine_name`, `document_path` and
-`pass_name`, or `source_pass_name` when the row was scored from another view of
-the same call or from a retried call. A `.call.json` holds the prompt or schema sent, the recorded settings, the full
-provider reply, the output the leg scored, cost and latency. One physical call
-scored as several views has one file per view (`default.call.json`,
-`default.tables.call.json`). Nothing else is kept: superseded attempts and the
-losing side of a retry are not in the repository.
-
-### Rescore with the current scorers
-
-```bash
-python run_benchmark.py --rescore current
-```
-
-Scores every saved output again with the scorers in this checkout and writes a
-new run; the source run is never modified. Markdown checklists, document-judge
-verdicts and key/value rulings are reused from the caches under `results/`.
-New paid key/value rulings are made only with `--allow-kv-judge` and
-`GOOGLE_API_KEY`; nothing refreshes document verdicts. A rescore writes a plain
-`_results.jsonl`; gzip it before committing.
+`current` is the newest scored run under `results/runs/`; in a fresh clone
+that is the published run. The report is rendered from the saved result rows:
+no credentials, no model calls. Add `--report-details` for document-family
+breakdowns, or `--legs text --report-sort cer` to rank one leg by another
+column. The score ledger is stored gzipped to stay under GitHub's file-size
+limit; the harness and the viewer read it as is.
 
 ### Browser viewer
 
-The viewer under `viewer/` shows every saved call, output, reference and
-verdict of the run `--report current` prints, and draws the geometry boxes on
-the page images. It is a static page with no build step and no copy of the
-data: it reads the files in this repository through a local web server,
-because browsers do not let a `file://` page read other local files.
+The viewer shows the comparison tables and charts, the best engine per leg
+with its cost and time at a chosen page volume, and for every engine, page and
+leg the prompt sent, the full reply, the output beside its reference, the
+scorer's verdict per item, and the geometry boxes drawn on the page at word,
+line and block level.
 
-1. Download the page images once. They are not in the repository; the
-   HuggingFace dataset is public, so no account or token is needed:
+1. Download the page images once. The HuggingFace dataset is public, so no
+   token is needed:
 
    ```bash
    python scripts/download_data.py
    ```
 
-2. Start a web server in the repository directory, the folder that holds
-   `results/` and `documents/`:
+2. Serve the repository directory, the folder that holds `results/` and
+   `documents/`:
 
    ```bash
    python -m http.server 8000
@@ -384,42 +369,37 @@ because browsers do not let a `file://` page read other local files.
 
 3. Open <http://localhost:8000/viewer/viewer.html>.
 
-Without step 1 the page still loads, but every page image is missing and the
-viewer says so in its place.
+The viewer is a static page that reads the repository's files, which is why it
+needs the web server. Without step 1 it loads but shows no page images.
+Markdown and HTML tables render with `marked` and `DOMPurify` from a CDN;
+offline they show as source text.
 
-- **Page view** (an engine, a page, a leg): the score and metrics as recorded;
-  the saved call with the prompt or schema that reached the engine, the
-  recorded settings, cost, latency and the full provider reply; the output the
-  leg is scored on beside its reference; and the scorer's verdict for every
-  reference item. Geometry draws the scored boxes on the page. A leg with no
-  row says "not recorded".
-- **Results view** (the first sidebar entry): the per-leg comparison tables
-  with every column of the terminal report, sortable; score against cost or
-  seconds per page; one mark per scored page; and means by document type. Tier
-  and document-type filters narrow every table. The numbers are recomputed in
-  the browser from the saved rows with the rules of `evaluation/reporting.py`;
-  nothing is re-scored.
+### Saved calls
 
-Markdown and HTML tables are rendered with `marked` and `DOMPurify` from a
-CDN; without network access they are shown as source text.
+Every call behind the published scores is saved as
+`results/ocr_outputs/reconciled_outputs/<tier>__<type>__<stem>/<engine>/<pass>.call.json`:
+the prompt or schema sent, the recorded settings, the provider reply, the
+output that was scored, cost and latency.
 
-## Run a new benchmark
+## Run the benchmark
+
+### With the engines here
 
 **1. Set up** from the repository directory:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp -n .env.example .env
 python scripts/download_data.py
 ```
 
-Add credentials for the engines you plan to run to `.env`; `.env.example`
-lists the variable for each engine. The download supplies the source images;
-references are included in the repository.
+The download fetches the page images from the HuggingFace dataset; references
+are in the repository. Add API keys for the engines you plan to run to `.env`;
+`.env.example` names the variable for each engine.
 
-**2. Select engines and legs, then preview** the calls without running them:
+**2. Preview** the calls without running them:
 
 ```bash
 python run_benchmark.py --engines mistral_ocr_4_1,docling --legs text,markdown,tables --skip-judge --dry-run
@@ -432,8 +412,8 @@ python run_benchmark.py --engines mistral_ocr_4_1,docling --legs text,markdown,t
 | `--tiers` | `easy,medium,hard`; omit for all tiers. |
 | `--docs` | Page IDs such as `invoice_000,sroie_000`; omit for all selected pages. |
 
-`--estimate` prints the expected cost and exits; `--check` verifies API keys
-and Modal deployments.
+`--estimate` prints the expected cost; `--check` verifies API keys and Modal
+deployments.
 
 **3. Run** by removing `--dry-run`. Hosted engines incur charges:
 
@@ -441,27 +421,24 @@ and Modal deployments.
 python run_benchmark.py --engines mistral_ocr_4_1,docling --legs text,markdown,tables --skip-judge
 ```
 
-The command saves outputs, evaluates them and prints the comparison.
-`--skip-judge` skips new judging, **not OCR**: uncached key/value reviews
-remain pending and pages without text references receive no new judged-text
-scores. To enable judging, omit it and set `GOOGLE_API_KEY`. The key/value
-judge allowance is `OCR_KV_JUDGE_BUDGET_USD` (default `$2`); it does not cap
-inference or judged text.
+The run saves every call, scores it and prints the comparison.
+`--skip-judge` skips new judge calls, not OCR: key/value items that need a
+ruling stay pending and the judged-text estimate is skipped. To judge, omit it
+and set `GOOGLE_API_KEY`; key/value judge spend is capped by
+`OCR_KV_JUDGE_BUDGET_USD`, default `$2`.
 
-**4. View your run later.** Replace `RUN_TIMESTAMP` with the timestamp the run
-printed:
+**4. Report your run** with the timestamp it printed:
 
 ```bash
 python run_benchmark.py --report RUN_TIMESTAMP
 ```
 
-The browser viewer opens the newest scored run, so once your run is scored it
-is the one `viewer/viewer.html` shows.
+The browser viewer opens the newest scored run, so it shows your run once it
+is scored.
 
-### Local and Modal setup
-
-Tesseract needs its system binary installed. For a Modal engine, deploy its app
-before step 2; for example:
+**Local and Modal engines.** Tesseract needs its system binary installed. A
+Modal engine needs its app deployed before step 2; deploying may incur build
+charges, and `--skip-smoke` skips the test inference:
 
 ```bash
 modal setup
@@ -469,30 +446,36 @@ python scripts/setup_modal.py
 python scripts/deploy_modal.py --apps glm_ocr --skip-smoke
 ```
 
-`--skip-smoke` skips test inference during deployment. Builds may still incur
-charges.
+### Add an engine
 
-## How scoring works
+Every command reads the engine registry in `engines.py`, so an engine is one
+runner and one registry entry.
 
-| Leg | Question | Headline score |
-| --- | --- | --- |
-| [Text](public_docs/scoring-design.md#text) | Did the engine read the words? | Unique reference-token coverage |
-| [Markdown](public_docs/scoring-design.md#markdown) | Is the page structure right? | (correct + 0.5 × partial) / elements |
-| [Tables](public_docs/scoring-design.md#tables) | Are the table cells right? | Value credit / counted reference cells |
-| [Key/value](public_docs/scoring-design.md#keyvalue) | Did it pull the printed fields? | (correct + blank_ok) / counted fields |
-| [Schema](public_docs/scoring-design.md#schema) | Can it fill a given schema? | (correct + blank_ok) / (fields + extra fields) |
-| [Geometry](public_docs/scoring-design.md#geometry) | Are the boxes in the right place? | Located reference units / reference units |
+1. **Runner.** Add `runners/<name>_runner.py` with a class that subclasses
+   `OCRRunner` from `runners/base.py` and returns an `OCRResult` from `run()`.
+   `runners/tesseract_runner.py` is the smallest example. An engine that
+   takes prompts sets `accepts_task = True` and receives an `OCRTask` with the
+   leg's prompt and, for schema, the JSON schema.
+2. **Registry entry.** Add an `EngineSpec` to `engines.py`: `kind` (`local`,
+   `cloud` or `modal`), the runner path, `required_env` for API keys,
+   `cost_per_page`, `native_legs` answered from the default output, and
+   `prompted_legs` that need the leg's prompt. `default=False` keeps it out of
+   the default engine list.
+3. **Self-hosted models** run on Modal: add `modal_apps/<name>_app.py`
+   exposing `run_ocr_batch`, modelled on an existing app, and point the entry
+   at it with `runner="runners.modal_runner:ModalRunner"`, `modal_app`,
+   `modal_class`, `modal_app_file`, `gpu_type` and `batch_size`. Deploy it
+   with `python scripts/deploy_modal.py --apps <name>`.
+4. **Run it** as above with `--engines <name>`, then report it beside the
+   published engines. The combined report refuses an engine and leg that
+   appear in both runs.
 
-- [Scoring design](public_docs/scoring-design.md): per leg, what is asked, the
-  reference, the scorer, normalisation and known issues; which engines take
-  part in each leg; the retry policy; averaging rules; the judged-text
-  estimate; published result limitations.
-- [Engine configuration and pricing](public_docs/engines-and-pricing.md): the
-  exact model or version behind each engine ID, how certain each version is,
-  the pricing sources and how to scale cost and latency.
-- [Documents, references and licensing](public_docs/documents-and-licensing.md):
-  corpus layout, per-dataset attribution and licences, reference provenance,
-  and how to add documents.
+   ```bash
+   python run_benchmark.py --report RUN_TIMESTAMP,20261020T120222Z
+   ```
+
+A newer version of a measured model is a new engine entry; changing an
+existing entry's model would invalidate its published results.
 
 ## License
 
