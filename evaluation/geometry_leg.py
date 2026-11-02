@@ -32,6 +32,12 @@ class GeometryScore:
     reference_lines: int = 0
     block_score: float | None = None         # block engines only (diagnostic)
     words_per_box: int | None = None
+    # Evidence for the Line and Block numbers, as scored: one entry per
+    # reference line / reference unit, plus the engine lines and blocks used.
+    line_matches: list[dict[str, Any]] = field(default_factory=list)
+    predicted_lines: list[dict[str, Any]] = field(default_factory=list)
+    block_matches: list[dict[str, Any]] = field(default_factory=list)
+    blocks: list[dict[str, Any]] = field(default_factory=list)
     worst_matches: list[dict[str, Any]] = field(default_factory=list)
     matches: list[dict[str, Any]] = field(default_factory=list)
     parsed_boxes: list[dict[str, Any]] = field(default_factory=list)
@@ -93,7 +99,11 @@ class GeometryScore:
                 "parsed_boxes": self.parsed_boxes, "scored_boxes": self.scored_boxes,
                 "parsed_box_coordinates": "xyxy after box-key decoding, before scale/axis correction; original keys remain in source call",
                 "scored_box_coordinates": "normalized xyxy after recorded scale/axis correction, before scope filtering/line merging; includes unmatched and excluded predictions",
-                "match_box_coordinates": "normalized xyxy after recorded scale/axis conversion"}
+                "match_box_coordinates": "normalized xyxy after recorded scale/axis conversion",
+                **({"line_matches": self.line_matches, "predicted_lines": self.predicted_lines}
+                   if self.line_matches else {}),
+                **({"block_matches": self.block_matches, "blocks": self.blocks}
+                   if self.block_matches else {})}
 
 
 def normalize_word(text: str) -> str:
@@ -450,7 +460,8 @@ def score_geometry(
                         "reference_bbox": ref["bbox"], "predicted_bbox": best["bbox"],
                         "predicted_text": best["text"]})
 
-    line_score, line_n = line_level_score(ref_words, pred_words)
+    line_evidence: dict[str, list] = {}
+    line_score, line_n = line_level_score(ref_words, pred_words, line_evidence)
     return GeometryScore(
         applicable=True,
         geometry_score=round(located / len(ref_words), 4),
@@ -475,12 +486,15 @@ def score_geometry(
         axes_swapped=axes_swapped,
         line_score=line_score,
         reference_lines=line_n,
+        line_matches=line_evidence.get("line_matches", []),
+        predicted_lines=line_evidence.get("predicted_lines", []),
         worst_matches=sorted(matches, key=lambda m: (m["hit"], m["iou"]))[:25],
         reference_repairs=gt.metadata.get("geometry_reference_repairs", {}) if gt else {},
     )
 
 
-def line_level_score(ref_words: list[dict], pred_words: list[dict]) -> tuple[float, int]:
+def line_level_score(ref_words: list[dict], pred_words: list[dict],
+                     evidence: dict | None = None) -> tuple[float, int]:
     """Second number, reported beside the word-level headline: the reference
     merged into visual lines (the same merge applied to predictions), each
     reference line paired with the engine's best line by fuzzy text (>= 0.7,
@@ -492,6 +506,9 @@ def line_level_score(ref_words: list[dict], pred_words: list[dict]) -> tuple[flo
 
     ref_lines = merge_words_into_lines(ref_words)
     pred_lines = merge_words_into_lines(pred_words)
+    if evidence is not None:
+        evidence["line_matches"], evidence["predicted_lines"] = [], [
+            {"text": pl["text"], "bbox": pl["bbox"]} for pl in pred_lines]
     if not ref_lines:
         return 0.0, 0
     used: set[int] = set()
@@ -506,9 +523,19 @@ def line_level_score(ref_words: list[dict], pred_words: list[dict]) -> tuple[flo
             if ratio > best_ratio:
                 best, best_ratio = i, ratio
         if best is None or best_ratio < 0.7:
+            if evidence is not None:
+                evidence["line_matches"].append({"text": rl["text"], "bbox": rl["bbox"], "hit": False,
+                                                 "predicted_text": None, "predicted_bbox": None,
+                                                 "similarity": None})
             continue
         used.add(best)
-        located += center_hit(rl["bbox"], pred_lines[best]["bbox"])
+        hit = center_hit(rl["bbox"], pred_lines[best]["bbox"])
+        located += hit
+        if evidence is not None:
+            evidence["line_matches"].append({"text": rl["text"], "bbox": rl["bbox"], "hit": hit,
+                                             "predicted_text": pred_lines[best]["text"],
+                                             "predicted_bbox": pred_lines[best]["bbox"],
+                                             "similarity": round(best_ratio, 4)})
     return round(located / len(ref_lines), 4), len(ref_lines)
 
 
@@ -552,10 +579,14 @@ def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) ->
         return x0 <= pt[0] <= x1 and y0 <= pt[1] <= y1
 
     located = 0
+    block_matches = []
     for ref in ref_words:
         cx, cy = (ref["bbox"][0] + ref["bbox"][2]) / 2, (ref["bbox"][1] + ref["bbox"][3]) / 2
-        if any(text_in(ref["text"], b["text"]) and inside(b["bbox"], (cx, cy)) for b in blocks):
-            located += 1
+        covering = next((i for i, b in enumerate(blocks)
+                         if text_in(ref["text"], b["text"]) and inside(b["bbox"], (cx, cy))), None)
+        located += covering is not None
+        block_matches.append({"text": ref["text"], "bbox": ref["bbox"],
+                              "covered": covering is not None, "block": covering})
     wpb = sorted(len(str(b["text"]).split()) for b in blocks)[len(blocks) // 2]
     return GeometryScore(
         applicable=False,
@@ -564,6 +595,8 @@ def score_blocks(blocks: list[dict], reference: Any, granularity: str | None) ->
         predicted_words=len(blocks),
         block_score=round(located / len(ref_words), 4),
         words_per_box=wpb,
+        block_matches=block_matches,
+        blocks=[{"text": b["text"], "bbox": b["bbox"]} for b in blocks],
         parse_ok=True,
     )
 

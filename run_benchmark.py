@@ -564,6 +564,7 @@ def score_leg(leg: str, engine: str, text: str, gt, structured_output: dict | No
             result = score_geometry(blocks, gt, infer_scale=False)
             result.block_score = diagnostic.block_score
             result.words_per_box = diagnostic.words_per_box
+            result.block_matches, result.blocks = diagnostic.block_matches, diagnostic.blocks
             result.prediction_granularity = "layout_block"
             result.reason = "actual layout boxes scored against reference units; no synthetic word boxes"
             return result
