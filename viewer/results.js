@@ -107,13 +107,15 @@ const Results = (() => {
       if (!valid(r)) continue;
       const call = callFor(r);
       if (!call) continue;
-      const a = acc[r.engine_name] ||= {cost: [], rec: []};
+      const a = acc[r.engine_name] ||= {cost: [], rec: [], tin: [], tout: []};
       const c = costOf(call), s = recorded(call);
       if (c != null) a.cost.push(c);
       if (s != null) a.rec.push(s);
+      if (isNum(call.input_tokens)) a.tin.push(call.input_tokens);
+      if (isNum(call.output_tokens)) a.tout.push(call.output_tokens);
     }
     const out = {};
-    for (const [e, a] of Object.entries(acc)) out[e] = {cost: mean(a.cost), rec: mean(a.rec), cost_n: a.cost.length, rec_n: a.rec.length};
+    for (const [e, a] of Object.entries(acc)) out[e] = {cost: mean(a.cost), rec: mean(a.rec), cost_n: a.cost.length, rec_n: a.rec.length, tin: mean(a.tin), tout: mean(a.tout)};
     return out;
   }
   // run_benchmark.engine_operational: the "primary" pass (one call per page) and all passes, per engine.
@@ -247,7 +249,7 @@ const Results = (() => {
         errors: rs.filter(r => r.error).length, unscored: rs.filter(r => r.unscored).length, pending: rs.filter(r => r.pending && !r.error).length};
       for (const t of tiers) row["tier:" + t] = meanMetric(rs.filter(r => r.tier === t));
       for (const [, key] of METRICS[leg]) { row["m:" + key] = meanMetric(rs, key); row["mn:" + key] = rs.filter(r => valid(r) && isNum(metricValue(r, key))).length; }
-      Object.assign(row, {cost: null, rec: null, cost_n: 0, rec_n: 0}, ops[e] || {});
+      Object.assign(row, {cost: null, rec: null, cost_n: 0, rec_n: 0, tin: null, tout: null}, ops[e] || {});
       return row;
     });
     return {leg, legRows, data, tiers, absent, buckets, pages: new Set(legRows.filter(valid).map(r => r.stem)).size};
@@ -586,28 +588,64 @@ const Results = (() => {
     const hrs = Math.round(sec / 3600), d = Math.floor(hrs / 24);
     return `${d} day${d === 1 ? "" : "s"}${hrs % 24 ? ` ${hrs % 24} hr` : ""}`;
   }
+  // reporting.parallel_rate: [pages per second, binding limit] at the engine's documented default limits.
+  function parallelRate(lim, secPerPage, tin, tout) {
+    lim = lim || {};
+    if (lim.requests_per_second) return [lim.requests_per_second, "requests_per_second"];
+    if (lim.requests_per_minute) {
+      const caps = [[lim.requests_per_minute / 60, "requests_per_minute"]];
+      if (lim.input_tokens_per_minute && tin) caps.push([lim.input_tokens_per_minute / 60 / tin, "input_tokens_per_minute"]);
+      if (lim.output_tokens_per_minute && tout) caps.push([lim.output_tokens_per_minute / 60 / tout, "output_tokens_per_minute"]);
+      return caps.reduce((a, b) => b[0] < a[0] ? b : a);
+    }
+    for (const key of ["concurrent_jobs", "concurrent_gpus"]) if (lim[key] && secPerPage) return [lim[key] / secPerPage, key];
+    return [null, null];
+  }
+  // reporting.parallel_seconds: a daily request cap binds only beyond one day's allowance.
+  function parallelSeconds(lim, pages, secPerPage, tin, tout) {
+    const [rate, by] = parallelRate(lim, secPerPage, tin, tout);
+    if (!rate) return [null, null, null];
+    const seconds = pages / rate, perDay = (lim || {}).requests_per_day;
+    if (perDay && pages > perDay && pages / perDay * 86400 > seconds) return [pages / perDay * 86400, "requests_per_day", rate];
+    return [seconds, by, rate];
+  }
+  const big = n => n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(0)}k` : String(n);
+  function limitText(lim, by, rate, rec) {
+    if (!by) return lim?.basis?.startsWith("local") ? "local: scales with CPU cores" : "no default limit declared";
+    const what = {requests_per_second: `${lim[by]} request${lim[by] === 1 ? "" : "s"}/s`, requests_per_minute: `${big(lim[by])} requests/min`,
+      input_tokens_per_minute: `${big(lim[by])} input tokens/min`, output_tokens_per_minute: `${big(lim[by])} output tokens/min`,
+      requests_per_day: `${big(lim[by])} requests/day`, concurrent_jobs: `${lim[by]} jobs at once`, concurrent_gpus: `${lim[by]} GPUs at once`}[by];
+    const text = by.startsWith("concurrent") || by === "requests_per_day" ? what : `${what} · about ${Math.round(rate * rec)} calls at once`;
+    return lim.basis?.startsWith("estimate") ? `${text} (estimate)` : text;
+  }
   function scalePanel(Ls) {
     const vol = +rf.vol || 1e6, top = +rf.top || 1, volText = (VOLUMES.find(v => +v[0] === vol) || [, String(vol)])[1];
     const rows = [];
     for (const l of D.legs) {
       Ls[l].data.filter(r => isNum(r.score)).sort((a, b) => b.score - a.score || a.engine.localeCompare(b.engine)).slice(0, top)
-        .forEach((r, i) => rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec,
-          costAt: isNum(r.cost) ? r.cost * vol : null, timeAt: isNum(r.rec) ? r.rec * vol : null}));
+        .forEach((r, i) => {
+          const lim = D.limits?.[r.engine], [parAt, by, rate] = parallelSeconds(lim, vol, r.rec, r.tin, r.tout);
+          rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec,
+            costAt: isNum(r.cost) ? r.cost * vol : null, timeAt: isNum(r.rec) ? r.rec * vol : null,
+            parAt, limit: limitText(lim, by, rate, r.rec), basis: lim ? `${lim.basis}${lim.source ? ` · ${lim.source}` : ""}` : "no default_limits in engines.py"});
+        });
     }
     const empty = D.legs.filter(l => !Ls[l].data.some(r => isNum(r.score)));
     const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
-    const maxCost = Math.max(0, ...rows.map(r => r.costAt || 0)), maxTime = Math.max(0, ...rows.map(r => r.timeAt || 0));
+    const maxCost = Math.max(0, ...rows.map(r => r.costAt || 0)), maxTime = Math.max(0, ...rows.map(r => r.timeAt || 0)),
+      maxPar = Math.max(0, ...rows.map(r => r.parAt || 0));
     const bar = (v, max, text, cls) => `<div class="scale-cell"><span class="track"><span class="fill ${cls}" style="width:${max > 0 && v ? Math.max(v / max * 100, 0.6) : 0}%"></span></span><span class="val">${text}</span></div>`;
     const body = rows.map(r => `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
         <td data-v="${r.leg}">${r.rank === 1 ? esc(LEG_TITLES[r.leg]) : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
         <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}</td>
         <td data-v="${r.cost ?? ""}">${XM.cost.fmt(r.cost)}</td><td data-v="${r.rec ?? ""}">${XM.rec.fmt(r.rec)}</td>
         <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}</td>
-        <td data-v="${r.timeAt ?? ""}">${bar(r.timeAt, maxTime, duration(r.timeAt), "time")}</td></tr>`).join("");
+        <td data-v="${r.timeAt ?? ""}">${bar(r.timeAt, maxTime, duration(r.timeAt), "time")}</td>
+        <td data-v="${r.parAt ?? ""}" title="${esc(r.basis)}">${bar(r.parAt, maxPar, duration(r.parAt), "time")}<div class="muted limit">${esc(r.limit)}</div></td></tr>`).join("");
     const heads = [["leg", "Leg"], ["engine", "Engine"], ["score", "Score"], ["cost", XM.cost.label], ["rec", XM.rec.label],
-      ["costAt", `Cost for ${volText} pages`], ["timeAt", `Time for ${volText} pages`]];
+      ["costAt", `Cost for ${volText} pages`], ["timeAt", "Time, one at a time"], ["parAt", "Time in parallel at default limits"]];
     return `<div class="panel"><h3>Best per leg at scale — cost and time for ${esc(volText)} pages · ${esc(where)}</h3>
-        <p class="muted">Cost = ${esc(XM.cost.label)} × pages. Time = ${esc(XM.rec.label)} × pages, one call at a time or one warm GPU container at the measured throughput; running N workers in parallel divides the time by about N and leaves the cost the same. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced.</p>
+        <p class="muted">Cost = ${esc(XM.cost.label)} × pages; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced.</p>
         <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("vol", VOLUMES, "pages")}${selectHTML("top", [["1", "best engine"], ["3", "top 3"], ["5", "top 5"]], "per leg")}</div>
         <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
         ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;

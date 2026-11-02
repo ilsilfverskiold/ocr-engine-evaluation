@@ -85,7 +85,7 @@ const progress = text => { el("content").innerHTML = `<div class="empty">${esc(t
 // Scalars only: the Results view aggregates scores, metrics, cost and time; it never reads detail or replies.
 const CALL_FIELDS = ["engine_name", "pass_name", "legs", "latency_seconds", "steady_latency_seconds",
   "cost_per_page", "steady_cost_per_page", "measurement_scope", "batch_id", "error", "source_timestamp", "source_pass_name",
-  "timestamp", "gpu_type", "is_cold_start", "document_path"];
+  "timestamp", "gpu_type", "is_cold_start", "document_path", "input_tokens", "output_tokens"];
 function slimCall(r) {
   const c = {};
   for (const k of CALL_FIELDS) if (k in r) c[k] = r[k];
@@ -161,7 +161,32 @@ async function load() {
   }
   docs = Object.keys(D.docs).sort();
   engines = [...new Set(rows.map(r => r.engine_name))].sort();
+  D.limits = parseLimits((await getText(new URL("engines.py", ROOT))) || "");
   Results.init();
+}
+
+// Each engine's default_limits as written in engines.py: a JSON-style dict, or the name of a shared one.
+function parseLimits(text) {
+  const literal = from => {
+    const start = text.indexOf("{", from);
+    for (let j = start, depth = 0, inStr = false; start >= 0 && j < text.length; j++) {
+      const ch = text[j];
+      if (inStr) { if (ch === "\\") j++; else if (ch === '"') inStr = false; continue; }
+      if (ch === '"') inStr = true; else if (ch === "{") depth++; else if (ch === "}" && --depth === 0) return JSON.parse(text.slice(start, j + 1));
+    }
+    return null;
+  };
+  const out = {};
+  for (const m of text.matchAll(/^    "([\w.-]+)": EngineSpec\(/gm)) {
+    const end = text.indexOf("\n    ),", m.index), block = text.slice(m.index, end < 0 ? undefined : end);
+    const v = /default_limits=(\{|[A-Za-z_]\w*)/.exec(block);
+    if (!v) continue;
+    try {
+      const at = v[1] === "{" ? m.index + v.index : new RegExp(`^${v[1]} = \\{`, "m").exec(text)?.index;
+      out[m[1]] = at == null ? null : literal(at);
+    } catch { out[m[1]] = null; }
+  }
+  return out;
 }
 
 // Where a row's call is saved: the ledger names the folder (source_timestamp) and file (source_pass_name).

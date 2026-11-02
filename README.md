@@ -184,9 +184,8 @@ its own configuration; `mineru_pipeline` mixes line and whole-table boxes.
 
 Per-page means over the same 82 text-scored pages, multiplied out to volume,
 for one inference pass. Modal figures are GPU processing only, without
-container startup or shutdown; local CPU engines are unpriced. Volume times
-assume sequential calls or one warm GPU container; parallel workers would be
-faster. [Pricing sources and assumptions](public_docs/engines-and-pricing.md#pricing-audit).
+container startup or shutdown; local CPU engines are unpriced.
+[Pricing sources and assumptions](public_docs/engines-and-pricing.md#pricing-audit).
 
 ### Cost — lowest first
 
@@ -209,22 +208,31 @@ faster. [Pricing sources and assumptions](public_docs/engines-and-pricing.md#pri
 
 ### Latency — fastest first
 
-| Engine | Per page | 1,000 pages | 100,000 pages | 1 million pages |
-| --- | --- | --- | --- | --- |
-| `deepseek_ocr` | 1.08 sec | 18 min | 1 day 6 hr | 12 days 12 hr |
-| `mineru` | 1.13 sec | 19 min | 1 day 7 hr | 13 days 1 hr |
-| `paddleocr_vl` | 1.37 sec | 23 min | 1 day 14 hr | 15 days 20 hr |
-| `marker` | 1.69 sec | 28 min | 1 day 23 hr | 19 days 13 hr |
-| `glm_ocr` | 1.76 sec | 29 min | 2 days 1 hr | 20 days 10 hr |
-| `tesseract` | 2.38 sec | 40 min | 2 days 18 hr | 27 days 13 hr |
-| `mistral_ocr_4_1` | 3.85 sec | 1 hr 4 min | 4 days 11 hr | 44 days 13 hr |
-| `gemini_flash` | 4.06 sec | 1 hr 8 min | 4 days 17 hr | 47 days |
-| `textract_text` | 4.73 sec | 1 hr 19 min | 5 days 11 hr | 54 days 17 hr |
-| `qwen3_vl` | 5.38 sec | 1 hr 30 min | 6 days 5 hr | 62 days 7 hr |
-| `textract_structured` | 7.08 sec | 1 hr 58 min | 8 days 5 hr | 81 days 23 hr |
-| `claude_sonnet_4_6` | 18.27 sec | 5 hr 4 min | 21 days 3 hr | 211 days 11 hr |
-| `llamaparse` | 21.88 sec | 6 hr 5 min | 25 days 8 hr | 253 days 7 hr |
-| `docling` | 24.84 sec | 6 hr 54 min | 28 days 17 hr | 287 days 11 hr |
+The volume columns run one page at a time: sequential calls, or one warm GPU
+container at its measured throughput. The parallel columns run as many pages at
+once as each provider's default limits allow a standard paid account with no
+increase requested: AWS Textract quotas in US East, Anthropic's Start tier,
+LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Gemini and
+Mistral publish no default limits, so theirs are marked estimates. Local
+engines scale with your CPU cores. Cost is the same either way.
+[Limits, sources and caveats](public_docs/engines-and-pricing.md#scaling-latency-in-parallel).
+
+| Engine | Per page | 1,000 pages | 100,000 pages | 1 million pages | Parallel limit | 1 million pages in parallel |
+| --- | --- | --- | --- | --- | --- | --- |
+| `deepseek_ocr` | 1.08 sec | 18 min | 1 day 6 hr | 12 days 12 hr | 10 GPUs at once | 1 day 6 hr |
+| `mineru` | 1.13 sec | 19 min | 1 day 7 hr | 13 days 1 hr | 10 GPUs at once | 1 day 7 hr |
+| `paddleocr_vl` | 1.37 sec | 23 min | 1 day 14 hr | 15 days 20 hr | 10 GPUs at once | 1 day 14 hr |
+| `marker` | 1.69 sec | 28 min | 1 day 23 hr | 19 days 13 hr | 10 GPUs at once | 1 day 23 hr |
+| `glm_ocr` | 1.76 sec | 29 min | 2 days 1 hr | 20 days 10 hr | 10 GPUs at once | 2 days 1 hr |
+| `tesseract` | 2.38 sec | 40 min | 2 days 18 hr | 27 days 13 hr | Local: your CPU cores | — |
+| `mistral_ocr_4_1` | 3.85 sec | 1 hr 4 min | 4 days 11 hr | 44 days 13 hr | 1 request/s, about 4 at once (estimate) | 11 days 14 hr |
+| `gemini_flash` | 4.06 sec | 1 hr 8 min | 4 days 17 hr | 47 days | 150k requests/day (estimate) | 6 days 16 hr |
+| `textract_text` | 4.73 sec | 1 hr 19 min | 5 days 11 hr | 54 days 17 hr | 25 requests/s, about 118 at once | 11 hr 7 min |
+| `qwen3_vl` | 5.38 sec | 1 hr 30 min | 6 days 5 hr | 62 days 7 hr | 10 GPUs at once | 6 days 5 hr |
+| `textract_structured` | 7.08 sec | 1 hr 58 min | 8 days 5 hr | 81 days 23 hr | 10 requests/s, about 71 at once | 1 day 4 hr |
+| `claude_sonnet_4_6` | 18.27 sec | 5 hr 4 min | 21 days 3 hr | 211 days 11 hr | 400k output tokens/min, about 169 at once | 1 day 6 hr |
+| `llamaparse` | 21.88 sec | 6 hr 5 min | 25 days 8 hr | 253 days 7 hr | 5 jobs at once | 50 days 16 hr |
+| `docling` | 24.84 sec | 6 hr 54 min | 28 days 17 hr | 287 days 11 hr | Local: your CPU cores | — |
 
 ### Geometry-only pipelines
 
@@ -236,11 +244,11 @@ Measured on the 17 geometry pages.
 | `mineru_pipeline` | $0.000430 | $0.43 | $42.98 | $429.84 |
 | `llamaparse_granular` | $0.003750 | $3.75 | $375.00 | $3,750.00 |
 
-| Engine | Per page | 1,000 pages | 100,000 pages | 1 million pages |
-| --- | --- | --- | --- | --- |
-| `paddleocr_ppocrv5` | 0.88 sec | 15 min | 1 day | 10 days 3 hr |
-| `mineru_pipeline` | 2.62 sec | 44 min | 3 days 1 hr | 30 days 8 hr |
-| `llamaparse_granular` | 8.59 sec | 2 hr 23 min | 9 days 22 hr | 99 days 10 hr |
+| Engine | Per page | 1,000 pages | 100,000 pages | 1 million pages | Parallel limit | 1 million pages in parallel |
+| --- | --- | --- | --- | --- | --- | --- |
+| `paddleocr_ppocrv5` | 0.88 sec | 15 min | 1 day | 10 days 3 hr | 10 GPUs at once | 1 day |
+| `mineru_pipeline` | 2.62 sec | 44 min | 3 days 1 hr | 30 days 8 hr | 10 GPUs at once | 3 days 1 hr |
+| `llamaparse_granular` | 8.59 sec | 2 hr 23 min | 9 days 22 hr | 99 days 10 hr | 5 jobs at once | 19 days 21 hr |
 
 ## How it was tested
 

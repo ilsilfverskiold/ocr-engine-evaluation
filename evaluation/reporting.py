@@ -122,6 +122,7 @@ def _operations(records, inference):
     index = {(r['engine_name'], r['document_path'], r.get('pass_name') or 'default'): r
              for r in inference if not r.get('error')}
     costs, times = defaultdict(list), defaultdict(list)
+    tokens_in, tokens_out = defaultdict(list), defaultdict(list)
     for row in records:
         if not valid(row):
             continue
@@ -136,10 +137,49 @@ def _operations(records, inference):
                 value = call.get(fallback)
             if isinstance(value, (int, float)) and math.isfinite(value):
                 target[engine].append(value)
-    return {e: {'cost': sum(costs[e])/len(costs[e]) if costs[e] else None,
-                'latency': sum(times[e])/len(times[e]) if times[e] else None,
-                'cost_n': len(costs[e]), 'latency_n': len(times[e])}
+        for target, key in [(tokens_in, 'input_tokens'), (tokens_out, 'output_tokens')]:
+            if isinstance(call.get(key), (int, float)):
+                target[engine].append(call[key])
+    mean = lambda xs: sum(xs)/len(xs) if xs else None
+    return {e: {'cost': mean(costs[e]), 'latency': mean(times[e]),
+                'cost_n': len(costs[e]), 'latency_n': len(times[e]),
+                'input_tokens': mean(tokens_in[e]), 'output_tokens': mean(tokens_out[e])}
             for e in {r['engine_name'] for r in records}}
+
+
+def parallel_rate(limits, seconds_per_page, input_tokens=None, output_tokens=None):
+    """(pages per second, binding limit) at an engine's default limits
+    (EngineSpec.default_limits), or (None, None) when it declares none.
+
+    A request or token rate caps throughput directly; concurrent jobs or GPUs
+    each process one page per recorded second-per-page. A daily request cap is
+    applied by parallel_seconds, since it only binds beyond one day's allowance.
+    """
+    limits = limits or {}
+    if limits.get('requests_per_second'):
+        return float(limits['requests_per_second']), 'requests_per_second'
+    if limits.get('requests_per_minute'):
+        caps = [(limits['requests_per_minute'] / 60, 'requests_per_minute')]
+        for key, used in (('input_tokens_per_minute', input_tokens), ('output_tokens_per_minute', output_tokens)):
+            if limits.get(key) and used:
+                caps.append((limits[key] / 60 / used, key))
+        return min(caps)
+    for key in ('concurrent_jobs', 'concurrent_gpus'):
+        if limits.get(key) and seconds_per_page:
+            return limits[key] / seconds_per_page, key
+    return None, None
+
+
+def parallel_seconds(limits, pages, seconds_per_page, input_tokens=None, output_tokens=None):
+    """(seconds, binding limit) to run `pages` at the default limits, or (None, None)."""
+    rate, by = parallel_rate(limits, seconds_per_page, input_tokens, output_tokens)
+    if not rate:
+        return None, None
+    seconds = pages / rate
+    per_day = (limits or {}).get('requests_per_day')
+    if per_day and pages > per_day and pages / per_day * 86400 > seconds:
+        return pages / per_day * 86400, 'requests_per_day'
+    return seconds, by
 
 
 def print_report(rows, inference, log, legs, *, sort_by='score', details=False):

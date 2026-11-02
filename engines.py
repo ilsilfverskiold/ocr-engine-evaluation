@@ -61,6 +61,13 @@ class EngineSpec:
     # a rescore scores them from the saved reply instead of needing a new call.
     # Every other stored pass keeps exactly the legs it was saved for.
     default_pass_added_legs: tuple[str, ...] = ()
+    # Default account limits that cap how many pages run at once, as each
+    # provider documents them for a standard paid account with no requested
+    # increase (checked 2026-11-02). Only used to project time at volume:
+    # requests_per_second, requests/input_tokens/output_tokens_per_minute,
+    # requests_per_day, concurrent_jobs or concurrent_gpus, with the basis and
+    # its source; a basis starting "estimate:" marks a limit not published.
+    default_limits: dict | None = None
 
     def response_format_for(self, leg: str, needs_schema: bool) -> str | None:
         """The provider response format for this engine on this leg."""
@@ -90,11 +97,17 @@ class EngineSpec:
 # single default conversion call — see docs/scoring-design.md "Two passes".
 _CONVERSION_LEGS = ("text", "markdown", "tables")
 
+# Account-level limits shared by several engines (see EngineSpec.default_limits).
+_MODAL_STARTER = {"concurrent_gpus": 10, "basis": "Modal Starter plan: 10 GPUs at once, one per container", "source": "https://modal.com/pricing"}
+_LLAMACLOUD_STARTER = {"concurrent_jobs": 5, "basis": "LlamaCloud Starter plan: 5 parse and 5 extract jobs at once", "source": "https://www.llamaindex.ai/pricing"}
+_LOCAL = {"basis": "local: as many pages at once as your CPU cores allow"}
+
 ENGINES: dict[str, EngineSpec] = {
     # --- Local (free, no keys) --------------------------------------------
     "tesseract": EngineSpec(
         name="tesseract", kind="local",
         runner="runners.tesseract_runner:TesseractRunner",
+        default_limits=_LOCAL,
         cost_notes="local, free",
         native_legs=("text", "geometry"),
         leg_notes="flat text only: no markdown, no table structure, no prompt",
@@ -102,6 +115,7 @@ ENGINES: dict[str, EngineSpec] = {
     "docling": EngineSpec(
         name="docling", kind="local",
         runner="runners.docling_runner:DoclingRunner",
+        default_limits=_LOCAL,
         cost_notes="local, free",
         # geometry added 2026-10-20: every export carries prov[0].bbox per
         # text item and table (bottom-left origin, page size recorded);
@@ -116,6 +130,7 @@ ENGINES: dict[str, EngineSpec] = {
     "textract_text": EngineSpec(
         name="textract_text", kind="cloud",
         runner="runners.textract_text_runner:TextractTextRunner",
+        default_limits={"requests_per_second": 25, "basis": "AWS default quota for DetectDocumentText, US East (N. Virginia)", "source": "https://docs.aws.amazon.com/general/latest/gr/textract.html"},
         required_env=("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"),
         cost_per_page=0.0015,
         native_legs=("text", "geometry"),
@@ -124,6 +139,7 @@ ENGINES: dict[str, EngineSpec] = {
     "textract_structured": EngineSpec(
         name="textract_structured", kind="cloud",
         runner="runners.textract_structured_runner:TextractStructuredRunner",
+        default_limits={"requests_per_second": 10, "basis": "AWS default quota for AnalyzeDocument, US East (N. Virginia)", "source": "https://docs.aws.amazon.com/general/latest/gr/textract.html"},
         required_env=("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"),
         cost_per_page=0.065,
         cost_notes="AnalyzeDocument TABLES+FORMS",
@@ -137,6 +153,7 @@ ENGINES: dict[str, EngineSpec] = {
     "mistral_ocr_4_1": EngineSpec(
         name="mistral_ocr_4_1", kind="cloud",
         runner="runners.mistral_runner:MistralOCRRunner",
+        default_limits={"requests_per_second": 1, "basis": "estimate: Mistral publishes no default; accounts start on the lowest limits and prepaying credits does not raise them, assumed 1 request per second (a third-party guide reports 5)", "source": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them"},
         required_env=("MISTRAL_API_KEY",),
         cost_per_page=0.004,
         native_legs=_CONVERSION_LEGS,
@@ -156,6 +173,7 @@ ENGINES: dict[str, EngineSpec] = {
     "llamaparse": EngineSpec(
         name="llamaparse", kind="cloud",
         runner="runners.llamaparse_runner:LlamaParseRunner",
+        default_limits=_LLAMACLOUD_STARTER,
         required_env=("LLAMA_CLOUD_API_KEY",),
         cost_per_page=0.00375,
         cost_notes="cost_effective tier: 3 credits × $1.25/1K; free tier: 10K credits/mo",
@@ -177,6 +195,7 @@ ENGINES: dict[str, EngineSpec] = {
     "llamaparse_granular": EngineSpec(
         name="llamaparse_granular", kind="cloud",
         runner="runners.llamaparse_runner:LlamaParseGranularRunner",
+        default_limits=_LLAMACLOUD_STARTER,
         required_env=("LLAMA_CLOUD_API_KEY",),
         cost_per_page=0.00375,
         cost_notes="cost_effective tier: 3 credits × $1.25/1K; granular_bboxes "
@@ -194,6 +213,7 @@ ENGINES: dict[str, EngineSpec] = {
     "gemini_flash": EngineSpec(
         name="gemini_flash", kind="cloud",
         runner="runners.gemini_runner:GeminiRunner",
+        default_limits={"requests_per_minute": 4000, "input_tokens_per_minute": 4000000, "requests_per_day": 150000, "basis": "estimate: Tier 1 values for Gemini 3.1 Flash-Lite from an undated third-party table; Google shows each project's limits only in AI Studio", "source": "https://www.scriptbyai.com/gemini-api-rate-limits/"},
         required_env=("GOOGLE_API_KEY",),
         cost_per_page=0.0007,
         cost_notes="variable — token-based",
@@ -206,6 +226,7 @@ ENGINES: dict[str, EngineSpec] = {
     "claude_sonnet_4_6": EngineSpec(
         name="claude_sonnet_4_6", kind="cloud",
         runner="runners.claude_runner:ClaudeRunner",
+        default_limits={"requests_per_minute": 1000, "input_tokens_per_minute": 2000000, "output_tokens_per_minute": 400000, "basis": "Anthropic Start tier, Sonnet 4.x (spend capped at $500 a month)", "source": "https://platform.claude.com/docs/en/api/rate-limits"},
         required_env=("ANTHROPIC_API_KEY",),
         cost_per_page=0.012,
         cost_notes="variable — token-based",
@@ -220,6 +241,7 @@ ENGINES: dict[str, EngineSpec] = {
     "mineru": EngineSpec(
         name="mineru", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.000922, cost_notes="Modal A100-80GB; measured batch estimate",
         modal_app="ocr-bench-mineru", modal_class="MinerUInference",
         modal_app_file="modal_apps/mineru_app.py",
@@ -242,6 +264,7 @@ ENGINES: dict[str, EngineSpec] = {
     "glm_ocr": EngineSpec(
         name="glm_ocr", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.000617, cost_notes="Modal A10; measured batch estimate",
         modal_app="ocr-bench-glm-ocr", modal_class="GLMOCRInference",
         modal_app_file="modal_apps/glm_ocr_app.py",
@@ -279,6 +302,7 @@ ENGINES: dict[str, EngineSpec] = {
     "paddleocr_vl": EngineSpec(
         name="paddleocr_vl", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.001411, cost_notes="Modal A100-80GB; measured batch estimate",
         modal_app="ocr-bench-paddleocr-vl", modal_class="PaddleOCRVLInference",
         modal_app_file="modal_apps/paddleocr_vl_app.py",
@@ -299,6 +323,7 @@ ENGINES: dict[str, EngineSpec] = {
     "marker": EngineSpec(
         name="marker", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.001420, cost_notes="Modal A100-80GB; measured batch estimate",
         modal_app="ocr-bench-marker", modal_class="MarkerInference",
         modal_app_file="modal_apps/marker_app.py",
@@ -326,6 +351,7 @@ ENGINES: dict[str, EngineSpec] = {
     "deepseek_ocr": EngineSpec(
         name="deepseek_ocr", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.000975, cost_notes="Modal A100-80GB; measured batch estimate",
         modal_app="ocr-bench-deepseek-ocr", modal_class="DeepSeekOCRInference",
         modal_app_file="modal_apps/deepseek_ocr_app.py",
@@ -363,6 +389,7 @@ ENGINES: dict[str, EngineSpec] = {
     "qwen3_vl": EngineSpec(
         name="qwen3_vl", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.004113, cost_notes="Modal A100-80GB; measured batch estimate",
         modal_app="ocr-bench-qwen3-vl", modal_class="Qwen3VLInference",
         modal_app_file="modal_apps/qwen3_vl_app.py",
@@ -408,6 +435,7 @@ ENGINES: dict[str, EngineSpec] = {
     "paddleocr_ppocrv5": EngineSpec(
         name="paddleocr_ppocrv5", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.0,
         cost_notes="unmeasured; Modal A10 GPU-seconds, sequential pages",
         modal_app="ocr-bench-paddleocr-ppocrv5", modal_class="PaddleOCRv5Inference",
@@ -423,6 +451,7 @@ ENGINES: dict[str, EngineSpec] = {
     "mineru_pipeline": EngineSpec(
         name="mineru_pipeline", kind="modal",
         runner="runners.modal_runner:ModalRunner",
+        default_limits=_MODAL_STARTER,
         cost_per_page=0.0,
         cost_notes="unmeasured; Modal T4 GPU-seconds, one pipeline_doc_analyze "
                    "call per chunk",

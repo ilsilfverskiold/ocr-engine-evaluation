@@ -127,3 +127,38 @@ container at measured batch throughput. Startup/shutdown is excluded.
 Parallelism, rate limits and document mix change elapsed time; these projections
 are not measured production completion times. Durations round to minutes below
 one day and hours above it.
+
+### Scaling latency in parallel
+
+Hosted APIs and Modal accept many pages at once, up to an account limit. The
+README's parallel column and the viewer's best-per-leg panel use each
+provider's default limit for a standard paid account with no increase
+requested, declared as `default_limits` in `engines.py` (checked 2026-11-02):
+
+| Engine | Default limit | Basis |
+| --- | --- | --- |
+| `textract_text` | 25 requests per second | AWS default quota for DetectDocumentText, US East (N. Virginia). [Quotas](https://docs.aws.amazon.com/general/latest/gr/textract.html) |
+| `textract_structured` | 10 requests per second | AWS default quota for AnalyzeDocument, US East (N. Virginia). [Quotas](https://docs.aws.amazon.com/general/latest/gr/textract.html) |
+| `claude_sonnet_4_6` | 1,000 requests, 2M input tokens and 400k output tokens per minute | Anthropic Start tier, Sonnet 4.x. [Rate limits](https://platform.claude.com/docs/en/api/rate-limits) |
+| `llamaparse`, `llamaparse_granular` | 5 parse and 5 extract jobs at once | LlamaCloud Starter plan. [Pricing](https://www.llamaindex.ai/pricing) |
+| Modal engines | 10 GPUs at once, one per container | Modal Starter plan. [Pricing](https://modal.com/pricing) |
+| `gemini_flash` | Estimate: 4,000 requests and 4M input tokens per minute, 150,000 requests per day | Google shows each project's limits only in [AI Studio](https://ai.google.dev/gemini-api/docs/rate-limits). Tier 1 values for Gemini 3.1 Flash-Lite from an undated [third-party table](https://www.scriptbyai.com/gemini-api-rate-limits/); Tier 1 needs only a linked billing account |
+| `mistral_ocr_4_1` | Estimate: 1 request per second | Mistral publishes no default; accounts start on the lowest limits and prepaying credits does not raise them ([help center](https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them)). A third-party guide reports 5 requests per second, which would cut its time to a fifth |
+| `tesseract`, `docling` | Your CPU cores | Local; not estimated |
+
+Pages per second is the tightest of these: the request rate; each
+token-per-minute limit divided by the engine's mean tokens per page for that
+pass, as recorded in the inference ledger; or the jobs or GPUs at once divided
+by seconds per page. Time is pages divided by that rate; a daily request cap
+binds only once the pages exceed one day's allowance, and then sets the time.
+Cost does not change. Check your own limits in each provider's console; the
+estimates in particular can be well off.
+
+- Anthropic's Start tier also caps spend at $500 a month, about 33,000 Sonnet
+  text pages. Larger volumes need the Build or Scale tier, whose rate limits
+  are higher.
+- Textract's limits are lower outside US East and US West (Oregon): 5 requests
+  per second in Europe (Ireland) and 1 in most other regions. Its asynchronous
+  operations allow more.
+- Every limit can be raised on request; Modal's Team plan allows 50 GPUs.
+- Ramp-up, retries and Modal container startup are excluded.
