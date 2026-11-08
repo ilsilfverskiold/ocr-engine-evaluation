@@ -783,6 +783,17 @@ const Results = (() => {
         ${unpriced.length ? `<p class="muted">No ${esc(XM.cost.label)} recorded, ranked last: ${unpriced.map(esc).join(", ")}.</p>` : ""}
         ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
   }
+  // How cost grows with volume: each engine's primary pass (one call per page), its $/page × pages.
+  function costScalePanel(ops, list) {
+    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
+    const rows = list.filter(e => isNum(ops[e]?.cost_per_page)).map(e => ({engine: e, cost: ops[e].cost_per_page, primary: ops[e].primary}))
+      .sort((a, b) => a.cost - b.cost || a.engine.localeCompare(b.engine));
+    const at = (r, n) => r.cost === 0 ? "unpriced (local)" : money(r.cost * n);
+    return `<div class="panel"><h3>How cost scales with volume — each engine's primary pass · ${esc(where)}</h3>
+        <p class="muted">One call per page: the engine's default conversion, or its text call where it has none. Cost grows in a straight line with the number of pages. Engines that need extra calls for some legs cost more in total; see "all passes" in the next table.</p>
+        <div class="twrap"><table class="v r" data-table="costscale"><thead><tr><th data-key="engine">Engine</th><th data-key="primary">Primary pass</th><th data-key="cost">${esc(XM.cost.label)}</th>${VOLUMES.map(([n, t]) => `<th data-key="v${n}">${esc(t)} pages</th>`).join("")}</tr></thead>
+        <tbody>${rows.map(r => `<tr data-e="${esc(r.engine)}"><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td><td data-v="${esc(r.primary)}">${esc(r.primary)}</td><td data-v="${r.cost}">${XM.cost.fmt(r.cost)}</td>${VOLUMES.map(([n]) => `<td data-v="${r.cost * n}">${at(r, +n)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  }
   function overviewView(rows) {
     const Ls = cached("legs", () => Object.fromEntries(D.legs.map(l => [l, legData(l, rows)])));
     const engines = [...new Set(rows.filter(r => valid(r) || r.error).map(r => r.engine_name))].sort();
@@ -809,6 +820,7 @@ const Results = (() => {
         <p class="muted">Each leg is scored on its own pages; no cross-leg blended score. Cost and time are the engine's primary pass; † marks a time taken from a batch that also ran other passes (hover for which). Click a column to sort.</p>
         ${table("glance", cols, data)}</div>
       ${scalePanel(Ls)}
+      ${costScalePanel(ops, engines)}
       <div class="panel"><h3>Cost and time per engine — recorded calls in this selection</h3>
         <p class="muted">Primary pass = one call per page ("default", else the text pass). All-passes figures add every pass the benchmark asked of the engine, so they depend on how many legs it was prompted for.</p>
         ${table("ops", opsCols, opsData)}</div>
