@@ -26,8 +26,8 @@ const Results = (() => {
   // Columns whose sort starts ascending: every lower-is-better metric, cost and time.
   const LOWER_METRICS = new Set(Object.values(METRICS).flat().filter(m => !m[2]).map(m => m[1]));
   const LOWER = new Set(["cost", "rec", "cost_all", ...[...LOWER_METRICS].map(k => "m:" + k)]);
-  // By-document-type columns end in their metric key (t:<type>:<metric>).
-  const isLower = key => LOWER.has(key) || (key.startsWith("t:") && LOWER_METRICS.has(key.split(":").pop()));
+  // By-document-type columns end in their metric key (t:<type>:<metric>, or e:<engine>:<metric> when flipped).
+  const isLower = key => LOWER.has(key) || (/^[te]:/.test(key) && LOWER_METRICS.has(key.split(":").pop()));
   const LOW_THRESHOLD = 0.25, MIN_ENGINES = 3;
   // The two recorded operating measures, as the report and the README's cost and latency tables define them.
   const XM = {
@@ -38,7 +38,7 @@ const Results = (() => {
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
   const DEFAULTS = {leg: "all", tier: "all", type: "all", etype: "all", sort: "score", dir: "desc",
     x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", near: "0.1", top: "10", sleg: "all",
-    ftypes: "all", fm: "score", flegs: "all", fx: ""};
+    ftypes: "all", fm: "score", flegs: "all", fx: "", fflip: "0", feng: "all"};
   const VOLUMES = [["1000", "1,000"], ["10000", "10,000"], ["100000", "100,000"], ["1000000", "1 million"]];
   // At-scale panel: how far below a leg's best score an engine may sit, and how many of those engines to show.
   const NEAR = [["0.05", "0.05"], ["0.1", "0.10"], ["0.15", "0.15"]];
@@ -225,7 +225,7 @@ const Results = (() => {
   // ---------- tables ----------
   const tint = v => v == null ? "" : v >= .8 ? "ok" : v >= .5 ? "part" : "bad";
   // cols: {key, label, fmt, higher (marks the best and sets the sort direction), tint, countKey, title}
-  function table(name, cols, rows, {groups, pickCols = true} = {}) {
+  function table(name, cols, rows, {groups, pickCols = true, chooser: withChooser = true} = {}) {
     const sortable = cols.filter(c => c.fmt);
     const sc = sortable.find(c => c.key === rf.sort) || sortable[0];
     const dir = sc && sortable.some(c => c.key === rf.sort) ? rf.dir : (sc?.higher === false ? "asc" : "desc");
@@ -253,7 +253,7 @@ const Results = (() => {
       return `<td data-v="${v == null ? "" : v}" class="${c.tint ? tint(v) : ""} ${isBest ? "best" : ""} ${c.cls || ""}">${isBest ? `<b>${text}</b>` : text}${suffix}</td>`;
     }).join("") + "</tr>").join("");
     const top = groups ? `<tr class="grp">${groups.map(g => `<th colspan="${g.span}" class="${g.label ? "gs" : ""}">${esc(g.label)}</th>`).join("")}</tr>` : "";
-    return `${chooser(name, allCols, rows, pickCols)}<div class="twrap"><table class="v r${groups ? " grouped" : ""}" data-table="${esc(name)}"><thead>${top}<tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    return `${withChooser ? chooser(name, allCols, rows, pickCols) : ""}<div class="twrap"><table class="v r${groups ? " grouped" : ""}" data-table="${esc(name)}"><thead>${top}<tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
   }
 
   // Show / hide per table, for screenshots. Hidden columns and engines are only not drawn: ranks and bold still count
@@ -383,18 +383,41 @@ const Results = (() => {
     const on = (v, all) => v === "all" ? all : v.split(",").filter(Boolean);
     const types = kinds.filter(k => on(rf.ftypes, kinds.map(t => t.type)).includes(k.type));
     const shown = measures.filter(m => on(L ? rf.fm : rf.flegs, measures.map(x => x.id)).includes(m.id));
-    const extras = [["cost", XM.cost.label], ["rec", XM.rec.label]].filter(([k]) => rf.fx.split(",").includes(k));
+    const flip = rf.fflip === "1";
+    const extras = flip ? [] : [["cost", XM.cost.label], ["rec", XM.rec.label]].filter(([k]) => rf.fx.split(",").includes(k));
+    const engines = L ? L.data.map(d => d.engine) : [...new Set(rows.filter(r => valid(r) || r.error).map(r => r.engine_name))].sort();
+    const picked = engines.filter(e => on(rf.feng, engines).includes(e));
     const box = (name, value, text, checked, attr = "") => `<label class="chk"><input type="checkbox" data-pick="${name}" value="${esc(value)}" ${attr} ${checked ? "checked" : ""}> ${esc(text)}</label>`;
     const tiers = TIERS.filter(t => kinds.some(k => k.tier === t));
-    const pickers = `<div class="pick"><span class="lbl">Tiers</span>${tiers.map(t => `<label class="chk"><input type="checkbox" data-tier-pick="${t}" ${kinds.filter(k => k.tier === t).every(k => types.includes(k)) ? "checked" : ""}> ${t}</label>`).join("")}</div>
+    const pickers = `<div class="pick"><span class="lbl">Rows</span><span>${flip ? "document types; engines across" : "engines; document types across"}</span>
+        <button type="button" class="mini" data-pick-set="fflip" data-v="${flip ? "0" : "1"}">⇄ flip</button></div>
+      <div class="pick"><span class="lbl">Tiers</span>${tiers.map(t => `<label class="chk"><input type="checkbox" data-tier-pick="${t}" ${kinds.filter(k => k.tier === t).every(k => types.includes(k)) ? "checked" : ""}> ${t}</label>`).join("")}</div>
       <div class="pick"><span class="lbl">Document types</span>${kinds.map(k => box("ftypes", k.type, `${k.type} · ${k.tier}`, types.includes(k), `data-tier="${k.tier}"`)).join("")}
         <button type="button" class="mini" data-pick-set="ftypes" data-v="all">all</button><button type="button" class="mini" data-pick-set="ftypes" data-v="">none</button></div>
       <div class="pick"><span class="lbl">${L ? "Under each" : "Legs under each"}</span>${measures.map(m => box(L ? "fm" : "flegs", m.id, m.label, shown.includes(m))).join("")}</div>
-      <div class="pick"><span class="lbl">Also show</span>${[["cost", XM.cost.label], ["rec", XM.rec.label]].map(([k, label]) => box("fx", k, label, extras.some(x => x[0] === k))).join("")}
-        <span class="muted">${L ? "this leg's recorded cost and time per engine" : "primary pass cost and time per engine"}</span></div>`;
+      ${flip ? `<div class="pick"><span class="lbl">Engines</span>${engines.map(e => box("feng", e, e, picked.includes(e))).join("")}
+        <button type="button" class="mini" data-pick-set="feng" data-v="all">all</button><button type="button" class="mini" data-pick-set="feng" data-v="">none</button></div>`
+      : `<div class="pick"><span class="lbl">Also show</span>${[["cost", XM.cost.label], ["rec", XM.rec.label]].map(([k, label]) => box("fx", k, label, extras.some(x => x[0] === k))).join("")}
+        <span class="muted">${L ? "this leg's recorded cost and time per engine" : "primary pass cost and time per engine"}</span></div>`}`;
     let body;
-    if (!types.length || !shown.length) body = `<p class="muted">Tick at least one document type and one ${L ? "measure" : "leg"}.</p>`;
-    else {
+    if (!types.length || !shown.length || (flip && !picked.length)) body = `<p class="muted">Tick at least one document type${flip ? ", one engine" : ""} and one ${L ? "measure" : "leg"}.</p>`;
+    else if (flip) {
+      // Flipped: one row per document type, the chosen engines across with the chosen measures under each.
+      const cols = [{key: "engine", label: "Document type"}, {key: "pages", label: "Pages", title: "scored pages of this type"}], groups = [{label: "", span: 2}];
+      for (const e of picked) {
+        groups.push({label: e, span: shown.length});
+        shown.forEach((m, i) => cols.push({key: `e:${e}:${m.id}`, label: m.label, fmt: f4, higher: m.higher, tint: m.key === "score" || GEO_LEAD.includes(m.key),
+          cls: i ? "" : "gs", countKey: `en:${e}:${m.id}`, title: `${e}: ${L ? m.label : LEG_TITLES[m.leg] + " full score"}, family mean`}));
+      }
+      const data = types.map(k => { const r = {engine: `${k.type} · ${k.tier}`, pages: new Set(scope.filter(x => valid(x) && x.doc_type === k.type).map(x => x.stem)).size};
+        for (const e of picked) for (const m of shown) {
+          const rs = ((L || Ls[m.leg]).buckets[e] || []).filter(x => x.doc_type === k.type);
+          r[`e:${e}:${m.id}`] = meanMetric(rs, m.key); r[`en:${e}:${m.id}`] = rs.filter(x => valid(x) && isNum(metricValue(x, m.key))).length;
+        }
+        return r; }).filter(r => cols.some(c => c.key.startsWith("e:") && r[c.key] != null));
+      body = `<p class="muted">Document types with no value in the chosen columns are left out. Click a column to sort; bold marks the column's best document type.</p>
+        ${data.length ? table("familiesflip:" + (L ? L.leg : "all"), cols, data, {groups, pickCols: false, chooser: false}) : '<p class="muted">No document type has a value in the chosen columns.</p>'}`;
+    } else {
       const colKey = (type, m) => L && m.id === "score" ? "t:" + type : `t:${type}:${m.id}`;
       const pages = Object.fromEntries(types.map(k => [k.type, new Set(scope.filter(r => valid(r) && r.doc_type === k.type).map(r => r.stem)).size]));
       const cols = [{key: "engine", label: "Engine"}], groups = [{label: "", span: 1}];
@@ -409,7 +432,6 @@ const Results = (() => {
         extras.forEach(([key, label], i) => cols.push({key, label, fmt: XM[key].fmt, higher: false, cls: i ? "" : "gs",
           title: L ? `${LEG_TITLES[L.leg]} leg, ${XM[key].title}` : `primary pass, ${XM[key].title}`}));
       }
-      const engines = L ? L.data.map(d => d.engine) : [...new Set(rows.filter(r => valid(r) || r.error).map(r => r.engine_name))].sort();
       const data = engines.map(e => { const r = {engine: e};
         for (const k of types) for (const m of shown) {
           const key = colKey(k.type, m), rs = ((L || Ls[m.leg]).buckets[e] || []).filter(x => x.doc_type === k.type);
@@ -934,7 +956,7 @@ const Results = (() => {
     });
     c.querySelectorAll("input[data-pick]").forEach(n => n.onchange = () => {
       const name = n.dataset.pick, boxes = [...c.querySelectorAll(`input[data-pick="${name}"]`)], on = boxes.filter(b => b.checked).map(b => b.value);
-      update({[name]: (name === "ftypes" || name === "flegs") && on.length === boxes.length ? "all" : on.join(",")});
+      update({[name]: ["ftypes", "flegs", "feng"].includes(name) && on.length === boxes.length ? "all" : on.join(",")});
     });
     c.querySelectorAll("input[data-tier-pick]").forEach(n => n.onchange = () => {
       const boxes = [...c.querySelectorAll('input[data-pick="ftypes"]')];
