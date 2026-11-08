@@ -24,7 +24,10 @@ const Results = (() => {
     geometry: "Full = Word: located reference-unit recall (words; line segments on receipts). Line: both sides merged into visual lines, fuzzy text, mutual centre containment. Block cov: reference words inside a returned block that contains their text; block engines only, read with Words/box. Boxes are never invented at a finer unit than returned.",
   };
   // Columns whose sort starts ascending: every lower-is-better metric, cost and time.
-  const LOWER = new Set(["cost", "rec", "cost_all", ...Object.values(METRICS).flat().filter(m => !m[2]).map(m => "m:" + m[1])]);
+  const LOWER_METRICS = new Set(Object.values(METRICS).flat().filter(m => !m[2]).map(m => m[1]));
+  const LOWER = new Set(["cost", "rec", "cost_all", ...[...LOWER_METRICS].map(k => "m:" + k)]);
+  // By-document-type columns end in their metric key (t:<type>:<metric>).
+  const isLower = key => LOWER.has(key) || (key.startsWith("t:") && LOWER_METRICS.has(key.split(":").pop()));
   const LOW_THRESHOLD = 0.25, MIN_ENGINES = 3;
   // The two recorded operating measures, as the report and the README's cost and latency tables define them.
   const XM = {
@@ -34,7 +37,8 @@ const Results = (() => {
   };
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
   const DEFAULTS = {leg: "all", tier: "all", type: "all", etype: "all", sort: "score", dir: "desc",
-    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", near: "0.1", top: "10", sleg: "all"};
+    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", near: "0.1", top: "10", sleg: "all",
+    ftypes: "all", fm: "score", flegs: "all", fx: ""};
   const VOLUMES = [["1000", "1,000"], ["10000", "10,000"], ["100000", "100,000"], ["1000000", "1 million"]];
   // At-scale panel: how far below a leg's best score an engine may sit, and how many of those engines to show.
   const NEAR = [["0.05", "0.05"], ["0.1", "0.10"], ["0.15", "0.15"]];
@@ -216,7 +220,7 @@ const Results = (() => {
   // ---------- tables ----------
   const tint = v => v == null ? "" : v >= .8 ? "ok" : v >= .5 ? "part" : "bad";
   // cols: {key, label, fmt, higher (marks the best and sets the sort direction), tint, countKey, title}
-  function table(name, cols, rows) {
+  function table(name, cols, rows, {groups, pickCols = true} = {}) {
     const sortable = cols.filter(c => c.fmt);
     const sc = sortable.find(c => c.key === rf.sort) || sortable[0];
     const dir = sc && sortable.some(c => c.key === rf.sort) ? rf.dir : (sc?.higher === false ? "asc" : "desc");
@@ -231,17 +235,31 @@ const Results = (() => {
     const ranks = Object.fromEntries(ordered.map(r => [r.engine, r[sc?.key] == null ? "—" : 1 + ordered.filter(o => o[sc.key] != null && better(o[sc.key], r[sc.key])).length]));
     const best = {};
     for (const c of cols) if (c.fmt && c.higher != null) { const vs = rows.map(r => r[c.key]).filter(isNum); if (vs.length) best[c.key] = c.higher ? Math.max(...vs) : Math.min(...vs); }
-    const head = cols.map(c => `<th data-key="${c.key}" class="${c.fmt ? "sortable" : ""} ${sc?.key === c.key ? "sorted" : ""}" title="${esc(c.title || "")}">${esc(c.label)}${c.higher === true ? " ↑" : c.higher === false ? " ↓" : ""}${sc?.key === c.key ? (dir === "asc" ? " ▲" : " ▼") : ""}</th>`).join("");
-    const body = ordered.map(r => `<tr data-e="${esc(r.engine)}">` + cols.map(c => {
+    const h = hidden.get(name), allCols = cols;
+    cols = cols.filter(c => c.key === "engine" || !h?.cols.has(c.key));
+    const head = cols.map(c => `<th data-key="${c.key}" class="${c.fmt ? "sortable" : ""} ${sc?.key === c.key ? "sorted" : ""} ${c.cls || ""}" title="${esc(c.title || "")}">${esc(c.label)}${c.higher === true ? " ↑" : c.higher === false ? " ↓" : ""}${sc?.key === c.key ? (dir === "asc" ? " ▲" : " ▼") : ""}</th>`).join("");
+    const body = ordered.filter(r => !h?.engines.has(r.engine)).map(r => `<tr data-e="${esc(r.engine)}">` + cols.map(c => {
       if (c.key === "rank") return `<td data-v="${ranks[r.engine]}" class="muted">${ranks[r.engine]}</td>`;
       if (c.key === "engine") return `<td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>`;
       const v = r[c.key], text = (c.fmt ? c.fmt(v) : esc(v ?? "—")) + (c.note ? c.note(r) : "");
-      const n = c.countKey ? r[c.countKey] : null, pages = r.pages;
+      const n = c.countKey ? r[c.countKey] : null, pages = c.countOf ?? r.pages;
       const suffix = c.countKey && n != null && pages != null && n > 0 && n < pages ? ` <span class="muted">(${n})</span>` : "";
       const isBest = isNum(v) && best[c.key] === v;
-      return `<td data-v="${v == null ? "" : v}" class="${c.tint ? tint(v) : ""} ${isBest ? "best" : ""}">${isBest ? `<b>${text}</b>` : text}${suffix}</td>`;
+      return `<td data-v="${v == null ? "" : v}" class="${c.tint ? tint(v) : ""} ${isBest ? "best" : ""} ${c.cls || ""}">${isBest ? `<b>${text}</b>` : text}${suffix}</td>`;
     }).join("") + "</tr>").join("");
-    return `<div class="twrap"><table class="v r" data-table="${esc(name)}"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    const top = groups ? `<tr class="grp">${groups.map(g => `<th colspan="${g.span}" class="${g.label ? "gs" : ""}">${esc(g.label)}</th>`).join("")}</tr>` : "";
+    return `${chooser(name, allCols, rows, pickCols)}<div class="twrap"><table class="v r${groups ? " grouped" : ""}" data-table="${esc(name)}"><thead>${top}<tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  }
+
+  // Show / hide per table, for screenshots. Hidden columns and engines are only not drawn: ranks and bold still count
+  // every engine in the selection. Kept per table for the session.
+  const hidden = new Map();
+  function chooser(name, cols, rows, pickCols) {
+    const h = hidden.get(name) || {cols: new Set(), engines: new Set()}, n = h.cols.size + h.engines.size;
+    const chip = (kind, v, text) => `<label class="chk"><input type="checkbox" data-hide="${kind}" data-tbl="${esc(name)}" value="${esc(v)}" ${h[kind].has(v) ? "" : "checked"}> ${esc(text)}</label>`;
+    return `<details class="colpick" data-k="pick:${esc(name)}"><summary>Show / hide ${pickCols ? "columns and engines" : "engines"}${n ? ` · ${n} hidden` : ""}</summary>
+      ${pickCols ? `<div class="pick"><span class="lbl">Columns</span>${cols.filter(c => c.key !== "engine").map(c => chip("cols", c.key, c.key === "rank" ? "#" : c.label)).join("")}</div>` : ""}
+      <div class="pick"><span class="lbl">Engines</span>${rows.map(r => r.engine).sort().map(e => chip("engines", e, e)).join("")}${n ? `<button type="button" class="mini" data-unhide="${esc(name)}">show all</button>` : ""}</div></details>`;
   }
 
   // One row per participating engine for a leg, with every column the report prints.
@@ -344,14 +362,60 @@ const Results = (() => {
     return `<details class="help" data-k="help:${L.leg}"><summary>What the columns mean</summary>
       <dl class="help-list">${items.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></details>`;
   }
-  function familiesTable(L) {
-    const kinds = docTypes().filter(t => L.legRows.some(r => valid(r) && r.doc_type === t.type));
+  // By document type: the chosen families as column groups and the chosen measures under each. A leg offers its
+  // full score and every metric its table shows; all legs offers each leg's full score. A family's scored pages sit
+  // in its header; (n) marks a value taken from fewer of them.
+  function familiesPanel(L, Ls, rows, ops) {
+    const scope = L ? L.legRows : rows;
+    const kinds = docTypes().filter(t => scope.some(r => valid(r) && r.doc_type === t.type));
     if (kinds.length < 2) return "";
-    const rows = L.data.map(d => { const r = {engine: d.engine, pages: d.pages};
-      for (const k of kinds) { const rs = L.buckets[d.engine].filter(x => x.doc_type === k.type); r["t:" + k.type] = meanMetric(rs); r["tn:" + k.type] = rs.filter(valid).length; }
-      return r; });
-    const cols = [{key: "engine", label: "Engine"}, ...kinds.map(k => ({key: "t:" + k.type, label: `${k.type} · ${k.tier}`, fmt: f4, higher: true, tint: true, countKey: "tn:" + k.type, title: "family mean (pages)"}))];
-    return `<details class="panel" data-k="families"><summary>By document type · ${LEG_TITLES[L.leg]} full score per family (pages in brackets where fewer than the engine's total)</summary>${table("families:" + L.leg, cols, rows)}</details>`;
+    const measures = L
+      ? [{id: "score", label: L.leg === "geometry" ? "Word" : "Score", leg: L.leg, key: "score", higher: true},
+        ...METRICS[L.leg].map(([label, key, up]) => ({id: key, label, leg: L.leg, key, higher: up}))]
+      : D.legs.map(l => ({id: l, label: LEG_SHORT[l], leg: l, key: "score", higher: true}));
+    const on = (v, all) => v === "all" ? all : v.split(",").filter(Boolean);
+    const types = kinds.filter(k => on(rf.ftypes, kinds.map(t => t.type)).includes(k.type));
+    const shown = measures.filter(m => on(L ? rf.fm : rf.flegs, measures.map(x => x.id)).includes(m.id));
+    const extras = [["cost", XM.cost.label], ["rec", XM.rec.label]].filter(([k]) => rf.fx.split(",").includes(k));
+    const box = (name, value, text, checked, attr = "") => `<label class="chk"><input type="checkbox" data-pick="${name}" value="${esc(value)}" ${attr} ${checked ? "checked" : ""}> ${esc(text)}</label>`;
+    const tiers = TIERS.filter(t => kinds.some(k => k.tier === t));
+    const pickers = `<div class="pick"><span class="lbl">Tiers</span>${tiers.map(t => `<label class="chk"><input type="checkbox" data-tier-pick="${t}" ${kinds.filter(k => k.tier === t).every(k => types.includes(k)) ? "checked" : ""}> ${t}</label>`).join("")}</div>
+      <div class="pick"><span class="lbl">Document types</span>${kinds.map(k => box("ftypes", k.type, `${k.type} · ${k.tier}`, types.includes(k), `data-tier="${k.tier}"`)).join("")}
+        <button type="button" class="mini" data-pick-set="ftypes" data-v="all">all</button><button type="button" class="mini" data-pick-set="ftypes" data-v="">none</button></div>
+      <div class="pick"><span class="lbl">${L ? "Under each" : "Legs under each"}</span>${measures.map(m => box(L ? "fm" : "flegs", m.id, m.label, shown.includes(m))).join("")}</div>
+      <div class="pick"><span class="lbl">Also show</span>${[["cost", XM.cost.label], ["rec", XM.rec.label]].map(([k, label]) => box("fx", k, label, extras.some(x => x[0] === k))).join("")}
+        <span class="muted">${L ? "this leg's recorded cost and time per engine" : "primary pass cost and time per engine"}</span></div>`;
+    let body;
+    if (!types.length || !shown.length) body = `<p class="muted">Tick at least one document type and one ${L ? "measure" : "leg"}.</p>`;
+    else {
+      const colKey = (type, m) => L && m.id === "score" ? "t:" + type : `t:${type}:${m.id}`;
+      const pages = Object.fromEntries(types.map(k => [k.type, new Set(scope.filter(r => valid(r) && r.doc_type === k.type).map(r => r.stem)).size]));
+      const cols = [{key: "engine", label: "Engine"}], groups = [{label: "", span: 1}];
+      for (const k of types) {
+        groups.push({label: `${k.type} · ${k.tier} (${pages[k.type]} page${pages[k.type] === 1 ? "" : "s"})`, span: shown.length});
+        shown.forEach((m, i) => { const key = colKey(k.type, m);
+          cols.push({key, label: m.label, fmt: f4, higher: m.higher, tint: m.key === "score" || GEO_LEAD.includes(m.key), cls: i ? "" : "gs",
+            countKey: "tn:" + key.slice(2), countOf: pages[k.type], title: `${k.type}: ${L ? m.label : LEG_TITLES[m.leg] + " full score"}, family mean`}); });
+      }
+      if (extras.length) {
+        groups.push({label: "", span: extras.length});
+        extras.forEach(([key, label], i) => cols.push({key, label, fmt: XM[key].fmt, higher: false, cls: i ? "" : "gs",
+          title: L ? `${LEG_TITLES[L.leg]} leg, ${XM[key].title}` : `primary pass, ${XM[key].title}`}));
+      }
+      const engines = L ? L.data.map(d => d.engine) : [...new Set(rows.filter(r => valid(r) || r.error).map(r => r.engine_name))].sort();
+      const data = engines.map(e => { const r = {engine: e};
+        for (const k of types) for (const m of shown) {
+          const key = colKey(k.type, m), rs = ((L || Ls[m.leg]).buckets[e] || []).filter(x => x.doc_type === k.type);
+          r[key] = meanMetric(rs, m.key); r["tn:" + key.slice(2)] = rs.filter(x => valid(x) && isNum(metricValue(x, m.key))).length;
+        }
+        if (L) { const d = L.data.find(x => x.engine === e); r.cost = d.cost; r.rec = d.rec; }
+        else { r.cost = ops[e]?.cost_per_page ?? null; r.rec = ops[e]?.latency_s ?? null; }
+        return r; }).filter(r => cols.some(c => c.key.startsWith("t:") && r[c.key] != null));
+      body = `<p class="muted">Engines with no value in the chosen columns are left out. Click a column to sort; bold marks the column's best.</p>
+        ${data.length ? table("families:" + (L ? L.leg : "all"), cols, data, {groups, pickCols: false}) : '<p class="muted">No engine has a value in the chosen columns.</p>'}`;
+    }
+    return `<details class="panel fam" data-k="families"><summary>By document type · ${L ? LEG_TITLES[L.leg] : "all legs"} <span class="muted">${L ? "family mean per engine" : "each leg's full score, family mean per engine"}</span></summary>
+      ${pickers}${body}</details>`;
   }
   function judgePanel() {
     const rows = D.results.judge.filter(r => isNum(r.score) && (rf.tier === "all" || r.tier === rf.tier) && (rf.type === "all" || r.doc_type === rf.type) && inType(r.engine_name));
@@ -701,7 +765,7 @@ const Results = (() => {
       <div class="panel"><h3>Every page · one mark per scored page, ✕ = error</h3>
         <div class="chart-controls">${stripSel}</div>${stripLegend(strip.types, strip.engines)}<div id="strip">${strip.html}</div>
         ${pagesTable(L)}</div>
-      ${familiesTable(L)}
+      ${familiesPanel(L, null, rows)}
       ${L.leg === "text" ? judgePanel() : ""}
       ${notesPanel([L.leg])}`;
   }
@@ -832,6 +896,7 @@ const Results = (() => {
     return `<div class="panel"><h3>At a glance — full scores per leg; bold marks the column's best</h3>
         <p class="muted">Each leg is scored on its own pages; no cross-leg blended score. Cost and time are the engine's primary pass; † marks a time taken from a batch that also ran other passes (hover for which). Click a column to sort.</p>
         ${table("glance", cols, data)}</div>
+      ${familiesPanel(null, Ls, rows, ops)}
       ${scalePanel(Ls)}
       ${costScalePanel(ops, engines)}
       <div class="panel"><h3>Cost and time per engine — recorded calls in this selection</h3>
@@ -854,8 +919,27 @@ const Results = (() => {
     const c = el("content");
     c.querySelectorAll("th.sortable").forEach(th => th.onclick = () => {
       const key = th.dataset.key;
-      update(rf.sort === key ? {dir: rf.dir === "asc" ? "desc" : "asc"} : {sort: key, dir: LOWER.has(key) ? "asc" : "desc"});
+      update(rf.sort === key ? {dir: rf.dir === "asc" ? "desc" : "asc"} : {sort: key, dir: isLower(key) ? "asc" : "desc"});
     });
+    c.querySelectorAll("input[data-pick]").forEach(n => n.onchange = () => {
+      const name = n.dataset.pick, boxes = [...c.querySelectorAll(`input[data-pick="${name}"]`)], on = boxes.filter(b => b.checked).map(b => b.value);
+      update({[name]: (name === "ftypes" || name === "flegs") && on.length === boxes.length ? "all" : on.join(",")});
+    });
+    c.querySelectorAll("input[data-tier-pick]").forEach(n => n.onchange = () => {
+      const boxes = [...c.querySelectorAll('input[data-pick="ftypes"]')];
+      for (const b of boxes) if (b.dataset.tier === n.dataset.tierPick) b.checked = n.checked;
+      const on = boxes.filter(b => b.checked).map(b => b.value);
+      update({ftypes: on.length === boxes.length ? "all" : on.join(",")});
+    });
+    c.querySelectorAll("input[data-hide]").forEach(n => n.onchange = () => {
+      const h = hidden.get(n.dataset.tbl) || {cols: new Set(), engines: new Set()};
+      h[n.dataset.hide][n.checked ? "delete" : "add"](n.value);
+      hidden.set(n.dataset.tbl, h);
+      render();
+    });
+    c.querySelectorAll("[data-unhide]").forEach(n => n.onclick = () => { hidden.delete(n.dataset.unhide); render(); });
+    c.querySelectorAll("[data-pick-set]").forEach(n => n.onclick = () => update({[n.dataset.pickSet]: n.dataset.v}));
+    wireResize(c);
     c.querySelectorAll("[data-o]").forEach(n => n.onchange = () => update({[n.dataset.o]: n.type === "checkbox" ? (n.checked ? "1" : "0") : n.value}));
     c.querySelectorAll("table[data-table^='leg:'] tr[data-e], table[data-table='glance'] tr[data-e], table[data-table='ops'] tr[data-e], table[data-table='scale'] tr[data-e], table[data-table^='families:'] tr[data-e], table[data-table='judge'] tr[data-e]").forEach(tr => {
       tr.classList.add("link"); tr.ondblclick = () => go({view: "page", engine: tr.dataset.e, leg: rf.leg === "all" ? state.leg : rf.leg}); tr.title = "double-click to open this engine in the page view";
@@ -886,6 +970,25 @@ const Results = (() => {
     }
   }
 
+  // Tables can be dragged taller from the bottom-right corner (CSS resize). The first drag lifts the height cap;
+  // the height reached is kept per table and comes back after a re-render, as a cap so shorter content still shrinks.
+  const heights = new Map();
+  const sizes = new ResizeObserver(entries => { for (const {target: w} of entries) if (w.style.maxHeight === "none" && w.style.height) heights.set(w.dataset.t, w.style.height); });
+  function wireResize(c) {
+    sizes.disconnect();
+    for (const w of c.querySelectorAll(".twrap")) {
+      const key = w.querySelector("table[data-table]")?.dataset.table;
+      if (!key) continue;
+      w.dataset.t = key;
+      if (heights.has(key)) w.style.maxHeight = heights.get(key);
+      w.addEventListener("pointerdown", e => {
+        const b = w.getBoundingClientRect();
+        if (e.clientX >= b.right - 24 && e.clientY >= b.bottom - 24) Object.assign(w.style, {height: w.offsetHeight + "px", maxHeight: "none"});
+      });
+      sizes.observe(w);
+    }
+  }
+
   // ---------- state ----------
   function set(patch) { for (const k of Object.keys(DEFAULTS)) if (k in patch && patch[k] != null) rf[k] = String(patch[k]); }
   function update(patch) { set(patch); return go({view: "results"}); }
@@ -901,7 +1004,7 @@ const Results = (() => {
   function dump() {
     const tables = {};
     for (const t of document.querySelectorAll("table[data-table]")) {
-      const heads = [...t.querySelectorAll("thead th")].map(th => th.dataset.key || th.textContent.trim());
+      const heads = [...t.querySelectorAll("thead tr:last-child th")].map(th => th.dataset.key || th.textContent.trim());
       tables[t.dataset.table] = [...t.querySelectorAll("tbody tr")].map(tr => Object.fromEntries([...tr.children].map((td, i) => [heads[i], td.dataset.v ?? td.textContent.trim()])));
     }
     const dotsOut = [...el("engine-list").querySelectorAll(".eng[data-e]")].map(n => [n.dataset.e, [...n.querySelectorAll(".dot")].map(d => d.dataset.v ?? "")]);
