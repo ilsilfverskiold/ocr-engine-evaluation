@@ -736,6 +736,7 @@ const Results = (() => {
   }
   function scalePanel(Ls) {
     const vol = +rf.vol || 1e6, near = Math.max(0, +rf.near || 0), top = +rf.top || 1, volText = (VOLUMES.find(v => +v[0] === vol) || [, String(vol)])[1];
+    const nearText = (NEAR.find(n => n[0] === rf.near) || [, rf.near])[1];
     const rows = [], unpriced = [];
     // Lower $/page, then lower s/page; unrecorded values rank last.
     const low = (x, y) => (x == null) - (y == null) || (x ?? 0) - (y ?? 0);
@@ -768,7 +769,7 @@ const Results = (() => {
         cost: r.engine === r.best.engine || diff == null ? "" : diff >= 0 ? `saves ${money(diff)} vs best` : `${money(-diff)} more than best`};
     };
     const body = rows.map(r => { const v = vsBest(r); return `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
-        <td data-v="${r.leg}">${r.rank === 1 ? `${esc(LEG_TITLES[r.leg])}<div class="muted limit">best ${f4(r.best.score)} · ${esc(r.best.engine)}<br>${r.count} engine${r.count === 1 ? "" : "s"} within ${esc(rf.near)}</div>` : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
+        <td data-v="${r.leg}">${r.rank === 1 ? `${esc(LEG_TITLES[r.leg])}<div class="muted limit">best ${f4(r.best.score)} · ${esc(r.best.engine)}<br>${r.count} engine${r.count === 1 ? "" : "s"} within ${esc(nearText)}</div>` : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
         <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}<div class="muted limit">${v.score}</div></td>
         <td data-v="${r.cost ?? ""}">${XM.cost.fmt(r.cost)}</td><td data-v="${r.rec ?? ""}">${XM.rec.fmt(r.rec)}</td>
         <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}${v.cost ? `<div class="muted limit">${v.cost}</div>` : ""}</td>
@@ -776,7 +777,7 @@ const Results = (() => {
         <td data-v="${r.parAt ?? ""}" title="${esc(r.basis)}">${bar(r.parAt, maxPar, duration(r.parAt), "time")}<div class="muted limit">${esc(r.limit)}</div></td></tr>`; }).join("");
     const heads = [["leg", "Leg"], ["engine", "Engine"], ["score", "Score"], ["cost", XM.cost.label], ["rec", XM.rec.label],
       ["costAt", `Cost for ${volText} pages`], ["timeAt", "Time, one at a time"], ["parAt", "Time in parallel at default limits"]];
-    return `<div class="panel"><h3>Score against cost per leg at scale — engines within ${esc(rf.near)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</h3>
+    return `<div class="panel"><h3>Score against cost per leg at scale — engines within ${esc(nearText)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</h3>
         <p class="muted">Per leg: the best score in this selection (named under the leg), then every engine scoring within the chosen margin of it (4 d.p.), cheapest first by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}. "Within" sets the margin; "show" how many of those engines to list. Each row shows the score it gives up and the money it saves against the best scorer.</p>
         <details data-k="scale-how"><summary>How cost and time are worked out</summary><p class="muted">Cost = ${esc(XM.cost.label)} × pages ÷ 1,000; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and count as $0.</p></details>
         <div class="chart-controls">${selectHTML("sleg", [["all", "all legs"], ...D.legs.map(l => [l, LEG_TITLES[l]])], "leg")}${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("near", NEAR, "within")}${selectHTML("top", TOP, "show")}${selectHTML("vol", VOLUMES, "pages")}</div>
