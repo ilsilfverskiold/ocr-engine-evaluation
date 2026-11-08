@@ -28,7 +28,8 @@ const Results = (() => {
   const LOW_THRESHOLD = 0.25, MIN_ENGINES = 3;
   // The two recorded operating measures, as the report and the README's cost and latency tables define them.
   const XM = {
-    cost: {label: "$/page", title: "recorded inference cost per page (USD): steady_cost_per_page, else cost_per_page, of the call serving the scored page", fmt: v => f(v, 6)},
+    // Stored per page; shown per 1,000 pages, which reads more easily than fractions of a cent. `mult` scales axis labels.
+    cost: {label: "$/1k pages", title: "recorded inference cost per 1,000 pages (USD): steady_cost_per_page, else cost_per_page, of the call serving the scored page, × 1,000", fmt: v => v == null ? "—" : f(v * 1000, v * 1000 < 1 ? 3 : 2), mult: 1000},
     rec: {label: "s/page", title: "recorded seconds per page: steady_latency_seconds, else latency_seconds. For a Modal batch this is the warm batch's seconds divided by its items (throughput basis, startup excluded), not request latency. † = the primary pass shared its batch with other passes, so this share includes their generation time", fmt: v => f(v, 2)},
   };
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
@@ -353,7 +354,7 @@ const Results = (() => {
     const X = scaler(xs, L, L + pw), Y = v => T + (1 - (v - ys.lo) / (1 - ys.lo)) * ph;
     let g = "";
     for (const v of ys.ticks) g += `<line class="grid" x1="${L}" x2="${L + pw}" y1="${Y(v)}" y2="${Y(v)}"/><text class="tick" x="${L - 6}" y="${Y(v) + 3.5}" text-anchor="end">${tickText(v)}</text>`;
-    for (const v of xs.ticks) g += `<line class="grid" y1="${T}" y2="${T + ph}" x1="${X(v)}" x2="${X(v)}"/><text class="tick" x="${X(v)}" y="${T + ph + 14}" text-anchor="middle">${tickText(v)}</text>`;
+    for (const v of xs.ticks) g += `<line class="grid" y1="${T}" y2="${T + ph}" x1="${X(v)}" x2="${X(v)}"/><text class="tick" x="${X(v)}" y="${T + ph + 14}" text-anchor="middle">${tickText(v * (xm.mult || 1))}</text>`;
     for (const v of xs.minor) g += `<line class="grid minor" y1="${T}" y2="${T + ph}" x1="${X(v)}" x2="${X(v)}"/>`;
     g += `<line class="axis" x1="${L}" x2="${L + pw}" y1="${T + ph}" y2="${T + ph}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${T + ph}"/>`;
     g += `<text class="tick" x="${L + pw / 2}" y="${h - 4}" text-anchor="middle">${esc(xm.label)}${log ? " (log)" : ""}</text>`;
@@ -394,7 +395,7 @@ const Results = (() => {
     const xs = xm.key === "score" ? scoreScale(vals) : log ? logScale(Math.min(...vals), Math.max(...vals)) : linearScale(Math.min(0, ...vals), Math.max(...vals));
     const X = scaler(xs, L, L + pw);
     let g = "";
-    for (const v of xs.ticks) g += `<line class="grid" y1="${T}" y2="${T + rowsE.length * rh}" x1="${X(v)}" x2="${X(v)}"/><text class="tick" x="${X(v)}" y="${T + rowsE.length * rh + 14}" text-anchor="middle">${tickText(v)}</text>`;
+    for (const v of xs.ticks) g += `<line class="grid" y1="${T}" y2="${T + rowsE.length * rh}" x1="${X(v)}" x2="${X(v)}"/><text class="tick" x="${X(v)}" y="${T + rowsE.length * rh + 14}" text-anchor="middle">${tickText(v * (xm.mult || 1))}</text>`;
     for (const v of xs.minor) g += `<line class="grid minor" y1="${T}" y2="${T + rowsE.length * rh}" x1="${X(v)}" x2="${X(v)}"/>`;
     g += `<text class="tick" x="${L + pw / 2}" y="${h - 3}" text-anchor="middle">${esc(xm.label)}${xs.score && xs.lo > 0 ? ` from ${xs.lo}` : ""}${log && xm.key !== "score" ? " (log)" : ""}</text>`;
     let dotsHTML = "";
@@ -480,7 +481,7 @@ const Results = (() => {
     const drawn = plotted.length ? scatterSVG(plotted, {xm, log, labels: rf.labels, small, w: small ? 300 : 680, h: small ? 210 : 380}) : null;
     const below = drawn ? plotted.filter(p => p.y < drawn.lo) : [];
     const notes = [];
-    if (left.length) notes.push(`Not plotted: ${left.map(p => `${esc(p.engine)} (${p.x == null ? "not recorded" : f(p.x, 6)})`).join(", ")}`);
+    if (left.length) notes.push(`Not plotted: ${left.map(p => `${esc(p.engine)} (${p.x == null ? "not recorded" : xm.fmt(p.x)})`).join(", ")}`);
     const zero = plotted.filter(p => p.zero);
     if (zero.length) notes.push(`At the axis start, shown as ▷ ($0 recorded: local engine, machine cost unpriced): ${zero.map(p => esc(p.engine)).join(", ")}`);
     if (below.length) notes.push(`Below the axis start (${drawn.lo}), shown as ▼ on the baseline: ${below.map(p => `${esc(p.engine)} ${f4(p.y)}`).join(", ")}`);
@@ -685,7 +686,7 @@ const Results = (() => {
       cost_all: ops[e]?.cost_all_passes ?? null, rec_all: ops[e]?.latency_all_passes ?? null, passes: ops[e]?.passes ?? null, documents: ops[e]?.documents ?? null, primary: ops[e]?.primary ?? null, mixed: ops[e]?.mixed ?? []})).filter(d => d.cost != null || d.rec != null);
     const opsCols = [{key: "rank", label: "#"}, {key: "engine", label: "Engine"}, {key: "primary", label: "Primary pass"},
       {key: "cost", label: XM.cost.label, fmt: XM.cost.fmt, higher: false, title: "primary pass"}, {key: "rec", label: XM.rec.label, fmt: XM.rec.fmt, higher: false, title: "primary pass", note: mixedMark},
-      {key: "cost_all", label: "all passes $/page", fmt: XM.cost.fmt, higher: false, title: "every pass the benchmark asked, summed per page"}, {key: "rec_all", label: "all passes s/page", fmt: XM.rec.fmt, higher: false},
+      {key: "cost_all", label: `all passes ${XM.cost.label}`, fmt: XM.cost.fmt, higher: false, title: "every pass the benchmark asked, summed per page"}, {key: "rec_all", label: "all passes s/page", fmt: XM.rec.fmt, higher: false},
       {key: "passes", label: "Passes", fmt: fi}, {key: "documents", label: "Pages", fmt: fi, title: "pages with a successful call"}];
     const shownEngines = new Set();
     const multi = D.legs.map(l => { const sp = scatterPanel(Ls[l], {small: true, id: "scatter-" + l}); charts.push({sel: `#scatter-${l} svg`, pts: sp.pts, leg: l, kind: "scatter"});
