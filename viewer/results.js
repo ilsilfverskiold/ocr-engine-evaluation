@@ -783,6 +783,8 @@ const Results = (() => {
   const restorePanels = () => { for (const d of panels()) { d.open = openPanels.has(d.dataset.k); d.ontoggle = () => d.open ? openPanels.add(d.dataset.k) : openPanels.delete(d.dataset.k); } };
   function legView(rows) {
     const L = cached("leg:" + rf.leg, () => legData(rf.leg, rows));
+    const pagesOf = k => new Set(L.legRows.filter(r => valid(r) && r.doc_type === k.type).map(r => r.stem)).size;
+    const docKinds = docTypes().filter(k => pagesOf(k) > 0);
     const scatter = scatterPanel(L, {id: "scatter"}), strip = stripPanel(L);
     charts.push({sel: "#scatter svg", pts: scatter.pts, leg: L.leg, kind: "scatter"}, {sel: "#strip svg", rowsE: strip.rowsE, xm: strip.xm, leg: L.leg, kind: "strip"});
     const stripSel = selectHTML("strip", [["score", "score"], ...Object.entries(XM).map(([k, m]) => [k, m.label])], "value")
@@ -793,8 +795,9 @@ const Results = (() => {
         ${L.data.length ? table("leg:" + L.leg, legColumns(L), L.data) : '<p class="muted">No engine has a scored or failed row here.</p>'}
         ${L.absent.length ? `<p class="muted">N/A only (not ranked): ${L.absent.map(esc).join(", ")}</p>` : ""}
         ${L.data.length ? columnHelp(L) : ""}</div>
-      ${typesPanel([{label: "all document types", entries: L.data}, ...docTypes().filter(k => L.legRows.some(r => valid(r) && r.doc_type === k.type)).map(k => ({label: `${k.type} · ${k.tier}`,
-        entries: L.data.map(d => ({engine: d.engine, cost: d.cost, rec: d.rec, score: meanMetric(L.buckets[d.engine].filter(x => x.doc_type === k.type))}))}))], L)}
+      ${typesPanel([{label: "all document types", entries: L.data}, ...docKinds.filter(k => pagesOf(k) >= 5).map(k => ({label: `${k.type} · ${k.tier}`,
+        entries: L.data.map(d => ({engine: d.engine, cost: d.cost, rec: d.rec, score: meanMetric(L.buckets[d.engine].filter(x => x.doc_type === k.type))}))}))], L,
+        docKinds.filter(k => pagesOf(k) < 5).map(k => `${k.type} · ${k.tier} (${pagesOf(k)})`))}
       <div class="panel"><h3>Score against ${esc((XM[rf.x] || XM.cost).label)} · one point per engine</h3>
         <div class="chart-controls">${xControls()}${selectHTML("labels", [["auto", "auto"], ["on", "on"], ["off", "off"]], "labels")}</div>${scatterLegend(scatter.engines, "scatter-legend")}${scatter.html}</div>
       <div class="panel"><h3>Every page · one mark per scored page, ✕ = error</h3>
@@ -808,7 +811,7 @@ const Results = (() => {
   // One row per leg (all legs) or per document type (a leg), one column per engine type. Each cell: the type's best
   // engine there, then the cheapest engine of the same type scoring within the chosen margin of that best (4 d.p.,
   // ordered as the at-scale panel orders: $/page, then s/page, then score).
-  function typesPanel(lines, L) {
+  function typesPanel(lines, L, leftOut = []) {
     const near = Number(rf.near), nearText = (NEAR.find(([v]) => v === rf.near) || [0, rf.near])[1];
     const present = new Set(lines.flatMap(l => l.entries.map(x => D.engineTypes[x.engine])));
     const types = ENGINE_TYPES.filter(([k]) => present.has(k));
@@ -826,11 +829,12 @@ const Results = (() => {
         <div class="tb-cheap">${cheap === best ? `also the cheapest within ${esc(nearText)}` : `cheapest within ${esc(nearText)}: <b>${f4(cheap.score)}</b> ${esc(cheap.engine)} · ${price(cheap)}`}</div></td>`;
     };
     const count = k => new Set(lines.flatMap(l => l.entries.map(x => x.engine)).filter(e => D.engineTypes[e] === k)).size;
-    return `<div class="panel"><h3>Engine types · where each does well${L ? ` on ${LEG_TITLES[L.leg]}` : ""}</h3>
+    return `<details class="panel" data-k="types"><summary>Engine types · where each does well${L ? ` on ${LEG_TITLES[L.leg]}` : ""} <span class="muted">each type's best engine, and its cheapest engine close to that</span></summary>
       <p class="muted">Each cell: the best engine of that type on the ${L ? "document type" : "leg"} (score and recorded ${esc(XM.cost.label)}), then the cheapest engine of the same type whose score is within the chosen margin of that best. Cost is the engine's recorded cost for ${L ? "this leg" : "that leg"}; local engines record $0 (machine cost unpriced). An engine type is listed when the selection has one of its engines.</p>
+      ${leftOut.length ? `<p class="muted">Document types with fewer than 5 scored pages in this leg get no row of their own (scored pages in brackets): ${leftOut.map(esc).join(", ")}. They still count in "all document types".</p>` : ""}
       <div class="chart-controls">${selectHTML("near", NEAR, "within")}</div>
       <div class="twrap"><table class="v r" data-table="typebest:${L ? L.leg : "all"}"><thead><tr><th data-key="engine">${L ? "Document type" : "Leg"}</th>${types.map(([k, label]) => `<th data-key="${k}" title="${esc(ENGINE_TYPES.find(t => t[0] === k)[2])}">${esc(label)} (${count(k)})</th>`).join("")}</tr></thead>
-      <tbody>${lines.map(line => `<tr><td data-v="${esc(line.label)}" class="eng-cell">${esc(line.label)}</td>${types.map(([k]) => cellOf(line, k)).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+      <tbody>${lines.map(line => `<tr><td data-v="${esc(line.label)}" class="eng-cell">${esc(line.label)}</td>${types.map(([k]) => cellOf(line, k)).join("")}</tr>`).join("")}</tbody></table></div></details>`;
   }
   // ---------- best per leg at scale: the leg table's own $/page and s/page, multiplied by a page volume ----------
   const money = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -915,13 +919,13 @@ const Results = (() => {
         <td data-v="${r.parAt ?? ""}" title="${esc(r.basis)}">${bar(r.parAt, maxPar, duration(r.parAt), "time")}<div class="muted limit">${esc(r.limit)}</div></td></tr>`; }).join("");
     const heads = [["leg", "Leg"], ["engine", "Engine"], ["score", "Score"], ["cost", XM.cost.label], ["rec", XM.rec.label],
       ["costAt", `Cost for ${volText} pages`], ["timeAt", "Time, one at a time"], ["parAt", "Time in parallel at default limits"]];
-    return `<div class="panel"><h3>Score against cost per leg at scale — engines within ${esc(nearText)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</h3>
+    return `<details class="panel" data-k="scale"><summary>Score against cost per leg at scale <span class="muted">engines within ${esc(nearText)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</span></summary>
         <p class="muted">Per leg: the best score in this selection (named under the leg), then every engine scoring within the chosen margin of it (4 d.p.), cheapest first by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}. "Within" sets the margin; "show" how many of those engines to list. Each row shows the score it gives up and the money it saves against the best scorer.</p>
         <details data-k="scale-how"><summary>How cost and time are worked out</summary><p class="muted">Cost = ${esc(XM.cost.label)} × pages ÷ 1,000; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and count as $0.</p></details>
         <div class="chart-controls">${selectHTML("sleg", [["all", "all legs"], ...D.legs.map(l => [l, LEG_TITLES[l]])], "leg")}${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("etype", [["all", "all engine types"], ...ENGINE_TYPES.filter(([k]) => engines.some(e => D.engineTypes[e] === k)).map(([k, label]) => [k, label])], "engine type")}${selectHTML("near", NEAR, "within")}${selectHTML("top", TOP, "show")}${selectHTML("vol", VOLUMES, "pages")}</div>
         <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
         ${unpriced.length ? `<p class="muted">No ${esc(XM.cost.label)} recorded, ranked last: ${unpriced.map(esc).join(", ")}.</p>` : ""}
-        ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
+        ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</details>`;
   }
   // How cost grows with volume: each engine's primary pass (one call per page), its $/page × pages.
   function costScalePanel(ops, list) {
@@ -929,10 +933,10 @@ const Results = (() => {
     const rows = list.filter(e => isNum(ops[e]?.cost_per_page)).map(e => ({engine: e, cost: ops[e].cost_per_page, primary: ops[e].primary}))
       .sort((a, b) => a.cost - b.cost || a.engine.localeCompare(b.engine));
     const at = (r, n) => r.cost === 0 ? "unpriced (local)" : money(r.cost * n);
-    return `<div class="panel"><h3>How cost scales with volume — each engine's primary pass · ${esc(where)}</h3>
-        <p class="muted">One call per page: the engine's default conversion, or its text call where it has none. Cost grows in a straight line with the number of pages. Engines that need extra calls for some legs cost more in total; see "all passes" in the next table.</p>
+    return `<details class="panel" data-k="costscale"><summary>How cost scales with volume <span class="muted">each engine's primary pass · ${esc(where)}</span></summary>
+        <p class="muted">One call per page: the engine's default conversion, or its text call where it has none. Cost grows in a straight line with the number of pages. Engines that need extra calls for some legs cost more in total; see "all passes" under "Cost and time per engine" above.</p>
         <div class="twrap"><table class="v r" data-table="costscale"><thead><tr><th data-key="engine">Engine</th><th data-key="primary">Primary pass</th><th data-key="cost">${esc(XM.cost.label)}</th>${VOLUMES.map(([n, t]) => `<th data-key="v${n}">${esc(t)} pages</th>`).join("")}</tr></thead>
-        <tbody>${rows.map(r => `<tr data-e="${esc(r.engine)}"><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td><td data-v="${esc(r.primary)}">${esc(r.primary)}</td><td data-v="${r.cost}">${XM.cost.fmt(r.cost)}</td>${VOLUMES.map(([n]) => `<td data-v="${r.cost * n}">${at(r, +n)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+        <tbody>${rows.map(r => `<tr data-e="${esc(r.engine)}"><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td><td data-v="${esc(r.primary)}">${esc(r.primary)}</td><td data-v="${r.cost}">${XM.cost.fmt(r.cost)}</td>${VOLUMES.map(([n]) => `<td data-v="${r.cost * n}">${at(r, +n)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></details>`;
   }
   function overviewView(rows) {
     const Ls = cached("legs", () => Object.fromEntries(D.legs.map(l => [l, legData(l, rows)])));
@@ -961,11 +965,11 @@ const Results = (() => {
         ${table("glance", cols, data)}</div>
       ${typesPanel(D.legs.map(l => ({label: LEG_TITLES[l], entries: Ls[l].data})), null)}
       ${familiesPanel(null, Ls, rows, ops)}
-      ${scalePanel(Ls)}
-      ${costScalePanel(ops, engines)}
       <div class="panel"><h3>Cost and time per engine — recorded calls in this selection</h3>
         <p class="muted">Primary pass = one call per page ("default", else the text pass). All-passes figures add every pass the benchmark asked of the engine, so they depend on how many legs it was prompted for.</p>
         ${table("ops", opsCols, opsData)}</div>
+      ${scalePanel(Ls)}
+      ${costScalePanel(ops, engines)}
       <div class="panel"><h3>Score against ${esc((XM[rf.x] || XM.cost).label)} per leg · one point per engine</h3>
         <div class="chart-controls">${xControls()}</div>${scatterLegend(engines.filter(e => shownEngines.has(e)), "scatter-legend")}<div class="multi">${multi}</div></div>
       ${notesPanel(D.legs)}`;
