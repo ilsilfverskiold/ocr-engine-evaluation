@@ -11,7 +11,7 @@ const D = {legs: [], docs: {}, baseline: null, manifest: null, ledger: new Map()
   // The document judge's saved checklist verdicts on the silver-reference pages, by "stem|engine".
   judge: {}};
 let docs = [], engines = [];
-const state = {view: "page", engine: null, doc: null, leg: "text", filter: "all",
+const state = {view: "page", engine: null, doc: null, leg: "text", filter: "all", vs: null,
   layers: {ref: true, pred: true, unmatched: true}, geoLevel: "word"};
 
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
@@ -528,7 +528,8 @@ function scorePanel(row) {
     .sort((a, b) => (b.row.score ?? -1) - (a.row.score ?? -1));
   const bars = all.length ? `<div class="bars">${all.map(x => `<div class="bar ${geo ? "geo" : ""} ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
       <span>${esc(x.e)}</span><span class="track"><span class="fill" style="display:block;width:${(x.row.score ?? 0) * 100}%"></span></span>
-      <span>${(st => st === "s" ? fmt(x.row.score) : st === "err" ? '<span class="err">error</span>' : STATUS_TEXT[st])(legStatus(x.e, state.doc, leg))}</span>${geo ? `<span class="geo-extra">${geoExtra(x.row)}</span>` : ""}</div>`).join("")}</div>`
+      <span>${(st => st === "s" ? fmt(x.row.score) : st === "err" ? '<span class="err">error</span>' : STATUS_TEXT[st])(legStatus(x.e, state.doc, leg))}</span>${geo ? `<span class="geo-extra">${geoExtra(x.row)}</span>` : ""}
+      ${x.e === state.engine ? "<span></span>" : `<button type="button" class="mini cmp-btn ${x.e === state.vs ? "on" : ""}" data-vs="${x.e}" title="show ${esc(state.engine)} and ${esc(x.e)} side by side">${x.e === state.vs ? "comparing" : "compare"}</button>`}</div>`).join("")}</div>`
     : '<span class="muted">none</span>';
   const metrics = Object.entries(row?.metrics || {}).filter(([, v]) => v == null || typeof v !== "object")
     .map(([k, v]) => `<span>${esc(k)}: <b>${fmt(v)}</b></span>`).join("");
@@ -539,7 +540,7 @@ function scorePanel(row) {
       ${row.reason ? `<div class="muted">${esc(row.reason)}</div>` : ""}
       ${metrics ? `<details><summary class="muted">all metrics</summary><div class="metrics">${metrics}</div></details>` : ""}`
       : `<div class="muted">No ${LEG_TITLES[leg]} result is recorded for ${esc(state.engine)} on this page.</div>`}
-    <h3 style="margin-top:12px">All engines, this page${geo ? ": Word, with Line and Block cov where recorded" : ""} (click to switch)</h3>${bars}</div>`;
+    <h3 style="margin-top:12px">All engines, this page${geo ? ": Word, with Line and Block cov where recorded" : ""} (click to switch, or compare side by side)</h3>${bars}</div>`;
 }
 
 // The document judge estimate (not a leg) on a page without a reliable text reference: the values a model read
@@ -571,17 +572,17 @@ function callPointer(row, info, call) {
 }
 
 // The "Why" table for the geometry level shown on the image.
-function geoWhy(row, d) {
+function geoWhy(row, d, tag = "") {
   const level = geoLevel(row);
-  if (level === "line") return `<div class="panel"><h3>Why: reference lines</h3>
+  if (level === "line") return `<div class="panel"><h3>${tag}Why: reference lines</h3>
     <p class="muted">Reference and engine boxes are each merged into visual lines. Each reference line is paired with the unused engine line of most similar text (at least 0.7) and is located when each box contains the other's centre.</p>
     ${verdictTable((d.line_matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.predicted_text != null ? "text matched, box missed" : "no line with similar text"})), [
       ["reference line", r => r.text], ["engine line", r => r.predicted_text], ["text similarity", r => r.similarity], ["verdict", r => r.verdict]])}</div>`;
-  if (level === "block") return `<div class="panel"><h3>Why: reference units inside blocks</h3>
+  if (level === "block") return `<div class="panel"><h3>${tag}Why: reference units inside blocks</h3>
     <p class="muted">A reference unit is covered when an engine block contains its text and its centre. This shows where text sits, not word-level boxes.</p>
     ${verdictTable((d.block_matches || []).map(x => ({...x, verdict: x.covered ? "correct" : "not covered", inBlock: x.block == null ? null : `block ${x.block + 1}: ${clip(d.blocks?.[x.block]?.text, 120)}`})), [
       ["reference", r => r.text], ["covering block", r => r.inBlock], ["verdict", r => r.verdict]])}</div>`;
-  return `<div class="panel"><h3>Why: reference units</h3>${verdictTable((d.matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.matched ? "text matched, box missed" : "missing"})), [
+  return `<div class="panel"><h3>${tag}Why: reference units</h3>${verdictTable((d.matches || []).map(x => ({...x, verdict: x.hit ? "correct" : x.matched ? "text matched, box missed" : "missing"})), [
     ["reference", r => r.text], ["engine text", r => r.predicted_text], ["IoU", r => r.iou], ["verdict", r => r.verdict]])}</div>`;
 }
 
@@ -616,63 +617,39 @@ const sub = text => `<div class="sub">${esc(text)}</div>`;
 const repairs = v => isEmpty(v) ? "" : `<details><summary>Reference changes recorded with this score</summary>${tree(v)}</details>`;
 
 // ---------- leg bodies ----------
-function legBody(row, call, ref) {
-  const d = row.detail || {}, m = row.metrics || {};
+// A leg's page is three parts: the engine's output as the scorer read it, the reference, and the scorer's verdicts.
+// The page shows output beside reference; comparing two engines shows the two outputs, then the two verdict lists.
+// `name` (compare only) puts the engine's name in each title.
+function outputPanel(row, call, engine, name) {
+  const d = row.detail || {}, m = row.metrics || {}, tag = name ? `${esc(name)} · ` : "";
   call = call || {};
   switch (state.leg) {
     case "text":
-      return `${row.scoring_status === "unscored" ? '<div class="panel muted">Word coverage has not been scored for this call.</div>' : `<div class="panel"><h3>Missed reference words (${(d.missed_words || []).length})</h3>
-        ${(d.missed_words || []).map(w => `<span class="chip bad">${esc(w)}</span>`).join("") || '<span class="muted">none</span>'}</div>`}
-        <div class="two"><div class="panel"><h3>Engine text</h3>${sub("raw_text, what the scorer read")}<pre>${esc(call.raw_text)}</pre></div>
-        <div class="panel"><h3>Reference text</h3>${ref ? sub(ref.file) : ""}${ref ? `<pre>${esc(ref.text)}</pre>` : '<p class="muted">No text sidecar found for this page.</p>'}
-          ${repairs(m.text_reference_repairs)}</div></div>`;
+      return `<div class="panel"><h3>${tag}Engine text</h3>${sub("raw_text, what the scorer read")}<pre>${esc(call.raw_text)}</pre></div>`;
     case "markdown": {
       const mdText = (call.structured_output || {}).markdown ?? call.raw_text ?? "";
       const mdField = (call.structured_output || {}).markdown != null ? "structured_output.markdown" : "raw_text";
-      return `<div class="two"><div class="panel"><h3>Engine Markdown</h3>${sub(`${mdField}, as recorded; one outer \`\`\` fence hidden, as the scorer removes it`)}
+      return `<div class="panel"><h3>${tag}Engine Markdown</h3>${sub(`${mdField}, as recorded; one outer \`\`\` fence hidden, as the scorer removes it`)}
           <pre>${esc(unfence(mdText))}</pre>
-          <details><summary>rendered</summary><div class="rendered">${md(unfence(mdText))}</div></details></div>
-        <div class="panel"><h3>Reference Markdown</h3>${ref ? sub(ref.file) : ""}
-          ${ref ? `<div class="rendered">${md(ref.text)}</div>` : '<p class="muted">No _markdown_gt.md sidecar for this page, and the row records no reference file; the items the headline was scored against are in the verdicts below.</p>'}
-          <p class="muted">Supporting metrics only (CER/WER, block recall, reading order); their recorded text reference: ${esc(m.markdown_text_reference_source ?? "not recorded")}. The headline score checks the catalogue items below.</p></div></div>
-        <div class="panel"><h3>Why: catalogue item verdicts (${(d.verdicts || []).length} items)</h3>${verdictTable(d.verdicts || [], [
-          ["#", r => r.n], ["type", r => r.type], ["reference content", r => r.content], ["verdict", r => r.verdict], ["how", r => r.how],
-          ["matched engine text", r => (r.evidence || []).map(e => `[${e.kind}] ${e.text}`).join(" | ")]])}</div>`;
+          <details><summary>rendered</summary><div class="rendered">${md(unfence(mdText))}</div></details></div>`;
     }
     case "tables": {
       // The tables the scorer read are saved with the score.
       const tables = d.output_tables || [];
-      return `<div class="two"><div class="panel"><h3>Engine tables (${tables.length})</h3>${sub("as recorded by the scorer")}
-          ${tables.map((t, i) => `<div class="muted">table ${i}</div><div class="tablebox">${clean(t)}</div>`).join("") || `<span class="muted">${d.output_tables ? "the scorer recorded no tables" : "not recorded for this row"}</span>`}</div>
-        <div class="panel"><h3>Reference table</h3>${sub(ref ? ref.file : `selected_reference: ${d.selected_reference ?? "not recorded"}`)}
-          ${ref ? `<div class="tablebox">${clean(ref.html || "")}</div>` : '<p class="muted">The reference file is not recorded for this row; each reference cell is in the verdicts below.</p>'}
-          <div class="metrics">reference cells <b>${fmt(d.reference_cells)}</b> · output cells <b>${fmt(d.output_cells)}</b></div></div></div>
-        <div class="panel"><h3>Why: cell verdicts</h3>${verdictTable(d.verdicts || [], [
-          ["ref cell", r => pos(r.reference)], ["reference", r => cell(r.reference)], ["engine", r => (r.output_components || []).map(cell).join(" + ") || cell(r.output)],
-          ["credit", r => r.credit], ["verdict", r => r.verdict === "extra" && r.invented ? "extra (invented number)" : r.verdict], ["how", r => r.how]])}</div>`;
+      return `<div class="panel"><h3>${tag}Engine tables (${tables.length})</h3>${sub("as recorded by the scorer")}
+          ${tables.map((t, i) => `<div class="muted">table ${i}</div><div class="tablebox">${clean(t)}</div>`).join("") || `<span class="muted">${d.output_tables ? "the scorer recorded no tables" : "not recorded for this row"}</span>`}</div>`;
     }
     case "key_value":
     case "schema": {
       // Recorded only: the engine's reply as saved, the native pairs saved in the call, and the scorer's verdicts.
       const extra = state.leg === "schema" && d.compliance ? `<div class="metrics">valid JSON as returned <b>${d.compliance.valid_json}</b> · schema valid <b>${d.compliance.schema_valid}</b> · extra fields <b>${(d.extra_fields || []).length}</b></div>
           ${(d.compliance.errors || []).length ? `<p class="muted">Recorded validity errors: ${esc(d.compliance.errors.join("; "))}</p>` : ""}` : "";
-      const textract = state.engine === "textract_structured";
-      const forms = !textract && Array.isArray((call.structured_output || {}).forms) && call.structured_output.forms.length ? call.structured_output.forms : null;
-      return `<div class="two"><div class="panel"><h3>Engine reply</h3>${sub("raw_text, as recorded")}${extra}
-          ${textract ? `<p class="muted">The scorer does not read this text for Textract. It rebuilds the FORMS pairs and tables from the saved Blocks (run_benchmark._read_stored_call); they are not saved separately. The Blocks are under "Full provider reply"; the key and value the scorer matched for each field are in the verdicts below.</p>` : ""}
-          <pre>${esc(call.raw_text ?? "")}</pre></div>
-        <div class="panel"><h3>Reference</h3>${ref ? sub(`true_json in ${ref.file}`) : ""}
-          ${ref ? `<pre>${esc(JSON.stringify(ref.json, null, 2))}</pre>` : '<p class="muted">This score row does not record its reference file; the expected value of every field is in the verdicts below.</p>'}
-          ${state.leg === "schema" ? repairs(m.schema_reference_repairs) : ""}</div></div>
-        ${forms ? `<div class="panel"><h3>Native key/value pairs</h3>${sub("structured_output.forms, as saved in the call")}
-          <div class="vwrap"><table class="v"><tr><th>key</th><th>value</th></tr>${forms.map(f => `<tr><td>${esc(f.key)}</td><td>${esc(f.value)}</td></tr>`).join("")}</table></div></div>` : ""}
-        <div class="panel"><h3>Why: field verdicts (as recorded by the scorer)</h3>${verdictTable(d.verdicts || [], [
-          ["reference field", r => r.path], ["expected", r => r.expected], ["engine key", r => r.key], ["engine value", r => r.value],
-          ["verdict", r => r.verdict], ["how", r => r.how]])}
-          ${(d.unresolved_keys || []).length ? `<details><summary>unmatched engine pairs (${d.unresolved_keys.length})</summary><table class="v"><tr><th>key</th><th>value</th><th>decision</th></tr>${d.unresolved_keys.map(u => `<tr><td>${esc(u.key)}</td><td>${esc(u.value)}</td><td>${esc(u.decision)}</td></tr>`).join("")}</table></details>` : ""}</div>`;
+      return `<div class="panel"><h3>${tag}Engine reply</h3>${sub("raw_text, as recorded")}${extra}
+          ${engine === "textract_structured" ? `<p class="muted">The scorer does not read this text for Textract. It rebuilds the FORMS pairs and tables from the saved Blocks (run_benchmark._read_stored_call); they are not saved separately. The Blocks are under "Full provider reply"; the key and value the scorer matched for each field are in the verdicts below.</p>` : ""}
+          <pre>${esc(call.raw_text ?? "")}</pre></div>`;
     }
-    case "geometry": {
-      return `<div class="panel"><div class="metrics"><span>engine box unit: <b>${esc(m.geometry_prediction_granularity || "not recorded")}</b></span>
+    case "geometry":
+      return `<div class="panel">${name ? `<h3>${esc(name)}</h3>` : ""}<div class="metrics"><span>engine box unit: <b>${esc(m.geometry_prediction_granularity || "not recorded")}</b></span>
           <span>scored against: <b>${esc(m.geometry_scoring_unit || "not recorded")}</b></span>
           <span>recall (headline): <b>${fmt(m.geometry_recall ?? row.score)}</b></span><span>precision: <b>${fmt(m.geometry_precision)}</b></span>
           ${m.geometry_block_score != null ? `<span>block score (diagnostic): <b>${fmt(m.geometry_block_score)}</b></span><span>words per box: <b>${fmt(m.geometry_words_per_box)}</b></span>` : ""}
@@ -681,12 +658,100 @@ function legBody(row, call, ref) {
           <span>matched: <b>${fmt(m.geometry_matched_words)}</b> / located: <b>${fmt(m.geometry_located_words)}</b> of <b>${fmt(m.geometry_reference_words)}</b></span>
           <span>rescaled from 1000: <b>${fmt(m.geometry_rescaled_from_thousand)}</b></span><span>axes swapped: <b>${fmt(m.geometry_axes_swapped)}</b></span></div>
           ${m.geometry_prediction_granularity === "layout_block" && m.geometry_scoring_unit !== "layout_block" ? `<p class="warn">The engine returned layout blocks; the headline counts ${esc(m.geometry_scoring_unit)}-level reference units one-to-one, so a block covering several ${esc(m.geometry_scoring_unit)}s can locate at most one of them. The block score above shows box placement separately.</p>` : ""}
-          <p class="muted">Boxes are drawn on the page image to the left, in the scorer's normalised coordinates (${esc(d.scored_box_coordinates || "not recorded")}); hover a box for its text.</p>
-          ${repairs(m.geometry_reference_repairs)}</div>
-        ${geoWhy(row, d)}`;
-    }
+          ${name ? "" : `<p class="muted">Boxes are drawn on the page image to the left, in the scorer's normalised coordinates (${esc(d.scored_box_coordinates || "not recorded")}); hover a box for its text.</p>`}
+          ${repairs(m.geometry_reference_repairs)}</div>`;
   }
   return "";
+}
+function referencePanel(row, ref) {
+  const d = row.detail || {}, m = row.metrics || {};
+  switch (state.leg) {
+    case "text":
+      return `<div class="panel"><h3>Reference text</h3>${ref ? sub(ref.file) : ""}${ref ? `<pre>${esc(ref.text)}</pre>` : '<p class="muted">No text sidecar found for this page.</p>'}
+          ${repairs(m.text_reference_repairs)}</div>`;
+    case "markdown":
+      return `<div class="panel"><h3>Reference Markdown</h3>${ref ? sub(ref.file) : ""}
+          ${ref ? `<div class="rendered">${md(ref.text)}</div>` : '<p class="muted">No _markdown_gt.md sidecar for this page, and the row records no reference file; the items the headline was scored against are in the verdicts below.</p>'}
+          <p class="muted">Supporting metrics only (CER/WER, block recall, reading order); their recorded text reference: ${esc(m.markdown_text_reference_source ?? "not recorded")}. The headline score checks the catalogue items below.</p></div>`;
+    case "tables":
+      return `<div class="panel"><h3>Reference table</h3>${sub(ref ? ref.file : `selected_reference: ${d.selected_reference ?? "not recorded"}`)}
+          ${ref ? `<div class="tablebox">${clean(ref.html || "")}</div>` : '<p class="muted">The reference file is not recorded for this row; each reference cell is in the verdicts below.</p>'}
+          <div class="metrics">reference cells <b>${fmt(d.reference_cells)}</b> · output cells <b>${fmt(d.output_cells)}</b></div></div>`;
+    case "key_value":
+    case "schema":
+      return `<div class="panel"><h3>Reference</h3>${ref ? sub(`true_json in ${ref.file}`) : ""}
+          ${ref ? `<pre>${esc(JSON.stringify(ref.json, null, 2))}</pre>` : '<p class="muted">This score row does not record its reference file; the expected value of every field is in the verdicts below.</p>'}
+          ${state.leg === "schema" ? repairs(m.schema_reference_repairs) : ""}</div>`;
+  }
+  return "";
+}
+// Key/value and schema: the native pairs an engine's call saved, where it has them (Textract's are rebuilt by the scorer).
+function formsPanel(engine, call) {
+  const forms = engine !== "textract_structured" && Array.isArray((call?.structured_output || {}).forms) && call.structured_output.forms.length ? call.structured_output.forms : null;
+  return forms ? `<div class="panel"><h3>Native key/value pairs</h3>${sub("structured_output.forms, as saved in the call")}
+          <div class="vwrap"><table class="v"><tr><th>key</th><th>value</th></tr>${forms.map(f => `<tr><td>${esc(f.key)}</td><td>${esc(f.value)}</td></tr>`).join("")}</table></div></div>` : "";
+}
+function whyPanel(row, name) {
+  const d = row.detail || {}, tag = name ? `${esc(name)} · ` : "";
+  switch (state.leg) {
+    case "text":
+      return row.scoring_status === "unscored" ? `<div class="panel muted">${tag}Word coverage has not been scored for this call.</div>` : `<div class="panel"><h3>${tag}Missed reference words (${(d.missed_words || []).length})</h3>
+        ${(d.missed_words || []).map(w => `<span class="chip bad">${esc(w)}</span>`).join("") || '<span class="muted">none</span>'}</div>`;
+    case "markdown":
+      return `<div class="panel"><h3>${tag}Why: catalogue item verdicts (${(d.verdicts || []).length} items)</h3>${verdictTable(d.verdicts || [], [
+          ["#", r => r.n], ["type", r => r.type], ["reference content", r => r.content], ["verdict", r => r.verdict], ["how", r => r.how],
+          ["matched engine text", r => (r.evidence || []).map(e => `[${e.kind}] ${e.text}`).join(" | ")]])}</div>`;
+    case "tables":
+      return `<div class="panel"><h3>${tag}Why: cell verdicts</h3>${verdictTable(d.verdicts || [], [
+          ["ref cell", r => pos(r.reference)], ["reference", r => cell(r.reference)], ["engine", r => (r.output_components || []).map(cell).join(" + ") || cell(r.output)],
+          ["credit", r => r.credit], ["verdict", r => r.verdict === "extra" && r.invented ? "extra (invented number)" : r.verdict], ["how", r => r.how]])}</div>`;
+    case "key_value":
+    case "schema":
+      return `<div class="panel"><h3>${tag}Why: field verdicts (as recorded by the scorer)</h3>${verdictTable(d.verdicts || [], [
+          ["reference field", r => r.path], ["expected", r => r.expected], ["engine key", r => r.key], ["engine value", r => r.value],
+          ["verdict", r => r.verdict], ["how", r => r.how]])}
+          ${(d.unresolved_keys || []).length ? `<details><summary>unmatched engine pairs (${d.unresolved_keys.length})</summary><table class="v"><tr><th>key</th><th>value</th><th>decision</th></tr>${d.unresolved_keys.map(u => `<tr><td>${esc(u.key)}</td><td>${esc(u.value)}</td><td>${esc(u.decision)}</td></tr>`).join("")}</table></details>` : ""}</div>`;
+    case "geometry":
+      return geoWhy(row, d, tag);
+  }
+  return "";
+}
+function legBody(row, call, ref, engine) {
+  const pair = `<div class="two">${outputPanel(row, call, engine)}${referencePanel(row, ref)}</div>`;
+  switch (state.leg) {
+    case "text": return whyPanel(row) + pair;
+    case "markdown":
+    case "tables": return pair + whyPanel(row);
+    case "key_value":
+    case "schema": return pair + formsPanel(engine, call) + whyPanel(row);
+    case "geometry": return outputPanel(row, call, engine) + whyPanel(row);
+  }
+  return "";
+}
+
+// ---------- two engines side by side ----------
+// The numbers that explain a difference at a glance, per leg (only those the row recorded are shown).
+const COMPARE_METRICS = {
+  text: [["CER", "cer"], ["WER", "wer"], ["words returned", "output_words"], ["reference words", "gt_words"], ["repetition suspected", "repetition_suspected"]],
+  markdown: [["Text CER", "markdown_cer"], ["Block F1", "element_f1"]],
+  tables: [["Numbers", "numeric_accuracy"], ["Invented", "invented_number_rate"], ["Extra rate", "extra_cell_rate"]],
+  key_value: [["fields", "kv_pairs_total"], ["missing", "kv_pairs_missing"], ["wrong", "kv_pairs_wrong_value"]],
+  schema: [["fields", "schema_fields_total"], ["missing", "schema_fields_missing"], ["wrong", "schema_fields_wrong_value"], ["valid JSON", "schema_valid_json"]],
+  geometry: [["Line", "geometry_line_score"], ["Block cov", "geometry_block_score"], ["words/box", "geometry_words_per_box"]],
+};
+function compareHead(A, B) {
+  const line = x => `<div class="cmp-row"><b>${esc(x.engine)}</b>
+      <span class="cmp-score" style="color:${scoreColor(x.row?.score)}">${!x.row ? "not recorded" : x.row.error ? "error" : x.row.applicable === false ? "n/a" : fmt(x.row.score)}</span>
+      ${(COMPARE_METRICS[state.leg] || []).filter(([, k]) => x.row?.metrics?.[k] != null).map(([label, k]) => `<span>${esc(label)} <b>${fmt(x.row.metrics[k])}</b></span>`).join("")}</div>`;
+  return `<div class="panel"><h3>${LEG_TITLES[state.leg]} · side by side on this page</h3>${line(A)}${line(B)}
+    <div class="pick"><button type="button" class="mini" data-cmp="swap">⇄ swap</button><button type="button" class="mini" data-cmp="stop">stop comparing</button></div></div>`;
+}
+function compareBody(A, B) {
+  const out = x => !x.row ? `<div class="panel muted">No ${LEG_TITLES[state.leg]} result is recorded for ${esc(x.engine)} on this page.</div>`
+    : x.row.error ? `<div class="panel"><h3>${esc(x.engine)}</h3><pre class="warn">${esc(x.row.error)}</pre></div>`
+    : outputPanel(x.row, x.call, x.engine, x.engine) + (state.leg === "key_value" || state.leg === "schema" ? formsPanel(x.engine, x.call) : "");
+  const why = x => x.row && !x.row.error ? whyPanel(x.row, x.engine) : "<div></div>";
+  return `<div class="two cmp">${out(A)}${out(B)}</div><div class="two cmp">${why(A)}${why(B)}</div>`;
 }
 
 async function renderContent() {
@@ -694,13 +759,21 @@ async function renderContent() {
   const row = legRow(state.engine, state.doc, state.leg);
   const entry = D.docs[state.doc]?.engines[state.engine];
   const info = row && entry?.calls[row.call];
-  const [call, ref] = row ? await Promise.all([loadCall(info), loadReference(D.docs[state.doc], state.leg, row)]) : [null, null];
+  const vsRow = state.vs ? legRow(state.vs, state.doc, state.leg) : null;
+  const vsInfo = vsRow && D.docs[state.doc]?.engines[state.vs]?.calls[vsRow.call];
+  const [call, ref, vsCall] = await Promise.all([row ? loadCall(info) : null, row ? loadReference(D.docs[state.doc], state.leg, row) : null, vsRow ? loadCall(vsInfo) : null]);
   if (seq !== contentSeq || state.view !== "page") return;
   // On a silver-reference page the judge estimate is the only result for the text, so it comes first.
   const judged = state.leg === "text" ? judgePanel() : "";
-  let right = judged && row?.applicable === false ? judged + scorePanel(row) : scorePanel(row) + judged;
-  if (row) right += callPointer(row, info, call) + (row.error ? "" : legBody(row, call, ref));
-  el("content").innerHTML = `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>`;
+  let right = judged && row?.applicable === false ? judged + scorePanel(row) : scorePanel(row) + judged, below = "";
+  if (state.vs) {
+    const A = {engine: state.engine, row, call}, B = {engine: state.vs, row: vsRow, call: vsCall};
+    right += compareHead(A, B);
+    below = compareBody(A, B);
+  } else if (row) right += callPointer(row, info, call) + (row.error ? "" : legBody(row, call, ref, state.engine));
+  el("content").innerHTML = `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>${below}`;
+  el("content").querySelectorAll("[data-vs]").forEach(b => b.onclick = ev => { ev.stopPropagation(); go({vs: b.dataset.vs === state.vs ? null : b.dataset.vs}); });
+  el("content").querySelectorAll("[data-cmp]").forEach(b => b.onclick = () => go(b.dataset.cmp === "swap" ? {engine: state.vs, vs: state.engine} : {vs: null}));
   el("content").querySelectorAll(".bar").forEach(n => n.onclick = () => go({engine: n.dataset.e}));
   el("content").querySelectorAll(".filter button").forEach(b => b.onclick = () => go({filter: b.dataset.f}));
   el("content").querySelectorAll("[data-layer]").forEach(c => c.onchange = () => { state.layers[c.dataset.layer] = c.checked; renderContent(); });
@@ -715,7 +788,9 @@ function go(patch) {
   // A newly picked engine keeps the page when it has it, else jumps to its first.
   const avail = availableDocs(state.engine);
   if (avail.length && !avail.includes(state.doc)) state.doc = avail[0];
-  location.hash = state.view === "results" ? Results.toHash() : [state.engine, state.doc, state.leg, state.howOpen ? "how" : "view"].join("/");
+  if (state.vs === state.engine || !engines.includes(state.vs)) state.vs = null;
+  location.hash = state.view === "results" ? Results.toHash()
+    : [state.engine, state.doc, state.leg, state.howOpen ? "how" : "view", ...(state.vs ? ["vs=" + state.vs] : [])].join("/");
   return render();
 }
 function render() {
@@ -727,8 +802,9 @@ function render() {
 function fromHash() {
   const parts = decodeURIComponent(location.hash.slice(1)).split("/");
   if (parts[0] === "results") { state.view = "results"; Results.fromHash(parts.slice(1)); return; }
-  const [e, d, l, how] = parts;
+  const [e, d, l, how, vs] = parts;
   state.howOpen = how === "how";
+  state.vs = vs?.startsWith("vs=") && engines.includes(vs.slice(3)) && vs.slice(3) !== e ? vs.slice(3) : null;
   if (engines.includes(e)) state.engine = e;
   if (docs.includes(d)) state.doc = d;
   if (D.legs.includes(l)) state.leg = l;
