@@ -540,13 +540,59 @@ const Results = (() => {
   const REPO = "https://github.com/ilsilfverskiold/ocr-engine-evaluation";
   const SCORING = REPO + "/blob/main/public_docs/scoring-design.md";
   const link = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${esc(text)}</a>`;
+  // How each leg is measured, in plain words (public_docs/scoring-design.md has the full rules), and its section there.
+  const MEASURE = {
+    text: ["#text", [
+      ["The question", "Did the engine read the words on the page?"],
+      ["What the engine returns", "Its plain-text transcription of the page: its normal output, or the reply to a text prompt for engines that need one."],
+      ["What it is compared with", "A reference transcript of the page, written by a person for most pages and model-verified for the rest. Pages without a reliable transcript are not part of this leg."],
+      ["The score", "Formatting is stripped and case and spacing are normalised. Score = the share of the reference's distinct words that appear in the output. Word order, repeated words and extra words do not change it."],
+      ["Supporting numbers", "CER and WER count every character or word that would need fixing, so they do reflect order and extra text."]]],
+    markdown: ["#markdown", [
+      ["The question", "Is the page's structure right: headings, lists, tables, key/value lines and paragraphs?"],
+      ["What the engine returns", "The page as Markdown (or HTML)."],
+      ["What it is compared with", "A checklist of up to 40 expected elements per page, written once by a model from the page image and shared by every engine. The engines' answers are checked by code, not by a model."],
+      ["The score", "Each element is looked up in the engine's Markdown and must sit in the right kind of block: a heading as a heading, a table row inside a table. A full match earns 1, a partial match 0.5, a missing element or the wrong block type 0. Score = credit ÷ elements. Bold text is not a heading."],
+      ["Supporting numbers", "Text CER/WER and Block P/R/F1 exist only on pages with a full reference transcript or Markdown."]]],
+    tables: ["#tables", [
+      ["The question", "Are the table cells returned with the right values under the right rows and columns?"],
+      ["What the engine returns", "Its tables in Markdown or HTML (Textract: its own table output). Every table in the answer is read."],
+      ["What it is compared with", "Human-reviewed reference tables, on the pages that have tables."],
+      ["The score", "Each reference cell is found through its row label and column header, so a table may be split, merged or ordered differently. A cell earns 1 for the exact value or the same number written another way, partial credit for close text, and 0 for a wrong number or a missing cell. Score = credit ÷ reference cells."],
+      ["Supporting numbers", "Extra cells do not lower the score; they show in Extra rate. Numbers and Invented look at numeric cells alone."]]],
+    key_value: ["#keyvalue", [
+      ["The question", "Did the engine pull the printed fields off the page, each label with its value?"],
+      ["What the engine returns", "Every printed label and its value as flat JSON, asked with the same prompt for every prompted engine. Textract structured returns its own form fields and tables, with no prompt."],
+      ["What it is compared with", "A reviewed list of the page's printed fields and their values."],
+      ["The score", "Each reference field is matched to a returned label: the exact name first, then normalised names and known aliases. Where it is unclear whether a returned label means the field, a judge model (Gemini 2.5 Flash) decides once and the ruling is stored and reused. Values are compared by code: numbers as numbers, dates as dates. Score = (correct values + fields correctly left blank) ÷ fields counted. A printed but empty field the engine did not return is not counted."],
+      ["Supporting numbers", "Missing and Wrong split the errors; Unmapped counts returned labels that matched no field, which do not lower the score."]]],
+    schema: ["#schema", [
+      ["The question", "Can the engine fill a set of fields it is given?"],
+      ["What the engine returns", "JSON with exactly the requested keys. Every engine gets the same field names for a page, as a JSON schema in the prompt or through the provider's own extraction feature."],
+      ["What it is compared with", "The same reviewed field values as Key-value, on a fixed sample of fields."],
+      ["The score", "Keys must match exactly, with no judge; values are compared by code as in Key-value. Score = (correct + correctly blank) ÷ (requested fields + extra keys), so extra or repeated keys cost points."],
+      ["Supporting numbers", "Valid JSON shows whether the reply parsed as returned; values are still read from fenced or slightly broken replies."]]],
+    geometry: ["#geometry", [
+      ["The question", "Are the engine's text boxes in the right place?"],
+      ["What the engine returns", "Text with a box around each word, line or block."],
+      ["What it is compared with", "A reference box for every word (every line on receipts), on the pages that have them."],
+      ["The score (Word)", "A reference word counts as located when the engine returned the same text in a box and each box contains the other's centre. Score = located ÷ reference words."],
+      ["Line and Block cov", "Line merges both sides into visual lines first, which is fairer to engines that return one box per line. Block cov is for engines that return large layout blocks: the share of words inside a block that contains their text. Read it with Words/box, since one page-sized box would cover everything."]]],
+  };
+  function measureHTML(leg) {
+    const [anchor, items] = MEASURE[leg] || [];
+    return items ? `<h4>How ${esc(LEG_TITLES[leg])} is measured</h4>
+      <ul class="notes">${items.map(([k, v]) => `<li><b>${esc(k)}.</b> ${esc(v)}</li>`).join("")}<li>${link(SCORING + anchor, `Full rules for ${LEG_TITLES[leg]}`)}</li></ul>
+      <h4>About all the numbers</h4>` : "";
+  }
   // Written for a reader who has not seen the code: what was tested, how a score is averaged, what cost means.
   function headHTML() {
     const R = D.results, nEngines = new Set(R.rows.map(r => r.engine_name)).size, nPages = new Set(R.rows.map(r => r.stem)).size;
     const types = docTypes();
     return `<h1>Results</h1>
       <div class="meta"><span>Published run ${esc(D.baseline)}: ${nEngines} engines · ${nPages} pages · ${R.rows.length} result rows</span></div>
-      <details class="panel" data-k="how"><summary>How these numbers are computed</summary>
+      <details class="panel" data-k="how"><summary>How these numbers are computed${rf.leg !== "all" ? ` · how ${esc(LEG_TITLES[rf.leg])} is measured` : ""}</summary>
+        ${rf.leg !== "all" ? measureHTML(rf.leg) : ""}
         <ul class="notes">
           <li><b>What was tested.</b> ${nEngines} OCR engines and engine configurations, from local tools (Tesseract, Docling) and self-hosted open models to cloud APIs, each ran on the same ${nPages} single-page documents: ${types.length} document types (${types.map(t => esc(t.type.replace(/_/g, " "))).join(", ")}) in three difficulty tiers, easy, medium and hard.</li>
           <li><b>Six tasks, scored separately.</b> Each task is called a leg: Text (did it read the words), Markdown (is the page structure right), Tables (are the cells right), Key-value (did it pull the printed fields), Schema (can it fill a given set of fields) and Geometry (are the text boxes in the right place). Every leg has its own reference answers and a score from 0 to 1. There is no combined score.</li>
