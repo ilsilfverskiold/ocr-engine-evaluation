@@ -279,6 +279,63 @@ const Results = (() => {
       {key: "rec", label: XM.rec.label, fmt: XM.rec.fmt, higher: false, countKey: "rec_n", title: XM.rec.title},
     ].filter(Boolean);
   }
+  // What each column of a leg table means, shown folded under the table. Metric keys as in METRICS.
+  const COLUMN_HELP = {
+    score: "The leg's headline score, 0 to 1, higher is better, averaged per document type. How it is worked out is under How these numbers are computed, above.",
+    noout: "The same score without the low-scoring page cases listed under Notes.",
+    tier: "The same score on one difficulty tier only.",
+    pages: "Pages with a score for this engine.",
+    errors: "Pages where the call failed. They get no score rather than zero.",
+    unscored: "Replies that were collected but not scored in this run.",
+    pending: "Pages waiting for a key review; left out of the score.",
+    cer: "Character error rate: characters inserted, deleted or substituted to turn the output into the reference, divided by the reference's length. Lower is better; 0 is a perfect match; extra text can push it above 1.",
+    wer: "Word error rate: the same, counted in words.",
+    word_f1: "The balance of Word P and Word R.",
+    word_precision: "Share of the output's words that are in the reference, repeats counted. Low means extra or invented text.",
+    word_recall: "Share of the reference's words found in the output, repeats counted. Low means missed text.",
+    markdown_cer: "Character error rate of the Markdown's rendered text against a full-page transcript, on pages that have one.",
+    markdown_wer: "The same, counted in words.",
+    element_f1: "The balance of Block P and Block R.",
+    element_precision: "Share of the output's blocks whose text is at least 85% covered by complete, correctly typed matches. Only on pages with a full Markdown reference.",
+    element_recall: "Share of reference blocks matched completely with the right block type. Only on pages with a full Markdown reference.",
+    order_score: "Whether the matched blocks come in the reference's reading order; 1 is the same order.",
+    numeric_accuracy: "Share of numeric reference cells (amounts, quantities, numeric IDs) returned correct and in the right place.",
+    invented_number_rate: "Share of returned numeric cells whose number is printed nowhere on the page. Lower is better.",
+    cell_f1: "The balance of Strict P and Strict R.",
+    cell_precision: "Share of returned cells that exactly match a reference cell, with no partial credit.",
+    cell_recall: "Share of reference cells matched exactly, with no partial credit.",
+    extra_cell_rate: "Share of returned cells that match no reference cell. Lower is better; it does not lower the score.",
+    structure_similarity: "How close the returned tables' rows and cells are to the reference's layout, ignoring the text; 1 is the same shape.",
+    numeric_found_rate: "Share of numeric reference values found in any returned cell, wherever it sits.",
+    geometry_line_score: "Word scoring after merging the reference and the engine's boxes into visual lines: the fair number for engines that return one box per line.",
+    geometry_block_score: "For engines that return layout blocks: the share of reference words inside a returned block that contains their text. Read it with Words/box.",
+    geometry_words_per_box: "Median reference words per returned box. High means coarse blocks.",
+    geometry_precision: "How many of the returned boxes inside the annotated area locate a reference word. Extra, duplicated or misplaced boxes lower it.",
+    geometry_f1: "The balance of Word (recall) and Precision.",
+    geometry_cer: "Character error rate of the text read from the returned boxes, in reading order.",
+    geometry_wer: "The same, counted in words.",
+    missing_rate: "Share of fields the engine did not return.",
+    wrong_rate: "Share of fields returned with a wrong value.",
+    kv_unresolved_keys: "Returned labels per page that matched no reference field, on average. They do not lower the score.",
+    kv_populated_accuracy: "Accuracy on fields that have a value printed on the page.",
+    kv_blank_accuracy: "Accuracy on printed but empty fields, which should come back blank.",
+    schema_extra_fields: "Returned keys per page that were not requested, or were repeated, on average. Each one lowers the score.",
+    schema_valid_json: "Share of replies that were valid JSON as returned. Values are still read from fenced or slightly broken replies.",
+    cost: "Recorded cost of 1,000 pages for the call that served this leg.",
+    rec: "Recorded seconds per page. For self-hosted models it is GPU time per page within a batch, not the wait for one request.",
+  };
+  function columnHelp(L) {
+    const items = [];
+    for (const c of legColumns(L)) {
+      if (c.key === "rank" || c.key === "engine") continue;
+      if (c.key.startsWith("tier:")) { if (!items.some(i => i[0] === "Easy / Medium / Hard")) items.push(["Easy / Medium / Hard", COLUMN_HELP.tier]); continue; }
+      const text = COLUMN_HELP[c.key.replace(/^m:/, "")];
+      if (text) items.push([c.label, text]);
+    }
+    items.push(["(n) after a value", "Only n of the engine's pages record that number."]);
+    return `<details class="help" data-k="help:${L.leg}"><summary>What the columns mean</summary>
+      <dl class="help-list">${items.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></details>`;
+  }
   function familiesTable(L) {
     const kinds = docTypes().filter(t => L.legRows.some(r => valid(r) && r.doc_type === t.type));
     if (kinds.length < 2) return "";
@@ -626,7 +683,8 @@ const Results = (() => {
     return `<div class="panel"><h3>${LEG_TITLES[L.leg]} — ${L.pages} scored page${L.pages === 1 ? "" : "s"} in this selection</h3>
         <p class="muted">${esc(METHOD[L.leg])} Click a column to sort; bold marks the best value per column.</p>
         ${L.data.length ? table("leg:" + L.leg, legColumns(L), L.data) : '<p class="muted">No engine has a scored or failed row here.</p>'}
-        ${L.absent.length ? `<p class="muted">N/A only (not ranked): ${L.absent.map(esc).join(", ")}</p>` : ""}</div>
+        ${L.absent.length ? `<p class="muted">N/A only (not ranked): ${L.absent.map(esc).join(", ")}</p>` : ""}
+        ${L.data.length ? columnHelp(L) : ""}</div>
       <div class="panel"><h3>Score against ${esc((XM[rf.x] || XM.cost).label)} · one point per engine</h3>
         <div class="chart-controls">${xControls()}${selectHTML("labels", [["auto", "auto"], ["on", "on"], ["off", "off"]], "labels")}</div>${scatterLegend(scatter.engines, "scatter-legend")}${scatter.html}</div>
       <div class="panel"><h3>Every page · one mark per scored page, ✕ = error</h3>
