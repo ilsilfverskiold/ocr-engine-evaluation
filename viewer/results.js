@@ -793,6 +793,8 @@ const Results = (() => {
         ${L.data.length ? table("leg:" + L.leg, legColumns(L), L.data) : '<p class="muted">No engine has a scored or failed row here.</p>'}
         ${L.absent.length ? `<p class="muted">N/A only (not ranked): ${L.absent.map(esc).join(", ")}</p>` : ""}
         ${L.data.length ? columnHelp(L) : ""}</div>
+      ${typesPanel([{label: "all document types", entries: L.data}, ...docTypes().filter(k => L.legRows.some(r => valid(r) && r.doc_type === k.type)).map(k => ({label: `${k.type} · ${k.tier}`,
+        entries: L.data.map(d => ({engine: d.engine, cost: d.cost, rec: d.rec, score: meanMetric(L.buckets[d.engine].filter(x => x.doc_type === k.type))}))}))], L)}
       <div class="panel"><h3>Score against ${esc((XM[rf.x] || XM.cost).label)} · one point per engine</h3>
         <div class="chart-controls">${xControls()}${selectHTML("labels", [["auto", "auto"], ["on", "on"], ["off", "off"]], "labels")}</div>${scatterLegend(scatter.engines, "scatter-legend")}${scatter.html}</div>
       <div class="panel"><h3>Every page · one mark per scored page, ✕ = error</h3>
@@ -801,6 +803,34 @@ const Results = (() => {
       ${familiesPanel(L, null, rows)}
       ${L.leg === "text" ? judgePanel() : ""}
       ${notesPanel([L.leg])}`;
+  }
+  // ---------- engine types: where each does well, with price ----------
+  // One row per leg (all legs) or per document type (a leg), one column per engine type. Each cell: the type's best
+  // engine there, then the cheapest engine of the same type scoring within the chosen margin of that best (4 d.p.,
+  // ordered as the at-scale panel orders: $/page, then s/page, then score).
+  function typesPanel(lines, L) {
+    const near = Number(rf.near), nearText = (NEAR.find(([v]) => v === rf.near) || [0, rf.near])[1];
+    const present = new Set(lines.flatMap(l => l.entries.map(x => D.engineTypes[x.engine])));
+    const types = ENGINE_TYPES.filter(([k]) => present.has(k));
+    if (!lines.length || !types.length) return "";
+    const r4 = x => round4(x.score);
+    const price = x => x.cost == null ? "cost not recorded" : x.cost === 0 ? "unpriced (local)" : `$${XM.cost.fmt(x.cost)}/1k`;
+    const cellOf = (line, type) => {
+      const cand = line.entries.filter(x => isNum(x.score) && D.engineTypes[x.engine] === type);
+      if (!cand.length) return '<td data-v="">—</td>';
+      const best = cand.slice().sort((a, b) => r4(b) - r4(a) || (a.cost == null) - (b.cost == null) || (a.cost ?? 0) - (b.cost ?? 0) || a.engine.localeCompare(b.engine))[0];
+      const cheap = cand.filter(x => r4(x) >= r4(best) - near - 1e-9).sort((a, b) => (a.cost == null) - (b.cost == null) || (a.cost ?? 0) - (b.cost ?? 0)
+        || (a.rec == null) - (b.rec == null) || (a.rec ?? 0) - (b.rec ?? 0) || r4(b) - r4(a) || a.engine.localeCompare(b.engine))[0];
+      return `<td class="${tint(best.score)} tb" data-v="${esc(best.engine)}|${best.score}|${esc(cheap.engine)}|${cheap.score}">
+        <div><b>${f4(best.score)}</b> ${esc(best.engine)} <span class="muted">${price(best)}</span></div>
+        <div class="tb-cheap">${cheap === best ? `also the cheapest within ${esc(nearText)}` : `cheapest within ${esc(nearText)}: <b>${f4(cheap.score)}</b> ${esc(cheap.engine)} · ${price(cheap)}`}</div></td>`;
+    };
+    const count = k => new Set(lines.flatMap(l => l.entries.map(x => x.engine)).filter(e => D.engineTypes[e] === k)).size;
+    return `<div class="panel"><h3>Engine types · where each does well${L ? ` on ${LEG_TITLES[L.leg]}` : ""}</h3>
+      <p class="muted">Each cell: the best engine of that type on the ${L ? "document type" : "leg"} (score and recorded ${esc(XM.cost.label)}), then the cheapest engine of the same type whose score is within the chosen margin of that best. Cost is the engine's recorded cost for ${L ? "this leg" : "that leg"}; local engines record $0 (machine cost unpriced). An engine type is listed when the selection has one of its engines.</p>
+      <div class="chart-controls">${selectHTML("near", NEAR, "within")}</div>
+      <div class="twrap"><table class="v r" data-table="typebest:${L ? L.leg : "all"}"><thead><tr><th data-key="engine">${L ? "Document type" : "Leg"}</th>${types.map(([k, label]) => `<th data-key="${k}" title="${esc(ENGINE_TYPES.find(t => t[0] === k)[2])}">${esc(label)} (${count(k)})</th>`).join("")}</tr></thead>
+      <tbody>${lines.map(line => `<tr><td data-v="${esc(line.label)}" class="eng-cell">${esc(line.label)}</td>${types.map(([k]) => cellOf(line, k)).join("")}</tr>`).join("")}</tbody></table></div></div>`;
   }
   // ---------- best per leg at scale: the leg table's own $/page and s/page, multiplied by a page volume ----------
   const money = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -929,6 +959,7 @@ const Results = (() => {
     return `<div class="panel"><h3>At a glance — full scores per leg; bold marks the column's best</h3>
         <p class="muted">Each leg is scored on its own pages; no cross-leg blended score. Cost and time are the engine's primary pass; † marks a time taken from a batch that also ran other passes (hover for which). Click a column to sort.</p>
         ${table("glance", cols, data)}</div>
+      ${typesPanel(D.legs.map(l => ({label: LEG_TITLES[l], entries: Ls[l].data})), null)}
       ${familiesPanel(null, Ls, rows, ops)}
       ${scalePanel(Ls)}
       ${costScalePanel(ops, engines)}
