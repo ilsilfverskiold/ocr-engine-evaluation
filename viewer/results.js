@@ -24,7 +24,7 @@ const Results = (() => {
     geometry: "Full = Word: located reference-unit recall (words; line segments on receipts). Line: both sides merged into visual lines, fuzzy text, mutual centre containment. Block cov: reference words inside a returned block that contains their text; block engines only, read with Words/box. Boxes are never invented at a finer unit than returned.",
   };
   // Columns whose sort starts ascending: every lower-is-better metric, cost and time.
-  const LOWER = new Set(["cost", "rec", "cost_all", "rec_all", ...Object.values(METRICS).flat().filter(m => !m[2]).map(m => "m:" + m[1])]);
+  const LOWER = new Set(["cost", "rec", "cost_all", ...Object.values(METRICS).flat().filter(m => !m[2]).map(m => "m:" + m[1])]);
   const LOW_THRESHOLD = 0.25, MIN_ENGINES = 3;
   // The two recorded operating measures, as the report and the README's cost and latency tables define them.
   const XM = {
@@ -820,10 +820,10 @@ const Results = (() => {
       {key: "pages", label: "Pages", fmt: fi, title: "pages with any scored leg"},
       {key: "cost", label: XM.cost.label, fmt: XM.cost.fmt, higher: false, title: "primary pass, " + XM.cost.title}, {key: "rec", label: XM.rec.label, fmt: XM.rec.fmt, higher: false, title: "primary pass, " + XM.rec.title, note: mixedMark}];
     const opsData = engines.map(e => ({engine: e, cost: ops[e]?.cost_per_page ?? null, rec: ops[e]?.latency_s ?? null,
-      cost_all: ops[e]?.cost_all_passes ?? null, rec_all: ops[e]?.latency_all_passes ?? null, passes: ops[e]?.passes ?? null, documents: ops[e]?.documents ?? null, primary: ops[e]?.primary ?? null, mixed: ops[e]?.mixed ?? []})).filter(d => d.cost != null || d.rec != null);
+      cost_all: ops[e]?.cost_all_passes ?? null, passes: ops[e]?.passes ?? null, documents: ops[e]?.documents ?? null, primary: ops[e]?.primary ?? null, mixed: ops[e]?.mixed ?? []})).filter(d => d.cost != null || d.rec != null);
     const opsCols = [{key: "rank", label: "#"}, {key: "engine", label: "Engine"}, {key: "primary", label: "Primary pass"},
       {key: "cost", label: XM.cost.label, fmt: XM.cost.fmt, higher: false, title: "primary pass"}, {key: "rec", label: XM.rec.label, fmt: XM.rec.fmt, higher: false, title: "primary pass", note: mixedMark},
-      {key: "cost_all", label: `all passes ${XM.cost.label}`, fmt: XM.cost.fmt, higher: false, title: "every pass the benchmark asked, summed per page"}, {key: "rec_all", label: "all passes s/page", fmt: XM.rec.fmt, higher: false},
+      {key: "cost_all", label: `all passes ${XM.cost.label}`, fmt: XM.cost.fmt, higher: false, title: "every pass the benchmark asked, summed per page"},
       {key: "passes", label: "Passes", fmt: fi}, {key: "documents", label: "Pages", fmt: fi, title: "pages with a successful call"}];
     const shownEngines = new Set();
     const multi = D.legs.map(l => { const sp = scatterPanel(Ls[l], {small: true, id: "scatter-" + l}); charts.push({sel: `#scatter-${l} svg`, pts: sp.pts, leg: l, kind: "scatter"});
