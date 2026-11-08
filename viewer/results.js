@@ -33,8 +33,11 @@ const Results = (() => {
   };
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
   const DEFAULTS = {leg: "all", tier: "all", type: "all", sort: "score", dir: "desc",
-    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000"};
+    x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", near: "0.1", top: "10"};
   const VOLUMES = [["1000", "1,000"], ["10000", "10,000"], ["100000", "100,000"], ["1000000", "1 million"]];
+  // At-scale panel: how far below a leg's best score an engine may sit, and how many of those engines to show.
+  const NEAR = [["0.05", "0.05"], ["0.1", "0.10"], ["0.15", "0.15"]];
+  const TOP = [["1", "top 1"], ["2", "top 2"], ["3", "top 3"], ["5", "top 5"], ["10", "top 10"]];
   const rf = {...DEFAULTS};
 
   // ---------- numbers, exactly as the report computes and prints them ----------
@@ -619,46 +622,51 @@ const Results = (() => {
     return lim.basis?.startsWith("estimate") ? `${text} (estimate)` : text;
   }
   function scalePanel(Ls) {
-    const vol = +rf.vol || 1e6, volText = (VOLUMES.find(v => +v[0] === vol) || [, String(vol)])[1];
+    const vol = +rf.vol || 1e6, near = Math.max(0, +rf.near || 0), top = +rf.top || 1, volText = (VOLUMES.find(v => +v[0] === vol) || [, String(vol)])[1];
     const rows = [], unpriced = [];
     // Lower $/page, then lower s/page; unrecorded values rank last.
     const low = (x, y) => (x == null) - (y == null) || (x ?? 0) - (y ?? 0);
-    const byScore = (a, b) => round4(b.score) - round4(a.score) || low(a.cost, b.cost) || low(a.rec, b.rec) || a.engine.localeCompare(b.engine);
+    const cheaper = (a, b) => low(a.cost, b.cost) || low(a.rec, b.rec) || round4(b.score) - round4(a.score) || a.engine.localeCompare(b.engine);
     for (const l of D.legs) {
-      // The cost–score trade-off: from the top score (4 d.p.) down, every engine cheaper per page than all engines
-      // scoring above it. An engine left out scores lower and costs as much or more than one that is listed.
-      const scored = Ls[l].data.filter(r => isNum(r.score)).sort(byScore);
-      for (const r of scored) if (!isNum(r.cost)) unpriced.push(`${r.engine} (${LEG_TITLES[l]})`);
-      let floor = Infinity, lead = null;
-      for (const r of scored) {
-        if (!isNum(r.cost) || r.cost >= floor) continue;
-        floor = r.cost;
-        lead ||= r;
+      // Score against cost: every engine within `near` of the leg's best score (4 d.p.), cheapest first, the first `top` shown.
+      const scored = Ls[l].data.filter(r => isNum(r.score));
+      if (!scored.length) continue;
+      const bestScore = Math.max(...scored.map(r => round4(r.score)));
+      const best = scored.filter(r => round4(r.score) === bestScore).sort(cheaper)[0];
+      const within = scored.filter(r => round4(r.score) >= bestScore - near - 1e-9).sort(cheaper);
+      for (const r of within) if (!isNum(r.cost)) unpriced.push(`${r.engine} (${LEG_TITLES[l]})`);
+      within.slice(0, top).forEach((r, i) => {
         const lim = D.limits?.[r.engine], [parAt, by, rate] = parallelSeconds(lim, vol, r.rec, r.tin, r.tout);
-        rows.push({leg: l, rank: rows.filter(x => x.leg === l).length + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec, lead,
-          costAt: r.cost * vol, timeAt: isNum(r.rec) ? r.rec * vol : null,
+        rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec, best, count: within.length,
+          costAt: isNum(r.cost) ? r.cost * vol : null, timeAt: isNum(r.rec) ? r.rec * vol : null,
           parAt, limit: limitText(lim, by, rate, r.rec), basis: lim ? `${lim.basis}${lim.source ? ` · ${lim.source}` : ""}` : "no default_limits in engines.py"});
-      }
+      });
     }
     const empty = D.legs.filter(l => !Ls[l].data.some(r => isNum(r.score)));
     const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
     const maxCost = Math.max(0, ...rows.map(r => r.costAt || 0)), maxTime = Math.max(0, ...rows.map(r => r.timeAt || 0)),
       maxPar = Math.max(0, ...rows.map(r => r.parAt || 0));
     const bar = (v, max, text, cls) => `<div class="scale-cell"><span class="track"><span class="fill ${cls}" style="width:${max > 0 && v ? Math.max(v / max * 100, 0.6) : 0}%"></span></span><span class="val">${text}</span></div>`;
-    const body = rows.map(r => `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
-        <td data-v="${r.leg}">${r.rank === 1 ? esc(LEG_TITLES[r.leg]) : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
-        <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}${r.rank > 1 ? `<div class="muted limit">−${f4(round4(r.lead.score) - round4(r.score))} vs top</div>` : ""}</td>
+    // Each row against the leg's best scorer: the score given up and the money saved (or spent) at this volume.
+    const vsBest = r => {
+      const drop = round4(r.best.score) - round4(r.score), diff = isNum(r.best.cost) && isNum(r.cost) ? (r.best.cost - r.cost) * vol : null;
+      return {score: r.engine === r.best.engine ? "best score" : `−${f4(drop)} vs best`,
+        cost: r.engine === r.best.engine || diff == null ? "" : diff >= 0 ? `saves ${money(diff)} vs best` : `${money(-diff)} more than best`};
+    };
+    const body = rows.map(r => { const v = vsBest(r); return `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
+        <td data-v="${r.leg}">${r.rank === 1 ? `${esc(LEG_TITLES[r.leg])}<div class="muted limit">best ${f4(r.best.score)} · ${esc(r.best.engine)}<br>${r.count} engine${r.count === 1 ? "" : "s"} within ${esc(rf.near)}</div>` : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
+        <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}<div class="muted limit">${v.score}</div></td>
         <td data-v="${r.cost ?? ""}">${XM.cost.fmt(r.cost)}</td><td data-v="${r.rec ?? ""}">${XM.rec.fmt(r.rec)}</td>
-        <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}${r.rank > 1 ? `<div class="muted limit">saves ${money(r.lead.cost * vol - r.costAt)} vs top</div>` : ""}</td>
+        <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}${v.cost ? `<div class="muted limit">${v.cost}</div>` : ""}</td>
         <td data-v="${r.timeAt ?? ""}">${bar(r.timeAt, maxTime, duration(r.timeAt), "time")}</td>
-        <td data-v="${r.parAt ?? ""}" title="${esc(r.basis)}">${bar(r.parAt, maxPar, duration(r.parAt), "time")}<div class="muted limit">${esc(r.limit)}</div></td></tr>`).join("");
+        <td data-v="${r.parAt ?? ""}" title="${esc(r.basis)}">${bar(r.parAt, maxPar, duration(r.parAt), "time")}<div class="muted limit">${esc(r.limit)}</div></td></tr>`; }).join("");
     const heads = [["leg", "Leg"], ["engine", "Engine"], ["score", "Score"], ["cost", XM.cost.label], ["rec", XM.rec.label],
       ["costAt", `Cost for ${volText} pages`], ["timeAt", "Time, one at a time"], ["parAt", "Time in parallel at default limits"]];
-    return `<div class="panel"><h3>Cost against score per leg at scale — cost and time for ${esc(volText)} pages · ${esc(where)}</h3>
-        <p class="muted">Per leg, from the top score down: every engine that costs less per page than every engine scoring above it. Each row down gives up some score and saves money; an engine that is not listed scores lower and costs as much or more than one that is. Cost = ${esc(XM.cost.label)} × pages; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and count as $0.</p>
-        <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("vol", VOLUMES, "pages")}</div>
+    return `<div class="panel"><h3>Score against cost per leg at scale — engines within ${esc(rf.near)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</h3>
+        <p class="muted">Per leg: the best score in this selection (named under the leg), then every engine scoring within the chosen margin of it (4 d.p.), cheapest first by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}. "Within" sets the margin; "show" how many of those engines to list. Each row shows the score it gives up and the money it saves against the best scorer. Cost = ${esc(XM.cost.label)} × pages; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and count as $0.</p>
+        <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("near", NEAR, "within")}${selectHTML("top", TOP, "show")}${selectHTML("vol", VOLUMES, "pages")}</div>
         <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
-        ${unpriced.length ? `<p class="muted">No ${esc(XM.cost.label)} recorded, so not compared: ${unpriced.map(esc).join(", ")}.</p>` : ""}
+        ${unpriced.length ? `<p class="muted">No ${esc(XM.cost.label)} recorded, ranked last: ${unpriced.map(esc).join(", ")}.</p>` : ""}
         ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
   }
   function overviewView(rows) {
