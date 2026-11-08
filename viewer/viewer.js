@@ -30,6 +30,23 @@ function pyFixed(x, n) {
 }
 const fmt = v => v == null ? "—" : typeof v === "number" ? (Math.abs(v) <= 1 && !Number.isInteger(v) ? pyFixed(v, 3) : String(+pyFixed(v, 4))) : esc(v);
 const el = id => document.getElementById(id);
+
+// ---------- light / dark ----------
+// Follows the system until the reader picks one; the pick is remembered in this browser only.
+const THEME_KEY = "ocr-viewer-theme";
+const effectiveTheme = () => document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+function setTheme(theme) {
+  if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+  const button = el("theme-toggle");
+  if (button) button.textContent = effectiveTheme() === "dark" ? "☀ Light mode" : "☾ Dark mode";
+}
+try { setTheme(localStorage.getItem(THEME_KEY)); } catch (e) { setTheme(null); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => setTheme(null));
+el("theme-toggle")?.addEventListener("click", () => {
+  const next = effectiveTheme() === "dark" ? "light" : "dark";
+  setTheme(next);
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* storage blocked: the choice lasts this visit */ }
+});
 const isEmpty = v => v == null || (typeof v === "object" && !Object.keys(v).length);
 
 // ---------- reading files ----------
