@@ -632,10 +632,13 @@ const Results = (() => {
       if (!scored.length) continue;
       const bestScore = Math.max(...scored.map(r => round4(r.score)));
       const best = scored.filter(r => round4(r.score) === bestScore).sort(cheaper)[0];
-      scored.filter(r => round4(r.score) >= bestScore - near - 1e-9).sort(cheaper).slice(0, top)
+      const pick = scored.filter(r => round4(r.score) >= bestScore - near - 1e-9).sort(cheaper)[0];
+      // The best value always shows; "rows per leg" adds the leg's top scorers beside it for comparison, by score.
+      const byScore = (a, b) => round4(b.score) - round4(a.score) || cheaper(a, b);
+      (top > 1 ? [...new Set([pick, ...scored.slice().sort(byScore).slice(0, top)])].sort(byScore) : [pick])
         .forEach((r, i) => {
           const lim = D.limits?.[r.engine], [parAt, by, rate] = parallelSeconds(lim, vol, r.rec, r.tin, r.tout);
-          rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec, best,
+          rows.push({leg: l, rank: i + 1, engine: r.engine, score: r.score, cost: r.cost, rec: r.rec, best, pick: r === pick,
             costAt: isNum(r.cost) ? r.cost * vol : null, timeAt: isNum(r.rec) ? r.rec * vol : null,
             parAt, limit: limitText(lim, by, rate, r.rec), basis: lim ? `${lim.basis}${lim.source ? ` · ${lim.source}` : ""}` : "no default_limits in engines.py"});
         });
@@ -646,7 +649,7 @@ const Results = (() => {
       maxPar = Math.max(0, ...rows.map(r => r.parAt || 0));
     const bar = (v, max, text, cls) => `<div class="scale-cell"><span class="track"><span class="fill ${cls}" style="width:${max > 0 && v ? Math.max(v / max * 100, 0.6) : 0}%"></span></span><span class="val">${text}</span></div>`;
     const body = rows.map(r => `<tr data-e="${esc(r.engine)}" class="${r.rank === 1 ? "lead-row" : ""}">
-        <td data-v="${r.leg}">${r.rank === 1 ? `${esc(LEG_TITLES[r.leg])}<div class="muted limit">best ${f4(r.best.score)} · ${esc(r.best.engine)}</div>` : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}</td>
+        <td data-v="${r.leg}">${r.rank === 1 ? `${esc(LEG_TITLES[r.leg])}${top === 1 ? `<div class="muted limit">best ${f4(r.best.score)} · ${esc(r.best.engine)}</div>` : ""}` : ""}</td><td data-v="${esc(r.engine)}" class="eng-cell">${esc(r.engine)}${r.pick ? ' <span class="chip ok">best value</span>' : ""}</td>
         <td data-v="${r.score}" class="${tint(r.score)}">${f4(r.score)}</td>
         <td data-v="${r.cost ?? ""}">${XM.cost.fmt(r.cost)}</td><td data-v="${r.rec ?? ""}">${XM.rec.fmt(r.rec)}</td>
         <td data-v="${r.costAt ?? ""}">${bar(r.costAt, maxCost, r.cost === 0 ? "unpriced (local)" : money(r.costAt), "cost")}</td>
@@ -656,8 +659,8 @@ const Results = (() => {
       ["costAt", `Cost for ${volText} pages`], ["timeAt", "Time, one at a time"], ["parAt", "Time in parallel at default limits"]];
     const nearText = near > 0 ? `within ${near} of` : "tied with";
     return `<div class="panel"><h3>Best value per leg at scale — the cheapest engine ${esc(nearText)} the leg's best score · cost and time for ${esc(volText)} pages · ${esc(where)}</h3>
-        <p class="muted">Per leg: the best score in this selection, then every engine scoring ${esc(nearText)} it (4 d.p.), cheapest first by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}. The leg's top scorer is named under the leg. Set the margin with "within"; "same score" keeps only engines tied with the best. Cost = ${esc(XM.cost.label)} × pages; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and rank as $0.</p>
-        <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("near", NEAR, "within")}${selectHTML("vol", VOLUMES, "pages")}${selectHTML("top", [["1", "cheapest"], ["3", "3 cheapest"], ["5", "5 cheapest"]], "per leg")}</div>
+        <p class="muted">Per leg: the best score in this selection, and of the engines scoring ${esc(nearText)} it (4 d.p.), the cheapest by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}, marked best value. Set the margin with "within"; "same score" keeps only engines tied with the best. "Rows per leg" adds the leg's top 3 or 5 scorers for comparison, sorted by score. Cost = ${esc(XM.cost.label)} × pages; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and rank as $0.</p>
+        <div class="chart-controls">${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("near", NEAR, "within")}${selectHTML("vol", VOLUMES, "pages")}${selectHTML("top", [["1", "best value only"], ["3", "with top 3 by score"], ["5", "with top 5 by score"]], "rows per leg")}</div>
         <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
         ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
   }
