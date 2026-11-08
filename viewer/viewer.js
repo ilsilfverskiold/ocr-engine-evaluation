@@ -32,16 +32,18 @@ const fmt = v => v == null ? "—" : typeof v === "number" ? (Math.abs(v) <= 1 &
 const el = id => document.getElementById(id);
 
 // ---------- light / dark ----------
-// Follows the system until the reader picks one; the pick is remembered in this browser only.
+// Light unless the reader picks dark here; the pick is remembered in this browser only. The page sets the theme
+// explicitly, so the system setting does not decide it.
 const THEME_KEY = "ocr-viewer-theme";
-const effectiveTheme = () => document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+const effectiveTheme = () => document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 function setTheme(theme) {
-  if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
   const button = el("theme-toggle");
   if (button) button.textContent = effectiveTheme() === "dark" ? "☀ Light mode" : "☾ Dark mode";
 }
-try { setTheme(localStorage.getItem(THEME_KEY)); } catch (e) { setTheme(null); }
-matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => setTheme(null));
+let savedTheme = null;
+try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) { /* storage blocked: light */ }
+setTheme(savedTheme);
 el("theme-toggle")?.addEventListener("click", () => {
   const next = effectiveTheme() === "dark" ? "light" : "dark";
   setTheme(next);
