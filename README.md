@@ -10,6 +10,13 @@ and reference behind the scores is in this repository.
 - [View the results yourself](#view-the-results-yourself): terminal report and browser viewer, or the [hosted viewer](https://ilsilfverskiold.github.io/ocr-engine-evaluation/) with no setup
 - [Run the benchmark](#run-the-benchmark): with the engines here, or with an engine you add
 
+[![The results viewer: full scores per leg for every engine, with tier, document type and engine type filters](viewer/ocr-benchmark-screen.png)](https://ilsilfverskiold.github.io/ocr-engine-evaluation/)
+
+The [hosted viewer](https://ilsilfverskiold.github.io/ocr-engine-evaluation/)
+shows this run in the browser, with no setup: the comparison tables and charts,
+and for every engine, page and leg the prompt sent, the full reply, the output
+beside its reference and the scorer's verdict per item.
+
 ## Results
 
 Published run `20261020T120222Z`. Each leg is a separate task with its own
@@ -363,7 +370,8 @@ the steps below.
 
 The viewer shows the comparison tables and charts, filtered by tier, document
 type or engine type (general VLM, specialised OCR model, classical pipeline,
-hosted document API; `engine_type` in `engines.py`), the engines near each leg's
+hosted document API; `engine_type` in `engines.py`), a breakdown by document
+type with the metrics you pick, the engines near each leg's
 best score ranked by cost, with cost and time at a chosen page volume, and for
 every engine, page and leg the prompt sent, the full reply, the output beside
 its reference, the scorer's verdict per item, and the geometry boxes drawn on
