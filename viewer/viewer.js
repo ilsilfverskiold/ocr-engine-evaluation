@@ -7,7 +7,9 @@ const LEG_TITLES = {text: "Text", markdown: "Markdown", tables: "Tables", key_va
   schema: "Schema", geometry: "Geometry"};
 const D = {legs: [], docs: {}, baseline: null, manifest: null, ledger: new Map(),
   // Slim copies of every recorded row and ledger entry, for the Results view (results.js).
-  results: {rows: [], judge: [], ledger: []}};
+  results: {rows: [], judge: [], ledger: []},
+  // The document judge's saved checklist verdicts on the silver-reference pages, by "stem|engine".
+  judge: {}};
 let docs = [], engines = [];
 const state = {view: "page", engine: null, doc: null, leg: "text", filter: "all",
   layers: {ref: true, pred: true, unmatched: true}, geoLevel: "word"};
@@ -154,7 +156,11 @@ async function load() {
   const rows = [];
   await eachLine(new URL(D.resultsFile, runsURL), line => {
     const r = JSON.parse(line);
-    if (r.leg === "judge") { D.results.judge.push(slimRow(r)); return; }
+    if (r.leg === "judge") {
+      D.results.judge.push(slimRow(r));
+      D.judge[stemOf(r.document_path) + "|" + r.engine_name] = {score: r.score, error: r.error, metrics: r.metrics || {}, items: (r.detail || {}).items || []};
+      return;
+    }
     if (!D.legs.includes(r.leg)) return;
     D.results.rows.push(slimRow(r));
     delete r.detail;
@@ -536,6 +542,25 @@ function scorePanel(row) {
     <h3 style="margin-top:12px">All engines, this page${geo ? ": Word, with Line and Block cov where recorded" : ""} (click to switch)</h3>${bars}</div>`;
 }
 
+// The document judge estimate (not a leg) on a page without a reliable text reference: the values a model read
+// from the page image, the same list for every engine, and this engine's saved verdict on each (evaluation/judge.py).
+function judgePanel() {
+  const all = engines.map(e => ({e, j: D.judge[state.doc + "|" + e]})).filter(x => x.j)
+    .sort((a, b) => (b.j.score ?? -1) - (a.j.score ?? -1));
+  if (!all.length) return "";
+  const j = D.judge[state.doc + "|" + state.engine], m = j?.metrics || {};
+  const right = j ? j.items.filter(i => i.verdict === "present_correct").length : 0;
+  const bars = `<div class="bars">${all.map(x => `<div class="bar ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
+      <span>${esc(x.e)}</span><span class="track"><span class="fill" style="display:block;width:${(x.j.score ?? 0) * 100}%"></span></span>
+      <span>${x.j.error ? '<span class="err">error</span>' : fmt(x.j.score)}</span></div>`).join("")}</div>`;
+  return `<div class="panel"><h3>Document judge estimate on this page · not a leg</h3>
+    <p class="muted">This page has no reliable text reference, so the Text leg does not score it. A model read the page image once and listed up to 40 values printed on it; every engine is checked against that same list. For each value the model then read this engine's text and answered present and correct, present but wrong, or absent. Score = correct ÷ values checked. These are the verdicts saved with the published run (${esc(m.judge_verdict_version || "version not recorded")}${m.recovered_from_commit ? `, recovered from commit ${esc(m.recovered_from_commit)}` : ""}); they do not record which model produced them, and the scoring notes say they may include substring-matching errors.</p>
+    ${j ? `<div class="score-big" style="color:${scoreColor(j.score)}">${j.error ? "error" : fmt(j.score)}</div><div class="muted">${right} of ${j.items.length} values present and correct</div>
+      ${j.error ? `<pre class="warn">${esc(j.error)}</pre>` : verdictTable(j.items.map((i, n) => ({...i, n: n + 1})), [["#", r => r.n], ["item", r => r.label], ["value on the page", r => r.value], ["verdict", r => r.verdict], ["legible", r => r.confident === false ? "marked hard to read" : ""]])}`
+      : `<div class="muted">No judge verdicts were saved for ${esc(state.engine)} on this page; ${all.length} engines have them.</div>`}
+    <h3 style="margin-top:12px">All engines, this page (click to switch)</h3>${bars}</div>`;
+}
+
 function callPointer(row, info, call) {
   if (!info) return "";
   if (info.missing || !call) {
@@ -575,12 +600,13 @@ function verdictTable(rows, cols) {
   const counts = {};
   for (const r of rows) counts[r.verdict] = (counts[r.verdict] || 0) + 1;
   if (hasInvented) counts.invented = rows.filter(r => r.invented).length;
-  const chips = Object.entries(counts).map(([k, v]) => `<span class="chip ${k === "correct" || k === "blank_ok" ? "ok" : k === "partial" ? "part" : "bad"}">${esc(k)} ${v}</span>`).join("");
+  const okv = v => ["correct", "blank_ok", "present_correct"].includes(v);
+  const chips = Object.entries(counts).map(([k, v]) => `<span class="chip ${okv(k) ? "ok" : k === "partial" ? "part" : "bad"}">${esc(k)} ${v}</span>`).join("");
   return `<div>${chips}</div><div class="filter">${filters.map(([f, label]) => `<button data-f="${f}" class="${active === f ? "on" : ""}">${label}</button>`).join("")}</div>
     <div class="vwrap"><table class="v"><tr>${cols.map(c => `<th>${esc(c[0])}</th>`).join("")}</tr>
     ${shown.map(r => `<tr>${cols.map(c => {
       const v = c[1](r);
-      return c[0] === "verdict" ? `<td><span class="chip ${v === "correct" || v === "blank_ok" ? "ok" : v === "partial" ? "part" : "bad"}">${esc(v)}</span></td>` : `<td>${esc(v)}</td>`;
+      return c[0] === "verdict" ? `<td><span class="chip ${okv(v) ? "ok" : v === "partial" ? "part" : "bad"}">${esc(v)}</span></td>` : `<td>${esc(v)}</td>`;
     }).join("")}</tr>`).join("")}</table></div>`;
 }
 const cell = c => c ? `${c.text ?? ""}` : "";
@@ -670,7 +696,9 @@ async function renderContent() {
   const info = row && entry?.calls[row.call];
   const [call, ref] = row ? await Promise.all([loadCall(info), loadReference(D.docs[state.doc], state.leg, row)]) : [null, null];
   if (seq !== contentSeq || state.view !== "page") return;
-  let right = scorePanel(row);
+  // On a silver-reference page the judge estimate is the only result for the text, so it comes first.
+  const judged = state.leg === "text" ? judgePanel() : "";
+  let right = judged && row?.applicable === false ? judged + scorePanel(row) : scorePanel(row) + judged;
   if (row) right += callPointer(row, info, call) + (row.error ? "" : legBody(row, call, ref));
   el("content").innerHTML = `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>`;
   el("content").querySelectorAll(".bar").forEach(n => n.onclick = () => go({engine: n.dataset.e}));

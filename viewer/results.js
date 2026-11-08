@@ -432,11 +432,15 @@ const Results = (() => {
     const data = engines.map(e => { const rs = rows.filter(r => r.engine_name === e), d = {engine: e, acc: mean(rs.map(r => r.score)), docs: rs.length};
       for (const k of kinds) { const ks = rs.filter(r => r.doc_type === k); d["j:" + k] = ks.length ? mean(ks.map(r => r.score)) : null; d["jn:" + k] = ks.length; }
       d.pages = d.docs; return d; });
+    const stems = [...new Set(rows.map(r => r.stem))].sort();
+    const byPage = engines.map(e => ({engine: e, ...Object.fromEntries(stems.map(st => ["p:" + st, rows.find(r => r.engine_name === e && r.stem === st)?.score ?? null]))}));
     const cols = [{key: "rank", label: "#"}, {key: "engine", label: "Engine"}, {key: "acc", label: "Item accuracy", fmt: v => f(v, 3), higher: true, tint: true, title: "checklist items right / items on the page, mean over judged pages"},
       {key: "docs", label: "Pages", fmt: fi}, ...kinds.map(k => ({key: "j:" + k, label: k, fmt: v => f(v, 3), higher: true, tint: true, countKey: "jn:" + k}))];
     return `<details class="panel" data-k="judge"><summary>Document judge estimate · the ${new Set(rows.map(r => r.stem)).size} silver-GT pages, scored against the image (not a leg)</summary>
       <p class="muted">Item accuracy = checklist items the engine got right / items on the page. The checklist is model-generated and not validated against human judgement; not comparable to the GT-scored legs. Engines without saved judge verdicts are omitted.</p>
-      ${table("judge", cols, data)}</details>`;
+      ${table("judge", cols, data)}
+      <h4>Per page · click a value to see that page's checklist and this engine's verdict on every item</h4>
+      ${table("judgepages", [{key: "engine", label: "Engine"}, ...stems.map(st => ({key: "p:" + st, label: st, fmt: v => f(v, 3), higher: true, tint: true, title: `${st}: items right / items checked`}))], byPage)}</details>`;
   }
 
   // ---------- charts (inline SVG; the tables above and the per-page table are their table views) ----------
@@ -952,6 +956,10 @@ const Results = (() => {
       tr.classList.add("link"); tr.ondblclick = () => go({view: "page", engine: tr.dataset.e, leg: rf.leg === "all" ? state.leg : rf.leg}); tr.title = "double-click to open this engine in the page view";
     });
     c.querySelectorAll("table[data-table^='pages:'] tr[data-e]").forEach(tr => tr.onclick = () => go({view: "page", engine: tr.dataset.e, doc: tr.dataset.d, leg: rf.leg}));
+    c.querySelectorAll("table[data-table='judgepages'] tr[data-e] td").forEach(td => {
+      const key = td.closest("table").querySelectorAll("thead tr:last-child th")[td.cellIndex]?.dataset.key || "";
+      if (key.startsWith("p:") && td.dataset.v !== "") { td.classList.add("link"); td.onclick = () => go({view: "page", engine: td.parentElement.dataset.e, doc: key.slice(2), leg: "text"}); }
+    });
     const scatterSvgs = [];
     for (const ch of charts) {
       const svg = c.querySelector(ch.sel);
