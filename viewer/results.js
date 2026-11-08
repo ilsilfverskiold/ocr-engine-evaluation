@@ -537,16 +537,24 @@ const Results = (() => {
     el("leg-tabs").querySelectorAll(".tab").forEach(n => n.onclick = () => update({leg: n.dataset.v}));
     el("doc-tabs").querySelectorAll("select").forEach(s => s.onchange = () => update({[s.dataset.f]: s.value}));
   }
+  const REPO = "https://github.com/ilsilfverskiold/ocr-engine-evaluation";
+  const SCORING = REPO + "/blob/main/public_docs/scoring-design.md";
+  const link = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${esc(text)}</a>`;
+  // Written for a reader who has not seen the code: what was tested, how a score is averaged, what cost means.
   function headHTML() {
-    const R = D.results;
+    const R = D.results, nEngines = new Set(R.rows.map(r => r.engine_name)).size, nPages = new Set(R.rows.map(r => r.stem)).size;
+    const types = docTypes();
     return `<h1>Results</h1>
-      <div class="meta"><span>Published run ${esc(D.baseline)}: ${new Set(R.rows.map(r => r.engine_name)).size} engines · ${new Set(R.rows.map(r => r.stem)).size} pages · ${R.rows.length} result rows</span></div>
+      <div class="meta"><span>Published run ${esc(D.baseline)}: ${nEngines} engines · ${nPages} pages · ${R.rows.length} result rows</span></div>
       <details class="panel" data-k="how"><summary>How these numbers are computed</summary>
         <ul class="notes">
-          <li>Every value is read from the saved rows and ledger (<code>results/runs/${esc(D.resultsFile || D.baseline + "_results.jsonl")}</code>, <code>_inference.jsonl</code>); nothing is re-scored. Scores and metrics reproduce <code>evaluation/reporting.py</code>: a page counts when it is applicable, has no error and a finite score; an engine's figure is the mean of its document-family means (each family mean rounded to 4 d.p. for the headline), so families weigh equally. Errors and N/A are excluded, not zeros.</li>
-          <li>${esc(XM.cost.label)}: ${esc(XM.cost.title)}. ${esc(XM.rec.label)}: ${esc(XM.rec.title)}. Per leg these are means over the scored pages of that leg (<code>reporting._operations</code>); per engine in the cost table they follow <code>run_benchmark.engine_operational</code> (the primary pass: "default", else the text pass; "all passes" sums every pass per page). The README's cost and latency tables are the Text leg's ${esc(XM.cost.label)} and ${esc(XM.rec.label)} columns. Modal costs exclude startup and idle, GPU rows exclude CPU/RAM, CPU rows are allocation floors; mixed batches share cost equally across items. Local engines record $0 (machine cost unpriced). Shared calls are paid once; do not add costs across legs. † on a time: the primary pass ran in a batch with other passes (hover for which), so its equal share includes their generation time.</li>
-          <li>"Without low" appears where the common low-page exclusion changes a figure: page/leg cases where at least ${MIN_ENGINES} engines all scored ≤ ${LOW_THRESHOLD} with no failed or pending participant, chosen once from the run and applied to every engine. A sensitivity check, not a ranking.</li>
-          <li>Charts are drawn from the table beside them; hover or focus a point for its values, click it to open that engine (and page) in the page view. "Score axis from" stretches the top of the score range; anything under the start is kept on the baseline as a hollow triangle and listed. Document-type marks: hue is the tier (green easy, violet medium, magenta hard), the shade and the circle/square shape tell the types of a tier apart; the legend lights one type up across every row.</li>
+          <li><b>What was tested.</b> ${nEngines} OCR engines and engine configurations, from local tools (Tesseract, Docling) and self-hosted open models to cloud APIs, each ran on the same ${nPages} single-page documents: ${types.length} document types (${types.map(t => esc(t.type.replace(/_/g, " "))).join(", ")}) in three difficulty tiers, easy, medium and hard.</li>
+          <li><b>Six tasks, scored separately.</b> Each task is called a leg: Text (did it read the words), Markdown (is the page structure right), Tables (are the cells right), Key-value (did it pull the printed fields), Schema (can it fill a given set of fields) and Geometry (are the text boxes in the right place). Every leg has its own reference answers and a score from 0 to 1. There is no combined score.</li>
+          <li><b>How an engine's score is averaged.</b> Pages are averaged within each document type first, then those averages are averaged, so every type counts equally whatever its number of pages. Failed calls and pages without a reference are left out, not counted as zero; the Err and Pages columns show how many.</li>
+          <li><b>Cost and time.</b> ${esc(XM.cost.label)} is the recorded cost of 1,000 pages: the provider's price for cloud APIs, and measured GPU processing time at Modal's rates for self-hosted models (container startup and idle time not included). Tesseract and Docling run on your own CPU and are unpriced. ${esc(XM.rec.label)} is the recorded time per page. A call that serves several legs is paid once, so do not add costs across legs. † on a time: the call ran in a batch with other calls, so its share includes their time.</li>
+          <li><b>Without low</b> appears where it changes a figure. It leaves out page/leg cases where at least ${MIN_ENGINES} engines all scored ${LOW_THRESHOLD} or less, the same cases for every engine. It is a sensitivity check, not a ranking.</li>
+          <li><b>Charts</b> are drawn from the tables beside them. Hover a point for its values; click it to open that engine and page with the prompt sent, the full reply and the reference.</li>
+          <li><b>Where it comes from.</b> Every value is read from the saved results of this one run; nothing is re-scored in the browser. The code, the references, every prompt sent and every reply received are public: ${link(REPO, REPO.replace("https://", ""))}. The full rules for each leg are in ${link(SCORING, "scoring-design.md")}.</li>
         </ul></details>`;
   }
   function notesPanel(legs) {
