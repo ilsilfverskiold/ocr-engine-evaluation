@@ -11,16 +11,16 @@ const Results = (() => {
     markdown: [["Text CER", "markdown_cer", false], ["Text WER", "markdown_wer", false], ["Block F1", "element_f1", true], ["Order", "order_score", true], ["Block P", "element_precision", true], ["Block R", "element_recall", true]],
     tables: [["Numbers", "numeric_accuracy", true], ["Invented", "invented_number_rate", false], ["Strict F1", "cell_f1", true], ["Extra rate", "extra_cell_rate", false], ["Structure", "structure_similarity", true], ["Numbers anywhere", "numeric_found_rate", true], ["Strict P", "cell_precision", true], ["Strict R", "cell_recall", true]],
     geometry: [["Line", "geometry_line_score", true], ["Block cov", "geometry_block_score", true], ["Words/box", "geometry_words_per_box", false], ["Precision", "geometry_precision", true], ["F1", "geometry_f1", true], ["Box CER", "geometry_cer", false], ["Box WER", "geometry_wer", false]],
-    key_value: [["Missing", "missing_rate", false], ["Wrong", "wrong_rate", false], ["Unmapped", "kv_unresolved_keys", false], ["Populated fields", "kv_populated_accuracy", true], ["Blank fields", "kv_blank_accuracy", true]],
-    schema: [["Missing", "missing_rate", false], ["Wrong", "wrong_rate", false], ["Extra/page", "schema_extra_fields", false], ["Valid JSON", "schema_valid_json", true]],
+    key_value: [["Wrong numbers", "numbers_wrong_rate", false], ["Missing numbers", "numbers_missing_rate", false], ["Missing", "missing_rate", false], ["Wrong", "wrong_rate", false], ["Unmapped", "kv_unresolved_keys", false], ["Populated fields", "kv_populated_accuracy", true], ["Blank fields", "kv_blank_accuracy", true]],
+    schema: [["Wrong numbers", "numbers_wrong_rate", false], ["Missing numbers", "numbers_missing_rate", false], ["Missing", "missing_rate", false], ["Wrong", "wrong_rate", false], ["Extra/page", "schema_extra_fields", false], ["Valid JSON", "schema_valid_json", true]],
   };
   // evaluation/reporting.py METHOD, verbatim.
   const METHOD = {
     text: "Distinct-token coverage; CER/WER measure sequence errors separately.",
     markdown: "Correct structure + half partial credit per reference element; text fidelity is separate.",
     tables: "Reference value credit, including returned blanks, checkbox states and partial text matches; gold blanks with no returned slot and unprinted header rows are not counted. Labels and headers align supported split, merged or reordered fields; identical physical grids are not required. Numbers = gold numeric cells correct in place; Invented = returned numeric cells printed nowhere on the page. Extras, strict F1 and structure are separate diagnostics.",
-    key_value: "Correct values / counted printed-label fields; unreturned reference blanks are excluded. Unmapped is a count of returned keys per page.",
-    schema: "Correct values / (requested fields + unexpected fields). Same frozen field sample.",
+    key_value: "Correct values / counted printed-label fields; unreturned reference blanks are excluded. Unmapped is a count of returned keys per page. Wrong/Missing numbers: share of the fields compared as numbers (amounts, totals, quantities, rates; not dates or identifiers) returned wrong or not returned.",
+    schema: "Correct values / (requested fields + unexpected fields). Same frozen field sample. Wrong/Missing numbers: share of the fields compared as numbers (amounts, totals, quantities, rates; not dates or identifiers) returned wrong or not returned.",
     geometry: "Full = Word: located reference-unit recall (words; line segments on receipts). Line: both sides merged into visual lines, fuzzy text, mutual centre containment. Block cov: reference words inside a returned block that contains their text; block engines only, read with Words/box. Boxes are never invented at a finer unit than returned.",
   };
   // Columns whose sort starts ascending: every lower-is-better metric, cost and time.
@@ -73,6 +73,11 @@ const Results = (() => {
       const kv = r.leg === "key_value";
       const total = m[kv ? "kv_pairs_total" : "schema_fields_total"];
       const count = m[(kv ? "kv_pairs_" : "schema_fields_") + (key === "missing_rate" ? "missing" : "wrong_value")];
+      return total && count != null ? count / total : null;
+    }
+    if (key === "numbers_wrong_rate" || key === "numbers_missing_rate") {
+      const prefix = r.leg === "key_value" ? "kv" : "schema";
+      const total = m[prefix + "_numbers_total"], count = m[prefix + "_numbers_" + (key === "numbers_wrong_rate" ? "wrong" : "missing")];
       return total && count != null ? count / total : null;
     }
     return numOf(m[key]);
@@ -340,6 +345,8 @@ const Results = (() => {
     geometry_f1: "The balance of Word (recall) and Precision.",
     geometry_cer: "Character error rate of the text read from the returned boxes, in reading order.",
     geometry_wer: "The same, counted in words.",
+    numbers_wrong_rate: "Share of the page's number fields (amounts, totals, quantities, rates) returned with a different number. Dates and identifiers such as invoice or phone numbers are compared as text and not counted here. Pages without number fields have no value.",
+    numbers_missing_rate: "Share of the page's number fields the engine did not return.",
     missing_rate: "Share of fields the engine did not return.",
     wrong_rate: "Share of fields returned with a wrong value.",
     kv_unresolved_keys: "Returned labels per page that matched no reference field, on average. They do not lower the score.",
@@ -697,13 +704,13 @@ const Results = (() => {
       ["What the engine returns", "Every printed label and its value as flat JSON, asked with the same prompt for every prompted engine. Textract structured returns its own form fields and tables, with no prompt."],
       ["What it is compared with", "A reviewed list of the page's printed fields and their values."],
       ["The score", "Each reference field is matched to a returned label: the exact name first, then normalised names and known aliases. Where it is unclear whether a returned label means the field, a judge model (Gemini 2.5 Flash) decides once and the ruling is stored and reused. Values are compared by code: numbers as numbers, dates as dates. Score = (correct values + fields correctly left blank) ÷ fields counted. A printed but empty field the engine did not return is not counted."],
-      ["Supporting numbers", "Missing and Wrong split the errors; Unmapped counts returned labels that matched no field, which do not lower the score."]]],
+      ["Supporting numbers", "Missing and Wrong split the errors; Wrong numbers and Missing numbers do the same for the fields compared as numbers (amounts, totals, quantities, rates). Unmapped counts returned labels that matched no field, which do not lower the score."]]],
     schema: ["#schema", [
       ["The question", "Can the engine fill a set of fields it is given?"],
       ["What the engine returns", "JSON with exactly the requested keys. Every engine gets the same field names for a page, as a JSON schema in the prompt or through the provider's own extraction feature."],
       ["What it is compared with", "The same reviewed field values as Key-value, on a fixed sample of fields."],
       ["The score", "Keys must match exactly, with no judge; values are compared by code as in Key-value. Score = (correct + correctly blank) ÷ (requested fields + extra keys), so extra or repeated keys cost points."],
-      ["Supporting numbers", "Valid JSON shows whether the reply parsed as returned; values are still read from fenced or slightly broken replies."]]],
+      ["Supporting numbers", "Wrong numbers and Missing numbers: the share of the fields compared as numbers (amounts, totals, quantities, rates) that came back wrong or not at all. Valid JSON shows whether the reply parsed as returned; values are still read from fenced or slightly broken replies."]]],
     geometry: ["#geometry", [
       ["The question", "Are the engine's text boxes in the right place?"],
       ["What the engine returns", "Text with a box around each word, line or block."],

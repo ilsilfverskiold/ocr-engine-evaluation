@@ -64,8 +64,8 @@ METRICS = {
     'markdown': [('Text CER', 'markdown_cer', False), ('Text WER', 'markdown_wer', False), ('Block F1', 'element_f1', True), ('Order', 'order_score', True)],
     'tables': [('Numbers', 'numeric_accuracy', True), ('Invented', 'invented_number_rate', False), ('Strict F1', 'cell_f1', True), ('Extra rate', 'extra_cell_rate', False), ('Structure', 'structure_similarity', True)],
     'geometry': [('Line', 'geometry_line_score', True), ('Block cov', 'geometry_block_score', True), ('Words/box', 'geometry_words_per_box', False), ('Precision', 'geometry_precision', True), ('F1', 'geometry_f1', True), ('Box CER', 'geometry_cer', False), ('Box WER', 'geometry_wer', False)],
-    'key_value': [('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Unmapped', 'kv_unresolved_keys', False)],
-    'schema': [('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Extra/page', 'schema_extra_fields', False), ('Valid JSON', 'schema_valid_json', True)],
+    'key_value': [('Wrong numbers', 'numbers_wrong_rate', False), ('Missing numbers', 'numbers_missing_rate', False), ('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Unmapped', 'kv_unresolved_keys', False)],
+    'schema': [('Wrong numbers', 'numbers_wrong_rate', False), ('Missing numbers', 'numbers_missing_rate', False), ('Missing', 'missing_rate', False), ('Wrong', 'wrong_rate', False), ('Extra/page', 'schema_extra_fields', False), ('Valid JSON', 'schema_valid_json', True)],
 }
 EXTRA_METRICS = {
     'key_value': [('Populated fields', 'kv_populated_accuracy', True), ('Blank fields', 'kv_blank_accuracy', True)],
@@ -77,8 +77,8 @@ METHOD = {
     'text': 'Distinct-token coverage; CER/WER measure sequence errors separately.',
     'markdown': 'Correct structure + half partial credit per reference element; text fidelity is separate.',
     'tables': 'Reference value credit, including returned blanks, checkbox states and partial text matches; gold blanks with no returned slot and unprinted header rows are not counted. Labels and headers align supported split, merged or reordered fields; identical physical grids are not required. Numbers = gold numeric cells correct in place; Invented = returned numeric cells printed nowhere on the page. Extras, strict F1 and structure are separate diagnostics.',
-    'key_value': 'Correct values / counted printed-label fields; unreturned reference blanks are excluded. Unmapped is a count of returned keys per page.',
-    'schema': 'Correct values / (requested fields + unexpected fields). Same frozen field sample.',
+    'key_value': 'Correct values / counted printed-label fields; unreturned reference blanks are excluded. Unmapped is a count of returned keys per page. Wrong/Missing numbers: share of the fields compared as numbers (amounts, totals, quantities, rates; not dates or identifiers) returned wrong or not returned.',
+    'schema': 'Correct values / (requested fields + unexpected fields). Same frozen field sample. Wrong/Missing numbers: share of the fields compared as numbers (amounts, totals, quantities, rates; not dates or identifiers) returned wrong or not returned.',
     'geometry': 'Full = Word: located reference-unit recall (words; line segments on receipts). Line: both sides merged into visual lines, fuzzy text, mutual centre containment. Block cov: reference words inside a returned block that contains their text; block engines only, read with Words/box. Boxes are never invented at a finer unit than returned.',
 }
 
@@ -92,6 +92,11 @@ def metric_value(row, key):
         total = m.get(prefix + ('_pairs_total' if prefix == 'kv' else '_fields_total'))
         name = prefix + ('_pairs_' if prefix == 'kv' else '_fields_')
         count = m.get(name + ('missing' if key == 'missing_rate' else 'wrong_value'))
+        return count / total if total and count is not None else None
+    if key in ('numbers_wrong_rate', 'numbers_missing_rate'):
+        prefix = 'kv' if row['leg'] == 'key_value' else 'schema'
+        total = m.get(prefix + '_numbers_total')
+        count = m.get(prefix + '_numbers_' + ('wrong' if key == 'numbers_wrong_rate' else 'missing'))
         return count / total if total and count is not None else None
     return m.get(key)
 

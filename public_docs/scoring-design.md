@@ -453,6 +453,11 @@ A changed reference invalidates the file. Rulings never cross documents.
   still counts against the engine, and a missing key for a filled field is
   still missing. Populated-only accuracy, blank accuracy and unmatched extra
   pairs are separate diagnostics; extras do not lower the headline.
+- Wrong numbers and Missing numbers (`kv_numbers_*`): the share of counted
+  fields that `value_equal` compares as numbers (`kv_schema_code.is_number_field`:
+  amounts, totals, quantities, rates; not dates, checkboxes or identifiers such
+  as invoice or phone numbers) whose value was wrong or not returned. Pages
+  without such fields have no value. Diagnostics; the headline is unchanged.
 - A page with a field that still needs the judge publishes no headline; its
   provisional score stays visible and is excluded from means. `--skip-judge`
   disables new judge calls, not inference.
@@ -521,6 +526,8 @@ returned keys ──► exact literal key match (no synonyms, no judge) ──�
 **Score and limits.**
 - Headline: `(correct + blank_ok) / (requested fields + extras)`.
 - Unpenalized accuracy and JSON/schema compliance are separate diagnostics.
+- Wrong numbers and Missing numbers (`schema_numbers_*`) are counted as in
+  key/value, over the requested fields compared as numbers.
   Recovering values from fenced or malformed JSON does not make the JSON valid:
   Sonnet's answers are fenced, so its `schema_valid_json` is false although its
   values are scored.

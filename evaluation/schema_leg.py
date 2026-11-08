@@ -38,6 +38,7 @@ class SchemaScore:
         return self.field_accuracy
 
     def as_metrics(self) -> dict[str, Any]:
+        from evaluation.kv_schema_code import number_counts
         return {
             "schema_field_accuracy": self.field_accuracy,
             "schema_sample": self.sample,
@@ -57,6 +58,7 @@ class SchemaScore:
             "schema_extra_fields": len(self.extra_fields),
             "schema_valid_json": self.compliance.get("valid_json"),
             "schema_contract_valid": self.compliance.get("schema_valid"),
+            **{f"schema_numbers_{k}": n for k, n in number_counts(self.verdicts).items()},
         }
 
     def as_detail(self) -> dict[str, Any]:

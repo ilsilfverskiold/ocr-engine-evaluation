@@ -508,6 +508,25 @@ def value_equal(expected: Any, got: Any, names: list[str] | None = None, shared_
     return e == g or e.replace(" ", "") == g.replace(" ", "")
 
 
+def is_number_field(expected: Any, names: list[str] | None = None) -> bool:
+    """Whether value_equal compares this reference value as a number: not blank or a
+    checkbox, not an identifier field, and a complete numeric value (a rate may be
+    printed @6). Dates and identifiers such as invoice numbers are compared as text."""
+    if expected is None or is_blank_value(expected) or is_bool_expected(expected) or is_identifier_key(names):
+        return False
+    if "rate" in {token for n in names or [] for token in norm_label(n).split()}:
+        expected = re.sub(r"^@\s*", "", str(expected))
+    return as_number(expected) is not None
+
+
+def number_counts(verdicts) -> dict[str, int]:
+    """Reference values compared as numbers, and how many came back wrong or not at
+    all. Shared scoring compares each field under its path alone, so that is its name."""
+    numbers = [v for v in verdicts if not v.is_blank and is_number_field(v.expected, [v.path])]
+    return {"total": len(numbers), "wrong": sum(v.verdict == "wrong" for v in numbers),
+            "missing": sum(v.verdict == "missing" for v in numbers)}
+
+
 @dataclass
 class FieldVerdict:
     path: str

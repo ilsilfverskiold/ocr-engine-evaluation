@@ -48,6 +48,7 @@ class KeyValueScore:
         return self.field_accuracy
 
     def as_metrics(self) -> dict[str, Any]:
+        from evaluation.kv_schema_code import number_counts
         return {
             "kv_field_accuracy": self.field_accuracy,
             "kv_pairs_total": self.pairs_total,
@@ -71,6 +72,7 @@ class KeyValueScore:
             "kv_synonym_reference_id": self.synonym_reference_id,
             "kv_pending_key_review": len(self.pending_key_review),
             "kv_provisional_accuracy": self.provisional_accuracy,
+            **{f"kv_numbers_{k}": n for k, n in number_counts(self.verdicts).items()},
         }
 
     def as_detail(self) -> dict[str, Any]:
