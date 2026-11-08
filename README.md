@@ -7,7 +7,7 @@ and reference behind the scores is in this repository.
 
 - [Results](#results), then [cost and latency](#cost-and-latency)
 - [How it was tested](#how-it-was-tested): engines and versions, documents, scoring
-- [View the results yourself](#view-the-results-yourself): terminal report and browser viewer
+- [View the results yourself](#view-the-results-yourself): terminal report and browser viewer, or the [hosted viewer](https://claude.ai/artifact/97nKvFHmMFvECf2YKmyXKb) with no setup
 - [Run the benchmark](#run-the-benchmark): with the engines here, or with an engine you add
 
 ## Results
@@ -355,11 +355,15 @@ limit; the harness and the viewer read it as is.
 
 ### Browser viewer
 
-The viewer shows the comparison tables and charts, the best engine per leg
-with its cost and time at a chosen page volume, and for every engine, page and
-leg the prompt sent, the full reply, the output beside its reference, the
-scorer's verdict per item, and the geometry boxes drawn on the page at word,
-line and block level.
+A hosted copy of the viewer needs no setup:
+<https://claude.ai/artifact/97nKvFHmMFvECf2YKmyXKb>. To run it from this
+repository instead, follow the steps below.
+
+The viewer shows the comparison tables and charts, the engines near each leg's
+best score ranked by cost, with cost and time at a chosen page volume, and for
+every engine, page and leg the prompt sent, the full reply, the output beside
+its reference, the scorer's verdict per item, and the geometry boxes drawn on
+the page at word, line and block level.
 
 1. Download the page images once. The HuggingFace dataset is public, so no
    token is needed:
