@@ -690,6 +690,8 @@ const ready = load().then(() => {
   if (!docs.length) { el("content").innerHTML = '<div class="empty">No results found.</div>'; return; }
   state.engine = engines[0]; state.doc = docs[0];
   fromHash();
+  // Open on the Results overview unless the address names a view.
+  if (location.hash.length <= 1) state.view = "results";
   // The first engine may have rows on a few pages only; start on one it has.
   const avail = availableDocs(state.engine);
   if (avail.length && !avail.includes(state.doc)) state.doc = avail[0];
