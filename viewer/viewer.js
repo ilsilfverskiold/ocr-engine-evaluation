@@ -180,7 +180,9 @@ async function load() {
   }
   docs = Object.keys(D.docs).sort();
   engines = [...new Set(rows.map(r => r.engine_name))].sort();
-  D.limits = parseLimits((await getText(new URL("engines.py", ROOT))) || "");
+  const registry = (await getText(new URL("engines.py", ROOT))) || "";
+  D.limits = parseLimits(registry);
+  D.engineTypes = parseEngineTypes(registry);
   Results.init();
 }
 
@@ -204,6 +206,16 @@ function parseLimits(text) {
       const at = v[1] === "{" ? m.index + v.index : new RegExp(`^${v[1]} = \\{`, "m").exec(text)?.index;
       out[m[1]] = at == null ? null : literal(at);
     } catch { out[m[1]] = null; }
+  }
+  return out;
+}
+
+// Each engine's engine_type as written in engines.py.
+function parseEngineTypes(text) {
+  const out = {};
+  for (const m of text.matchAll(/^    "([\w.-]+)": EngineSpec\(/gm)) {
+    const end = text.indexOf("\n    ),", m.index), t = /engine_type="(\w+)"/.exec(text.slice(m.index, end < 0 ? undefined : end));
+    if (t) out[m[1]] = t[1];
   }
   return out;
 }
@@ -290,7 +302,7 @@ function renderSidebar() {
         const bg = st === "s" ? `style="background:${scoreColor(row.score)}"` : "";
         return `<span class="dot ${st}" ${bg} title="${LEG_TITLES[l]}: ${st === "s" ? fmt(row.score) : STATUS_TEXT[st]}"></span>`;
       }).join("");
-    html += `<div class="eng ${!results && e === state.engine ? "active" : ""}" data-e="${e}"><span>${esc(e)}</span><span class="dots">${dots}</span></div>`;
+    html += `<div class="eng ${!results && e === state.engine ? "active" : ""} ${results && !Results.inType(e) ? "out" : ""}" data-e="${e}"><span>${esc(e)}</span><span class="dots">${dots}</span></div>`;
   }
   el("engine-list").innerHTML = html;
   el("engine-list").querySelectorAll(".eng[data-e]").forEach(n => n.onclick = () =>

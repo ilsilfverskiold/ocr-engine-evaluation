@@ -33,12 +33,18 @@ const Results = (() => {
     rec: {label: "s/page", title: "recorded seconds per page: steady_latency_seconds, else latency_seconds. For a Modal batch this is the warm batch's seconds divided by its items (throughput basis, startup excluded), not request latency. † = the primary pass shared its batch with other passes, so this share includes their generation time", fmt: v => f(v, 2)},
   };
   const YMIN = [["0", "0 (full axis)"], ["auto", "lowest point"], ["0.5", "0.5"], ["0.8", "0.8"], ["0.9", "0.9"]];
-  const DEFAULTS = {leg: "all", tier: "all", type: "all", sort: "score", dir: "desc",
+  const DEFAULTS = {leg: "all", tier: "all", type: "all", etype: "all", sort: "score", dir: "desc",
     x: "cost", xlog: "1", labels: "auto", strip: "score", color: "type", ymin: "0", vol: "1000000", near: "0.1", top: "10", sleg: "all"};
   const VOLUMES = [["1000", "1,000"], ["10000", "10,000"], ["100000", "100,000"], ["1000000", "1 million"]];
   // At-scale panel: how far below a leg's best score an engine may sit, and how many of those engines to show.
   const NEAR = [["0.05", "0.05"], ["0.1", "0.10"], ["0.15", "0.15"]];
   const TOP = [["1", "top 1"], ["2", "top 2"], ["3", "top 3"], ["5", "top 5"], ["10", "top 10"]];
+  // EngineSpec.engine_type values (engines.py), in the order the engine-type filter lists them, with what each means.
+  const ENGINE_TYPES = [
+    ["general_vlm", "General VLM", "a general-purpose vision-language model reads the page"],
+    ["ocr_model", "Specialised OCR model", "a model trained for document OCR reads the page; some run a layout model first"],
+    ["pipeline", "Classical pipeline", "separate text detection and recognition models, plus layout and table models where the pipeline has them; no language model reads the page"],
+    ["document_api", "Hosted document API", "a hosted document service that does not publish what it runs"]];
   const rf = {...DEFAULTS};
 
   // ---------- numbers, exactly as the report computes and prints them ----------
@@ -168,8 +174,10 @@ const Results = (() => {
     if (memo.sig !== sig) memo = {sig, data: {}};
     return key in memo.data ? memo.data[key] : (memo.data[key] = make());
   }
-  const selection = () => D.results.rows.filter(r => (rf.tier === "all" || r.tier === rf.tier) && (rf.type === "all" || r.doc_type === rf.type));
-  const selectedCalls = () => { const stems = new Set(selection().map(r => r.stem)); return D.results.ledger.filter(c => stems.has(c.stem)); };
+  const typeLabel = k => (ENGINE_TYPES.find(t => t[0] === k) || [k, k])[1];
+  const inType = e => rf.etype === "all" || D.engineTypes[e] === rf.etype;
+  const selection = () => D.results.rows.filter(r => (rf.tier === "all" || r.tier === rf.tier) && (rf.type === "all" || r.doc_type === rf.type) && inType(r.engine_name));
+  const selectedCalls = () => { const stems = new Set(selection().map(r => r.stem)); return D.results.ledger.filter(c => stems.has(c.stem) && inType(c.engine_name)); };
   function docTypes() {
     const seen = new Map();
     for (const r of D.results.rows) seen.set(r.doc_type, r.tier);
@@ -346,7 +354,7 @@ const Results = (() => {
     return `<details class="panel" data-k="families"><summary>By document type · ${LEG_TITLES[L.leg]} full score per family (pages in brackets where fewer than the engine's total)</summary>${table("families:" + L.leg, cols, rows)}</details>`;
   }
   function judgePanel() {
-    const rows = D.results.judge.filter(r => isNum(r.score) && (rf.tier === "all" || r.tier === rf.tier) && (rf.type === "all" || r.doc_type === rf.type));
+    const rows = D.results.judge.filter(r => isNum(r.score) && (rf.tier === "all" || r.tier === rf.tier) && (rf.type === "all" || r.doc_type === rf.type) && inType(r.engine_name));
     if (!rows.length) return "";
     const kinds = [...new Set(rows.map(r => r.doc_type))].sort();
     const engines = [...new Set(rows.map(r => r.engine_name))];
@@ -587,10 +595,13 @@ const Results = (() => {
   function filterBar() {
     const rows = selection(), stems = new Set(rows.map(r => r.stem)), eng = new Set(rows.map(r => r.engine_name));
     el("leg-tabs").innerHTML = ["all", ...D.legs].map(l => `<span class="tab ${rf.leg === l ? "active" : ""}" data-f="leg" data-v="${l}">${l === "all" ? "0 All legs" : `${D.legs.indexOf(l) + 1} ${LEG_TITLES[l]}`}</span>`).join("");
-    const sel = (name, options, title) => `<label title="${esc(title)}">${esc(name)} <select data-f="${name.toLowerCase()}">${options.map(([v, t]) => `<option value="${v}" ${rf[name.toLowerCase()] === v ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></label>`;
+    const sel = (name, options, title, key = name.toLowerCase()) => `<label title="${esc(title)}">${esc(name)} <select data-f="${key}">${options.map(([v, t]) => `<option value="${v}" ${rf[key] === v ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></label>`;
+    const typed = ENGINE_TYPES.map(([k, label, what]) => [k, label, what, engines.filter(e => D.engineTypes[e] === k).length]).filter(t => t[3]);
+    const picked = typed.find(t => t[0] === rf.etype);
     el("doc-tabs").innerHTML = sel("Tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "difficulty tier")
       + sel("Type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "document family")
-      + `<span class="sc muted">${rows.length} rows · ${stems.size} page${stems.size === 1 ? "" : "s"} · ${eng.size} engine${eng.size === 1 ? "" : "s"}</span>`;
+      + sel("Engine type", [["all", "all engine types"], ...typed.map(([k, label, , n]) => [k, `${label} (${n})`])], typed.map(([, label, what]) => `${label}: ${what}`).join("\n"), "etype")
+      + `<span class="sc muted">${rows.length} rows · ${stems.size} page${stems.size === 1 ? "" : "s"} · ${eng.size} engine${eng.size === 1 ? "" : "s"}${picked ? ` · ${esc(picked[1])}: ${esc(picked[2])}` : ""}</span>`;
     el("leg-tabs").querySelectorAll(".tab").forEach(n => n.onclick = () => update({leg: n.dataset.v}));
     el("doc-tabs").querySelectorAll("select").forEach(s => s.onchange = () => update({[s.dataset.f]: s.value}));
   }
@@ -758,7 +769,7 @@ const Results = (() => {
       });
     }
     const empty = legs.filter(l => !Ls[l].data.some(r => isNum(r.score)));
-    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
+    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}${rf.etype === "all" ? "" : " · " + typeLabel(rf.etype)}`;
     const maxCost = Math.max(0, ...rows.map(r => r.costAt || 0)), maxTime = Math.max(0, ...rows.map(r => r.timeAt || 0)),
       maxPar = Math.max(0, ...rows.map(r => r.parAt || 0));
     const bar = (v, max, text, cls) => `<div class="scale-cell"><span class="track"><span class="fill ${cls}" style="width:${max > 0 && v ? Math.max(v / max * 100, 0.6) : 0}%"></span></span><span class="val">${text}</span></div>`;
@@ -780,14 +791,14 @@ const Results = (() => {
     return `<div class="panel"><h3>Score against cost per leg at scale — engines within ${esc(nearText)} of the best score, cheapest first · ${esc(volText)} pages · ${esc(where)}</h3>
         <p class="muted">Per leg: the best score in this selection (named under the leg), then every engine scoring within the chosen margin of it (4 d.p.), cheapest first by ${esc(XM.cost.label)}, then ${esc(XM.rec.label)}. "Within" sets the margin; "show" how many of those engines to list. Each row shows the score it gives up and the money it saves against the best scorer.</p>
         <details data-k="scale-how"><summary>How cost and time are worked out</summary><p class="muted">Cost = ${esc(XM.cost.label)} × pages ÷ 1,000; running in parallel leaves it the same. One at a time = ${esc(XM.rec.label)} × pages: one call after another, or one warm GPU container at the measured throughput. In parallel = pages ÷ the fastest rate the provider's default limits allow a standard paid account, with no increase requested: AWS Textract quotas in US East, Anthropic's Start tier (whose $500 monthly spend cap also limits volume), LlamaCloud's Starter plan and Modal's Starter plan of 10 GPUs. Hover a time for the limit's source. Gemini and Mistral publish no default limits, so theirs are estimates and marked as such: Gemini at third-party Tier 1 values, Mistral at an assumed 1 request per second. Local engines scale with your CPU cores. ${esc(XM.cost.label)} and ${esc(XM.rec.label)} are each leg's own means over its scored pages, as in the leg tables. Legs that share a call are paid once, so do not add rows. Modal figures cover GPU processing only, without container startup or idle time; local engines are unpriced and count as $0.</p></details>
-        <div class="chart-controls">${selectHTML("sleg", [["all", "all legs"], ...D.legs.map(l => [l, LEG_TITLES[l]])], "leg")}${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("near", NEAR, "within")}${selectHTML("top", TOP, "show")}${selectHTML("vol", VOLUMES, "pages")}</div>
+        <div class="chart-controls">${selectHTML("sleg", [["all", "all legs"], ...D.legs.map(l => [l, LEG_TITLES[l]])], "leg")}${selectHTML("tier", [["all", "all tiers"], ...TIERS.map(t => [t, t])], "tier")}${selectHTML("type", [["all", "all document types"], ...docTypes().map(t => [t.type, `${t.type} · ${t.tier}`])], "type")}${selectHTML("etype", [["all", "all engine types"], ...ENGINE_TYPES.filter(([k]) => engines.some(e => D.engineTypes[e] === k)).map(([k, label]) => [k, label])], "engine type")}${selectHTML("near", NEAR, "within")}${selectHTML("top", TOP, "show")}${selectHTML("vol", VOLUMES, "pages")}</div>
         <div class="twrap"><table class="v r scale" data-table="scale"><thead><tr>${heads.map(([k, t]) => `<th data-key="${k}">${esc(t)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>
         ${unpriced.length ? `<p class="muted">No ${esc(XM.cost.label)} recorded, ranked last: ${unpriced.map(esc).join(", ")}.</p>` : ""}
         ${empty.length ? `<p class="muted">No scored pages in this selection for ${empty.map(l => esc(LEG_TITLES[l])).join(", ")}.</p>` : ""}</div>`;
   }
   // How cost grows with volume: each engine's primary pass (one call per page), its $/page × pages.
   function costScalePanel(ops, list) {
-    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}`;
+    const where = `${rf.tier === "all" ? "all tiers" : rf.tier + " tier"} · ${rf.type === "all" ? "all document types" : rf.type}${rf.etype === "all" ? "" : " · " + typeLabel(rf.etype)}`;
     const rows = list.filter(e => isNum(ops[e]?.cost_per_page)).map(e => ({engine: e, cost: ops[e].cost_per_page, primary: ops[e].primary}))
       .sort((a, b) => a.cost - b.cost || a.engine.localeCompare(b.engine));
     const at = (r, n) => r.cost === 0 ? "unpriced (local)" : money(r.cost * n);
@@ -884,6 +895,7 @@ const Results = (() => {
     for (const part of parts) { const [k, ...v] = part.split("="); if (k in DEFAULTS && v.length) rf[k] = v.join("="); }
     if (rf.leg !== "all" && !D.legs.includes(rf.leg)) rf.leg = "all";
     if (rf.tier !== "all" && !TIERS.includes(rf.tier)) rf.tier = "all";
+    if (rf.etype !== "all" && !ENGINE_TYPES.some(([k]) => k === rf.etype)) rf.etype = "all";
   }
   // Machine-readable copy of what is on screen, for checks/verify_results.py.
   function dump() {
@@ -896,5 +908,5 @@ const Results = (() => {
     return {filter: {...rf}, tables, dots: dotsOut, charts: charts.map(ch => ({sel: ch.sel, points: ch.kind === "scatter" ? ch.pts.length : ch.rowsE.reduce((n, r) => n + r.points.length + r.errors.length, 0)}))};
   }
 
-  return {DEFAULTS, rf, init, render, dots, set, update, toHash, fromHash, docTypes, dump, f4};
+  return {DEFAULTS, rf, init, render, dots, set, update, toHash, fromHash, docTypes, dump, f4, inType};
 })();

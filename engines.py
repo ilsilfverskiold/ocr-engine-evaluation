@@ -16,6 +16,13 @@ class EngineSpec:
     # Import path of the runner class, "module:ClassName". Modal engines all use
     # the generic ModalRunner, constructed with the engine name.
     runner: str
+    # What reads the page, for grouping results (the viewer's engine-type filter):
+    # "general_vlm"  — a general-purpose vision-language model.
+    # "ocr_model"    — a model trained for document OCR (some run a layout model first).
+    # "pipeline"     — separate text detection and recognition models, plus layout/table
+    #                  models where the pipeline has them; no language model reads the page.
+    # "document_api" — a hosted document service that does not publish what it runs.
+    engine_type: str = ""
     # Env vars that must be set for this engine to run (checked by --check and
     # validate_keys). Empty for local and Modal engines.
     required_env: tuple[str, ...] = ()
@@ -105,7 +112,7 @@ _LOCAL = {"basis": "local: as many pages at once as your CPU cores allow"}
 ENGINES: dict[str, EngineSpec] = {
     # --- Local (free, no keys) --------------------------------------------
     "tesseract": EngineSpec(
-        name="tesseract", kind="local",
+        name="tesseract", kind="local", engine_type="pipeline",
         runner="runners.tesseract_runner:TesseractRunner",
         default_limits=_LOCAL,
         cost_notes="local, free",
@@ -113,7 +120,7 @@ ENGINES: dict[str, EngineSpec] = {
         leg_notes="flat text only: no markdown, no table structure, no prompt",
     ),
     "docling": EngineSpec(
-        name="docling", kind="local",
+        name="docling", kind="local", engine_type="pipeline",
         runner="runners.docling_runner:DoclingRunner",
         default_limits=_LOCAL,
         cost_notes="local, free",
@@ -128,7 +135,7 @@ ENGINES: dict[str, EngineSpec] = {
     ),
     # --- Cloud APIs --------------------------------------------------------
     "textract_text": EngineSpec(
-        name="textract_text", kind="cloud",
+        name="textract_text", kind="cloud", engine_type="document_api",
         runner="runners.textract_text_runner:TextractTextRunner",
         default_limits={"requests_per_second": 25, "basis": "AWS default quota for DetectDocumentText, US East (N. Virginia)", "source": "https://docs.aws.amazon.com/general/latest/gr/textract.html"},
         required_env=("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"),
@@ -137,7 +144,7 @@ ENGINES: dict[str, EngineSpec] = {
         leg_notes="DetectDocumentText returns lines only: no structure, no prompt",
     ),
     "textract_structured": EngineSpec(
-        name="textract_structured", kind="cloud",
+        name="textract_structured", kind="cloud", engine_type="document_api",
         runner="runners.textract_structured_runner:TextractStructuredRunner",
         default_limits={"requests_per_second": 10, "basis": "AWS default quota for AnalyzeDocument, US East (N. Virginia)", "source": "https://docs.aws.amazon.com/general/latest/gr/textract.html"},
         required_env=("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"),
@@ -151,7 +158,7 @@ ENGINES: dict[str, EngineSpec] = {
         ),
     ),
     "mistral_ocr_4_1": EngineSpec(
-        name="mistral_ocr_4_1", kind="cloud",
+        name="mistral_ocr_4_1", kind="cloud", engine_type="ocr_model",
         runner="runners.mistral_runner:MistralOCRRunner",
         default_limits={"requests_per_second": 1, "basis": "estimate: Mistral publishes no default; accounts start on the lowest limits and prepaying credits does not raise them, assumed 1 request per second (a third-party guide reports 5)", "source": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them"},
         required_env=("MISTRAL_API_KEY",),
@@ -171,7 +178,7 @@ ENGINES: dict[str, EngineSpec] = {
         table_format="markdown",
     ),
     "llamaparse": EngineSpec(
-        name="llamaparse", kind="cloud",
+        name="llamaparse", kind="cloud", engine_type="document_api",
         runner="runners.llamaparse_runner:LlamaParseRunner",
         default_limits=_LLAMACLOUD_STARTER,
         required_env=("LLAMA_CLOUD_API_KEY",),
@@ -193,7 +200,7 @@ ENGINES: dict[str, EngineSpec] = {
         table_format="markdown",
     ),
     "llamaparse_granular": EngineSpec(
-        name="llamaparse_granular", kind="cloud",
+        name="llamaparse_granular", kind="cloud", engine_type="document_api",
         runner="runners.llamaparse_runner:LlamaParseGranularRunner",
         default_limits=_LLAMACLOUD_STARTER,
         required_env=("LLAMA_CLOUD_API_KEY",),
@@ -211,7 +218,7 @@ ENGINES: dict[str, EngineSpec] = {
                   "sidecar; same parse tier and price as llamaparse",
     ),
     "gemini_flash": EngineSpec(
-        name="gemini_flash", kind="cloud",
+        name="gemini_flash", kind="cloud", engine_type="general_vlm",
         runner="runners.gemini_runner:GeminiRunner",
         default_limits={"requests_per_minute": 4000, "input_tokens_per_minute": 4000000, "requests_per_day": 150000, "basis": "estimate: Tier 1 values for Gemini 3.1 Flash-Lite from an undated third-party table; Google shows each project's limits only in AI Studio", "source": "https://www.scriptbyai.com/gemini-api-rate-limits/"},
         required_env=("GOOGLE_API_KEY",),
@@ -224,7 +231,7 @@ ENGINES: dict[str, EngineSpec] = {
         table_format="markdown",
     ),
     "claude_sonnet_4_6": EngineSpec(
-        name="claude_sonnet_4_6", kind="cloud",
+        name="claude_sonnet_4_6", kind="cloud", engine_type="general_vlm",
         runner="runners.claude_runner:ClaudeRunner",
         default_limits={"requests_per_minute": 1000, "input_tokens_per_minute": 2000000, "output_tokens_per_minute": 400000, "basis": "Anthropic Start tier, Sonnet 4.x (spend capped at $500 a month)", "source": "https://platform.claude.com/docs/en/api/rate-limits"},
         required_env=("ANTHROPIC_API_KEY",),
@@ -239,7 +246,7 @@ ENGINES: dict[str, EngineSpec] = {
     ),
     # --- Self-hosted VLMs on Modal -----------------------------------------
     "mineru": EngineSpec(
-        name="mineru", kind="modal",
+        name="mineru", kind="modal", engine_type="ocr_model",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.000922, cost_notes="Modal A100-80GB; measured batch estimate",
@@ -262,7 +269,7 @@ ENGINES: dict[str, EngineSpec] = {
         },
     ),
     "glm_ocr": EngineSpec(
-        name="glm_ocr", kind="modal",
+        name="glm_ocr", kind="modal", engine_type="ocr_model",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.000617, cost_notes="Modal A10; measured batch estimate",
@@ -300,7 +307,7 @@ ENGINES: dict[str, EngineSpec] = {
         },
     ),
     "paddleocr_vl": EngineSpec(
-        name="paddleocr_vl", kind="modal",
+        name="paddleocr_vl", kind="modal", engine_type="ocr_model",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.001411, cost_notes="Modal A100-80GB; measured batch estimate",
@@ -321,7 +328,7 @@ ENGINES: dict[str, EngineSpec] = {
         },
     ),
     "marker": EngineSpec(
-        name="marker", kind="modal",
+        name="marker", kind="modal", engine_type="pipeline",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.001420, cost_notes="Modal A100-80GB; measured batch estimate",
@@ -349,7 +356,7 @@ ENGINES: dict[str, EngineSpec] = {
         },
     ),
     "deepseek_ocr": EngineSpec(
-        name="deepseek_ocr", kind="modal",
+        name="deepseek_ocr", kind="modal", engine_type="ocr_model",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.000975, cost_notes="Modal A100-80GB; measured batch estimate",
@@ -387,7 +394,7 @@ ENGINES: dict[str, EngineSpec] = {
         },
     ),
     "qwen3_vl": EngineSpec(
-        name="qwen3_vl", kind="modal",
+        name="qwen3_vl", kind="modal", engine_type="general_vlm",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.004113, cost_notes="Modal A100-80GB; measured batch estimate",
@@ -433,7 +440,7 @@ ENGINES: dict[str, EngineSpec] = {
     ),
     # Additional measured geometry configurations.
     "paddleocr_ppocrv5": EngineSpec(
-        name="paddleocr_ppocrv5", kind="modal",
+        name="paddleocr_ppocrv5", kind="modal", engine_type="pipeline",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.0,
@@ -449,7 +456,7 @@ ENGINES: dict[str, EngineSpec] = {
                   "no markdown or table structure, no prompt",
     ),
     "mineru_pipeline": EngineSpec(
-        name="mineru_pipeline", kind="modal",
+        name="mineru_pipeline", kind="modal", engine_type="pipeline",
         runner="runners.modal_runner:ModalRunner",
         default_limits=_MODAL_STARTER,
         cost_per_page=0.0,
