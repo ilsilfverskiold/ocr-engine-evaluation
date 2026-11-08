@@ -1,0 +1,49 @@
+# Publishes the browser viewer to GitHub Pages: the repository files it reads (viewer/, results/,
+# documents/, engines.py) plus the page images, downloaded from the HuggingFace dataset as in the README.
+name: Viewer on GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Download the page images
+        run: |
+          pip install "datasets>=3.0"
+          python scripts/download_data.py
+      - name: Assemble the site
+        run: |
+          mkdir _site
+          cp -r viewer results documents engines.py _site/
+          # Pages serves no directory listings; the viewer finds the newest scored run from this list instead.
+          ls _site/results/runs | sed 's|.*|<a href="&">&</a>|' > runs.html
+          mv runs.html _site/results/runs/index.html
+          echo '<!doctype html><meta http-equiv="refresh" content="0; url=viewer/viewer.html"><a href="viewer/viewer.html">OCR benchmark viewer</a>' > _site/index.html
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

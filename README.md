@@ -7,7 +7,7 @@ and reference behind the scores is in this repository.
 
 - [Results](#results), then [cost and latency](#cost-and-latency)
 - [How it was tested](#how-it-was-tested): engines and versions, documents, scoring
-- [View the results yourself](#view-the-results-yourself): terminal report and browser viewer, or the [hosted viewer](https://claude.ai/artifact/97nKvFHmMFvECf2YKmyXKb) with no setup
+- [View the results yourself](#view-the-results-yourself): terminal report and browser viewer, or the [hosted viewer](https://ilsilfverskiold.github.io/ocr-engine-evaluation/) with no setup
 - [Run the benchmark](#run-the-benchmark): with the engines here, or with an engine you add
 
 ## Results
@@ -356,10 +356,14 @@ limit; the harness and the viewer read it as is.
 ### Browser viewer
 
 A hosted copy of the viewer needs no setup:
-<https://claude.ai/artifact/97nKvFHmMFvECf2YKmyXKb>. To run it from this
-repository instead, follow the steps below.
+<https://ilsilfverskiold.github.io/ocr-engine-evaluation/>. It is published to
+GitHub Pages from this repository on every push to `main`
+(`.github/workflows/pages.yml`). To run it from this repository instead, follow
+the steps below.
 
-The viewer shows the comparison tables and charts, the engines near each leg's
+The viewer shows the comparison tables and charts, filtered by tier, document
+type or engine type (general VLM, specialised OCR model, classical pipeline,
+hosted document API; `engine_type` in `engines.py`), the engines near each leg's
 best score ranked by cost, with cost and time at a chosen page volume, and for
 every engine, page and leg the prompt sent, the full reply, the output beside
 its reference, the scorer's verdict per item, and the geometry boxes drawn on
