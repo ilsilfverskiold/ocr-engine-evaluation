@@ -522,6 +522,9 @@ function imagePanel(withBoxes) {
 const geoExtra = row => row && !row.error ? [["Line", row.metrics?.geometry_line_score], ["Block cov", row.metrics?.geometry_block_score]]
   .filter(([, v]) => v != null).map(([k, v]) => `${k} <b>${fmt(v)}</b>`).join(" · ") : "";
 
+const cmpButton = e => e === state.engine ? "<span></span>"
+  : `<button type="button" class="mini cmp-btn ${e === state.vs ? "on" : ""}" data-vs="${e}" title="show ${esc(state.engine)} and ${esc(e)} side by side">${e === state.vs ? "comparing" : "compare"}</button>`;
+
 function scorePanel(row) {
   const leg = state.leg, geo = leg === "geometry";
   const all = engines.map(e => ({e, row: legRow(e, state.doc, leg)})).filter(x => x.row)
@@ -529,7 +532,7 @@ function scorePanel(row) {
   const bars = all.length ? `<div class="bars">${all.map(x => `<div class="bar ${geo ? "geo" : ""} ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
       <span>${esc(x.e)}</span><span class="track"><span class="fill" style="display:block;width:${(x.row.score ?? 0) * 100}%"></span></span>
       <span>${(st => st === "s" ? fmt(x.row.score) : st === "err" ? '<span class="err">error</span>' : STATUS_TEXT[st])(legStatus(x.e, state.doc, leg))}</span>${geo ? `<span class="geo-extra">${geoExtra(x.row)}</span>` : ""}
-      ${x.e === state.engine ? "<span></span>" : `<button type="button" class="mini cmp-btn ${x.e === state.vs ? "on" : ""}" data-vs="${x.e}" title="show ${esc(state.engine)} and ${esc(x.e)} side by side">${x.e === state.vs ? "comparing" : "compare"}</button>`}</div>`).join("")}</div>`
+      ${cmpButton(x.e)}</div>`).join("")}</div>`
     : '<span class="muted">none</span>';
   const metrics = Object.entries(row?.metrics || {}).filter(([, v]) => v == null || typeof v !== "object")
     .map(([k, v]) => `<span>${esc(k)}: <b>${fmt(v)}</b></span>`).join("");
@@ -543,23 +546,34 @@ function scorePanel(row) {
     <h3 style="margin-top:12px">All engines, this page${geo ? ": Word, with Line and Block cov where recorded" : ""} (click to switch, or compare side by side)</h3>${bars}</div>`;
 }
 
-// The document judge estimate (not a leg) on a page without a reliable text reference: the values a model read
-// from the page image, the same list for every engine, and this engine's saved verdict on each (evaluation/judge.py).
-function judgePanel() {
-  const all = engines.map(e => ({e, j: D.judge[state.doc + "|" + e]})).filter(x => x.j)
+// The 11 silver-reference pages: the Text leg does not score them, and the document judge estimate (not a leg,
+// evaluation/judge.py) is their result. On Text it takes the score panel's place, and its checklist verdicts are the
+// Why below the engine text, as on the other legs.
+const judgedPage = () => state.leg === "text" && engines.some(e => D.judge[state.doc + "|" + e]);
+const judgeOf = engine => D.judge[state.doc + "|" + engine];
+const judgeRight = j => j.items.filter(i => i.verdict === "present_correct").length;
+
+function judgeScorePanel(row) {
+  const all = engines.map(e => ({e, j: judgeOf(e)})).filter(x => x.j)
     .sort((a, b) => (b.j.score ?? -1) - (a.j.score ?? -1));
-  if (!all.length) return "";
-  const j = D.judge[state.doc + "|" + state.engine], m = j?.metrics || {};
-  const right = j ? j.items.filter(i => i.verdict === "present_correct").length : 0;
+  const j = judgeOf(state.engine);
   const bars = `<div class="bars">${all.map(x => `<div class="bar ${x.e === state.engine ? "me" : ""}" data-e="${x.e}">
       <span>${esc(x.e)}</span><span class="track"><span class="fill" style="display:block;width:${(x.j.score ?? 0) * 100}%"></span></span>
-      <span>${x.j.error ? '<span class="err">error</span>' : fmt(x.j.score)}</span></div>`).join("")}</div>`;
+      <span>${x.j.error ? '<span class="err">error</span>' : fmt(x.j.score)}</span>${cmpButton(x.e)}</div>`).join("")}</div>`;
   return `<div class="panel"><h3>Document judge estimate on this page · not a leg</h3>
-    <p class="muted">This page has no reliable text reference, so the Text leg does not score it. A model read the page image once and listed up to 40 values printed on it; every engine is checked against that same list. For each value the model then read this engine's text and answered present and correct, present but wrong, or absent. Score = correct ÷ values checked. These are the verdicts saved with the published run (${esc(m.judge_verdict_version || "version not recorded")}${m.recovered_from_commit ? `, recovered from commit ${esc(m.recovered_from_commit)}` : ""}); they do not record which model produced them, and the scoring notes say they may include substring-matching errors.</p>
-    ${j ? `<div class="score-big" style="color:${scoreColor(j.score)}">${j.error ? "error" : fmt(j.score)}</div><div class="muted">${right} of ${j.items.length} values present and correct</div>
-      ${j.error ? `<pre class="warn">${esc(j.error)}</pre>` : verdictTable(j.items.map((i, n) => ({...i, n: n + 1})), [["#", r => r.n], ["item", r => r.label], ["value on the page", r => r.value], ["verdict", r => r.verdict], ["legible", r => r.confident === false ? "marked hard to read" : ""]])}`
-      : `<div class="muted">No judge verdicts were saved for ${esc(state.engine)} on this page; ${all.length} engines have them.</div>`}
-    <h3 style="margin-top:12px">All engines, this page (click to switch)</h3>${bars}</div>`;
+    ${j ? `<div class="score-big" style="color:${scoreColor(j.score)}">${j.error ? "error" : fmt(j.score)}</div>
+      <div class="muted">${judgeRight(j)} of ${j.items.length} checklist values present and correct</div>`
+      : `<div class="muted">No judge verdicts were saved for ${esc(state.engine)} on this page.</div>`}
+    <p class="muted">The Text leg does not score this page${row?.reason ? ` (${esc(row.reason)})` : ""}. A model read the page image once and listed up to 40 values printed on it; every engine's text is checked against that same list, value by value below the text.</p>
+    <h3 style="margin-top:12px">All engines, this page (click to switch, or compare side by side)</h3>${bars}</div>`;
+}
+function judgeWhy(engine, tag) {
+  const j = judgeOf(engine);
+  if (!j) return `<div class="panel muted">${tag}No judge verdicts were saved for ${esc(engine)} on this page.</div>`;
+  const m = j.metrics;
+  return `<div class="panel"><h3>${tag}Why: judge checklist verdicts (${j.items.length} values)</h3>
+    <p class="muted">For each value the model read this engine's text and answered present and correct, present but wrong, or absent. Score = correct ÷ values checked. These are the verdicts saved with the published run (${esc(m.judge_verdict_version || "version not recorded")}${m.recovered_from_commit ? `, recovered from commit ${esc(m.recovered_from_commit)}` : ""}); they do not record which model produced them, and the scoring notes say they may include substring-matching errors.</p>
+    ${j.error ? `<pre class="warn">${esc(j.error)}</pre>` : verdictTable(j.items.map((i, n) => ({...i, n: n + 1})), [["#", r => r.n], ["item", r => r.label], ["value on the page", r => r.value], ["verdict", r => r.verdict], ["legible", r => r.confident === false ? "marked hard to read" : ""]])}</div>`;
 }
 
 function callPointer(row, info, call) {
@@ -618,7 +632,8 @@ const repairs = v => isEmpty(v) ? "" : `<details><summary>Reference changes reco
 
 // ---------- leg bodies ----------
 // A leg's page is three parts: the engine's output as the scorer read it, the reference, and the scorer's verdicts.
-// The page shows output beside reference; comparing two engines shows the two outputs, then the two verdict lists.
+// The page shows output beside reference with the verdicts below; comparing two engines shows the two outputs, then
+// the two verdict lists.
 // `name` (compare only) puts the engine's name in each title.
 function outputPanel(row, call, engine, name) {
   const d = row.detail || {}, m = row.metrics || {}, tag = name ? `${esc(name)} · ` : "";
@@ -667,7 +682,7 @@ function referencePanel(row, ref) {
   const d = row.detail || {}, m = row.metrics || {};
   switch (state.leg) {
     case "text":
-      return `<div class="panel"><h3>Reference text</h3>${ref ? sub(ref.file) : ""}${ref ? `<pre>${esc(ref.text)}</pre>` : '<p class="muted">No text sidecar found for this page.</p>'}
+      return `<div class="panel"><h3>Reference text</h3>${ref ? sub(ref.file + (judgedPage() ? " · silver (Tesseract OCR), not scored" : "")) : ""}${ref ? `<pre>${esc(ref.text)}</pre>` : '<p class="muted">No text sidecar found for this page.</p>'}
           ${repairs(m.text_reference_repairs)}</div>`;
     case "markdown":
       return `<div class="panel"><h3>Reference Markdown</h3>${ref ? sub(ref.file) : ""}
@@ -691,10 +706,11 @@ function formsPanel(engine, call) {
   return forms ? `<div class="panel"><h3>Native key/value pairs</h3>${sub("structured_output.forms, as saved in the call")}
           <div class="vwrap"><table class="v"><tr><th>key</th><th>value</th></tr>${forms.map(f => `<tr><td>${esc(f.key)}</td><td>${esc(f.value)}</td></tr>`).join("")}</table></div></div>` : "";
 }
-function whyPanel(row, name) {
+function whyPanel(row, engine, name) {
   const d = row.detail || {}, tag = name ? `${esc(name)} · ` : "";
   switch (state.leg) {
     case "text":
+      if (judgedPage()) return judgeWhy(engine, tag);
       return row.scoring_status === "unscored" ? `<div class="panel muted">${tag}Word coverage has not been scored for this call.</div>` : `<div class="panel"><h3>${tag}Missed reference words (${(d.missed_words || []).length})</h3>
         ${(d.missed_words || []).map(w => `<span class="chip bad">${esc(w)}</span>`).join("") || '<span class="muted">none</span>'}</div>`;
     case "markdown":
@@ -719,12 +735,12 @@ function whyPanel(row, name) {
 function legBody(row, call, ref, engine) {
   const pair = `<div class="two">${outputPanel(row, call, engine)}${referencePanel(row, ref)}</div>`;
   switch (state.leg) {
-    case "text": return whyPanel(row) + pair;
+    case "text":
     case "markdown":
-    case "tables": return pair + whyPanel(row);
+    case "tables": return pair + whyPanel(row, engine);
     case "key_value":
-    case "schema": return pair + formsPanel(engine, call) + whyPanel(row);
-    case "geometry": return outputPanel(row, call, engine) + whyPanel(row);
+    case "schema": return pair + formsPanel(engine, call) + whyPanel(row, engine);
+    case "geometry": return outputPanel(row, call, engine) + whyPanel(row, engine);
   }
   return "";
 }
@@ -740,17 +756,24 @@ const COMPARE_METRICS = {
   geometry: [["Line", "geometry_line_score"], ["Block cov", "geometry_block_score"], ["words/box", "geometry_words_per_box"]],
 };
 function compareHead(A, B) {
-  const line = x => `<div class="cmp-row"><b>${esc(x.engine)}</b>
+  const judged = judgedPage();
+  const line = x => {
+    const j = judgeOf(x.engine);
+    return judged ? `<div class="cmp-row"><b>${esc(x.engine)}</b>
+      <span class="cmp-score" style="color:${scoreColor(j?.score)}">${!j ? "not recorded" : j.error ? "error" : fmt(j.score)}</span>
+      ${j ? `<span>${judgeRight(j)} of ${j.items.length} checklist values present and correct</span>` : ""}</div>`
+    : `<div class="cmp-row"><b>${esc(x.engine)}</b>
       <span class="cmp-score" style="color:${scoreColor(x.row?.score)}">${!x.row ? "not recorded" : x.row.error ? "error" : x.row.applicable === false ? "n/a" : fmt(x.row.score)}</span>
       ${(COMPARE_METRICS[state.leg] || []).filter(([, k]) => x.row?.metrics?.[k] != null).map(([label, k]) => `<span>${esc(label)} <b>${fmt(x.row.metrics[k])}</b></span>`).join("")}</div>`;
-  return `<div class="panel"><h3>${LEG_TITLES[state.leg]} · side by side on this page</h3>${line(A)}${line(B)}
+  };
+  return `<div class="panel"><h3>${judged ? "Document judge estimate" : LEG_TITLES[state.leg]} · side by side on this page</h3>${line(A)}${line(B)}
     <div class="pick"><button type="button" class="mini" data-cmp="swap">⇄ swap</button><button type="button" class="mini" data-cmp="stop">stop comparing</button></div></div>`;
 }
 function compareBody(A, B) {
   const out = x => !x.row ? `<div class="panel muted">No ${LEG_TITLES[state.leg]} result is recorded for ${esc(x.engine)} on this page.</div>`
     : x.row.error ? `<div class="panel"><h3>${esc(x.engine)}</h3><pre class="warn">${esc(x.row.error)}</pre></div>`
     : outputPanel(x.row, x.call, x.engine, x.engine) + (state.leg === "key_value" || state.leg === "schema" ? formsPanel(x.engine, x.call) : "");
-  const why = x => x.row && !x.row.error ? whyPanel(x.row, x.engine) : "<div></div>";
+  const why = x => x.row && !x.row.error ? whyPanel(x.row, x.engine, x.engine) : "<div></div>";
   return `<div class="two cmp">${out(A)}${out(B)}</div><div class="two cmp">${why(A)}${why(B)}</div>`;
 }
 
@@ -763,9 +786,7 @@ async function renderContent() {
   const vsInfo = vsRow && D.docs[state.doc]?.engines[state.vs]?.calls[vsRow.call];
   const [call, ref, vsCall] = await Promise.all([row ? loadCall(info) : null, row ? loadReference(D.docs[state.doc], state.leg, row) : null, vsRow ? loadCall(vsInfo) : null]);
   if (seq !== contentSeq || state.view !== "page") return;
-  // On a silver-reference page the judge estimate is the only result for the text, so it comes first.
-  const judged = state.leg === "text" ? judgePanel() : "";
-  let right = judged && row?.applicable === false ? judged + scorePanel(row) : scorePanel(row) + judged, below = "";
+  let right = judgedPage() ? judgeScorePanel(row) : scorePanel(row), below = "";
   if (state.vs) {
     const A = {engine: state.engine, row, call}, B = {engine: state.vs, row: vsRow, call: vsCall};
     right += compareHead(A, B);
