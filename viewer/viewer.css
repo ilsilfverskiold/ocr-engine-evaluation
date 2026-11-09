@@ -103,7 +103,8 @@ select { font: 500 13px var(--font); padding: 5px 8px; background: var(--panel);
 h1 { font-size: 35px; font-weight: 900; letter-spacing: -.03em; margin: 0 0 6px; text-wrap: balance; }
 /* Panel titles as stickers. */
 h3 { display: inline-block; font: 700 12px/1.4 var(--mono); margin: 0 0 12px; padding: 3px 8px; text-transform: uppercase; letter-spacing: .06em;
-  background: var(--tag); color: var(--on-tag); border: 2px solid var(--tag-edge); border-radius: var(--r-sm); text-wrap: balance; }
+  background: var(--tag); color: var(--on-tag); border: 2px solid var(--tag-edge); border-radius: var(--r-sm); text-wrap: balance;
+  max-width: 100%; overflow-wrap: anywhere; }
 h4 { font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin: 14px 0 6px; }
 .meta { color: var(--muted); font: 12px var(--mono); display: flex; flex-wrap: wrap; gap: 4px 16px; }
 code { font: 12px var(--mono); }
@@ -120,7 +121,8 @@ details.panel > summary { font-size: 14px; }
 details.panel[open] > summary { margin-bottom: 14px; }
 .panel > details:not(.help) { margin: 6px 0 12px; }
 .prompt { background: color-mix(in srgb, var(--accent) 8%, var(--panel)); }
-.grid { display: grid; grid-template-columns: minmax(280px, 38%) minmax(0, 1fr); gap: 20px; align-items: start; }
+/* The page image keeps its share of the width up to 480px, so zooming out shrinks it with the rest of the page. */
+.grid { display: grid; grid-template-columns: minmax(280px, min(38%, 480px)) minmax(0, 1fr); gap: 20px; align-items: start; }
 .sticky { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 128px); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .two > * { min-width: 0; }
@@ -130,6 +132,7 @@ pre { background: var(--code); padding: 10px 12px; border: 2px solid var(--edge)
 .score-big { font-size: 35px; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .metrics { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin-top: 8px; font-variant-numeric: tabular-nums; }
 .metrics b { font-weight: 700; }
+.metrics > span { min-width: 0; overflow-wrap: anywhere; }
 
 /* score bars: every engine on this page */
 .bars { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }

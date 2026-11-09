@@ -432,7 +432,7 @@ function callBlock(info, call, leg) {
     <details><summary>Settings and usage recorded in this call</summary>${meta.measurement_scope === "modal_batch" ? '<p class="muted">Cost is an equal share of measured batch work. GPU costs exclude CPU/RAM; CPU costs are allocation floors. Startup, idle and unmetered failures are excluded.</p>' : ""}${tree(recorded)}</details>
     ${replyBelow ? "" : `<details><summary>Reply (raw_text, ${(call.raw_text || "").length} chars)</summary>${formatReply(call.raw_text)}</details>`}
     <details><summary>Full provider reply</summary>${providerReply(call.raw_response)}</details>
-    <div class="muted" style="font-size:11px;margin-top:4px">${esc(rel(info.url))}</div></div>`;
+    <div class="muted" style="font-size:11px;margin-top:4px;overflow-wrap:anywhere">${esc(rel(info.url))}</div></div>`;
 }
 
 // What each leg's call received, from the saved call.
