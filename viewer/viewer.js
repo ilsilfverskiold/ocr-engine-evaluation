@@ -488,11 +488,12 @@ function geoLevels(row) {
 const geoLevel = row => geoLevels(row).some(([k]) => k === state.geoLevel) ? state.geoLevel : "word";
 const clip = (t, n = 200) => { t = String(t ?? ""); return t.length > n ? t.slice(0, n) + "…" : t; };
 
-function imagePanel(withBoxes) {
+// `engine` and `name` are set when comparing geometry: each engine's boxes on its own copy of the page.
+function imagePanel(withBoxes, engine = state.engine, name) {
   const doc = D.docs[state.doc];
   let svg = "", controls = "";
   if (withBoxes) {
-    const row = legRow(state.engine, state.doc, "geometry"), d = row?.detail || {}, level = geoLevel(row);
+    const row = legRow(engine, state.doc, "geometry"), d = row?.detail || {}, level = geoLevel(row);
     const rect = (b, color, title, dash) => b && b.length === 4 ?
       `<rect x="${b[0]}" y="${b[1]}" width="${Math.max(b[2] - b[0], 0)}" height="${Math.max(b[3] - b[1], 0)}" fill="${color}" fill-opacity=".12" stroke="${color}" stroke-width="1.5" vector-effect="non-scaling-stroke" ${dash ? 'stroke-dasharray="4 3"' : ""}><title>${esc(title)}</title></rect>` : "";
     let parts = "";
@@ -515,7 +516,7 @@ function imagePanel(withBoxes) {
     controls = `<div class="geo-levels">${geoLevels(row).map(([k, label, v]) => `<button data-geo="${k}" class="${k === level ? "on" : ""}">${label} ${fmt(v)}</button>`).join("")}</div>
       <div class="layers">${Object.entries(labels).map(([k, text]) => `<label><input type="checkbox" data-layer="${k}" ${state.layers[k] ? "checked" : ""}> ${text}</label>`).join("")}</div>`;
   }
-  return `<div class="panel sticky"><h3>${esc(doc.path)}</h3>${controls}<div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div>`;
+  return `<div class="panel ${name ? "" : "sticky"}"><h3>${name ? `${esc(name)} · boxes on ${esc(state.doc)}` : esc(doc.path)}</h3>${controls}<div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div>`;
 }
 
 // Geometry: Word is the score; Line and Block cov are shown beside it where the scorer recorded them.
@@ -664,7 +665,7 @@ function outputPanel(row, call, engine, name) {
           <pre>${esc(call.raw_text ?? "")}</pre></div>`;
     }
     case "geometry":
-      return `<div class="panel">${name ? `<h3>${esc(name)}</h3>` : ""}<div class="metrics"><span>engine box unit: <b>${esc(m.geometry_prediction_granularity || "not recorded")}</b></span>
+      return `<div class="panel">${name ? `<h3>${esc(name)} · results</h3>` : ""}<div class="metrics"><span>engine box unit: <b>${esc(m.geometry_prediction_granularity || "not recorded")}</b></span>
           <span>scored against: <b>${esc(m.geometry_scoring_unit || "not recorded")}</b></span>
           <span>recall (headline): <b>${fmt(m.geometry_recall ?? row.score)}</b></span><span>precision: <b>${fmt(m.geometry_precision)}</b></span>
           ${m.geometry_block_score != null ? `<span>block score (diagnostic): <b>${fmt(m.geometry_block_score)}</b></span><span>words per box: <b>${fmt(m.geometry_words_per_box)}</b></span>` : ""}
@@ -787,12 +788,16 @@ async function renderContent() {
   const [call, ref, vsCall] = await Promise.all([row ? loadCall(info) : null, row ? loadReference(D.docs[state.doc], state.leg, row) : null, vsRow ? loadCall(vsInfo) : null]);
   if (seq !== contentSeq || state.view !== "page") return;
   let right = judgedPage() ? judgeScorePanel(row) : scorePanel(row), below = "";
+  // Comparing geometry moves the page image down: both engines' boxes side by side, their results below.
+  const geoPair = state.vs && state.leg === "geometry";
   if (state.vs) {
     const A = {engine: state.engine, row, call}, B = {engine: state.vs, row: vsRow, call: vsCall};
     right += compareHead(A, B);
-    below = compareBody(A, B);
+    below = (geoPair ? `<div class="two cmp">${[A, B].map(x => imagePanel(!!x.row && !x.row.error, x.engine, x.engine)).join("")}</div>` : "")
+      + compareBody(A, B);
   } else if (row) right += callPointer(row, info, call) + (row.error ? "" : legBody(row, call, ref, state.engine));
-  el("content").innerHTML = `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>${below}`;
+  el("content").innerHTML = geoPair ? `<div>${right}</div>${below}`
+    : `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>${below}`;
   el("content").querySelectorAll("[data-vs]").forEach(b => b.onclick = ev => { ev.stopPropagation(); go({vs: b.dataset.vs === state.vs ? null : b.dataset.vs}); });
   el("content").querySelectorAll("[data-cmp]").forEach(b => b.onclick = () => go(b.dataset.cmp === "swap" ? {engine: state.vs, vs: state.engine} : {vs: null}));
   el("content").querySelectorAll(".bar").forEach(n => n.onclick = () => go({engine: n.dataset.e}));
