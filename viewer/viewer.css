@@ -191,7 +191,8 @@ details.help { margin-top: 12px; font-size: 13px; }
 .help-list dd { margin: 0; color: var(--muted); }
 
 /* ---------- page image and geometry overlay ---------- */
-.imgwrap { position: relative; width: 100%; }
+/* Capped in px wherever the page image appears (also side by side), so zooming out shrinks it with the page. */
+.imgwrap { position: relative; width: 100%; max-width: 520px; }
 .imgwrap img { width: 100%; display: block; border: 2px solid var(--edge); border-radius: var(--r-sm); background: #fff; }
 .imgwrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 /* Page view panels: drag the bottom-right corner to crop one for a screenshot (wirePanels in viewer.js). */
