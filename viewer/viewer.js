@@ -516,7 +516,7 @@ function imagePanel(withBoxes, engine = state.engine, name) {
     controls = `<div class="geo-levels">${geoLevels(row).map(([k, label, v]) => `<button data-geo="${k}" class="${k === level ? "on" : ""}">${label} ${fmt(v)}</button>`).join("")}</div>
       <div class="layers">${Object.entries(labels).map(([k, text]) => `<label><input type="checkbox" data-layer="${k}" ${state.layers[k] ? "checked" : ""}> ${text}</label>`).join("")}</div>`;
   }
-  return `<div class="panel ${name ? "" : "sticky"}"><h3>${name ? `${esc(name)} · boxes on ${esc(state.doc)}` : esc(doc.path)}</h3>${controls}<div class="imgbox"><div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div></div>`;
+  return `<div class="panel ${name ? "" : "sticky"}"><h3>${name ? `${esc(name)} · boxes on ${esc(state.doc)}` : esc(doc.path)}</h3>${controls}<div class="imgwrap"><img src="${doc.image}" alt="${esc(state.doc)}" onerror="this.outerHTML='<p class=muted>Page image not found. Download the images once with <code>python scripts/download_data.py</code> in the repository directory, then reload.</p>'">${svg}</div></div>`;
 }
 
 // Geometry: Word is the score; Line and Block cov are shown beside it where the scorer recorded them.
@@ -778,42 +778,22 @@ function compareBody(A, B) {
   return `<div class="two cmp">${out(A)}${out(B)}</div><div class="two cmp">${why(A)}${why(B)}</div>`;
 }
 
-// ---------- resizable boxes ----------
-// Texts, verdict tables, the engine list and the page image can be dragged shorter or taller from their bottom-right
-// corner, as the Results tables can (for screenshots). A dragged size is kept while the page view re-renders, as a
-// maximum height like the Results tables (the page image keeps it as its height): boxes are matched by leg, compare
-// mode, kind and order (those inside a collapsed section counted apart). The page image is scaled to the dragged
-// height, so its boxes stay on their words.
-const RZ = "pre, .vwrap, .rendered, .tablebox, .plain, .bars, .imgbox";
-const boxSizes = new Map();
-function fitImage(b) {
-  const img = b.querySelector("img");
-  if (b.classList.contains("sized") && img?.naturalHeight)
-    img.style.width = Math.min(b.clientWidth, b.clientHeight * img.naturalWidth / img.naturalHeight) + "px";
-}
-const boxObserver = new ResizeObserver(entries => {
-  for (const {target: b} of entries) if (b.classList.contains("sized")) {
-    boxSizes.set(b.dataset.rz, b.style.height);
-    if (b.classList.contains("imgbox")) fitImage(b);
-  }
+// ---------- croppable panels ----------
+// Each panel on a page can be dragged shorter or taller from its bottom-right corner, to crop it for a screenshot:
+// the content is cut off, nothing inside is resized. A dragged height is kept while the page view re-renders;
+// panels are matched by leg, compare mode and order on the page.
+const panelHeights = new Map();
+const panelObserver = new ResizeObserver(entries => {
+  for (const {target: p} of entries) if (p.style.height) panelHeights.set(p.dataset.crop, p.style.height);
 });
-function wireBoxes(root) {
-  boxObserver.disconnect();
-  const n = {};
-  for (const b of root.querySelectorAll(RZ)) {
-    const kind = (b.closest("details") ? "d" : "") + (b.classList.contains("imgbox") ? "img" : b.className.split(" ")[0] || b.tagName);
-    b.dataset.rz = [state.leg, state.vs ? "vs" : "one", kind, n[kind] = (n[kind] ?? -1) + 1].join("|");
-    b.classList.add("rz");
-    const size = h => { b.classList.add("sized"); Object.assign(b.style, {height: h, maxHeight: "none"}); };
-    const kept = boxSizes.get(b.dataset.rz);
-    if (kept) kind.endsWith("img") ? size(kept) : b.style.maxHeight = kept;
-    b.addEventListener("pointerdown", e => {
-      const r = b.getBoundingClientRect();
-      if (e.clientX >= r.right - 24 && e.clientY >= r.bottom - 24 && !b.classList.contains("sized")) size(b.offsetHeight + "px");
-    });
-    b.querySelector(":scope > .imgwrap > img")?.addEventListener("load", () => fitImage(b));
-    boxObserver.observe(b);
-  }
+function wirePanels(root) {
+  panelObserver.disconnect();
+  root.querySelectorAll(".panel").forEach((p, i) => {
+    p.dataset.crop = [state.leg, state.vs ? "vs" : "one", i].join("|");
+    p.classList.add("crop");
+    if (panelHeights.has(p.dataset.crop)) p.style.height = panelHeights.get(p.dataset.crop);
+    panelObserver.observe(p);
+  });
 }
 
 async function renderContent() {
@@ -836,7 +816,7 @@ async function renderContent() {
   } else if (row) right += callPointer(row, info, call) + (row.error ? "" : legBody(row, call, ref, state.engine));
   el("content").innerHTML = geoPair ? `<div>${right}</div>${below}`
     : `<div class="grid">${imagePanel(state.leg === "geometry" && row && !row.error)}<div style="min-width:0">${right}</div></div>${below}`;
-  wireBoxes(el("content"));
+  wirePanels(el("content"));
   el("content").querySelectorAll("[data-vs]").forEach(b => b.onclick = ev => { ev.stopPropagation(); go({vs: b.dataset.vs === state.vs ? null : b.dataset.vs}); });
   el("content").querySelectorAll("[data-cmp]").forEach(b => b.onclick = () => go(b.dataset.cmp === "swap" ? {engine: state.vs, vs: state.engine} : {vs: null}));
   el("content").querySelectorAll(".bar").forEach(n => n.onclick = () => go({engine: n.dataset.e}));
