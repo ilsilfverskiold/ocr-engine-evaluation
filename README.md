@@ -10,8 +10,6 @@ and reference behind the scores is in this repository.
 - [View the results yourself](#view-the-results-yourself): terminal report and browser viewer, or the [hosted viewer](https://ilsilfverskiold.github.io/ocr-engine-evaluation/) with no setup
 - [Run the benchmark](#run-the-benchmark): with the engines here, or with an engine you add
 
-[![The results viewer: full scores per leg for every engine, with tier, document type and engine type filters](viewer/ocr-benchmark-screen.png)](https://ilsilfverskiold.github.io/ocr-engine-evaluation/)
-
 The [hosted viewer](https://ilsilfverskiold.github.io/ocr-engine-evaluation/)
 shows this run in the browser, with no setup: the comparison tables and charts,
 and for every engine, page and leg the prompt sent, the full reply, the output
