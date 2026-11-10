@@ -791,6 +791,14 @@ function wirePanels(root) {
   root.querySelectorAll(".panel").forEach((p, i) => {
     p.dataset.crop = [state.leg, state.vs ? "vs" : "one", i].join("|");
     p.classList.add("crop");
+    // Title (and the sub-line under it) stays at the top while scrolling inside a cropped panel.
+    const h = p.querySelector(":scope > h3");
+    if (h) {
+      const head = document.createElement("div");
+      head.className = "panel-head";
+      h.before(head); head.append(h);
+      if (head.nextElementSibling?.classList.contains("sub")) head.append(head.nextElementSibling);
+    }
     if (panelHeights.has(p.dataset.crop)) p.style.height = panelHeights.get(p.dataset.crop);
     panelObserver.observe(p);
   });
