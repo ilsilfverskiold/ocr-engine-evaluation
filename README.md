@@ -27,8 +27,6 @@ first.
   are difficulty tiers.
 - **Pages** counts scored pages. **Errors** counts failed calls, which get no
   score rather than zero; — also means no score.
-- **CER** and **WER**, character and word error rate, are lower-is-better and
-  can exceed 1.
 - Nine rows are inference errors: eight Marker geometry pages and one
   DeepSeek-OCR schema page.
 
